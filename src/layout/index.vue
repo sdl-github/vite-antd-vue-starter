@@ -1,77 +1,81 @@
 <template>
   <a-layout style="min-height: 100vh">
-    <a-layout-sider
-      breakpoint="lg"
-      collapsed-width="0"
-      @collapse="onCollapse"
-      @breakpoint="onBreakpoint"
-    >
+    <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible>
       <div class="logo" />
-      <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline">
-        <a-menu-item key="1" @click="changeMenu('image')">
-          <user-outlined />
-          <span class="nav-text">图片加载</span>
-        </a-menu-item>
-        <a-menu-item key="2">
-          <video-camera-outlined />
-          <span class="nav-text">nav 2</span>
-        </a-menu-item>
-        <a-menu-item key="3">
-          <upload-outlined />
-          <span class="nav-text">nav 3</span>
-        </a-menu-item>
-        <a-menu-item key="4">
-          <user-outlined />
-          <span class="nav-text">nav 4</span>
-        </a-menu-item>
+      <a-menu class="vab-menu" theme="dark" mode="inline">
+        <SideMenu v-for="route in routes" :key="route.path" :item="route" />
       </a-menu>
     </a-layout-sider>
+
     <a-layout>
-      <a-layout-header :style="{ background: '#fff', padding: 0 }" />
-      <a-layout-content :style="{ margin: '24px 16px 0' }">
-        <div :style="{ padding: '24px', background: '#fff', minHeight: '520px' }">
-          <router-view />
-        </div>
+      <a-layout-header style="background: #fff; padding: 0">
+        <menu-unfold-outlined v-if="collapsed" class="trigger" @click="toggleCollapse" />
+        <menu-fold-outlined v-else class="trigger" @click="toggleCollapse" />
+      </a-layout-header>
+      <a-layout-content
+        :style="{ margin: '24px 16px', padding: '24px', background: '#fff', minHeight: '280px' }"
+      >
+        <router-view />
       </a-layout-content>
-      <a-layout-footer style="text-align: center">©{{ new Date().getFullYear() }} Created by sdl</a-layout-footer>
     </a-layout>
   </a-layout>
 </template>
-<script lang="ts">
+<script setup lang="ts">
+//@ts-ignore
+import SideMenu from '@/layout/components/side-menu/index.vue'
 import router from '@/router';
-import { UserOutlined, VideoCameraOutlined, UploadOutlined } from '@ant-design/icons-vue';
-import { defineComponent, ref } from 'vue';
-export default defineComponent({
-  name: 'Layout',
-  components: {
-    UserOutlined,
-    VideoCameraOutlined,
-    UploadOutlined,
+import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons-vue';
+import { computed } from 'vue';
+import { appStore } from '@/store/app';
+import { mapActions } from 'pinia';
+const store = appStore()
+const collapsed = computed(() => store.collapsed)
+const toggleCollapse = store.toggleCollapse
+const routes = [
+  {
+    name: 'Dashboard',
+    title: 'Dashboard',
+    path: '/',
+    hidden: false,
+    icon: '<dashboard-outlined />',
+    children: [
+      {
+        name: 'test',
+        title: 'test',
+        hidden: false,
+        path: '/dashboard/index',
+        icon: '<dashboard-outlined />'
+      }
+    ]
   },
-  setup() {
-    const onCollapse = (collapsed: boolean, type: string) => {
-      console.log(collapsed, type);
-    };
-
-    const onBreakpoint = (broken: boolean) => {
-      console.log(broken);
-    };
-
-    const changeMenu = (path: string) => {
-      console.log(path);
-      router.push(path);
-    }               
-    return {
-      selectedKeys: ref<string[]>(['1']),
-      onCollapse,
-      onBreakpoint,
-      changeMenu
-    };
-  },
-});
+  {
+    name: 'Image',
+    title: 'Image',
+    hidden: true,
+    path: '/image',
+    icon: '<dashboard-outlined />'
+  }
+]
 </script>
-<style lang="scss">
+<style scoped lang="scss">
 .logo {
-  height: 50px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.3);
+  margin: 16px;
+}
+.trigger {
+  font-size: 18px;
+  line-height: 64px;
+  padding: 0 24px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.trigger:hover {
+  color: #1890ff;
+}
+
+.site-layout .site-layout-background {
+  background: #fff;
 }
 </style>
