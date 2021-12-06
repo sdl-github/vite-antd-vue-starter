@@ -20,17 +20,11 @@
     </a-layout>
   </a-layout>
 </template>
-<script setup lang="ts">
-//@ts-ignore
+<script lang="ts">
 import SideMenu from '@/layout/components/side-menu/index.vue'
-import router from '@/router';
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons-vue';
-import { computed } from 'vue';
+import { computed, defineComponent } from 'vue';
 import { appStore } from '@/store/app';
-import { mapActions } from 'pinia';
-const store = appStore()
-const collapsed = computed(() => store.collapsed)
-const toggleCollapse = store.toggleCollapse
 const routes = [
   {
     name: 'Dashboard',
@@ -56,6 +50,26 @@ const routes = [
     icon: '<dashboard-outlined />'
   }
 ]
+export default defineComponent({
+  components: {
+    SideMenu,
+    MenuUnfoldOutlined,
+    MenuFoldOutlined
+  },
+  setup() {
+    const store = appStore()
+    const collapsed = computed(() => store.collapsed)
+    const toggleCollapse = store.toggleCollapse
+
+    return {
+      collapsed,
+      toggleCollapse,
+      routes
+    }
+  }
+})
+
+
 </script>
 <style scoped lang="scss">
 .logo {

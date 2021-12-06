@@ -1,30 +1,35 @@
 
 <template>
-    <a-menu-item :key="props.item.path" @click="handleLink">
+    <a-menu-item :key="menu.path" @click="handleLink">
         <span class="anticon"></span>
-        <span>{{ props.item.title }}</span>
+        <span>{{ menu.title }}</span>
     </a-menu-item>
 </template>
 
-<script setup lang="ts">
-import router, { IMenuItem } from '@/router';
+<script lang="ts">
+import router from '@/router';
+import { defineComponent, defineProps } from 'vue';
 
-
-interface Props {
-    msg?: string
-    labels?: string[]
-}
-
-const props = defineProps({
-    item: {
-        type: Object,
-        default: {}
+export default defineComponent({
+    props: {
+        item: {
+            type: Object,
+            default: {}
+        }
+    },
+    setup(props) {
+        const handleLink = () => {
+            const path = props.item.path
+            router.push(path)
+        }
+        return {
+            menu: props.item,
+            handleLink
+        }
     }
 })
-const handleLink = () => {
-    const path = props.item.path
-    router.push(path)
-}
+
+
 </script>
 
 <style>

@@ -3,17 +3,26 @@
     <a-sub-menu>
         <template v-slot:title>
             <span class="anticon"></span>
-            <span>{{ props.item.title }}</span>
+            <span>{{ menu.title }}</span>
         </template>
         <slot></slot>
     </a-sub-menu>
 </template>
 
-<script setup lang="ts">
-const props = defineProps({
-    item: {
-        type: Object,
-        default: {}
+<script lang="ts">
+import { defineComponent, defineProps } from 'vue';
+
+export default defineComponent({
+    props: {
+        item: {
+            type: Object,
+            default: {}
+        },
+    },
+    setup(props) {
+        return {
+            menu: props.item,
+        }
     }
 })
 </script>
