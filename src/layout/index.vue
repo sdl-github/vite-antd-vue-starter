@@ -1,19 +1,34 @@
 <template>
-  <a-layout style="min-height: 100vh">
-    <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible>
-      <div class="logo" />
-      <a-menu class="vab-menu" theme="dark" mode="inline">
+  <a-layout class="layout">
+    <a-layout-sider
+      class="sider"
+      v-model:collapsed="collapsed"
+      :trigger="null"
+      :theme='theme'
+      collapsible
+    >
+      <Logo />
+      <a-menu class="vab-menu" :theme="theme" mode="inline">
         <SideMenu v-for="route in routes" :key="route.path" :item="route" />
       </a-menu>
     </a-layout-sider>
 
     <a-layout>
       <a-layout-header style="background: #fff; padding: 0">
-        <menu-unfold-outlined v-if="collapsed" class="trigger" @click="toggleCollapse" />
+        <menu-unfold-outlined
+          v-if="collapsed"
+          class="trigger"
+          @click="toggleCollapse"
+        />
         <menu-fold-outlined v-else class="trigger" @click="toggleCollapse" />
       </a-layout-header>
       <a-layout-content
-        :style="{ margin: '24px 16px', padding: '24px', background: '#fff', minHeight: '280px' }"
+        :style="{
+          margin: '24px 16px',
+          padding: '24px',
+          background: '#fff',
+          minHeight: '280px',
+        }"
       >
         <router-view />
       </a-layout-content>
@@ -21,61 +36,70 @@
   </a-layout>
 </template>
 <script lang="ts">
-import SideMenu from '@/layout/components/side-menu/index.vue'
-import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons-vue';
-import { computed, defineComponent } from 'vue';
-import { appStore } from '@/store/app';
+import SideMenu from "@/layout/components/SideMenu/index.vue";
+import Logo from "@/layout/components/SideMenu/Logo.vue";
+import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons-vue";
+import { computed, defineComponent } from "vue";
+import { appStore } from "@/store/app";
 const routes = [
   {
-    name: 'Dashboard',
-    title: 'Dashboard',
-    path: '/',
+    name: "Dashboard",
+    title: "Dashboard",
+    path: "/",
     hidden: false,
-    icon: '<dashboard-outlined />',
+    icon: "<dashboard-outlined />",
     children: [
       {
-        name: 'test',
-        title: 'test',
+        name: "test",
+        title: "test",
         hidden: false,
-        path: '/dashboard/index',
-        icon: '<dashboard-outlined />'
-      }
-    ]
+        path: "/dashboard/index",
+        icon: "<dashboard-outlined />",
+        children: [
+          {
+            name: "test",
+            title: "test",
+            hidden: false,
+            path: "/dashboard/index",
+            icon: "<dashboard-outlined />",
+          },
+        ],
+      },
+    ],
   },
   {
-    name: 'Image',
-    title: 'Image',
+    name: "Image",
+    title: "Image",
     hidden: true,
-    path: '/image',
-    icon: '<dashboard-outlined />'
-  }
-]
+    path: "/image",
+    icon: "<dashboard-outlined />",
+  },
+];
 export default defineComponent({
   components: {
     SideMenu,
+    Logo,
     MenuUnfoldOutlined,
-    MenuFoldOutlined
+    MenuFoldOutlined,
   },
   setup() {
-    const store = appStore()
-    const collapsed = computed(() => store.collapsed)
-    const toggleCollapse = store.toggleCollapse
+    const store = appStore();
+    const toggleCollapse = store.toggleCollapse;
 
     return {
-      collapsed,
+      collapsed: computed(() => store.collapsed),
+      theme: computed(() => store.theme),
       toggleCollapse,
-      routes
-    }
-  }
-})
-
-
+      routes,
+    };
+  },
+});
 </script>
 <style scoped lang="scss">
-.logo {
-  height: 32px;
-  background: rgba(255, 255, 255, 0.3);
-  margin: 16px;
+.layout {
+  .sider {
+    height: 100vh;
+  }
 }
 .trigger {
   font-size: 18px;

@@ -6,6 +6,9 @@ export const appStore = defineStore({
     state: () => {
         return {
             collapsed: false,
+            title: 'super admin',
+            theme: 'dark',
+            logo: 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg',
             routes: []
         }
     },
