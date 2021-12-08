@@ -1,20 +1,20 @@
 <template>
     <a-menu-item class="menu-item" :key="menu.path" @click="handleLink">
         <span class="anticon">
-            <github-outlined/>
+            <RemixIcon :icon="item.meta.icon"/>
         </span>
-        <span>{{ menu.title }}</span>
+        <span>{{ menu.meta.title }}</span>
     </a-menu-item>
 </template>
 
 <script lang="ts">
 import router from '@/router';
-import {defineComponent, defineProps} from 'vue';
-import {GithubOutlined} from '@ant-design/icons-vue';
+import RemixIcon from '@/components/RemixIcon.vue'
+import {defineComponent} from 'vue';
 
 export default defineComponent({
     components: {
-        GithubOutlined
+        RemixIcon
     },
     props: {
         item: {
@@ -28,7 +28,7 @@ export default defineComponent({
             router.push(path)
         }
         return {
-            GithubOutlined,
+            RemixIcon,
             menu: props.item,
             handleLink
         }

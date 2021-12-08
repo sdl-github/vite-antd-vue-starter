@@ -2,21 +2,21 @@
     <a-sub-menu>
         <template v-slot:title>
             <span class="anticon">
-                <github-outlined/>
+              <RemixIcon :icon="item.meta.icon"/>
             </span>
-            <span>{{ menu.title }}</span>
+            <span>{{ menu.meta.title }}</span>
         </template>
         <slot></slot>
     </a-sub-menu>
 </template>
 
 <script lang="ts">
-import {defineComponent, defineProps} from 'vue';
-import {GithubOutlined} from '@ant-design/icons-vue';
+import RemixIcon from '@/components/RemixIcon.vue'
+import {defineComponent} from 'vue';
 
 export default defineComponent({
     components: {
-        GithubOutlined
+        RemixIcon
     },
     props: {
         item: {
@@ -26,7 +26,7 @@ export default defineComponent({
     },
     setup(props) {
         return {
-            GithubOutlined,
+            RemixIcon,
             menu: props.item,
         }
     }

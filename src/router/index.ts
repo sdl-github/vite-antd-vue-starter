@@ -1,29 +1,56 @@
-import { createRouter, createWebHashHistory } from 'vue-router';
+import {createRouter, createWebHashHistory, RouteRecordRaw} from 'vue-router';
 import Layout from "@/layout/index.vue";
 
-export interface IMenuItem {
-    title: string,
-    path: string
-    hidden: boolean
-    icon?: string
-    children?: IMenuItem[]
-}
 // 1.定义一些路由
-const routes = [
+export const routes: RouteRecordRaw[] = [
     {
         path: '/',
-        redirect: '/dashboard/index',
+        redirect: '/dashboard',
+        meta: {
+            hideInMenu: true,
+            title: 'root'
+        }
     },
     {
         path: '/dashboard',
         component: Layout,
+        meta: {
+            hideInMenu: false,
+            title: 'Dashboard',
+            icon: 'dashboard-3-line'
+        },
         children: [
             {
                 path: '/dashboard/index',
                 name: 'index',
+                meta: {
+                    hideInMenu: false,
+                    title: 'Dashboard',
+                    icon: 'dashboard-3-line'
+                },
                 component: () => import('@/views/index.vue')
-            },
-            { path: '/image', component: () => import('@/views/image/index.vue') },
+            }
+        ]
+    },
+    {
+        path: '/system',
+        component: Layout,
+        meta: {
+            hideInMenu: false,
+            title: '系统',
+            icon: 'settings-5-line'
+        },
+        children: [
+            {
+                path: '/system/image',
+                name: 'index',
+                meta: {
+                    hideInMenu: true,
+                    title: '图片加载',
+                    icon: 'image-line'
+                },
+                component: () => import('@/views/image/index.vue')
+            }
         ]
     },
 ];

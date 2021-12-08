@@ -1085,6 +1085,11 @@ regenerator-runtime@^0.13.4:
   resolved "https://registry.nlark.com/regenerator-runtime/download/regenerator-runtime-0.13.9.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fregenerator-runtime%2Fdownload%2Fregenerator-runtime-0.13.9.tgz#8925742a98ffd90814988d7566ad30ca3b263b52"
   integrity sha1-iSV0Kpj/2QgUmI11Zq0wyjsmO1I=
 
+remixicon@^2.5.0:
+  version "2.5.0"
+  resolved "https://registry.npm.taobao.org/remixicon/download/remixicon-2.5.0.tgz#b5e245894a1550aa23793f95daceadbf96ad1a41"
+  integrity sha1-teJFiUoVUKojeT+V2s6tv5atGkE=
+
 request-light@^0.5.4:
   version "0.5.5"
   resolved "https://registry.npmmirror.com/request-light/download/request-light-0.5.5.tgz?cache=0&sync_timestamp=1637139963631&other_urls=https%3A%2F%2Fregistry.npmmirror.com%2Frequest-light%2Fdownload%2Frequest-light-0.5.5.tgz#254ab0b38a1db2192170b599b05181934e14932b"

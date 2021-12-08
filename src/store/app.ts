@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import {routes} from "@/router";
 
 export const appStore = defineStore({
     // id: 必须的，在所有 Store 中唯一
@@ -9,7 +10,7 @@ export const appStore = defineStore({
             title: 'super admin',
             theme: 'dark',
             logo: 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg',
-            routes: []
+            routes
         }
     },
     getters: {

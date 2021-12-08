@@ -9,6 +9,7 @@
   "dependencies": {
     "ant-design-vue": "^2.2.8",
     "pinia": "^2.0.6",
+    "remixicon": "^2.5.0",
     "vue": "^3.2.16",
     "vue-router": "^4.0.12"
   },
