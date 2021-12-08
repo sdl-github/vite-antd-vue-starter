@@ -1,16 +1,21 @@
-
 <template>
-    <a-menu-item :key="menu.path" @click="handleLink">
-        <span class="anticon"></span>
+    <a-menu-item class="menu-item" :key="menu.path" @click="handleLink">
+        <span class="anticon">
+            <github-outlined/>
+        </span>
         <span>{{ menu.title }}</span>
     </a-menu-item>
 </template>
 
 <script lang="ts">
 import router from '@/router';
-import { defineComponent, defineProps } from 'vue';
+import {defineComponent, defineProps} from 'vue';
+import {GithubOutlined} from '@ant-design/icons-vue';
 
 export default defineComponent({
+    components: {
+        GithubOutlined
+    },
     props: {
         item: {
             type: Object,
@@ -23,6 +28,7 @@ export default defineComponent({
             router.push(path)
         }
         return {
+            GithubOutlined,
             menu: props.item,
             handleLink
         }
@@ -32,5 +38,6 @@ export default defineComponent({
 
 </script>
 
-<style>
+<style scoped lang='scss'>
+
 </style>

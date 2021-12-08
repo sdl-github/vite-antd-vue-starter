@@ -52,4 +52,7 @@ export default defineComponent({
 .anticon {
     margin-right: 3px !important;
 }
+.anticon + span {
+
+}
 </style>

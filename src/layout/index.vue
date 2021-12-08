@@ -44,7 +44,7 @@ import { appStore } from "@/store/app";
 const routes = [
   {
     name: "Dashboard",
-    title: "Dashboard",
+    title: "首页",
     path: "/",
     hidden: false,
     icon: "<dashboard-outlined />",
@@ -69,7 +69,7 @@ const routes = [
   },
   {
     name: "Image",
-    title: "Image",
+    title: "图片",
     hidden: true,
     path: "/image",
     icon: "<dashboard-outlined />",
@@ -113,7 +113,4 @@ export default defineComponent({
   color: #1890ff;
 }
 
-.site-layout .site-layout-background {
-  background: #fff;
-}
 </style>
