@@ -2,6 +2,12 @@ import { RouteRecordRaw } from "vue-router";
 import { message } from 'ant-design-vue'
 import Clipboard from 'clipboard'
 
+/**
+ * 删除树节点
+ * @param menus 
+ * @param hideKey 
+ * @returns 
+ */
 export const delHideMenu = (menus: RouteRecordRaw[] | undefined, hideKey = 'hideInMenu') => {
     if (!menus) {
         return

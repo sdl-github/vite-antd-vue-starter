@@ -34,8 +34,16 @@ import { getIconList } from "@/assets/icon";
 import { reactive } from "vue";
 import RemixIcon from "@/components/RemixIcon.vue";
 import { handleClipboard } from "@/utils/tools";
-import { message } from "ant-design-vue";
-const state = reactive({
+
+type IState = {
+  data: any[];
+  pageNo: number;
+  pageSize: number;
+  totalCount: number;
+  nameLike: string;
+};
+
+const state = reactive<IState>({
   data: [],
   pageNo: 1,
   pageSize: 64,
@@ -47,14 +55,12 @@ const handleInitData = () => {
   const { pageNo, pageSize, nameLike } = state;
   const { data, totalCount } = getIconList(pageNo, pageSize, nameLike);
   if (data && data.length > 0) {
-    // @ts-ignore
     state.data = [...state.data, ...data];
     state.totalCount = totalCount;
   }
 };
 const handleCopyIcon = (item: string, e: any) => {
   handleClipboard(`<RemixIcon :icon="${item}" />`, e);
-  message.success(`成功`);
 };
 const handleCurrentChange = (val: number) => {
   state.pageNo = val;

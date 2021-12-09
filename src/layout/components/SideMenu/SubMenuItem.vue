@@ -1,10 +1,10 @@
 <template>
-    <a-sub-menu>
+    <a-sub-menu :key="item.path">
         <template v-slot:title>
             <span class="anticon">
               <RemixIcon :icon="item?.meta?.icon"/>
             </span>
-            <span>{{ menu?.meta?.title }}</span>
+            <span>{{ item?.meta?.title }}</span>
         </template>
         <slot></slot>
     </a-sub-menu>
@@ -26,8 +26,7 @@ export default defineComponent({
     },
     setup(props) {
         return {
-            RemixIcon,
-            menu: props.item,
+            RemixIcon
         }
     }
 })
