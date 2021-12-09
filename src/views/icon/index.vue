@@ -54,8 +54,8 @@ const state = reactive<IState>({
 const handleInitData = () => {
   const { pageNo, pageSize, nameLike } = state;
   const { data, totalCount } = getIconList(pageNo, pageSize, nameLike);
-  if (data && data.length > 0) {
-    state.data = [...state.data, ...data];
+  if (data) {
+    state.data = data;
     state.totalCount = totalCount;
   }
 };

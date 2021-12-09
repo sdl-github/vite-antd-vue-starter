@@ -1,28 +1,30 @@
 <template>
-  <a-layout class="layout">
-    <a-layout-sider
-      class="layout-sider"
-      v-model:collapsed="collapsed"
-      :trigger="null"
-      :theme="theme"
-      collapsible
-    >
-      <Logo />
-      <a-menu
+  <div class="layout">
+    <a-layout>
+      <a-layout-sider
+        class="layout-sider"
+        v-model:collapsed="collapsed"
+        :trigger="null"
         :theme="theme"
-        mode="inline"
-        v-model:selectedKeys="state.selectedKeys"
-        v-model:openKeys="state.openKeys"
+        collapsible
       >
-        <SideMenu v-for="route in routes" :key="route.path" :item="route" />
-      </a-menu>
-    </a-layout-sider>
+        <Logo />
+        <a-menu
+          :theme="theme"
+          mode="inline"
+          v-model:selectedKeys="state.selectedKeys"
+          v-model:openKeys="state.openKeys"
+        >
+          <SideMenu v-for="route in routes" :key="route.path" :item="route" />
+        </a-menu>
+      </a-layout-sider>
 
-    <a-layout class="main-layout">
-      <Header />
-      <Main />
+      <a-layout class="main-layout">
+        <Header />
+        <Main />
+      </a-layout>
     </a-layout>
-  </a-layout>
+  </div>
 </template>
 <script lang="ts">
 import SideMenu from "@/layout/components/SideMenu/index.vue";
@@ -53,17 +55,11 @@ export default defineComponent({
     const toggleCollapse = store.toggleCollapse;
     const routes = computed(() => delHideMenu(store.routes));
     const route = useRoute();
+    const { path, matched } = route;
 
     watchEffect(() => {
-      const { fullPath, path, matched } = route;
       state.openKeys = [matched[0].path];
-      matched[0].children.length > 1
-        ? (state.selectedKeys = [path])
-        : (state.selectedKeys = [matched[0].path]);
-        console.log(fullPath);
-        console.log(path);
-        console.log(matched[0].path);
-        
+      state.selectedKeys = [path];
     });
 
     return {
@@ -79,6 +75,7 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .layout {
+  height: 100vh;
   //font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
   .layout-sider {
     //height: 100%;
