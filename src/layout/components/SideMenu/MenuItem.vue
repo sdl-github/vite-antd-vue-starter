@@ -24,7 +24,7 @@ export default defineComponent({
     },
     setup(props) {
         const handleLink = () => {
-            const path = props.item.path            
+            const path = props.item.path
             router.push(path)
         }
         return {

@@ -59,7 +59,7 @@ export const routes: RouteRecordRaw[] = [
                     title: 'icon',
                     icon: 'image-line'
                 },
-                component: () => import('@/views/image/index.vue')
+                component: () => import('@/views/icon/index.vue')
             }
         ]
     },

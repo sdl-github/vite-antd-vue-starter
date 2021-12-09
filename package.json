@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "ant-design-vue": "^2.2.8",
+    "clipboard": "^2.0.8",
     "nprogress": "^0.2.0",
     "pinia": "^2.0.6",
     "remixicon": "^2.5.0",
