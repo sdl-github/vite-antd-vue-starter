@@ -1,9 +1,9 @@
 <template>
     <a-menu-item class="menu-item" :key="menu.path" @click="handleLink">
         <span class="anticon">
-            <RemixIcon :icon="item.meta.icon"/>
+            <RemixIcon :icon="item?.meta?.icon"/>
         </span>
-        <span>{{ menu.meta.title }}</span>
+        <span>{{ menu?.meta?.title }}</span>
     </a-menu-item>
 </template>
 
@@ -24,7 +24,7 @@ export default defineComponent({
     },
     setup(props) {
         const handleLink = () => {
-            const path = props.item.path
+            const path = props.item.path            
             router.push(path)
         }
         return {

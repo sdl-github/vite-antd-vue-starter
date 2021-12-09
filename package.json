@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "ant-design-vue": "^2.2.8",
+    "nprogress": "^0.2.0",
     "pinia": "^2.0.6",
     "remixicon": "^2.5.0",
     "vue": "^3.2.16",
@@ -15,6 +16,7 @@
   },
   "devDependencies": {
     "@types/node": "^16.11.11",
+    "@types/nprogress": "^0.2.0",
     "@vitejs/plugin-vue": "^1.9.3",
     "sass": "^1.44.0",
     "sass-loader": "10.1.0",

@@ -1,11 +1,11 @@
-import {createRouter, createWebHashHistory, RouteRecordRaw} from 'vue-router';
+import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 import Layout from "@/layout/index.vue";
 
-// 1.定义一些路由
+// 定义路由
 export const routes: RouteRecordRaw[] = [
     {
         path: '/',
-        redirect: '/dashboard',
+        redirect: '/dashboard/index',
         meta: {
             hideInMenu: true,
             title: 'root'
@@ -22,7 +22,7 @@ export const routes: RouteRecordRaw[] = [
         children: [
             {
                 path: '/dashboard/index',
-                name: 'index',
+                name: 'dashboard',
                 meta: {
                     hideInMenu: false,
                     title: 'Dashboard',
@@ -33,20 +33,30 @@ export const routes: RouteRecordRaw[] = [
         ]
     },
     {
-        path: '/system',
+        path: '/example',
         component: Layout,
         meta: {
             hideInMenu: false,
-            title: '系统',
+            title: '例子',
             icon: 'settings-5-line'
         },
         children: [
             {
-                path: '/system/image',
+                path: '/example/image',
                 name: 'index',
                 meta: {
-                    hideInMenu: true,
+                    hideInMenu: false,
                     title: '图片加载',
+                    icon: 'image-line'
+                },
+                component: () => import('@/views/image/index.vue')
+            },
+            {
+                path: '/example/icon',
+                name: 'Remixicon',
+                meta: {
+                    hideInMenu: false,
+                    title: 'icon',
                     icon: 'image-line'
                 },
                 component: () => import('@/views/image/index.vue')
@@ -55,13 +65,10 @@ export const routes: RouteRecordRaw[] = [
     },
 ];
 
-// 3. 创建路由实例并传递 `routes` 配置
-// 你可以在这里输入更多的配置，但我们在这里
-// 暂时保持简单
 const router = createRouter({
-    // 4. 内部提供了 history 模式的实现。为了简单起见，我们在这里使用 hash 模式。
+    // hash 模式。
     history: createWebHashHistory(),
-    routes, // `routes: routes` 的缩写
+    routes
 });
 
 export default router;

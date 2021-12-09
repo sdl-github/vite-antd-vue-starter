@@ -2,9 +2,9 @@
     <a-sub-menu>
         <template v-slot:title>
             <span class="anticon">
-              <RemixIcon :icon="item.meta.icon"/>
+              <RemixIcon :icon="item?.meta?.icon"/>
             </span>
-            <span>{{ menu.meta.title }}</span>
+            <span>{{ menu?.meta?.title }}</span>
         </template>
         <slot></slot>
     </a-sub-menu>
