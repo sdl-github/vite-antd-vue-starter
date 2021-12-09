@@ -1,4 +1,4 @@
-export const getIconList = (pageNo = 1, pageSize = 20, nameLike) => {
+export const getIconList = (pageNo = 1, pageSize = 20, nameLike?:string) => {
   let list = icons.filter((item) => {
     if (nameLike && item.indexOf(nameLike) < 0) {
       return false
