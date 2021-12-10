@@ -20,7 +20,6 @@ export default defineComponent({
     margin: 10px;
     padding: 10px;
     background-color: #fff;
-    min-height: calc(100vh - 50px);
     position: relative;
     overflow: auto;
 }

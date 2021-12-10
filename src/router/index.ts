@@ -1,6 +1,26 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 import Layout from "@/layout/index.vue";
 
+export const staticRoutes: RouteRecordRaw[] = [
+    {
+        path: '/login',
+        component: () => import('@/views/login.vue'),
+        meta: {
+            hideInMenu: true,
+            title: 'login'
+        }
+    },
+    {
+        path: '/404',
+        name: '404',
+        component: () => import('@/views/404.vue'),
+        meta: {
+            hideInMenu: true,
+            title: '404'
+        }
+    },
+]
+
 // 定义路由
 export const routes: RouteRecordRaw[] = [
     {
@@ -8,7 +28,7 @@ export const routes: RouteRecordRaw[] = [
         redirect: '/dashboard/index',
         meta: {
             hideInMenu: true,
-            title: 'root'
+            title: 'index'
         }
     },
     {
@@ -63,12 +83,41 @@ export const routes: RouteRecordRaw[] = [
             }
         ]
     },
+    {
+        path: '/error',
+        component: Layout,
+        meta: {
+            hideInMenu: false,
+            title: 'Error',
+            icon: 'dashboard-3-line'
+        },
+        children: [
+            {
+                path: '/error/404',
+                name: 'erroe',
+                meta: {
+                    hideInMenu: false,
+                    title: '404',
+                    icon: 'dashboard-3-line'
+                },
+                component: () => import('@/views/404.vue')
+            }
+        ]
+    },
+    // {
+    //     path: '/:pathMatch(.*)*',
+    //     component: () => import('@/views/404.vue'),
+    //     meta: {
+    //         hideInMenu: true,
+    //         title: '404'
+    //     }
+    // },
 ];
 
 const router = createRouter({
     // hash 模式。
     history: createWebHashHistory(),
-    routes
+    routes: staticRoutes
 });
 
 export default router;

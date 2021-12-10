@@ -2,6 +2,7 @@ import {createApp} from 'vue';
 import router from './router';
 import App from './App.vue';
 import {createPinia} from 'pinia';
+import 'ant-design-vue/dist/antd.css';
 import '@/assets/styles/index.scss'
 import '@/router/permission'
 

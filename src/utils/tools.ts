@@ -14,11 +14,11 @@ export const delHideMenu = (menus: RouteRecordRaw[] | undefined, hideKey = 'hide
     }
     menus.forEach((item, index) => {
         // 遍历子节点
-        delHideMenu(item.children)
         if (item?.meta?.[hideKey]) {
             // 删除hide
             menus.splice(index, 1)
         }
+        delHideMenu(item.children)
     })
     return menus;
 }

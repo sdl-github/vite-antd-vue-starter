@@ -46,7 +46,7 @@ type IState = {
 const state = reactive<IState>({
   data: [],
   pageNo: 1,
-  pageSize: 64,
+  pageSize: 128,
   totalCount: 0,
   nameLike: "",
 });
@@ -60,6 +60,8 @@ const handleInitData = () => {
   }
 };
 const handleCopyIcon = (item: string, e: any) => {
+  console.log('copy');
+  
   handleClipboard(`<RemixIcon :icon="${item}" />`, e);
 };
 const handleCurrentChange = (val: number) => {

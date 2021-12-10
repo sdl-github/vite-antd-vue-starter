@@ -1,30 +1,28 @@
 <template>
-  <div class="layout">
-    <a-layout>
-      <a-layout-sider
-        class="layout-sider"
-        v-model:collapsed="collapsed"
-        :trigger="null"
+  <a-layout class="layout">
+    <a-layout-sider
+      class="layout-sider"
+      v-model:collapsed="collapsed"
+      :trigger="null"
+      :theme="theme"
+      collapsible
+    >
+      <Logo />
+      <a-menu
         :theme="theme"
-        collapsible
+        mode="inline"
+        v-model:selectedKeys="state.selectedKeys"
+        v-model:openKeys="state.openKeys"
       >
-        <Logo />
-        <a-menu
-          :theme="theme"
-          mode="inline"
-          v-model:selectedKeys="state.selectedKeys"
-          v-model:openKeys="state.openKeys"
-        >
-          <SideMenu v-for="route in routes" :key="route.path" :item="route" />
-        </a-menu>
-      </a-layout-sider>
+        <SideMenu v-for="route in routes" :key="route.path" :item="route" />
+      </a-menu>
+    </a-layout-sider>
 
-      <a-layout class="main-layout">
-        <Header />
-        <Main />
-      </a-layout>
+    <a-layout class="main-layout">
+      <Header />
+      <Main />
     </a-layout>
-  </div>
+  </a-layout>
 </template>
 <script lang="ts">
 import SideMenu from "@/layout/components/SideMenu/index.vue";
@@ -53,7 +51,7 @@ export default defineComponent({
     });
     const store = appStore();
     const toggleCollapse = store.toggleCollapse;
-    const routes = computed(() => delHideMenu(store.routes));
+    const routes = computed(() => delHideMenu(store.sideMenu));
     const route = useRoute();
     const { path, matched } = route;
 
@@ -61,7 +59,7 @@ export default defineComponent({
       state.openKeys = [matched[0].path];
       state.selectedKeys = [path];
     });
-
+    
     return {
       collapsed: computed(() => store.collapsed),
       theme: computed(() => store.theme),
@@ -76,14 +74,12 @@ export default defineComponent({
 <style scoped lang="scss">
 .layout {
   height: 100vh;
-  //font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
+  font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
   .layout-sider {
-    //height: 100%;
+    height: 100%;
   }
   .main-layout {
-    min-height: 100vh;
-    //padding-left: 250px;
-    //transition: all 0.2s;
+    min-height: 100%;
   }
 }
 </style>

@@ -1,7 +1,6 @@
 import { defineStore } from "pinia";
-import { routes } from "@/router";
-import { setVal, getVal } from "@/utils/tools";
-
+import { staticRoutes, routes } from "@/router";
+import { setVal, getVal, delHideMenu } from "@/utils/tools";
 export const appStore = defineStore({
     // id: 必须的，在所有 Store 中唯一
     id: "app",
@@ -12,11 +11,15 @@ export const appStore = defineStore({
             title: 'remix admin',
             theme: 'dark',
             logo: '',
-            routes
+            routes: [...staticRoutes, ...routes]
         }
     },
     getters: {
-        isOpend: (state) => !state.collapsed
+        isOpend: (state) => !state.collapsed,
+        sideMenu() {
+            const all = delHideMenu(this.routes)
+            return all
+        }
     },
     actions: {
         toggleCollapse() {
