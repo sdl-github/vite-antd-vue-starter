@@ -1,42 +1,37 @@
 <template>
-    <a-menu-item class="menu-item" :key="item.path" @click="handleLink">
-        <span class="anticon">
-            <RemixIcon :icon="item?.meta?.icon"/>
-        </span>
-        <span>{{ item?.meta?.title }}</span>
-    </a-menu-item>
+  <a-menu-item class="menu-item" :key="item.path">
+    <span class="anticon">
+      <RemixIcon :icon="item?.meta?.icon" />
+    </span>
+    <router-link
+      :to="{ name: (item.children && item.children[0].name) || item.name }"
+    >
+      <span>{{ item?.meta?.title }}</span>
+    </router-link>
+  </a-menu-item>
 </template>
 
 <script lang="ts">
-import router from '@/router';
-import RemixIcon from '@/components/RemixIcon.vue'
-import {defineComponent} from 'vue';
+import RemixIcon from "@/components/RemixIcon.vue";
+import { defineComponent } from "vue";
 
 export default defineComponent({
-    components: {
-        RemixIcon
+  components: {
+    RemixIcon,
+  },
+  props: {
+    item: {
+      type: Object,
+      default: {},
     },
-    props: {
-        item: {
-            type: Object,
-            default: {}
-        }
-    },
-    setup(props) {
-        const handleLink = () => {
-            const path = props.item.path
-            router.push(path)
-        }
-        return {
-            RemixIcon,
-            handleLink
-        }
-    }
-})
-
-
+  },
+  setup(props) {
+    return {
+      RemixIcon,
+    };
+  },
+});
 </script>
 
 <style scoped lang='scss'>
-
 </style>

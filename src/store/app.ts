@@ -1,6 +1,8 @@
 import { defineStore } from "pinia";
-import { staticRoutes, routes } from "@/router";
+import { staticRoutes, asyncRoutes } from "@/router";
 import { setVal, getVal, delHideMenu } from "@/utils/tools";
+import { RouteRecordRaw } from "vue-router";
+import path from 'path'
 export const appStore = defineStore({
     // id: 必须的，在所有 Store 中唯一
     id: "app",
@@ -11,7 +13,7 @@ export const appStore = defineStore({
             title: 'remix admin',
             theme: 'dark',
             logo: '',
-            routes: [...staticRoutes, ...routes]
+            routes: [...staticRoutes, ...asyncRoutes]
         }
     },
     getters: {
@@ -29,6 +31,26 @@ export const appStore = defineStore({
             } else {
                 setVal('collapsed', 'true')
             }
+        },
+        generateRoutes() {
+            const finalRoutes = filterRoutes([...staticRoutes, ...asyncRoutes])
+            console.log(finalRoutes);
+            this.routes = finalRoutes
         }
     },
 })
+
+function filterRoutes(routes: RouteRecordRaw[], baseUrl = '/') {
+    return routes.map((route) => {
+        if (route.path !== '*') {
+            route.path = path.resolve(baseUrl, route.path)
+            // @ts-ignore
+            route.fullPath = route.path
+        }
+        if (route.children) {
+            // @ts-ignore
+            route.children = filterRoutes(route.children, route.fullPath)
+        }
+        return route
+    })
+}

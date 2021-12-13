@@ -22,7 +22,7 @@ export const staticRoutes: RouteRecordRaw[] = [
 ]
 
 // 定义路由
-export const routes: RouteRecordRaw[] = [
+export const asyncRoutes: RouteRecordRaw[] = [
     {
         path: '/',
         redirect: '/dashboard/index',
@@ -117,7 +117,7 @@ export const routes: RouteRecordRaw[] = [
 const router = createRouter({
     // hash 模式。
     history: createWebHashHistory(),
-    routes: staticRoutes
+    routes: [...staticRoutes,...asyncRoutes]
 });
 
 export default router;

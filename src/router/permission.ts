@@ -8,6 +8,7 @@ router.beforeEach(async (to, from, next) => {
     NProgress.start()
     if(getToken()) {
         const store = appStore();
+        // store.generateRoutes()
         // const routers = store.routes
         // routers.forEach((item) => {
         //     router.addRoute(item)
