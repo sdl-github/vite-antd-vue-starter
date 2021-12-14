@@ -102,21 +102,13 @@ export const asyncRoutes: RouteRecordRaw[] = [
                 component: () => import('@/views/404.vue')
             }
         ]
-    },
-    {
-        path: '/:pathMatch(.*)*',
-        component: () => import('@/views/404.vue'),
-        meta: {
-            hideInMenu: true,
-            title: '404'
-        }
-    },
+    }
 ];
 
 const router = createRouter({
     // hash 模式。
     history: createWebHashHistory(),
-    routes: [...staticRoutes,...asyncRoutes]
+    routes: staticRoutes
 });
 
 export default router;

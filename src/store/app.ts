@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { staticRoutes, asyncRoutes } from "@/router";
 import { setVal, getVal, delHideMenu } from "@/utils/tools";
 import { RouteRecordRaw } from "vue-router";
-import path from 'path'
+import path from 'path-browserify'
 export const appStore = defineStore({
     // id: 必须的，在所有 Store 中唯一
     id: "app",
@@ -13,7 +13,7 @@ export const appStore = defineStore({
             title: 'remix admin',
             theme: 'dark',
             logo: '',
-            routes: [...staticRoutes, ...asyncRoutes]
+            routes: []
         }
     },
     getters: {
@@ -33,9 +33,18 @@ export const appStore = defineStore({
             }
         },
         generateRoutes() {
-            const finalRoutes = filterRoutes([...staticRoutes, ...asyncRoutes])
-            console.log(finalRoutes);
+            const none = {
+                path: '/:pathMatch(.*)*',
+                redirect: '/404',
+                meta: {
+                    hideInMenu: true,
+                    title: '404'
+                }
+            }
+            const finalRoutes = filterRoutes([...staticRoutes, ...asyncRoutes, none])
+            // @ts-ignore
             this.routes = finalRoutes
+            return finalRoutes
         }
     },
 })
