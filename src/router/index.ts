@@ -1,9 +1,9 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 import Layout from "@/layout/index.vue";
-
+export const LOGIN_PATH = '/login'
 export const staticRoutes: RouteRecordRaw[] = [
     {
-        path: '/login',
+        path: LOGIN_PATH,
         component: () => import('@/views/login.vue'),
         meta: {
             hideInMenu: true,
@@ -21,7 +21,6 @@ export const staticRoutes: RouteRecordRaw[] = [
     },
 ]
 
-// 定义路由
 export const asyncRoutes: RouteRecordRaw[] = [
     {
         path: '/',
@@ -104,14 +103,14 @@ export const asyncRoutes: RouteRecordRaw[] = [
             }
         ]
     },
-    // {
-    //     path: '/:pathMatch(.*)*',
-    //     component: () => import('@/views/404.vue'),
-    //     meta: {
-    //         hideInMenu: true,
-    //         title: '404'
-    //     }
-    // },
+    {
+        path: '/:pathMatch(.*)*',
+        component: () => import('@/views/404.vue'),
+        meta: {
+            hideInMenu: true,
+            title: '404'
+        }
+    },
 ];
 
 const router = createRouter({

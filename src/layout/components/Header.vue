@@ -8,16 +8,18 @@
     <div class="user-info">
       <a-dropdown>
         <div>
-          <span>admin</span>
-          <a-avatar
-            src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-          />
+          <a-avatar :src="userInfo.avatar" />
         </div>
 
         <template #overlay>
           <a-menu>
-            <a-menu-item> 个人信息 </a-menu-item>
-            <a-menu-item> 退出 </a-menu-item>
+            <a-menu-item>
+              <template #icon>
+                <RemixIcon icon='ri-user-line'/>
+              </template>
+              个人信息
+            </a-menu-item>
+            <a-menu-item @click="handleLogout"> 退出 </a-menu-item>
           </a-menu>
         </template>
       </a-dropdown>
@@ -25,21 +27,31 @@
   </a-layout-header>
 </template>
 <script lang="ts">
+import RemixIcon from "@/components/RemixIcon.vue";
 import { computed, defineComponent } from "vue";
 import { appStore } from "@/store/app";
+import { userStore } from "@/store/user";
 import { delHideMenu } from "@/utils/tools";
-import RemixIcon from "@/components/RemixIcon.vue";
-
+import { LOGIN_PATH } from "@/router";
+import { useRouter } from "vue-router";
 export default defineComponent({
   name: "Header",
   components: { RemixIcon },
   setup() {
     const store = appStore();
+    const user = userStore();
+    const router = useRouter();
+    const handleLogout = async () => {
+      await user.logout();
+      router.push(LOGIN_PATH);
+    };
     return {
       collapsed: computed(() => store.collapsed),
       theme: computed(() => store.theme),
       routes: computed(() => delHideMenu(store.routes)),
+      userInfo: computed(() => user.userInfo),
       toggleCollapse: store.toggleCollapse,
+      handleLogout,
     };
   },
 });
