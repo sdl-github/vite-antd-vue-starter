@@ -1,6 +1,13 @@
 <template>
   <div class="icon-container">
     <a-alert message="点击图标即可复制代码" type="success" show-icon></a-alert>
+    <a-input-search
+      v-model:value="state.nameLike"
+      size="large"
+      placeholder="请输入关键词"
+      allow-clear
+      @search="handleSearch"
+    />
     <a-row :gutter="20">
       <a-col
         v-for="(item, index) in state.data"
@@ -59,10 +66,12 @@ const handleInitData = () => {
     state.totalCount = totalCount;
   }
 };
+const handleSearch = () => {
+  state.pageNo = 1;
+  handleInitData();
+};
 const handleCopyIcon = (item: string, e: any) => {
-  console.log('copy');
-  
-  handleClipboard(`<RemixIcon :icon="${item}" />`, e);
+  handleClipboard(`<RemixIcon icon="${item}" />`, e);
 };
 const handleCurrentChange = (val: number) => {
   state.pageNo = val;
