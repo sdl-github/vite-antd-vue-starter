@@ -1,9 +1,9 @@
 <template>
-  <a-layout-header class="layout-header" style="background: #fff; padding: 0">
+  <a-layout-header class="layout-header">
     <RemixIcon
       class="trigger"
-      @click="toggleCollapse"
-      :icon="collapsed ? 'menu-unfold-fill' : 'menu-fold-fill'"
+      @click="setCollapsed(!collapsed)"
+      :icon="collapsed ? 'menu-fold-fill' : 'menu-unfold-fill'"
     />
     <div class="user-info">
       <a-dropdown>
@@ -15,7 +15,7 @@
           <a-menu>
             <a-menu-item>
               <template #icon>
-                <RemixIcon icon='ri-user-line'/>
+                <RemixIcon icon="ri-user-line" />
               </template>
               个人信息
             </a-menu-item>
@@ -31,7 +31,6 @@ import RemixIcon from "@/components/RemixIcon.vue";
 import { computed, defineComponent } from "vue";
 import { appStore } from "@/store/app";
 import { userStore } from "@/store/user";
-import { delHideMenu } from "@/utils/tools";
 import { LOGIN_PATH } from "@/router";
 import { useRouter } from "vue-router";
 export default defineComponent({
@@ -46,11 +45,10 @@ export default defineComponent({
       router.push(LOGIN_PATH);
     };
     return {
-      collapsed: computed(() => store.collapsed),
       theme: computed(() => store.theme),
-      routes: computed(() => delHideMenu(store.routes)),
+      collapsed: computed(() => store.collapsed),
       userInfo: computed(() => user.userInfo),
-      toggleCollapse: store.toggleCollapse,
+      setCollapsed: store.setCollapsed,
       handleLogout,
     };
   },
@@ -63,11 +61,13 @@ export default defineComponent({
   top: 0;
   box-shadow: 0 1px 4px rgb(0 21 41 / 8%);
   z-index: 10;
-  height: 64px;
+  height: 50px;
   display: flex;
   align-items: center;
   width: 100%;
   justify-content: space-between;
+  background: #fff;
+  padding: 0;
 }
 
 .user-info {

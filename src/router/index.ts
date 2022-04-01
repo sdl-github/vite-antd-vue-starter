@@ -1,7 +1,8 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
-import Layout from "@/layout/index.vue";
+import Layout from "@/layout/DashboardLayout.vue";
 export const LOGIN_PATH = '/login'
-export const staticRoutes: RouteRecordRaw[] = [
+
+export const routes: RouteRecordRaw[] = [
     {
         path: LOGIN_PATH,
         component: () => import('@/views/login.vue'),
@@ -19,9 +20,6 @@ export const staticRoutes: RouteRecordRaw[] = [
             title: '404'
         }
     },
-]
-
-export const asyncRoutes: RouteRecordRaw[] = [
     {
         path: '/',
         redirect: '/dashboard/index',
@@ -70,16 +68,6 @@ export const asyncRoutes: RouteRecordRaw[] = [
                 },
                 component: () => import('@/views/image/index.vue')
             },
-            {
-                path: '/example/icon',
-                name: 'Remixicon',
-                meta: {
-                    hideInMenu: false,
-                    title: 'icon',
-                    icon: 'image-line'
-                },
-                component: () => import('@/views/icon/index.vue')
-            }
         ]
     },
     {
@@ -106,9 +94,8 @@ export const asyncRoutes: RouteRecordRaw[] = [
 ];
 
 const router = createRouter({
-    // hash 模式。
     history: createWebHashHistory(),
-    routes: staticRoutes
+    routes
 });
 
 export default router;
