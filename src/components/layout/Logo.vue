@@ -1,20 +1,20 @@
 <template>
   <div class="logo">
     <img :src="logo || defaultLogo" class="sidebar-logo" />
-    <h1 class="sidebar-title">{{ name }}</h1>
+    <h1 class="sidebar-title">{{ title }}</h1>
   </div>
 </template>
 <script lang="ts">
 import { appStore } from "@/store/app";
 import { computed, defineComponent } from "vue";
+import defaultLogo from '@/assets/logo.png'
 
 export default defineComponent({
   name: "Logo",
   setup() {
     const store = appStore();
-    const defaultLogo = "";
     return {
-      name: computed(() => store.title),
+      title: computed(() => store.title),
       logo: computed(() => store.logo),
       defaultLogo,
     };

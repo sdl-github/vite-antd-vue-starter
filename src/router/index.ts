@@ -2,7 +2,7 @@ import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 import Layout from "@/layout/DashboardLayout.vue";
 export const LOGIN_PATH = '/login'
 
-export const routes: RouteRecordRaw[] = [
+const staticRoutes: RouteRecordRaw[] = [
     {
         path: LOGIN_PATH,
         component: () => import('@/views/login.vue'),
@@ -20,6 +20,10 @@ export const routes: RouteRecordRaw[] = [
             title: '404'
         }
     },
+]
+
+const asyncRoutes: RouteRecordRaw[] = [
+
     {
         path: '/',
         redirect: '/dashboard/index',
@@ -46,6 +50,47 @@ export const routes: RouteRecordRaw[] = [
                     icon: 'dashboard-3-line'
                 },
                 component: () => import('@/views/index.vue')
+            }
+        ]
+    },
+    {
+        path: '/system',
+        component: Layout,
+        meta: {
+            hideInMenu: false,
+            title: '系统管理',
+            icon: 'folder-user-line'
+        },
+        children: [
+            {
+                path: '/system/user',
+                name: 'user',
+                meta: {
+                    hideInMenu: false,
+                    title: '用户管理',
+                    icon: 'user-3-line'
+                },
+                component: () => import('@/views/system/user/index.vue')
+            },
+            {
+                path: '/system/role',
+                name: 'role',
+                meta: {
+                    hideInMenu: false,
+                    title: '角色管理',
+                    icon: 'role-3-line'
+                },
+                component: () => import('@/views/system/role/index.vue')
+            },
+            {
+                path: '/system/permission',
+                name: 'permission',
+                meta: {
+                    hideInMenu: false,
+                    title: '权限管理',
+                    icon: 'permission-3-line'
+                },
+                component: () => import('@/views/system/permission/index.vue')
             }
         ]
     },
@@ -92,6 +137,8 @@ export const routes: RouteRecordRaw[] = [
         ]
     }
 ];
+
+export const routes = [...staticRoutes, ...asyncRoutes]
 
 const router = createRouter({
     history: createWebHashHistory(),

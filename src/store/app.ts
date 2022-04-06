@@ -6,7 +6,7 @@ export const appStore = defineStore({
         return {
             title: 'super admin',
             theme: 'dark',
-            logo: '@/assets/logo.png',
+            logo: '',
             collapsed: false
         }
     },
