@@ -23,7 +23,6 @@ const staticRoutes: RouteRecordRaw[] = [
 ]
 
 const asyncRoutes: RouteRecordRaw[] = [
-
     {
         path: '/',
         redirect: '/dashboard/index',
@@ -37,7 +36,7 @@ const asyncRoutes: RouteRecordRaw[] = [
         component: Layout,
         meta: {
             hideInMenu: false,
-            title: 'Dashboard',
+            title: '总览',
             icon: 'dashboard-3-line'
         },
         children: [
@@ -119,7 +118,7 @@ const asyncRoutes: RouteRecordRaw[] = [
         path: '/error',
         component: Layout,
         meta: {
-            hideInMenu: false,
+            hideInMenu: true,
             title: 'Error',
             icon: 'dashboard-3-line'
         },
