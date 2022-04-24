@@ -1,42 +1,37 @@
 <template>
-    <a-layout-content class="content">
-        <router-view v-slot="{ Component }">
-            <transition mode="out-in" name="fade-transform">
-                <component :is="Component"/>
-            </transition>
-        </router-view>
-    </a-layout-content>
+  <a-layout-content class="content">
+    <router-view />
+  </a-layout-content>
 </template>
 <script lang="ts">
-import {defineComponent} from "vue";
+import { defineComponent } from "vue";
 
 export default defineComponent({
-    name: "Main",
-})
+  name: "Main",
+});
 </script>
 
 <style lang="scss" scoped>
 .content {
-    margin: 10px;
-    padding: 10px;
-    background-color: #fff;
-    position: relative;
-    overflow: auto;
+  margin: 10px;
+  padding: 10px;
+  background-color: #fff;
+  position: relative;
+  overflow: auto;
 }
 
 .fade-transform-leave-active,
 .fade-transform-enter-active {
-    transition: all 0.2s;
+  transition: all 0.2s;
 }
 
 .fade-transform-enter {
-    opacity: 0;
-    transform: translateX(-30px);
+  opacity: 0;
+  transform: translateX(-30px);
 }
 
 .fade-transform-leave-to {
-    opacity: 0;
-    transform: translateX(30px);
+  opacity: 0;
+  transform: translateX(30px);
 }
-
 </style>

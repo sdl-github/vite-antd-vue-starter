@@ -1,8 +1,8 @@
 import { notification } from 'ant-design-vue';
 import axios from 'axios';
 import { getToken, removeToken } from '../auth';
-// const baseURL = 'http://101.35.96.91:2333/graphql';
-const baseURL = 'http://localhost:2333/graphql';
+const baseURL = 'http://101.35.96.91:2333/graphql';
+// const baseURL = 'http://localhost:2333/graphql';
 
 const request = axios.create({
     baseURL,
