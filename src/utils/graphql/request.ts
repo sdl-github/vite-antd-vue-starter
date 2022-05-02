@@ -51,7 +51,7 @@ function handleError(data: any) {
             message: '提示',
             description: msg || "网络错误，请稍候再试",
         });
-        // throw new Error(msg);
+        throw new Error(msg);
     }
 }
 

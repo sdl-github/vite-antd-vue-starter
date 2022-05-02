@@ -134,7 +134,7 @@ const asyncRoutes: RouteRecordRaw[] = [
                 component: () => import('@/views/404.vue')
             }
         ]
-    }
+    },
 ];
 
 export const routes = [...staticRoutes, ...asyncRoutes]

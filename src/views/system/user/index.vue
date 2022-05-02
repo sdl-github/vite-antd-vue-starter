@@ -1,6 +1,6 @@
-
 <template>
   <div class="container">
+    <TableSearchCard/>
     <div class="table-header">
       <a-button @click='handleOpenCreate' type="primary">新建</a-button>
       <div class="table-action">
@@ -9,21 +9,37 @@
             <span>刷新</span>
           </template>
           <a-button @click="initData" type="text" shape="circle">
-            <RemixIcon icon="refresh-line" />
+            <RemixIcon icon="refresh-line"/>
           </a-button>
         </a-tooltip>
       </div>
     </div>
     <a-table
-      :columns="columns"
-      :row-key="(record) => record.id"
-      :data-source="state.dataList"
-      :loading="state.loading"
+        :scroll="{ x: 1500 }"
+        :columns="columns"
+        :row-key="(record) => record.id"
+        :data-source="state.dataList"
+        :loading="state.loading"
     >
       <template #bodyCell="{ column, record }">
         <template v-if="column.dataIndex === 'avatar'">
           <span>
             <a-avatar :src="record.avatar">{{ record.username }}</a-avatar>
+          </span>
+        </template>
+        <template v-if="column.dataIndex === 'nickname'">
+          <span>
+              {{ formatValue(record.nickname) }}
+          </span>
+        </template>
+        <template v-if="column.dataIndex === 'phone'">
+          <span>
+              {{ formatValue(record.phone) }}
+          </span>
+        </template>
+        <template v-if="column.dataIndex === 'email'">
+          <span>
+              {{ formatValue(record.email) }}
           </span>
         </template>
         <template v-if="column.dataIndex === 'gender'">
@@ -36,37 +52,48 @@
             {{ formatDate(record.createdAt) }}
           </span>
         </template>
+        <template v-if="column.dataIndex === 'roles'">
+          <span v-if="record.roles.length > 0">
+            <a-tag style="margin: 5px" v-for="role in record.roles" :key="role.id" color="blue">{{ role.name }}</a-tag>
+          </span>
+          <span v-else> -- </span>
+        </template>
         <template v-if="column.key === 'operation'">
           <span>
-            <a @click='handleOpenEdit'>编辑</a>
-            <a-divider type="vertical" />
-            <a>删除</a>
+            <a @click='handleOpenEdit(record)'>编辑</a>
+            <a-divider type="vertical"/>
+             <a-popconfirm
+                 :title="`确定要删除${record.username}?`"
+                 ok-text="确定"
+                 cancel-text="取消"
+                 @confirm="handleDelete(record.id)"
+             >
+               <a>删除</a>
+             </a-popconfirm>
+            <a-divider type="vertical"/>
+            <a @click='handleOpenEdit(record)'>重置密码</a>
           </span>
         </template>
       </template>
     </a-table>
-
-    <UserModal 
-    :modalVisible='state.modalVisible'
-    @handleModalVisible='(v) => {
-      state.modalVisible = v
-    }'
+    <UserModal
+        :current-item="state.currentItem"
+        v-model:modalVisible='state.modalVisible'
+        @handleOk="handleOk"
     />
   </div>
 </template>
 <script setup lang="ts">
+import TableSearchCard from "./components/TableSearchCard.vue";
 import UserModal from './components/UserModal.vue'
-import { queryUserList } from "@/api/user";
-import { UserGenderEnum } from "@/utils/graphql/zeus";
-import { onMounted, reactive } from "vue";
-import { IState, IUser } from "./data";
-import type { TableColumnType } from "ant-design-vue";
+import {createUser, delUsers, editUser, queryUserList} from "@/api/user";
+import {onMounted, reactive} from "vue";
+import {ICreateUserInput, IEditUserInput, IState, IUser, IUserActionModal} from "./data";
+import type {TableColumnType} from "ant-design-vue";
 import RemixIcon from "@/components/RemixIcon.vue";
 import dayjs from "dayjs";
+import {message} from "ant-design-vue";
 
-const MALE = UserGenderEnum.MALE;
-const FEMALE = UserGenderEnum.FEMALE;
-const UNKNOWN = UserGenderEnum.UNKNOWN;
 enum GenderEnum {
   MALE = "男",
   FEMALE = "女",
@@ -79,6 +106,11 @@ const state = reactive<IState>({
   dataList: [],
   loading: false,
   modalVisible: false,
+  currentItem: {
+    id: '',
+    username: '',
+    roles: []
+  }
 });
 
 const columns: TableColumnType<IUser>[] = [
@@ -119,13 +151,20 @@ const columns: TableColumnType<IUser>[] = [
     dataIndex: "gender",
   },
   {
+    title: "角色",
+    align: "center",
+    width: 300,
+    dataIndex: "roles",
+  },
+  {
     title: "创建时间",
     align: "center",
+    width: 160,
     dataIndex: "createdAt",
   },
   {
     title: "操作",
-    width: 120,
+    width: 180,
     fixed: "right",
     key: "operation",
     align: "center",
@@ -137,11 +176,11 @@ onMounted(() => {
 });
 
 // 初始化数据
-async function initData(params:type){
+async function initData() {
   state.loading = true;
-  const { pageNo, pageSize } = state;
+  const {pageNo, pageSize} = state;
   const {
-    getUserList: { data },
+    getUserList: {data},
   } = await queryUserList({
     pageNo,
     pageSize,
@@ -151,15 +190,76 @@ async function initData(params:type){
   state.loading = false;
 };
 
-function formatDate (date: string){
+function formatDate(date: string) {
   return dayjs(date).format("YYYY-MM-DD HH:mm");
 };
 
-function handleOpenEdit () {
+function formatValue(value: string) {
+  return value ? value : '--'
+}
+
+function handleOpenEdit(record: IUser) {
+  state.currentItem = record
   state.modalVisible = true
 }
-function handleOpenCreate () {
+
+function handleOpenCreate() {
+  state.currentItem = {} as any
   state.modalVisible = true
+}
+
+async function handleOk(v: IUserActionModal) {
+  console.log(v)
+  let success;
+  if (v.id) {
+    success = await handleUpdate(v)
+  } else {
+    success = await handleCreate(v)
+  }
+  if (success) {
+    state.modalVisible = false
+    await initData()
+  }
+}
+
+async function handleUpdate(v: IEditUserInput) {
+  const loading = message.loading('加载中', 0);
+  try {
+    await editUser(v)
+    loading()
+    message.success('成功');
+    return true
+  } catch (e) {
+    loading()
+    return false
+  }
+}
+
+async function handleCreate(v: ICreateUserInput) {
+  const loading = message.loading('加载中', 0);
+  try {
+    await createUser(v)
+    loading()
+    message.success('成功');
+    return true
+  } catch (e) {
+    loading()
+    return false
+  }
+}
+
+async function handleDelete(id: string) {
+  const loading = message.loading('加载中', 0);
+  try {
+    await delUsers([id])
+    loading()
+    initData()
+    message.success('成功');
+    return true
+  } catch (e) {
+    loading()
+    return false
+  }
 }
 </script>
 
@@ -168,15 +268,18 @@ function handleOpenCreate () {
   margin-bottom: 16px;
   background: #fff;
 }
+
 .container {
   width: 100%;
   background: #fff;
+
   .table-header {
     height: 64px;
     padding: 16px 0;
     display: flex;
     justify-content: flex-end;
   }
+
   .table-action {
     display: flex;
     align-items: center;

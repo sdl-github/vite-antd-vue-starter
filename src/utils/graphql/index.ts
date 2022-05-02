@@ -4,7 +4,7 @@ import request from './request';
 const thunder = Thunder(async (query) => {
     return request({
         method: 'POST',
-        data: { query}
+        data: { query }
     })
 })
 
