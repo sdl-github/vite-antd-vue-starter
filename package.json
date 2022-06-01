@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite --host",
-    "build": "vue-tsc --noEmit && vite build",
+    "build": "vite build",
     "serve": "vite preview",
     "z": "npx graphql-zeus http://101.35.96.91:2333/graphql ./src/utils/graphql --ts"
   },
