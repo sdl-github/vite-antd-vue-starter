@@ -15,8 +15,8 @@
         </a-tooltip>
       </div>
     </div>
-    <a-table :scroll="{ x: 1500 }" :columns="columns" :row-key="(record) => record.id" :data-source="state.dataList"
-      :loading="state.loading">
+    <a-table :pagination="false" :scroll="{ x: 1500 }" :columns="columns" :row-key="(record: any) => record.id"
+      :data-source="state.dataList" :loading="state.loading">
       <template #bodyCell="{ column, record }">
         <template v-if="column.dataIndex === 'avatar'">
           <span>
@@ -68,6 +68,11 @@
         </template>
       </template>
     </a-table>
+    <div class="pagination-card">
+      <a-pagination v-model:current="state.pageNo" v-model:pageSize="state.pageSize" show-size-changer
+        :total="state.total" :show-total="() => `共 ${state.total} 条`" @change="handleShowSizeChange" />
+    </div>
+
     <UserModal :current-item="state.currentItem" v-model:modalVisible='state.modalVisible' @handleOk="handleOk" />
   </div>
 </template>
@@ -91,6 +96,7 @@ enum GenderEnum {
 const state = reactive<IState>({
   pageNo: 1,
   pageSize: 10,
+  total: 10,
   dataList: [],
   loading: false,
   modalVisible: false,
@@ -175,37 +181,38 @@ async function initData() {
   state.loading = true;
   const { pageNo, pageSize, searchParams } = state;
   const {
-    getUserList: { data },
+    getUserList: { data, totalCount },
   } = await queryUserList({
     pageNo,
     pageSize,
     includeRole: true,
     ...searchParams,
   });
+  state.total = totalCount
   state.dataList = data as IUser[];
   state.loading = false;
 };
 
+// 格式化时间
 function formatDate(date: string) {
   return dayjs(date).format("YYYY-MM-DD HH:mm");
 };
-
+// 格式化内容
 function formatValue(value: string) {
   return value ? value : '--'
 }
-
+// 打开编辑
 function handleOpenEdit(record: IUser) {
   state.currentItem = record
   state.modalVisible = true
 }
-
+// 打开创建
 function handleOpenCreate() {
   state.currentItem = {} as any
   state.modalVisible = true
 }
-
+// 完成 创建/编辑 请求
 async function handleOk(v: IUserActionModal) {
-  console.log(v)
   let success;
   if (v.id) {
     success = await handleUpdate(v)
@@ -218,6 +225,7 @@ async function handleOk(v: IUserActionModal) {
   }
 }
 
+// 编辑请求
 async function handleUpdate(v: IEditUserInput) {
   const loading = message.loading('加载中', 0);
   try {
@@ -230,7 +238,7 @@ async function handleUpdate(v: IEditUserInput) {
     return false
   }
 }
-
+// 创建请求
 async function handleCreate(v: ICreateUserInput) {
   const loading = message.loading('加载中', 0);
   try {
@@ -243,7 +251,7 @@ async function handleCreate(v: ICreateUserInput) {
     return false
   }
 }
-
+// 删除请求
 async function handleDelete(id: string) {
   const loading = message.loading('加载中', 0);
   try {
@@ -257,9 +265,17 @@ async function handleDelete(id: string) {
     return false
   }
 }
-
+// 搜索回调
 function handleSearch(v: any) {
   state.searchParams = v
+  state.pageNo = 1
+  state.pageSize = 10
+  initData()
+}
+// 分页回调
+function handleShowSizeChange(current: number, pageSize: number) {
+  state.pageNo = current
+  state.pageSize = pageSize
   initData()
 }
 </script>
@@ -284,6 +300,17 @@ function handleSearch(v: any) {
     display: flex;
     align-items: center;
     margin-left: 16px;
+  }
+
+  .pagination-card{
+    height: 60px;
+    width: 100%;
+    background: #fff;
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 20px;
   }
 }
 </style>

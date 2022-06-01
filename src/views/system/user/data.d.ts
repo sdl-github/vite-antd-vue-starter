@@ -7,6 +7,7 @@ export type IUserActionModal = ICreateUserInput & IEditUserInput
 export type IState = {
     pageNo: number,
     pageSize: number,
+    total: number,
     dataList: IUser[],
     loading: boolean,
     modalVisible: boolean,
