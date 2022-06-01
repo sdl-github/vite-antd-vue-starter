@@ -15,7 +15,6 @@ export default defineComponent({
 .content {
   margin: 10px;
   padding: 10px;
-  background-color: #fff;
   position: relative;
   overflow: auto;
 }

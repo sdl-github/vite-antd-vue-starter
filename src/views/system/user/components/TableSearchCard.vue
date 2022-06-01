@@ -1,5 +1,5 @@
 <template>
-  <a-card :bordered="false">
+  <a-card class="search_card" :bordered="false">
     <a-row :gutter="[16, 16]">
       <a-col :md="9" :sm="24">
         <a-form-item
@@ -47,21 +47,12 @@
             </template>
             <span>搜索</span>
           </a-button>
-          <a-button>
+          <a-button style="margin-left:20px">
             <template #icon>
               <RedoOutlined />
             </template>
             <span>重置</span>
           </a-button>
-          <a @click="advanced = !advanced">
-            <span>
-              {{ advanced ? "收起" : "展开" }}
-            </span>
-            <span>
-              <UpOutlined v-if="advanced" />
-              <DownOutlined v-else />
-            </span>
-          </a>
         </span>
       </a-col>
     </a-row>
@@ -92,4 +83,5 @@ function handleSearch() {
 </script>
 
 <style lang="scss" scoped>
+
 </style>

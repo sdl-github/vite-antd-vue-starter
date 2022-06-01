@@ -271,7 +271,6 @@ async function handleDelete(id: string) {
 
 .container {
   width: 100%;
-  background: #fff;
 
   .table-header {
     height: 64px;
