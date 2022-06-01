@@ -1,6 +1,7 @@
 <template>
   <div class="container">
-    <TableSearchCard/>
+    <TableSearchCard @handleSearch='handleSearch' />
+
     <div class="table-header">
       <a-button @click='handleOpenCreate' type="primary">新建</a-button>
       <div class="table-action">
@@ -9,18 +10,13 @@
             <span>刷新</span>
           </template>
           <a-button @click="initData" type="text" shape="circle">
-            <RemixIcon icon="refresh-line"/>
+            <RemixIcon icon="refresh-line" />
           </a-button>
         </a-tooltip>
       </div>
     </div>
-    <a-table
-        :scroll="{ x: 1500 }"
-        :columns="columns"
-        :row-key="(record) => record.id"
-        :data-source="state.dataList"
-        :loading="state.loading"
-    >
+    <a-table :scroll="{ x: 1500 }" :columns="columns" :row-key="(record) => record.id" :data-source="state.dataList"
+      :loading="state.loading">
       <template #bodyCell="{ column, record }">
         <template v-if="column.dataIndex === 'avatar'">
           <span>
@@ -29,17 +25,17 @@
         </template>
         <template v-if="column.dataIndex === 'nickname'">
           <span>
-              {{ formatValue(record.nickname) }}
+            {{ formatValue(record.nickname) }}
           </span>
         </template>
         <template v-if="column.dataIndex === 'phone'">
           <span>
-              {{ formatValue(record.phone) }}
+            {{ formatValue(record.phone) }}
           </span>
         </template>
         <template v-if="column.dataIndex === 'email'">
           <span>
-              {{ formatValue(record.email) }}
+            {{ formatValue(record.email) }}
           </span>
         </template>
         <template v-if="column.dataIndex === 'gender'">
@@ -61,38 +57,30 @@
         <template v-if="column.key === 'operation'">
           <span>
             <a @click='handleOpenEdit(record)'>编辑</a>
-            <a-divider type="vertical"/>
-             <a-popconfirm
-                 :title="`确定要删除${record.username}?`"
-                 ok-text="确定"
-                 cancel-text="取消"
-                 @confirm="handleDelete(record.id)"
-             >
-               <a>删除</a>
-             </a-popconfirm>
-            <a-divider type="vertical"/>
+            <a-divider type="vertical" />
+            <a-popconfirm :title="`确定要删除${record.username}?`" ok-text="确定" cancel-text="取消"
+              @confirm="handleDelete(record.id)">
+              <a>删除</a>
+            </a-popconfirm>
+            <a-divider type="vertical" />
             <a @click='handleOpenEdit(record)'>重置密码</a>
           </span>
         </template>
       </template>
     </a-table>
-    <UserModal
-        :current-item="state.currentItem"
-        v-model:modalVisible='state.modalVisible'
-        @handleOk="handleOk"
-    />
+    <UserModal :current-item="state.currentItem" v-model:modalVisible='state.modalVisible' @handleOk="handleOk" />
   </div>
 </template>
 <script setup lang="ts">
 import TableSearchCard from "./components/TableSearchCard.vue";
 import UserModal from './components/UserModal.vue'
-import {createUser, delUsers, editUser, queryUserList} from "@/api/user";
-import {onMounted, reactive} from "vue";
-import {ICreateUserInput, IEditUserInput, IState, IUser, IUserActionModal} from "./data";
-import type {TableColumnType} from "ant-design-vue";
+import { createUser, delUsers, editUser, queryUserList } from "@/api/user";
+import { onMounted, reactive } from "vue";
+import { ICreateUserInput, IEditUserInput, IState, IUser, IUserActionModal } from "./data";
+import type { TableColumnType } from "ant-design-vue";
 import RemixIcon from "@/components/RemixIcon.vue";
 import dayjs from "dayjs";
-import {message} from "ant-design-vue";
+import { message } from "ant-design-vue";
 
 enum GenderEnum {
   MALE = "男",
@@ -110,6 +98,13 @@ const state = reactive<IState>({
     id: '',
     username: '',
     roles: []
+  },
+  searchParams: {
+    username: '',
+    phone: '',
+    email: '',
+    from: '',
+    to: ''
   }
 });
 
@@ -178,13 +173,14 @@ onMounted(() => {
 // 初始化数据
 async function initData() {
   state.loading = true;
-  const {pageNo, pageSize} = state;
+  const { pageNo, pageSize, searchParams } = state;
   const {
-    getUserList: {data},
+    getUserList: { data },
   } = await queryUserList({
     pageNo,
     pageSize,
     includeRole: true,
+    ...searchParams,
   });
   state.dataList = data as IUser[];
   state.loading = false;
@@ -260,6 +256,11 @@ async function handleDelete(id: string) {
     loading()
     return false
   }
+}
+
+function handleSearch(v: any) {
+  state.searchParams = v
+  initData()
 }
 </script>
 

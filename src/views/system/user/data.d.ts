@@ -1,4 +1,4 @@
-import {ModelTypes, ValueTypes} from "@/utils/graphql/zeus";
+import { ModelTypes, ValueTypes } from "@/utils/graphql/zeus";
 
 export type IUser = ModelTypes["User"]
 export type ICreateUserInput = ValueTypes["CreateUserInput"]
@@ -10,5 +10,12 @@ export type IState = {
     dataList: IUser[],
     loading: boolean,
     modalVisible: boolean,
-    currentItem: IUser
+    currentItem: IUser,
+    searchParams: {
+        username: string,
+        phone: string,
+        email: string,
+        from: string,
+        to: string
+    }
 }

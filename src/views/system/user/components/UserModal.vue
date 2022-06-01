@@ -1,63 +1,33 @@
 <template>
-  <a-modal
-      v-model:visible="modalVisible"
-      :destroy-on-close="true"
-      :title="currentItem?.id ? '编辑':' 创建'"
-      :confirm-loading="confirmLoading"
-      :width="600"
-      okText='确定'
-      cancelText='取消'
-      @ok="handleOk"
-      @cancel='handleCancel'
-  >
-    <a-form
-        ref="formRef"
-        :model="formState.data"
-        :label-col="{ span: 6 }"
-        :wrapper-col="{ span: 16 }"
-        autocomplete="off"
-    >
-      <a-row :gutter="[16,8]">
+  <a-modal v-model:visible="modalVisible" :destroy-on-close="true" :title="currentItem?.id ? '编辑' : ' 创建'"
+    :confirm-loading="confirmLoading" :width="600" okText='确定' cancelText='取消' @ok="handleOk" @cancel='handleCancel'>
+    <a-form ref="formRef" :model="formState.data" :label-col="{ span: 6 }" :wrapper-col="{ span: 16 }"
+      autocomplete="off">
+      <a-row :gutter="[16, 8]">
         <a-col :span="12">
-          <a-form-item
-              label="用户名"
-              name="username"
-              :rules="rules.username"
-          >
+          <a-form-item label="用户名" name="username" :rules="rules.username">
             <a-input :disabled="currentItem?.id" :placeholder="requireMessage('用户名')"
-                     v-model:value="formState.data.username"/>
+              v-model:value="formState.data.username" />
           </a-form-item>
         </a-col>
         <a-col :span="12" v-if="!currentItem?.id">
-          <a-form-item
-              label="密码"
-              name="password"
-              :rules="rules.password"
-          >
-            <a-input :placeholder="requireMessage('密码')" v-model:value="formState.data.password"/>
+          <a-form-item label="密码" name="password" :rules="rules.password">
+            <a-input :placeholder="requireMessage('密码')" v-model:value="formState.data.password" />
           </a-form-item>
         </a-col>
         <a-col :span="12">
-          <a-form-item
-              label="昵称"
-              name="nickname"
-          >
-            <a-input :placeholder="requireMessage('昵称')" v-model:value="formState.data.nickname"/>
+          <a-form-item label="昵称" name="nickname">
+            <a-input :placeholder="requireMessage('昵称')" v-model:value="formState.data.nickname" />
           </a-form-item>
         </a-col>
         <a-col :span="12">
-          <a-form-item
-              label="邮箱"
-              name="email"
-              :rules="rules.email"
-          >
-            <a-input :placeholder="requireMessage('邮箱')" v-model:value="formState.data.email"/>
+          <a-form-item label="邮箱" name="email" :rules="rules.email">
+            <a-input :placeholder="requireMessage('邮箱')" v-model:value="formState.data.email" />
           </a-form-item>
         </a-col>
         <a-col :span="12">
-          <a-form-item label="手机号码" name="phone" :rules="rules.phone"
-          >
-            <a-input :placeholder="requireMessage('手机号码')" v-model:value="formState.data.phone"/>
+          <a-form-item label="手机号码" name="phone" :rules="rules.phone">
+            <a-input :placeholder="requireMessage('手机号码')" v-model:value="formState.data.phone" />
           </a-form-item>
         </a-col>
         <a-col :span="12">
@@ -71,7 +41,7 @@
         </a-col>
         <a-col :span="12">
           <a-form-item label="角色" name="roleIds">
-            <UserRoleItem v-model:value="formState.data.roleIds"/>
+            <UserRoleItem v-model:value="formState.data.roleIds" />
           </a-form-item>
         </a-col>
       </a-row>
@@ -79,11 +49,11 @@
   </a-modal>
 </template>
 <script setup lang="ts">
-import {reactive, ref, watch} from 'vue'
-import {IUser, IUserActionModal} from "@/views/system/user/data";
-import {FormInstance} from "ant-design-vue";
+import { reactive, ref, watch } from 'vue'
+import { IUser, IUserActionModal } from "@/views/system/user/data";
+import { FormInstance } from "ant-design-vue";
 import UserRoleItem from "@/views/system/user/components/UserRoleSelect.vue";
-import {UserGenderEnum} from "@/utils/graphql/zeus";
+import { UserGenderEnum } from "@/utils/graphql/zeus";
 
 const props = defineProps({
   modalVisible: {
@@ -99,8 +69,8 @@ const props = defineProps({
 
 const formRef = ref<FormInstance>();
 const rules = {
-  username: [{required: true, message: requireMessage('用户名')}],
-  password: [{required: true, message: requireMessage('密码')}],
+  username: [{ required: true, message: requireMessage('用户名') }],
+  password: [{ required: true, message: requireMessage('密码') }],
   email: [{
     pattern: /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/,
     message: "请输入正确的邮箱",
@@ -127,8 +97,8 @@ let formState = reactive<{ data: IUserActionModal }>({
 
 watch(() => props.currentItem, (val, old) => {
   if (val.id) {
-    const {roles} = val as IUser
-    formState.data = {...val, roleIds: roles?.map((item) => item?.id)} as IUserActionModal
+    const { roles } = val as IUser
+    formState.data = { ...val, roleIds: roles?.map((item) => item?.id) } as IUserActionModal
   } else {
     formState.data = {} as IUserActionModal
   }
@@ -146,7 +116,6 @@ function handleOk() {
       v.id = props.currentItem.id
     }
     emits('handleOk', v)
-  }).catch((e) => {
   })
 }
 
