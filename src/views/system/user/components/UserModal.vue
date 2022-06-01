@@ -6,7 +6,7 @@
       <a-row :gutter="[16, 8]">
         <a-col :span="12">
           <a-form-item label="用户名" name="username" :rules="rules.username">
-            <a-input :disabled="currentItem?.id" :placeholder="requireMessage('用户名')"
+            <a-input :disabled="!!currentItem?.id" :placeholder="requireMessage('用户名')"
               v-model:value="formState.data.username" />
           </a-form-item>
         </a-col>

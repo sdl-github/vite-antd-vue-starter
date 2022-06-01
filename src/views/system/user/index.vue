@@ -96,7 +96,7 @@ enum GenderEnum {
 const state = reactive<IState>({
   pageNo: 1,
   pageSize: 10,
-  total: 10,
+  total: 0,
   dataList: [],
   loading: false,
   modalVisible: false,
