@@ -36,19 +36,7 @@ export const queryMenuList = async (input?: QueryMenuInput) => {
 
 export const queryMenuTree = async () => {
     return query({
-        getMenuTree: {
-            id: true,
-            name: true,
-            orderBy: true,
-            icon: true,
-            path: true,
-            pId: true,
-            component: true,
-            visible: true,
-            type: true,
-            permission: true,
-            createdAt: true,
-        }
+        getMenuTree: true
     })
 }
 

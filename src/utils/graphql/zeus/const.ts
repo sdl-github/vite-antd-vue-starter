@@ -15,8 +15,9 @@ export const AllTypesProps: Record<string,any> = {
 
 		}
 	},
-	DateTime: "String",
-	UserGenderEnum: true,
+	DateTime: `scalar.DateTime` as const,
+	UserGenderEnum: "enum" as const,
+	JSONObject: `scalar.JSONObject` as const,
 	Mutation:{
 		login:{
 
@@ -47,6 +48,9 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		removeUsers:{
 
+		},
+		resetUserPassword:{
+
 		}
 	},
 	CreateMenuInput:{
@@ -73,7 +77,7 @@ export const ReturnTypes: Record<string,any> = {
 	Query:{
 		hello:"String",
 		me:"LoginUser",
-		getMenuTree:"Menu",
+		getMenuTree:"JSONObject",
 		getMenuList:"MenuPageResult",
 		getRoleList:"RolePageResult",
 		getUserList:"UserPageResult"
@@ -95,6 +99,7 @@ export const ReturnTypes: Record<string,any> = {
 		permissions:"String",
 		isSuperAdmin:"Boolean"
 	},
+	DateTime: `scalar.DateTime` as const,
 	Role:{
 		id:"ID",
 		createdAt:"DateTime",
@@ -120,6 +125,7 @@ export const ReturnTypes: Record<string,any> = {
 		type:"String",
 		children:"Menu"
 	},
+	JSONObject: `scalar.JSONObject` as const,
 	MenuPageResult:{
 		data:"Menu",
 		totalCount:"Float",
@@ -159,7 +165,8 @@ export const ReturnTypes: Record<string,any> = {
 		removeRoles:"BaseResponse",
 		createUser:"BaseResponse",
 		editUser:"BaseResponse",
-		removeUsers:"BaseResponse"
+		removeUsers:"BaseResponse",
+		resetUserPassword:"BaseResponse"
 	},
 	LoginResult:{
 		code:"Float",

@@ -77,7 +77,7 @@ const asyncRoutes: RouteRecordRaw[] = [
                 meta: {
                     hideInMenu: false,
                     title: '角色管理',
-                    icon: 'role-3-line'
+                    icon: 'user-star-line'
                 },
                 component: () => import('@/views/system/role/index.vue')
             },
@@ -86,8 +86,8 @@ const asyncRoutes: RouteRecordRaw[] = [
                 name: 'permission',
                 meta: {
                     hideInMenu: false,
-                    title: '权限管理',
-                    icon: 'permission-3-line'
+                    title: '权限菜单配置',
+                    icon: 'flask-line'
                 },
                 component: () => import('@/views/system/permission/index.vue')
             }
