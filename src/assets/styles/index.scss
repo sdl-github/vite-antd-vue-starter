@@ -4,21 +4,16 @@
     font-family: Microsoft YaHei UI, Microsoft YaHei, PingFang SC, Helvetica Neue, Helvetica, Nimbus Sans L, Arial, Liberation Sans, Hiragino Sans GB, Wenquanyi Micro Hei, WenQuanYi Zen Hei, ST Heiti, WenQuanYi Zen Hei Sharp, sans-serif !important
 }
 
-/* 滚动槽 */
 ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 10px;
+    height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-    border-radius: 3px;
-    background: rgba(0, 0, 0, 0.06);
-    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.08);
+    background: #EDECE9;
 }
 
 /* 滚动条滑块 */
 ::-webkit-scrollbar-thumb {
-    border-radius: 3px;
-    background: rgba(0, 0, 0, 0.12);
-    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+    background: #D3D1CB;
 }

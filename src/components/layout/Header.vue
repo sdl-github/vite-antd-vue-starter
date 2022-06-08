@@ -1,10 +1,11 @@
 <template>
   <a-layout-header class="layout-header">
-    <RemixIcon
-      class="trigger"
-      @click="setCollapsed(!collapsed)"
-      :icon="collapsed ? 'menu-fold-fill' : 'menu-unfold-fill'"
-    />
+    <div class="layout-action">
+      <RemixIcon class="trigger" @click="setCollapsed(!collapsed)"
+        :icon="collapsed ? 'menu-unfold-fill' : 'menu-fold-fill'" />
+      <Breadcrumb />
+    </div>
+
     <div class="user-info">
       <a-dropdown>
         <div>
@@ -28,6 +29,7 @@
 </template>
 <script lang="ts">
 import RemixIcon from "@/components/RemixIcon.vue";
+import Breadcrumb from "./Breadcrumb.vue";
 import { computed, defineComponent } from "vue";
 import { appStore } from "@/store/app";
 import { userStore } from "@/store/user";
@@ -68,6 +70,12 @@ export default defineComponent({
   justify-content: space-between;
   background: #fff;
   padding: 0;
+
+  .layout-action {
+    display: flex;
+    align-items: center;
+    height: 50px;
+  }
 }
 
 .user-info {
