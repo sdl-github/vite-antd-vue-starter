@@ -1,6 +1,6 @@
 
 <template>
-    <div>
+    <div style="width:200vh;height:200vh">
         welcome
     </div>
 </template>
