@@ -1,9 +1,10 @@
 import { ModelTypes, ValueTypes } from "@/utils/graphql/zeus";
 
+
 export type IMenu = ModelTypes["Menu"]
 export type ICreateMenuInput = ValueTypes["CreateMenuInput"]
 export type IEditMenuInput = ValueTypes["EditMenuInput"]
-export type IUserActionModal = ICreateMenuInput & IEditMenuInput
+export type IMenuActionModal = ICreateMenuInput & IEditMenuInput
 export type IState = {
     pageNo: number,
     pageSize: number,
