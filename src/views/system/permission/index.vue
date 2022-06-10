@@ -35,7 +35,7 @@
         </template>
         <template v-if="column.key === 'operation'">
           <span>
-            <a>编辑</a>
+            <a @click='handleOpenEdit(record)'>编辑</a>
             <a-divider type="vertical" />
             <a-popconfirm :title="`确定要删除${record.username}?`" ok-text="确定" cancel-text="取消">
               <a>删除</a>
@@ -44,19 +44,18 @@
         </template>
       </template>
     </a-table>
-    <PermissionModal :current-item="state.currentItem" v-model:modalVisible='state.modalVisible' @handleOk="handleOk"/>
+    <PermissionModal :current-item="state.currentItem" v-model:modalVisible='state.modalVisible' @handleOk="handleOk" />
   </div>
 
 </template>
 <script setup lang="ts">
-import { queryMenuTree } from '@/api/menu';
+import { queryMenuTree, createMenu, updateMenu } from '@/api/menu';
 import { onMounted, reactive } from 'vue';
-import { IMenu, IState } from './data';
-import type { TableColumnType } from "ant-design-vue";
+import { ICreateMenuInput, IEditMenuInput, IMenu, IState } from './data';
+import { message, TableColumnType } from "ant-design-vue";
 import RemixIcon from '@/components/RemixIcon.vue';
 import PermissionModal from './components/PermissionModal.vue';
 import dayjs from 'dayjs';
-import RemixIconSelect from '@/components/RemixIconSelect/index.vue';
 
 enum PermissionTypeEnum {
   MENU = "菜单",
@@ -154,12 +153,54 @@ function formatDate(date: string) {
 };
 
 function handleOpenCreate() {
+  state.currentItem = {} as any
   state.modalVisible = true;
 }
 
-function handleOk() {
-  state.modalVisible = false;
-  initData();
+function handleOpenEdit(record: IMenu) {
+  state.currentItem = record;
+  state.modalVisible = true;
+}
+
+async function handleOk(v: any) {
+  console.log(v);
+  let success;
+  if (v.id) {
+    success = await handleUpdate(v)
+  } else {
+    success = await handleCreate(v)
+  }
+  if (success) {
+    state.modalVisible = false
+    await initData()
+  }
+}
+
+// 编辑请求
+async function handleUpdate(v: IEditMenuInput) {
+  const loading = message.loading('加载中', 0);
+  try {
+    await updateMenu(v)
+    loading()
+    message.success('成功');
+    return true
+  } catch (e) {
+    loading()
+    return false
+  }
+}
+// 创建请求
+async function handleCreate(v: ICreateMenuInput) {
+  const loading = message.loading('加载中', 0);
+  try {
+    await createMenu(v)
+    loading()
+    message.success('成功');
+    return true
+  } catch (e) {
+    loading()
+    return false
+  }
 }
 </script>
 

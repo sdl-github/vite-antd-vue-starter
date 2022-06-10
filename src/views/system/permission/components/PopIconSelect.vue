@@ -13,7 +13,6 @@ const visible = ref(false);
 const emits = defineEmits(['update:value'])
 
 function onSelect(value: string) {
-    console.log(value);
     visible.value = false;
     emits('update:value', value);
 }
@@ -21,7 +20,7 @@ function onSelect(value: string) {
 </script>
 
 <template>
-    <a-popover placement="bottom" trigger="click" v-model="visible">
+    <a-popover placement="bottom" trigger="click" destroyTooltipOnHide  v-model:visible="visible">
         <template #content>
             <div class="icon_select_content">
                 <RemixIconSelect @onSelect='onSelect' />
