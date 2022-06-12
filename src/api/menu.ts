@@ -7,6 +7,7 @@ type editMenuInput = ValueTypes["EditMenuInput"];
 export type QueryMenuInput = {
     id?: string
     name?: string
+    type?: string
     from?: string
     to?: string
 }

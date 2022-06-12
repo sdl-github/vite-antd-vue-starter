@@ -10,13 +10,15 @@ hello?: [{	name:string},boolean],
 	/** 获取我的信息 */
 	me?:ValueTypes["LoginUser"],
 getMenuTree?: [{	/** 角色id */
-	id?:string | null,	/** 角色名 */
+	id?:string | null,	/** 类型 */
+	type?:string | null,	/** 角色名 */
 	name?:string | null,	/** 是否可见 */
 	visible?:boolean | null,	/** 开始时间YYYY-DD-MM */
 	from?:string | null,	/** 结束时间YYYY-DD-MM */
 	to?:string | null},boolean],
 getMenuList?: [{	/** 角色id */
-	id?:string | null,	/** 角色名 */
+	id?:string | null,	/** 类型 */
+	type?:string | null,	/** 角色名 */
 	name?:string | null,	/** 是否可见 */
 	visible?:boolean | null,	/** 开始时间YYYY-DD-MM */
 	from?:string | null,	/** 结束时间YYYY-DD-MM */

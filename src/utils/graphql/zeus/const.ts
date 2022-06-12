@@ -17,6 +17,12 @@ export const AllTypesProps: Record<string,any> = {
 				arrayRequired:false,
 				required:false
 			},
+			type:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
 			name:{
 				type:"String",
 				array:false,
@@ -44,6 +50,12 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		getMenuList:{
 			id:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			type:{
 				type:"String",
 				array:false,
 				arrayRequired:false,
