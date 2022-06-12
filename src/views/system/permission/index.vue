@@ -26,7 +26,7 @@
           <RemixIcon :icon="record.icon"/>
         </template>
         <template v-if="column.dataIndex === 'visible'">
-          <a-switch v-model:checked="record.visible"/>
+          <a-switch @change="handleOk(record)" v-model:checked="record.visible"/>
         </template>
         <template v-if="column.dataIndex === 'createdAt'">
           <span>
@@ -207,6 +207,7 @@ function handleSearch(params: QueryMenuInput) {
   state.searchParams = params
   initData()
 }
+
 </script>
 
 <style lang="scss" scoped>

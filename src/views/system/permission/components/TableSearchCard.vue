@@ -28,6 +28,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
+import { SearchOutlined, RedoOutlined } from "@ant-design/icons-vue";
 import {QueryMenuInput} from "@/api/menu";
 
 const form = ref<QueryMenuInput>({
