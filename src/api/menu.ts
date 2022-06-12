@@ -1,10 +1,14 @@
-import { mutation, query } from '@/utils/graphql';
-import type { ValueTypes } from "@/utils/graphql/zeus"
+import {mutation, query} from '@/utils/graphql';
+import type {ValueTypes} from "@/utils/graphql/zeus"
+
 type createMenuInput = ValueTypes["CreateMenuInput"];
 type editMenuInput = ValueTypes["EditMenuInput"];
 
-type QueryMenuInput = {
-
+export type QueryMenuInput = {
+    id?: string
+    name?: string
+    from?: string
+    to?: string
 }
 
 export const queryMenuList = async (input?: QueryMenuInput) => {
@@ -34,9 +38,9 @@ export const queryMenuList = async (input?: QueryMenuInput) => {
     })
 }
 
-export const queryMenuTree = async () => {
+export const queryMenuTree = async (input?: QueryMenuInput) => {
     return query({
-        getMenuTree: true
+        getMenuTree: [{...input}, true]
     })
 }
 
@@ -51,7 +55,7 @@ export const createMenu = async (input: createMenuInput) => {
             {
                 input,
             },
-            { code: true, msg: true },
+            {code: true, msg: true},
         ],
     });
 };
@@ -66,7 +70,7 @@ export const deleteMenu = async (menuIds: string[]) => {
             {
                 menuIds
             },
-            { code: true, msg: true }
+            {code: true, msg: true}
         ]
     })
 };

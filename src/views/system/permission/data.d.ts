@@ -1,4 +1,5 @@
 import { ModelTypes, ValueTypes } from "@/utils/graphql/zeus";
+import {QueryMenuInput} from "@/api/menu";
 
 
 export type IMenu = ModelTypes["Menu"]
@@ -13,7 +14,5 @@ export type IState = {
     loading: boolean,
     modalVisible: boolean,
     currentItem: IMenu,
-    searchParams: {
-  
-    }
+    searchParams?: QueryMenuInput
 }
