@@ -9,7 +9,7 @@
       <a-col :md="9" :sm="24">
         <a-form-item :label-col="{ span: 5 }" :wrapper-col="{ span: 18 }" label="菜单类型">
           <a-select v-model:value="form.type" placeholder="菜单类型">
-            <a-select-option value="FUN">功能</a-select-option>
+            <a-select-option value="FUN">权限</a-select-option>
             <a-select-option value="MENU">菜单</a-select-option>
           </a-select>
         </a-form-item>

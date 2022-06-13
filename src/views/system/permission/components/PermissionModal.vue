@@ -8,7 +8,7 @@
           <a-form-item label="类型" name="type">
             <a-radio-group v-model:value="formState.data.type" button-style="solid">
               <a-radio-button :value="IMenuTypeEnum.MENU">菜单</a-radio-button>
-              <a-radio-button :value="IMenuTypeEnum.FUN">功能</a-radio-button>
+              <a-radio-button :value="IMenuTypeEnum.FUN">权限</a-radio-button>
             </a-radio-group>
           </a-form-item>
         </a-col>

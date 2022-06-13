@@ -38,6 +38,7 @@ export const queryRoleList = async (input?: QueryRoleInput) => {
                     menus: {
                         id: true,
                         name: true,
+                        type: true,
                     }
 
                 },
