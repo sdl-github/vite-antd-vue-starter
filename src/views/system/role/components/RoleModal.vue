@@ -20,13 +20,21 @@
                             style="width:100%" />
                     </a-form-item>
                 </a-col>
+                <a-col :span="24">
+                    <a-form-item label="权限菜单" name="menuIds">
+                        <PermissionSelect v-model:value="formState.data.menuIds" />
+                    </a-form-item>
+                </a-col>
             </a-row>
         </a-form>
     </a-modal>
 </template>
+
 <script setup lang="ts">
 import { reactive, ref, watch } from 'vue'
 import { FormInstance } from "ant-design-vue";
+import PermissionSelect from './PermissionSelect.vue'
+import { IPermission } from '../type'
 const rules = {
     required: [{ required: true, message: requireMessage('必填项') }],
 }
@@ -41,19 +49,33 @@ const props = defineProps({
     },
 });
 
+
 const formRef = ref<FormInstance>();
 
 const confirmLoading = ref(false)
-let formState = reactive<{ data: any }>({
-    data: {}
+let formState = reactive<{ data: IPermission }>({
+    data: {
+        id: '',
+        name: '',
+        key: '',
+        level: 0,
+        menuIds: []
+    }
 });
 
 
 watch(() => props.currentItem, (val, old) => {
     if (val.id) {
-        formState.data = val
+        const { menus, ...others } = val
+        formState.data = { ...others, menuIds: menus.map((item: any) => item.id) } as IPermission
     } else {
-        formState.data = {}
+        formState.data = {
+            id: '',
+            name: '',
+            key: '',
+            level: 0,
+            menuIds: []
+        }
     }
 })
 
@@ -68,13 +90,15 @@ function handleOk() {
         if (props.currentItem.id) {
             v.id = props.currentItem.id
         }
-        emits('handleOk', v)
+        const { menuIds, ...others } = v
+        emits('handleOk', { ...others, menuIds: menuIds.filter((id: string) => id !== '#') })
     })
 }
 
 function handleCancel() {
     emits('update:modalVisible', false)
 }
+
 
 </script>
 

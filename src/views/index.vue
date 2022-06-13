@@ -1,6 +1,6 @@
 
 <template>
-    <div style="width:200vh;height:200vh">
+    <div class="text-red-300 text-3xl font-bold underline" style="width:200vh;height:200vh">
         welcome
     </div>
 </template>

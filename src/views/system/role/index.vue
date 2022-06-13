@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import RoleModal from './components/RoleModal.vue';
+import TableSearchCard from './components/TableSearchCard.vue';
 import { createRole, delRoles, queryRoleList, updateRole } from '@/api/role';
 import dayjs from 'dayjs';
 import { onMounted, reactive } from 'vue';
@@ -144,11 +145,18 @@ async function handleDelete(id: string) {
         return false
     }
 }
+
+function handleSearch(params: any) {
+    state.searchParams = params
+    initData()
+}
+
 </script>
 
 
 <template>
     <div class="container">
+        <TableSearchCard @handleSearch="handleSearch" />
         <div class="table-header">
             <a-button @click='handleOpenCreate' type="primary">新建</a-button>
             <div class="table-action">
@@ -170,6 +178,12 @@ async function handleDelete(id: string) {
                         {{ formatDate(record.createdAt) }}
                     </span>
                 </template>
+                <template v-if="column.dataIndex === 'key'">
+                    <span
+                        class="ml-2 px-2 py-1 bg-purple-100 dark:bg-purple-100 text-xs font-semibold text-purple-800 dark:text-purple-800 rounded uppercase">
+                        {{ record.key }}
+                    </span>
+                </template>
                 <template v-if="column.dataIndex === 'isDefault'">
                     <span>
                         {{ record.isDefault ? '是' : '否' }}
@@ -183,8 +197,6 @@ async function handleDelete(id: string) {
                             @confirm="handleDelete(record.id)">
                             <a>删除</a>
                         </a-popconfirm>
-                        <a-divider type="vertical" />
-                        <a>分配权限</a>
                     </span>
                 </template>
             </template>
