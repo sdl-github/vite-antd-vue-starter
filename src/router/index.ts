@@ -20,6 +20,23 @@ const staticRoutes: RouteRecordRaw[] = [
             title: '404'
         }
     },
+    {
+        path: '/system',
+        component: Layout,
+        meta: {
+            title: '系统管理',
+        },
+        children: [
+            {
+                path: '/system/userInfo',
+                name: 'userInfo',
+                meta: {
+                    title: '我的信息',
+                },
+                component: () => import('@/views/system/userInfo/index.vue')
+            }
+        ]
+    },
 ]
 
 const asyncRoutes: RouteRecordRaw[] = [

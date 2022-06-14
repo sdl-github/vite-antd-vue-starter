@@ -1,7 +1,7 @@
 <template>
-  <div class="logo">
-    <img :src="logo || defaultLogo" class="sidebar-logo" />
-    <h1 class="sidebar-title">{{ title }}</h1>
+  <div class="flex items-center justify-center p-1">
+    <img :src="logo || defaultLogo" class="w-10" />
+    <h1 v-show="!collapsed" class="text-white mx-2 transition-all">{{ title }}</h1>
   </div>
 </template>
 <script lang="ts">
@@ -16,6 +16,7 @@ export default defineComponent({
     return {
       title: computed(() => store.title),
       logo: computed(() => store.logo),
+      collapsed: computed(() => store.collapsed),
       defaultLogo,
     };
   },
@@ -23,28 +24,4 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.logo {
-  width: 100%;
-  height: 50px;
-  line-height: 50px;
-  text-align: center;
-  overflow: hidden;
-
-  .sidebar-logo {
-    width: 32px;
-    height: 32px;
-    vertical-align: middle;
-  }
-
-  .sidebar-title {
-    margin-left: 12px;
-    display: inline-block;
-    color: #fff;
-    font-weight: 500;
-    line-height: 50px;
-    font-size: 16px;
-    font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
-    vertical-align: middle;
-  }
-}
 </style>
