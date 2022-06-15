@@ -180,6 +180,11 @@ function onSelectChange(selectedRowKeys: string | number[]) {
 function handleSave(v) {
     handleOk(v)
 }
+
+function handleCancel() {
+    state.currentSelected = {}
+    state.selectedRowKeys = []
+}
 </script>
 
 
@@ -239,7 +244,8 @@ function handleSave(v) {
                 </div>
             </a-col>
             <a-col :span="6">
-                <PermissionSelect :currentRole='state.currentSelected' @handleSave='handleSave' />
+                <PermissionSelect :currentRole='state.currentSelected' @handleSave='handleSave'
+                    @handleCancel="handleCancel" />
             </a-col>
         </a-row>
 

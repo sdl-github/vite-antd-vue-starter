@@ -10,18 +10,23 @@ const fileName = {
 const props = defineProps({
     currentRole: {
         type: Object,
-        default: () => {},
+        default: () => { },
     },
 });
 const treeData = ref([]);
 const checkedKeys = ref([]);
 const checkPermissionKeys = ref([]);
-const emits = defineEmits(['handleSave'])
+const emits = defineEmits(['handleSave', 'handleCancel']);
 
-watchEffect(()=>{
-    const ids = props?.currentRole?.menus?.map(item => item.id);
-    checkedKeys.value = ids;
-    checkPermissionKeys.value = ids;
+watchEffect(() => {
+    if (props?.currentRole?.id) {
+        const ids = props?.currentRole?.menus?.map(item => item.id);
+        checkedKeys.value = ids;
+        checkPermissionKeys.value = ids;
+    } else {
+        checkedKeys.value = [];
+        checkPermissionKeys.value = [];
+    }
 })
 
 onMounted(() => {
@@ -33,15 +38,13 @@ async function initData() {
     treeData.value = getMenuTree as any
 }
 
-function handleCheck(checkedKeys, e) {
-    console.log(checkedKeys);
-    console.log(e);
-    const { halfCheckedKeys } = e
-    checkPermissionKeys.value = [...checkedKeys, ...halfCheckedKeys]
+function handleCheck(e) {
+    const { halfChecked, checked } = e
+    checkPermissionKeys.value = [...halfChecked, ...checked]
 }
 
 function handleSave() {
-    if(!props.currentRole.id){
+    if (!props.currentRole.id) {
         message.info('请先选择角色')
         return
     }
@@ -55,11 +58,16 @@ function handleSave() {
 <template>
     <a-card class="permission_card" title="权限配置">
         <template #extra>
+            <a-button class="mr-2" v-if="currentRole.name" @click="emits('handleCancel')">取消</a-button>
             <a-button @click="handleSave" type="primary">保存</a-button>
         </template>
-        <a-tree @check="handleCheck" v-model:checkedKeys="checkedKeys" :tree-data="treeData" :field-names="fileName"
-            :showCheckedStrategy="TreeSelect.SHOW_ALL" checkable  style="width: 100%"
-            allow-clear>
+        <div class="mb-2 ml-2 px-2 py-1 bg-purple-100 dark:bg-purple-100 text-xs font-semibold text-purple-800 dark:text-purple-800 rounded uppercase"
+            v-if="currentRole.name"> 当前选择： {{ currentRole.name }}</div>
+        <a-tree @check="handleCheck" v-model:checkedKeys="checkedKeys" :selectable="false" :tree-data="treeData"
+            :field-names="fileName" checkable checkStrictly>
+            <template #icon="{ key, selected }">
+                fuck
+            </template>
         </a-tree>
     </a-card>
 </template>
