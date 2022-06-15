@@ -35,7 +35,7 @@
         </template>
         <template v-if="column.key === 'operation'">
           <span>
-            <a @click='handleOpenEdit(record)'>编辑</a>
+            <a @click.stop='handleOpenEdit(record)'>编辑</a>
             <a-divider type="vertical"/>
             <a-popconfirm :title="`确定要删除${record.username}?`" ok-text="确定" cancel-text="取消">
               <a>删除</a>

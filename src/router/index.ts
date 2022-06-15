@@ -38,25 +38,6 @@ const staticRoutes: RouteRecordRaw[] = [
         }
     },
     {
-        path: '/',
-        component: Layout,
-        meta: {
-            title: '总览',
-            icon: 'dashboard-3-line'
-        },
-        children: [
-            {
-                path: '/dashboard/index',
-                name: 'dashboard',
-                meta: {
-                    title: 'Dashboard',
-                    icon: 'dashboard-3-line'
-                },
-                component: () => import('@/views/index.vue')
-            }
-        ]
-    },
-    {
         path: '/system',
         component: Layout,
         meta: {
@@ -72,44 +53,6 @@ const staticRoutes: RouteRecordRaw[] = [
                 component: () => import('@/views/system/userInfo/index.vue')
             }
         ]
-    },
-]
-
-const asyncRoutes: RouteRecordRaw[] = [
-    {
-        path: '/',
-        redirect: '/dashboard/index',
-        meta: {
-            hideInMenu: true,
-            title: 'index'
-        }
-    },
-    {
-        path: '/',
-        component: Layout,
-        meta: {
-            title: '总览',
-            icon: 'dashboard-3-line'
-        },
-        children: [
-            {
-                path: '/dashboard/index',
-                name: 'dashboard',
-                meta: {
-                    title: 'Dashboard',
-                    icon: 'dashboard-3-line'
-                },
-                component: () => import('@/views/index.vue')
-            }
-        ]
-    },
-    {
-        path: '/404',
-        name: '404',
-        component: () => import('@/views/404.vue'),
-        meta: {
-            title: '404'
-        }
     },
 ]
 
