@@ -49,16 +49,14 @@ router.afterEach((to) => {
 
 
 function buildMenu(menus: any[]) {
+    const modules = import.meta.glob('../**/*.vue')
     const list = menus.filter(item => item.type === 'MENU' && item.visible)
     const menuList = list.map(item => {
         const { component, name: title, icon, path } = item
         return {
             ...item,
             name: title,
-            component: defineAsyncComponent({
-                loader: () => import(/* @vite-ignore */`../${component}`),
-                loadingComponent: Skeletion,
-            }),
+            component: modules[`../${component}.vue`],
             meta: {
                 title, icon
             }
