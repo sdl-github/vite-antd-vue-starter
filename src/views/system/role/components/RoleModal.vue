@@ -20,11 +20,6 @@
                             style="width:100%" />
                     </a-form-item>
                 </a-col>
-                <a-col :span="24">
-                    <a-form-item label="权限菜单" name="menuIds">
-                        <PermissionSelect v-model:value="formState.data.menuIds" />
-                    </a-form-item>
-                </a-col>
             </a-row>
         </a-form>
     </a-modal>
@@ -90,8 +85,7 @@ function handleOk() {
         if (props.currentItem.id) {
             v.id = props.currentItem.id
         }
-        const { menuIds, ...others } = v
-        emits('handleOk', { ...others, menuIds: menuIds.filter((id: string) => id !== '#') })
+        emits('handleOk', v)
     })
 }
 

@@ -1,10 +1,10 @@
 import { loginAccount, logout, meInfo } from "@/api/auth";
 import { removeToken, setToken } from "@/utils/auth";
-import { ValueTypes } from "@/utils/graphql/zeus";
+import { ModelTypes } from "@/utils/graphql/zeus";
 import { defineStore } from "pinia";
 import { appStore } from "./app";
 
-export type IUserInfo = ValueTypes["LoginUser"]
+export type IUserInfo = ModelTypes["LoginUser"]
 
 export const userStore = defineStore({
     id: "user",

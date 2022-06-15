@@ -47,7 +47,7 @@ function handleError(data: any) {
         if (code === 'INTERNAL_SERVER_ERROR') {
             msg = '网络错误，请稍候再试'
         }
-        notification.error({
+        notification.info({
             message: '提示',
             description: msg || "网络错误，请稍候再试",
         });

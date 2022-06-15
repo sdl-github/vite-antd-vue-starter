@@ -10,17 +10,22 @@
       <a-dropdown>
         <div>
           <a-avatar :src="userInfo.avatar" />
+          <span class="mx-2 rounded text-sm px-2 py-1 bg-purple-200 text-purple-500">{{ userInfo.nickname }}</span>
         </div>
-
         <template #overlay>
           <a-menu>
             <a-menu-item>
               <template #icon>
-                <RemixIcon icon="ri-user-line" />
+                <RemixIcon icon="user-line" />
               </template>
-              个人信息
+              <router-link to="/system/userInfo">个人信息</router-link>
             </a-menu-item>
-            <a-menu-item @click="handleLogout"> 退出 </a-menu-item>
+            <a-menu-item @click="handleLogout">
+              <template #icon>
+                <RemixIcon icon='logout-box-line' />
+              </template>
+              退出
+            </a-menu-item>
           </a-menu>
         </template>
       </a-dropdown>
@@ -35,6 +40,7 @@ import { appStore } from "@/store/app";
 import { userStore } from "@/store/user";
 import { LOGIN_PATH } from "@/router";
 import { useRouter } from "vue-router";
+
 export default defineComponent({
   name: "Header",
   components: { RemixIcon },
