@@ -16,7 +16,6 @@ import Logo from "@/components/layout/Logo.vue";
 import RemixIcon from "@/components/RemixIcon.vue";
 import MenuItem from "@/components/layout/MenuItem.vue";
 import { useRoute } from "vue-router";
-import { routes } from '@/router'
 
 type IState = {
   selectedKeys: string[];
@@ -41,7 +40,7 @@ export default defineComponent({
       collapsed: computed(() => store.collapsed),
       theme: computed(() => store.theme),
       state,
-      menus: routes,
+      menus: computed(() => store.sideMenu),
     };
   },
 });

@@ -7,7 +7,8 @@ export const appStore = defineStore({
             title: 'super admin',
             theme: 'dark',
             logo: '',
-            collapsed: false
+            collapsed: false,
+            sideMenu: []
         }
     },
     getters: {
@@ -16,6 +17,8 @@ export const appStore = defineStore({
         setCollapsed(collapsed: boolean) {
             this.collapsed = collapsed
         },
-
+        setSideMenu(sideMenu: any) {
+            this.sideMenu = sideMenu
+        }
     },
 })

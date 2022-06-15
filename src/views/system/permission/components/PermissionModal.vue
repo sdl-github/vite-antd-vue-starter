@@ -28,6 +28,11 @@
           </a-form-item>
         </a-col>
         <a-col :span="12">
+          <a-form-item label="组件" name="component">
+            <a-input :placeholder="requireMessage('组件')" v-model:value="formState.data.component" />
+          </a-form-item>
+        </a-col>
+        <a-col :span="12">
           <a-form-item label="上级目录" name="pId">
             <MenuTreeSelect v-model:value="formState.data.pId" />
           </a-form-item>

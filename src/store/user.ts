@@ -2,6 +2,7 @@ import { loginAccount, logout, meInfo } from "@/api/auth";
 import { removeToken, setToken } from "@/utils/auth";
 import { ValueTypes } from "@/utils/graphql/zeus";
 import { defineStore } from "pinia";
+import { appStore } from "./app";
 
 export type IUserInfo = ValueTypes["LoginUser"]
 
@@ -24,9 +25,11 @@ export const userStore = defineStore({
         },
         async getMeInfo() {
             const { me } = await meInfo()
-            this.userInfo = me as IUserInfo
+            this.userInfo = me as any
         },
         async logout() {
+            const app = appStore()
+            app.setSideMenu([])
             try {
                 await logout()
             } catch (e) {

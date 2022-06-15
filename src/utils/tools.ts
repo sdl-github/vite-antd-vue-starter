@@ -33,3 +33,16 @@ export const getVal = (key: string) => {
     }
     return JSON.parse(val)
 }
+
+export function listToTree(list: any[], id = 'id', pId = 'pId', rootId = '#') {
+    list.forEach((node) => {
+        // find current node parent
+        const pNdoe = list.find((row) => row[id] === node[pId])
+        if (pNdoe) {
+            pNdoe.children = pNdoe.children || []
+            pNdoe.children.push(node)
+        }
+    })
+    // remove child node
+    return list.filter((node) => node[pId] === rootId)
+}

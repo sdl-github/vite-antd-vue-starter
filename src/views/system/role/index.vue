@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import RoleModal from './components/RoleModal.vue';
+import PermissionSelect from './components/PermissionSelect.vue'
 import TableSearchCard from './components/TableSearchCard.vue';
 import { createRole, delRoles, queryRoleList, updateRole } from '@/api/role';
 import dayjs from 'dayjs';
@@ -48,8 +49,11 @@ const state = reactive({
     loading: false,
     modalVisible: false,
     currentItem: {},
-    searchParams: {}
+    searchParams: {},
+    currentSelected: {},
+    selectedRowKeys: []
 });
+
 
 onMounted(() => {
     initData();
@@ -151,64 +155,103 @@ function handleSearch(params: any) {
     initData()
 }
 
+
+
+function customRow(record) {
+    return {
+        onClick: (event) => {
+            state.currentSelected = record
+            state.selectedRowKeys = [record.id]
+        }
+    }
+}
+function rowClassName(record, index) {
+    console.log(record, index);
+    if (record?.id === state?.currentSelected?.id) {
+        console.log('row_selected');
+        return 'row_selected'
+    }
+}
+function onSelectChange(selectedRowKeys: string | number[]) {
+    console.log(selectedRowKeys);
+    state.selectedRowKeys = selectedRowKeys
+    state.currentSelected = state.dataList.filter(item => item.id === selectedRowKeys[0])
+}
+function handleSave(v) {
+    handleOk(v)
+}
 </script>
 
 
 <template>
     <div class="container">
-        <TableSearchCard @handleSearch="handleSearch" />
-        <div class="table-header">
-            <a-button @click='handleOpenCreate' type="primary">新建</a-button>
-            <div class="table-action">
-                <a-tooltip placement="top">
-                    <template #title>
-                        <span>刷新</span>
+        <a-row>
+            <a-col :span="17">
+                <TableSearchCard @handleSearch="handleSearch" />
+                <div class="table-header">
+                    <a-button @click='handleOpenCreate' type="primary">新建</a-button>
+                    <div class="table-action">
+                        <a-tooltip placement="top">
+                            <template #title>
+                                <span>刷新</span>
+                            </template>
+                            <a-button @click="initData" type="text" shape="circle">
+                                <RemixIcon icon="refresh-line" />
+                            </a-button>
+                        </a-tooltip>
+                    </div>
+                </div>
+                <a-table :customRow="customRow" :pagination="false" :columns="columns"
+                    :row-key="(record: any) => record.id" :data-source="state.dataList" :loading="state.loading"
+                    :row-selection="{ type: 'radio', selectedRowKeys: state.selectedRowKeys, onChange: onSelectChange }">
+                    <template #bodyCell="{ column, record }">
+                        <template v-if="column.dataIndex === 'createdAt'">
+                            <span>
+                                {{ formatDate(record.createdAt) }}
+                            </span>
+                        </template>
+                        <template v-if="column.dataIndex === 'key'">
+                            <span
+                                class="ml-2 px-2 py-1 bg-purple-100 dark:bg-purple-100 text-xs font-semibold text-purple-800 dark:text-purple-800 rounded uppercase">
+                                {{ record.key }}
+                            </span>
+                        </template>
+                        <template v-if="column.dataIndex === 'isDefault'">
+                            <span>
+                                {{ record.isDefault ? '是' : '否' }}
+                            </span>
+                        </template>
+                        <template v-if="column.key === 'operation'">
+                            <span>
+                                <a @click='handleOpenEdit(record)'>编辑</a>
+                                <a-divider type="vertical" />
+                                <a-popconfirm :title="`确定要删除${record.name}?`" ok-text="确定" cancel-text="取消"
+                                    @confirm="handleDelete(record.id)">
+                                    <a>删除</a>
+                                </a-popconfirm>
+                            </span>
+                        </template>
                     </template>
-                    <a-button @click="initData" type="text" shape="circle">
-                        <RemixIcon icon="refresh-line" />
-                    </a-button>
-                </a-tooltip>
-            </div>
-        </div>
-        <a-table :pagination="false" :columns="columns" :row-key="(record: any) => record.id"
-            :data-source="state.dataList" :loading="state.loading">
-            <template #bodyCell="{ column, record }">
-                <template v-if="column.dataIndex === 'createdAt'">
-                    <span>
-                        {{ formatDate(record.createdAt) }}
-                    </span>
-                </template>
-                <template v-if="column.dataIndex === 'key'">
-                    <span
-                        class="ml-2 px-2 py-1 bg-purple-100 dark:bg-purple-100 text-xs font-semibold text-purple-800 dark:text-purple-800 rounded uppercase">
-                        {{ record.key }}
-                    </span>
-                </template>
-                <template v-if="column.dataIndex === 'isDefault'">
-                    <span>
-                        {{ record.isDefault ? '是' : '否' }}
-                    </span>
-                </template>
-                <template v-if="column.key === 'operation'">
-                    <span>
-                        <a @click='handleOpenEdit(record)'>编辑</a>
-                        <a-divider type="vertical" />
-                        <a-popconfirm :title="`确定要删除${record.name}?`" ok-text="确定" cancel-text="取消"
-                            @confirm="handleDelete(record.id)">
-                            <a>删除</a>
-                        </a-popconfirm>
-                    </span>
-                </template>
-            </template>
-        </a-table>
-        <div class="pagination-card">
-            <a-pagination v-model:current="state.pageNo" v-model:pageSize="state.pageSize" show-size-changer
-                :total="state.total" :show-total="() => `共 ${state.total} 条`" @change="handleShowSizeChange" />
-        </div>
+                </a-table>
+                <div class="pagination-card">
+                    <a-pagination v-model:current="state.pageNo" v-model:pageSize="state.pageSize" show-size-changer
+                        :total="state.total" :show-total="() => `共 ${state.total} 条`" @change="handleShowSizeChange" />
+                </div>
+            </a-col>
+            <a-col :span="6">
+                <PermissionSelect :currentRole='state.currentSelected' @handleSave='handleSave' />
+            </a-col>
+        </a-row>
+
         <RoleModal :current-item="state.currentItem" v-model:modalVisible='state.modalVisible' @handleOk="handleOk" />
     </div>
 </template>
 
+<style lang="scss">
+.row_selected {
+    background: pink;
+}
+</style>
 
 <style lang="scss" scoped>
 .search-card {

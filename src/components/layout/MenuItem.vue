@@ -1,7 +1,6 @@
 <template>
   <template v-if="!menu.children">
     <a-menu-item
-      v-if="!menu.meta.hideInMenu"
       :key="menu.path"
       @click="handleClickMenu(menu)"
     >
@@ -14,7 +13,7 @@
     </a-menu-item>
   </template>
   <template v-else>
-    <a-sub-menu :key="menu.path" v-if="!menu.meta.hideInMenu">
+    <a-sub-menu :key="menu.path">
       <template #icon>
         <RemixIcon :icon="menu.meta.icon" />
       </template>

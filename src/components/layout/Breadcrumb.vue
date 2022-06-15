@@ -4,10 +4,9 @@ import { ref, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
-const menus = ref([])
+const menus = ref<Array<{ name: string, path: string }>>()
 
 watchEffect(() => {
-    console.log(route.matched);
     menus.value = route.matched.map(item => {
         return {
             name: item.meta.title,

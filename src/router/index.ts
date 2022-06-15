@@ -2,27 +2,24 @@ import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 import Layout from "@/layout/DashboardLayout.vue";
 export const LOGIN_PATH = '/login'
 
+declare module 'vue-router' {
+    interface RouteMeta {
+        // 是可选的
+        hideInMenu?: boolean
+        icon?: string
+        // 每个路由都必须声明
+        title: string
+    }
+}
+
 const staticRoutes: RouteRecordRaw[] = [
     {
         path: LOGIN_PATH,
         component: () => import('@/views/login.vue'),
         meta: {
-            hideInMenu: true,
             title: 'login'
         }
     },
-    {
-        path: '/404',
-        name: '404',
-        component: () => import('@/views/404.vue'),
-        meta: {
-            hideInMenu: true,
-            title: '404'
-        }
-    },
-]
-
-const asyncRoutes: RouteRecordRaw[] = [
     {
         path: '/',
         redirect: '/dashboard/index',
@@ -32,10 +29,9 @@ const asyncRoutes: RouteRecordRaw[] = [
         }
     },
     {
-        path: '/dashboard',
+        path: '/',
         component: Layout,
         meta: {
-            hideInMenu: false,
             title: '总览',
             icon: 'dashboard-3-line'
         },
@@ -44,7 +40,6 @@ const asyncRoutes: RouteRecordRaw[] = [
                 path: '/dashboard/index',
                 name: 'dashboard',
                 meta: {
-                    hideInMenu: false,
                     title: 'Dashboard',
                     icon: 'dashboard-3-line'
                 },
@@ -53,91 +48,17 @@ const asyncRoutes: RouteRecordRaw[] = [
         ]
     },
     {
-        path: '/system',
-        component: Layout,
+        path: '/404',
+        name: '404',
+        component: () => import('@/views/404.vue'),
         meta: {
-            hideInMenu: false,
-            title: '系统管理',
-            icon: 'folder-user-line'
-        },
-        children: [
-            {
-                path: '/system/user',
-                name: 'user',
-                meta: {
-                    hideInMenu: false,
-                    title: '用户管理',
-                    icon: 'user-3-line'
-                },
-                component: () => import('@/views/system/user/index.vue')
-            },
-            {
-                path: '/system/role',
-                name: 'role',
-                meta: {
-                    hideInMenu: false,
-                    title: '角色管理',
-                    icon: 'user-star-line'
-                },
-                component: () => import('@/views/system/role/index.vue')
-            },
-            {
-                path: '/system/permission',
-                name: 'permission',
-                meta: {
-                    hideInMenu: false,
-                    title: '权限菜单配置',
-                    icon: 'flask-line'
-                },
-                component: () => import('@/views/system/permission/index.vue')
-            }
-        ]
+            title: '404'
+        }
     },
-    {
-        path: '/example',
-        component: Layout,
-        meta: {
-            hideInMenu: false,
-            title: '例子',
-            icon: 'settings-5-line'
-        },
-        children: [
-            {
-                path: '/example/image',
-                name: 'index',
-                meta: {
-                    hideInMenu: false,
-                    title: '图片加载',
-                    icon: 'image-line'
-                },
-                component: () => import('@/views/image/index.vue')
-            },
-        ]
-    },
-    {
-        path: '/error',
-        component: Layout,
-        meta: {
-            hideInMenu: true,
-            title: 'Error',
-            icon: 'dashboard-3-line'
-        },
-        children: [
-            {
-                path: '/error/404',
-                name: 'erroe',
-                meta: {
-                    hideInMenu: false,
-                    title: '404',
-                    icon: 'dashboard-3-line'
-                },
-                component: () => import('@/views/404.vue')
-            }
-        ]
-    },
-];
+]
 
-export const routes = [...staticRoutes, ...asyncRoutes]
+
+export const routes = [...staticRoutes]
 
 const router = createRouter({
     history: createWebHashHistory(),

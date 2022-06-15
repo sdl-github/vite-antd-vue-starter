@@ -43,7 +43,14 @@ export function meInfo() {
             menus: {
                 id: true,
                 name: true,
-                path: true
+                orderBy: true,
+                icon: true,
+                path: true,
+                pId: true,
+                component: true,
+                visible: true,
+                type: true,
+                permission: true,
             },
             /** 权限 */
             permissions: true,

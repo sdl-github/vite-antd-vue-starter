@@ -1,43 +1,75 @@
 <script setup lang="ts">
 import { queryMenuTree } from '@/api/menu';
-import { onMounted, ref } from 'vue';
-import { TreeSelect } from 'ant-design-vue';
+import { onMounted, ref, watch, watchEffect } from 'vue';
+import { message, TreeSelect } from 'ant-design-vue';
+const fileName = {
+    children: 'children',
+    title: 'name',
+    key: 'id',
+}
 const props = defineProps({
-    value: {
-        type: Array,
-        default: () => [],
+    currentRole: {
+        type: Object,
+        default: () => {},
     },
 });
 const treeData = ref([]);
-const emits = defineEmits(['update:value'])
+const checkedKeys = ref([]);
+const checkPermissionKeys = ref([]);
+const emits = defineEmits(['handleSave'])
+
+watchEffect(()=>{
+    const ids = props?.currentRole?.menus?.map(item => item.id);
+    checkedKeys.value = ids;
+    checkPermissionKeys.value = ids;
+})
+
 onMounted(() => {
     initData();
 });
 
 async function initData() {
     const { getMenuTree } = await queryMenuTree();
-    const node = [
-        {
-            id: "#",
-            name: "根目录",
-            value: "",
-            children: getMenuTree,
-        }
-    ]
-    treeData.value = node as any
+    treeData.value = getMenuTree as any
 }
 
-function handleChange(v: Array<String>) {
-  emits('update:value', v)
+function handleCheck(checkedKeys, e) {
+    console.log(checkedKeys);
+    console.log(e);
+    const { halfCheckedKeys } = e
+    checkPermissionKeys.value = [...checkedKeys, ...halfCheckedKeys]
+}
+
+function handleSave() {
+    if(!props.currentRole.id){
+        message.info('请先选择角色')
+        return
+    }
+    emits('handleSave', {
+        id: props.currentRole.id,
+        menuIds: checkPermissionKeys.value
+    })
 }
 </script>
 
 <template>
-    <a-tree-select @change="handleChange" :showCheckedStrategy="TreeSelect.SHOW_ALL" tree-checkable
-        v-model:value="value" show-search style="width: 100%" :field-names="{
-            children: 'children',
-            label: 'name',
-            value: 'id',
-        }" :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }" placeholder="请选择" allow-clear :tree-data="treeData">
-    </a-tree-select>
+    <a-card class="permission_card" title="权限配置">
+        <template #extra>
+            <a-button @click="handleSave" type="primary">保存</a-button>
+        </template>
+        <a-tree @check="handleCheck" v-model:checkedKeys="checkedKeys" :tree-data="treeData" :field-names="fileName"
+            :showCheckedStrategy="TreeSelect.SHOW_ALL" checkable  style="width: 100%"
+            allow-clear>
+        </a-tree>
+    </a-card>
 </template>
+
+<style lang="scss" scoped>
+.permission_card {
+    width: 100%;
+    min-width: 300px;
+    height: 600px;
+    overflow: auto;
+    margin-left: 24px;
+}
+</style>
