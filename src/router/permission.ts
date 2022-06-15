@@ -4,8 +4,6 @@ import { userStore } from "@/store/user";
 import { getToken } from "@/utils/auth";
 import { listToTree } from "@/utils/tools";
 import NProgress from 'nprogress'
-import { defineAsyncComponent } from "vue";
-import Skeletion from '@/components/Skeleton.vue'
 import 'nprogress/nprogress.css'
 
 const whiteList = ['/login', '/auth-redirect', '/bind', '/register']
@@ -25,6 +23,7 @@ router.beforeEach(async (to, from, next) => {
             asyncRoutes.forEach((item) => {
                 router.addRoute(item)
             })
+            router.addRoute({ path: '/:pathMatch(.*)*', redirect: '/system/404' },)
             app.setSideMenu(asyncRoutes)
             next({ ...to, replace: true })
         } else {
@@ -44,6 +43,7 @@ router.beforeEach(async (to, from, next) => {
 
 router.afterEach((to) => {
     // console.log('afterEach')
+    document.title = to.meta.title || 'Super Admin'
     NProgress.done()
 })
 

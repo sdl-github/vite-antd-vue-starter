@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import RemixIcon from "@/components/RemixIcon.vue";
 import RoleModal from './components/RoleModal.vue';
 import PermissionSelect from './components/PermissionSelect.vue'
 import TableSearchCard from './components/TableSearchCard.vue';

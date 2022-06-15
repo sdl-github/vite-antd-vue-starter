@@ -20,15 +20,7 @@ const staticRoutes: RouteRecordRaw[] = [
             title: 'login'
         }
     },
-    {
-        path: '/404',
-        name: '404',
-        component: () => import('@/views/404.vue'),
-        meta: {
-            hideInMenu: true,
-            title: '404'
-        }
-    },
+
     {
         path: '/',
         redirect: '/dashboard/index',
@@ -51,7 +43,23 @@ const staticRoutes: RouteRecordRaw[] = [
                     title: '我的信息',
                 },
                 component: () => import('@/views/system/userInfo/index.vue')
-            }
+            },
+            {
+                path: '/system/404',
+                name: '404',
+                component: () => import('@/views/404.vue'),
+                meta: {
+                    title: '404'
+                }
+            },
+            {
+                path: '/system/403',
+                name: '403',
+                component: () => import('@/views/403.vue'),
+                meta: {
+                    title: '403'
+                }
+            },
         ]
     },
 ]
