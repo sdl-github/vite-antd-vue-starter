@@ -37,7 +37,7 @@
           <span>
             <a @click.stop='handleOpenEdit(record)'>编辑</a>
             <a-divider type="vertical"/>
-            <a-popconfirm :title="`确定要删除${record.username}?`" ok-text="确定" cancel-text="取消">
+            <a-popconfirm :title="`确定要删除[${record.name}]?`" @confirm="handleDelete(record.id)" ok-text="确定" cancel-text="取消">
               <a>删除</a>
             </a-popconfirm>
           </span>
@@ -49,7 +49,7 @@
 
 </template>
 <script setup lang="ts">
-import {queryMenuTree, createMenu, updateMenu, QueryMenuInput} from '@/api/menu';
+import {queryMenuTree, createMenu, updateMenu, QueryMenuInput, deleteMenu} from '@/api/menu';
 import {onMounted, reactive} from 'vue';
 import {ICreateMenuInput, IEditMenuInput, IMenu, IState} from './data';
 import {message, TableColumnType} from "ant-design-vue";
@@ -197,6 +197,21 @@ async function handleCreate(v: ICreateMenuInput) {
   try {
     await createMenu(v)
     loading()
+    message.success('成功');
+    return true
+  } catch (e) {
+    loading()
+    return false
+  }
+}
+
+// 删除请求
+async function handleDelete(id: string) {
+  const loading = message.loading('加载中', 0);
+  try {
+    await deleteMenu([id])
+    loading()
+    initData()
     message.success('成功');
     return true
   } catch (e) {
