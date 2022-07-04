@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="permission-container">
     <TableSearchCard @handleSearch="handleSearch"/>
     <div class="table-header">
       <a-button @click='handleOpenCreate' type="primary">新建</a-button>
@@ -228,7 +228,7 @@ function handleSearch(params: QueryMenuInput) {
 </script>
 
 <style lang="scss" scoped>
-.container {
+.permission-container {
   width: 100%;
 
   .table-header {

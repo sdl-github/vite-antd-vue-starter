@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="user-container">
     <TableSearchCard @handleSearch='handleSearch' />
 
     <div class="table-header">
@@ -286,7 +286,7 @@ function handleShowSizeChange(current: number, pageSize: number) {
   background: #fff;
 }
 
-.container {
+.user-container {
   width: 100%;
 
   .table-header {

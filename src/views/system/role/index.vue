@@ -190,7 +190,7 @@ function handleCancel() {
 
 
 <template>
-    <div class="container">
+    <div class="role-container">
         <a-row>
             <a-col :span="17">
                 <TableSearchCard @handleSearch="handleSearch" />
@@ -266,7 +266,7 @@ function handleCancel() {
     background: #fff;
 }
 
-.container {
+.role-container {
     width: 100%;
 
     .table-header {

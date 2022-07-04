@@ -3,594 +3,79 @@
 export const AllTypesProps: Record<string,any> = {
 	Query:{
 		hello:{
-			name:{
-				type:"String",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+
 		},
 		getMenuTree:{
-			id:{
-				type:"String",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			type:{
-				type:"String",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			name:{
-				type:"String",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			visible:{
-				type:"Boolean",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			from:{
-				type:"String",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			to:{
-				type:"String",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+
 		},
 		getMenuList:{
-			id:{
-				type:"String",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			type:{
-				type:"String",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			name:{
-				type:"String",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			visible:{
-				type:"Boolean",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			from:{
-				type:"String",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			to:{
-				type:"String",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			pageNo:{
-				type:"Float",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			pageSize:{
-				type:"Float",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+
 		},
 		getRoleList:{
-			id:{
-				type:"String",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			name:{
-				type:"String",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			key:{
-				type:"String",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			isDefault:{
-				type:"Boolean",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			from:{
-				type:"String",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			to:{
-				type:"String",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			includeMenu:{
-				type:"Boolean",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			pageNo:{
-				type:"Float",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			pageSize:{
-				type:"Float",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+
 		},
 		getUserList:{
-			id:{
-				type:"String",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			username:{
-				type:"String",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			phone:{
-				type:"String",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			email:{
-				type:"String",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			from:{
-				type:"String",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			to:{
-				type:"String",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			includeRole:{
-				type:"Boolean",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			pageNo:{
-				type:"Float",
-				array:false,
-				arrayRequired:false,
-				required:false
-			},
-			pageSize:{
-				type:"Float",
-				array:false,
-				arrayRequired:false,
-				required:false
-			}
+
 		}
 	},
-	DateTime: "String",
-	UserGenderEnum: "enum",
-	JSONObject: "String",
+	DateTime: `scalar.DateTime` as const,
+	UserGenderEnum: "enum" as const,
+	JSONObject: `scalar.JSONObject` as const,
 	Mutation:{
 		login:{
-			password:{
-				type:"String",
-				array:false,
-				arrayRequired:false,
-				required:true
-			},
-			username:{
-				type:"String",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+
 		},
 		createMenu:{
-			input:{
-				type:"CreateMenuInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"CreateMenuInput"
 		},
 		editMenu:{
-			input:{
-				type:"EditMenuInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"EditMenuInput"
 		},
 		removeMenus:{
-			menuIds:{
-				type:"String",
-				array:true,
-				arrayRequired:true,
-				required:true
-			}
+
 		},
 		createRole:{
-			input:{
-				type:"CreateRoleInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"CreateRoleInput"
 		},
 		editRole:{
-			input:{
-				type:"EditRoleInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"EditRoleInput"
 		},
 		removeRoles:{
-			roleIds:{
-				type:"String",
-				array:true,
-				arrayRequired:true,
-				required:true
-			}
+
 		},
 		createUser:{
-			input:{
-				type:"CreateUserInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"CreateUserInput"
 		},
 		editUser:{
-			input:{
-				type:"EditUserInput",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+			input:"EditUserInput"
 		},
 		removeUsers:{
-			userIds:{
-				type:"String",
-				array:true,
-				arrayRequired:true,
-				required:true
-			}
+
 		},
 		resetUserPassword:{
-			userId:{
-				type:"String",
-				array:false,
-				arrayRequired:false,
-				required:true
-			}
+
+		},
+		makeBucket:{
+
 		}
 	},
 	CreateMenuInput:{
-		name:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		icon:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		orderBy:{
-			type:"Float",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		path:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		component:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		visible:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		permission:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		type:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+
 	},
 	EditMenuInput:{
-		id:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		name:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		icon:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		pId:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		orderBy:{
-			type:"Float",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		path:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		component:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		visible:{
-			type:"Boolean",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		permission:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		type:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		}
+
 	},
 	CreateRoleInput:{
-		name:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		key:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		level:{
-			type:"Float",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		menuIds:{
-			type:"String",
-			array:true,
-			arrayRequired:false,
-			required:true
-		}
+
 	},
 	EditRoleInput:{
-		id:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		name:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		key:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		level:{
-			type:"Float",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		menuIds:{
-			type:"String",
-			array:true,
-			arrayRequired:false,
-			required:true
-		}
+
 	},
 	CreateUserInput:{
-		username:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		avatar:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		password:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		gender:{
-			type:"UserGenderEnum",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		email:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nickname:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		phone:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		note:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		roleIds:{
-			type:"String",
-			array:true,
-			arrayRequired:false,
-			required:true
-		}
+		gender:"UserGenderEnum"
 	},
 	EditUserInput:{
-		id:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:true
-		},
-		avatar:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		gender:{
-			type:"UserGenderEnum",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		email:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		nickname:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		phone:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		note:{
-			type:"String",
-			array:false,
-			arrayRequired:false,
-			required:false
-		},
-		roleIds:{
-			type:"String",
-			array:true,
-			arrayRequired:false,
-			required:true
-		}
+		gender:"UserGenderEnum"
 	}
 }
 
@@ -601,7 +86,8 @@ export const ReturnTypes: Record<string,any> = {
 		getMenuTree:"JSONObject",
 		getMenuList:"MenuPageResult",
 		getRoleList:"RolePageResult",
-		getUserList:"UserPageResult"
+		getUserList:"UserPageResult",
+		listBuckets:"BucketInfoResult"
 	},
 	LoginUser:{
 		id:"ID",
@@ -620,6 +106,7 @@ export const ReturnTypes: Record<string,any> = {
 		permissions:"String",
 		isSuperAdmin:"Boolean"
 	},
+	DateTime: `scalar.DateTime` as const,
 	Role:{
 		id:"ID",
 		createdAt:"DateTime",
@@ -645,6 +132,7 @@ export const ReturnTypes: Record<string,any> = {
 		type:"String",
 		children:"Menu"
 	},
+	JSONObject: `scalar.JSONObject` as const,
 	MenuPageResult:{
 		data:"Menu",
 		totalCount:"Float",
@@ -673,6 +161,15 @@ export const ReturnTypes: Record<string,any> = {
 		note:"String",
 		roles:"Role"
 	},
+	BucketInfoResult:{
+		code:"Float",
+		msg:"String",
+		data:"BucketInfo"
+	},
+	BucketInfo:{
+		name:"String",
+		creationDate:"String"
+	},
 	Mutation:{
 		login:"LoginResult",
 		logout:"BaseResponse",
@@ -685,7 +182,8 @@ export const ReturnTypes: Record<string,any> = {
 		createUser:"BaseResponse",
 		editUser:"BaseResponse",
 		removeUsers:"BaseResponse",
-		resetUserPassword:"BaseResponse"
+		resetUserPassword:"BaseResponse",
+		makeBucket:"BaseResponse"
 	},
 	LoginResult:{
 		code:"Float",
@@ -704,4 +202,9 @@ export const ReturnTypes: Record<string,any> = {
 		code:"Float",
 		msg:"String"
 	}
+}
+
+export const Ops = {
+query: "Query" as const,
+	mutation: "Mutation" as const
 }
