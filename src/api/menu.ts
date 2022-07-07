@@ -1,5 +1,5 @@
-import {mutation, query} from '@/utils/graphql';
-import type {ValueTypes} from "@/utils/graphql/zeus"
+import { mutation, query } from '@/utils/graphql';
+import type { ValueTypes } from "@/utils/graphql/zeus"
 
 type createMenuInput = ValueTypes["CreateMenuInput"];
 type editMenuInput = ValueTypes["EditMenuInput"];
@@ -41,7 +41,7 @@ export const queryMenuList = async (input?: QueryMenuInput) => {
 
 export const queryMenuTree = async (input?: QueryMenuInput) => {
     return query({
-        getMenuTree: [{...input}, true]
+        getMenuTree: [{ ...input }, true]
     })
 }
 
@@ -56,7 +56,7 @@ export const createMenu = async (input: createMenuInput) => {
             {
                 input,
             },
-            {code: true, msg: true},
+            { code: true, msg: true },
         ],
     });
 };
@@ -71,7 +71,7 @@ export const deleteMenu = async (menuIds: string[]) => {
             {
                 menuIds
             },
-            {code: true, msg: true}
+            { code: true, msg: true }
         ]
     })
 };
@@ -95,3 +95,33 @@ export const updateMenu = async (input: editMenuInput) => {
 };
 
 
+
+export const getAllMenuList = async () => {
+    return query({
+        allMenuList: {
+            id: true,
+            /** 创建时间 */
+            createdAt: true,
+            /** 更新时间 */
+            updatedAt: true,
+            /** 菜单名 */
+            name: true,
+            /** 图标 */
+            icon: true,
+            /** 上级ID */
+            pId: true,
+            /** 排序 */
+            orderBy: true,
+            /** 路径 */
+            path: true,
+            /** 组件 */
+            component: true,
+            /** 可见 */
+            visible: true,
+            /** 权限字符 */
+            permission: true,
+            /** 类型 */
+            type: true
+        }
+    })
+}

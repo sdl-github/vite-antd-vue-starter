@@ -868,6 +868,8 @@ export type ValueTypes = {
 hello?: [{	name: string | Variable<any, string>},boolean | `@${string}`],
 	/** 获取我的信息 */
 	me?:ValueTypes["LoginUser"],
+	/** 查询所有菜单 */
+	allMenuList?:ValueTypes["Menu"],
 getMenuTree?: [{	/** 角色id */
 	id?: string | undefined | null | Variable<any, string>,	/** 类型 */
 	type?: string | undefined | null | Variable<any, string>,	/** 角色名 */
@@ -899,7 +901,7 @@ getUserList?: [{	/** 用户id */
 	to?: string | undefined | null | Variable<any, string>,	/** 是否包含角色 */
 	includeRole?: boolean | undefined | null | Variable<any, string>,	pageNo?: number | undefined | null | Variable<any, string>,	pageSize?: number | undefined | null | Variable<any, string>},ValueTypes["UserPageResult"]],
 	/** 列出所有存储桶 */
-	listBuckets?:ValueTypes["BucketInfoResult"],
+	listBuckets?:ValueTypes["BucketInfo"],
 		__typename?: boolean | `@${string}`
 }>;
 	["LoginUser"]: AliasType<{
@@ -1028,15 +1030,6 @@ getUserList?: [{	/** 用户id */
 	roles?:ValueTypes["Role"],
 		__typename?: boolean | `@${string}`
 }>;
-	["BucketInfoResult"]: AliasType<{
-	/** code */
-	code?:boolean | `@${string}`,
-	/** msg */
-	msg?:boolean | `@${string}`,
-	/** data */
-	data?:ValueTypes["BucketInfo"],
-		__typename?: boolean | `@${string}`
-}>;
 	["BucketInfo"]: AliasType<{
 	/** 桶名 */
 	name?:boolean | `@${string}`,
@@ -1057,7 +1050,7 @@ createUser?: [{	input: ValueTypes["CreateUserInput"] | Variable<any, string>},Va
 editUser?: [{	input: ValueTypes["EditUserInput"] | Variable<any, string>},ValueTypes["BaseResponse"]],
 removeUsers?: [{	userIds: Array<string> | Variable<any, string>},ValueTypes["BaseResponse"]],
 resetUserPassword?: [{	userId: string | Variable<any, string>},ValueTypes["BaseResponse"]],
-makeBucket?: [{	name: string | Variable<any, string>},ValueTypes["BaseResponse"]],
+makeBucket?: [{	bucketName: string | Variable<any, string>},ValueTypes["BaseResponse"]],
 		__typename?: boolean | `@${string}`
 }>;
 	["LoginResult"]: AliasType<{
@@ -1194,6 +1187,8 @@ export type ResolverInputTypes = {
 hello?: [{	name: string},boolean | `@${string}`],
 	/** 获取我的信息 */
 	me?:ResolverInputTypes["LoginUser"],
+	/** 查询所有菜单 */
+	allMenuList?:ResolverInputTypes["Menu"],
 getMenuTree?: [{	/** 角色id */
 	id?: string | undefined | null,	/** 类型 */
 	type?: string | undefined | null,	/** 角色名 */
@@ -1225,7 +1220,7 @@ getUserList?: [{	/** 用户id */
 	to?: string | undefined | null,	/** 是否包含角色 */
 	includeRole?: boolean | undefined | null,	pageNo?: number | undefined | null,	pageSize?: number | undefined | null},ResolverInputTypes["UserPageResult"]],
 	/** 列出所有存储桶 */
-	listBuckets?:ResolverInputTypes["BucketInfoResult"],
+	listBuckets?:ResolverInputTypes["BucketInfo"],
 		__typename?: boolean | `@${string}`
 }>;
 	["LoginUser"]: AliasType<{
@@ -1354,15 +1349,6 @@ getUserList?: [{	/** 用户id */
 	roles?:ResolverInputTypes["Role"],
 		__typename?: boolean | `@${string}`
 }>;
-	["BucketInfoResult"]: AliasType<{
-	/** code */
-	code?:boolean | `@${string}`,
-	/** msg */
-	msg?:boolean | `@${string}`,
-	/** data */
-	data?:ResolverInputTypes["BucketInfo"],
-		__typename?: boolean | `@${string}`
-}>;
 	["BucketInfo"]: AliasType<{
 	/** 桶名 */
 	name?:boolean | `@${string}`,
@@ -1383,7 +1369,7 @@ createUser?: [{	input: ResolverInputTypes["CreateUserInput"]},ResolverInputTypes
 editUser?: [{	input: ResolverInputTypes["EditUserInput"]},ResolverInputTypes["BaseResponse"]],
 removeUsers?: [{	userIds: Array<string>},ResolverInputTypes["BaseResponse"]],
 resetUserPassword?: [{	userId: string},ResolverInputTypes["BaseResponse"]],
-makeBucket?: [{	name: string},ResolverInputTypes["BaseResponse"]],
+makeBucket?: [{	bucketName: string},ResolverInputTypes["BaseResponse"]],
 		__typename?: boolean | `@${string}`
 }>;
 	["LoginResult"]: AliasType<{
@@ -1520,6 +1506,8 @@ export type ModelTypes = {
 		hello: string,
 	/** 获取我的信息 */
 	me: ModelTypes["LoginUser"],
+	/** 查询所有菜单 */
+	allMenuList: Array<ModelTypes["Menu"]>,
 	/** 菜单Tree查询 */
 	getMenuTree: Array<ModelTypes["JSONObject"]>,
 	/** 菜单列表查询 */
@@ -1529,7 +1517,7 @@ export type ModelTypes = {
 	/** 角色列表查询 */
 	getUserList: ModelTypes["UserPageResult"],
 	/** 列出所有存储桶 */
-	listBuckets: ModelTypes["BucketInfoResult"]
+	listBuckets: Array<ModelTypes["BucketInfo"]>
 };
 	["LoginUser"]: {
 		id: string,
@@ -1648,14 +1636,6 @@ export type ModelTypes = {
 	note?: string | undefined,
 	/** 角色 */
 	roles?: Array<ModelTypes["Role"] | undefined> | undefined
-};
-	["BucketInfoResult"]: {
-		/** code */
-	code?: number | undefined,
-	/** msg */
-	msg?: string | undefined,
-	/** data */
-	data?: Array<ModelTypes["BucketInfo"]> | undefined
 };
 	["BucketInfo"]: {
 		/** 桶名 */
@@ -1816,6 +1796,8 @@ export type GraphQLTypes = {
 	hello: string,
 	/** 获取我的信息 */
 	me: GraphQLTypes["LoginUser"],
+	/** 查询所有菜单 */
+	allMenuList: Array<GraphQLTypes["Menu"]>,
 	/** 菜单Tree查询 */
 	getMenuTree: Array<GraphQLTypes["JSONObject"]>,
 	/** 菜单列表查询 */
@@ -1825,7 +1807,7 @@ export type GraphQLTypes = {
 	/** 角色列表查询 */
 	getUserList: GraphQLTypes["UserPageResult"],
 	/** 列出所有存储桶 */
-	listBuckets: GraphQLTypes["BucketInfoResult"]
+	listBuckets: Array<GraphQLTypes["BucketInfo"]>
 };
 	["LoginUser"]: {
 	__typename: "LoginUser",
@@ -1952,15 +1934,6 @@ export type GraphQLTypes = {
 	note?: string | undefined,
 	/** 角色 */
 	roles?: Array<GraphQLTypes["Role"] | undefined> | undefined
-};
-	["BucketInfoResult"]: {
-	__typename: "BucketInfoResult",
-	/** code */
-	code?: number | undefined,
-	/** msg */
-	msg?: string | undefined,
-	/** data */
-	data?: Array<GraphQLTypes["BucketInfo"]> | undefined
 };
 	["BucketInfo"]: {
 	__typename: "BucketInfo",

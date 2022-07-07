@@ -1,3 +1,4 @@
+import { getAllMenuList } from "@/api/menu";
 import router, { LOGIN_PATH } from "@/router/index";
 import { appStore } from "@/store/app";
 import { userStore } from "@/store/user";
@@ -19,15 +20,28 @@ router.beforeEach(async (to, from, next) => {
             await user.getMeInfo()
         }
         if (app.sideMenu.length === 0) {
-            const asyncRoutes = buildMenu(user.userInfo.menus as any)
+            // 所有菜单
+            const {allMenuList} = await getAllMenuList()
+            const asyncRoutes = buildMenu(allMenuList)
+             // 添加到路由
             asyncRoutes.forEach((item) => {
                 router.addRoute(item)
             })
-            router.addRoute({ path: '/:pathMatch(.*)*', redirect: '/system/404' },)
-            app.setSideMenu(asyncRoutes)
+            router.addRoute({ path: '/:pathMatch(.*)*', redirect: '/system/404' })
+            // 左侧菜单
+            app.setSideMenu(filterMenu(allMenuList))
             next({ ...to, replace: true })
         } else {
-            next()
+            if(to.path === '/system/403' || to.path === '/system/404'){ 
+                next()
+            }
+            if(!new Set(user.userInfo.menus?.map(item => item?.path)).has(to.path)){
+                console.log('不在权限范围内', to.path)
+                next({ path: '/system/403' })
+            } else {
+                console.log('在权限范围内', to.path)
+                next()
+            }
         }
     } else {
         // 没有token
@@ -47,10 +61,23 @@ router.afterEach((to) => {
     NProgress.done()
 })
 
+function filterMenu(menus: any[]) {
+    const list = menus.filter(item => item.type === 'MENU' && item.visible).map(item => {
+        const { name: title, icon } = item
+        return {
+            ...item,
+            name: title,
+            meta: {
+                title, icon
+            }
+        }
+    })
+    return listToTree(list, 'id', 'pId');
+}
 
 function buildMenu(menus: any[]) {
     const modules = import.meta.glob('../**/*.vue')
-    const list = menus.filter(item => item.type === 'MENU' && item.visible)
+    const list = menus.filter(item => item.type === 'MENU')
     const menuList = list.map(item => {
         const { component, name: title, icon, path } = item
         return {

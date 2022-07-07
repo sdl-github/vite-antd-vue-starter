@@ -83,11 +83,12 @@ export const ReturnTypes: Record<string,any> = {
 	Query:{
 		hello:"String",
 		me:"LoginUser",
+		allMenuList:"Menu",
 		getMenuTree:"JSONObject",
 		getMenuList:"MenuPageResult",
 		getRoleList:"RolePageResult",
 		getUserList:"UserPageResult",
-		listBuckets:"BucketInfoResult"
+		listBuckets:"BucketInfo"
 	},
 	LoginUser:{
 		id:"ID",
@@ -160,11 +161,6 @@ export const ReturnTypes: Record<string,any> = {
 		phone:"String",
 		note:"String",
 		roles:"Role"
-	},
-	BucketInfoResult:{
-		code:"Float",
-		msg:"String",
-		data:"BucketInfo"
 	},
 	BucketInfo:{
 		name:"String",
