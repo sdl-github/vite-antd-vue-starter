@@ -44,8 +44,8 @@
           </span>
         </template>
         <template v-if="column.dataIndex === 'createdAt'">
-          <span>
-            {{ formatDate(record.createdAt) }}
+          <span v-time>
+            {{ record.createdAt }}
           </span>
         </template>
         <template v-if="column.dataIndex === 'roles'">
