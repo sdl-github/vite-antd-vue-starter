@@ -43,7 +43,7 @@ import { useRouter } from "vue-router";
 
 export default defineComponent({
   name: "Header",
-  components: { RemixIcon },
+  components: { RemixIcon, Breadcrumb },
   setup() {
     const store = appStore();
     const user = userStore();
