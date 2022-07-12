@@ -33,7 +33,7 @@ export default defineComponent({
     const route = useRoute();
     watchEffect(() => {
       const { path, matched } = route;
-      state.openKeys = [matched[0].path];
+      state.openKeys = matched.map((item) => item.path);
       state.selectedKeys = [path];
     });
     return {
