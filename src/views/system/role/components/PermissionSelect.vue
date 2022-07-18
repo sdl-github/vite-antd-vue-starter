@@ -25,8 +25,10 @@ const emits = defineEmits(['handleSave', 'handleCancel']);
 
 watchEffect(() => {
     if (props?.currentRole?.id) {
-        const ids = props?.currentRole?.menus?.map(item => item.id);
-        checkedKeys.value = ids;
+        const ids = props?.currentRole?.menus?.map((item:any) => item.id);
+        const sonIds = deepTreeToList(treeData.value)
+        const checked = sonIds.filter(item => ids.includes(item));
+        checkedKeys.value = checked as any;
         checkPermissionKeys.value = ids;
     } else {
         checkedKeys.value = [];
@@ -38,15 +40,29 @@ onMounted(() => {
     initData();
 });
 
+function deepTreeToList(tree: any[]) {
+    const list: any[] = [];
+    const dfs = (tree: any[]) => {
+        tree.forEach(item => {
+            if (item.children && item.children.length > 0) {
+                dfs(item.children)
+            } else {
+                list.push(item.id)
+            }
+        });
+    }
+    dfs(tree);
+    return list;
+}
+
 async function initData() {
     const { getMenuTree } = await queryMenuTree();
     treeData.value = getMenuTree as any
 }
 
-function handleCheck(e) {
-    console.log(e);
-    // const { halfChecked, checked } = e
-    // checkPermissionKeys.value = [...halfChecked, ...checked]
+function handleCheck(checkedKeys: string[], e: any) {
+    const { halfCheckedKeys } = e
+    checkPermissionKeys.value = [...halfCheckedKeys, ...checkedKeys] as any
 }
 
 function handleSave() {
@@ -59,6 +75,7 @@ function handleSave() {
         menuIds: checkPermissionKeys.value
     })
 }
+
 </script>
 
 <template>
@@ -73,7 +90,6 @@ function handleSave() {
             :tree-data="treeData" :field-names="fileName" checkable>
         </a-tree>
     </a-drawer>
-
 </template>
 
 <style lang="scss" scoped>
