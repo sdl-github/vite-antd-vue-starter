@@ -29,7 +29,7 @@ router.beforeEach(async (to, from, next) => {
             })
             router.addRoute({ path: '/:pathMatch(.*)*', redirect: '/system/404' })
             // 左侧菜单
-            app.setSideMenu(filterMenu(allMenuList))
+            app.setSideMenu(filterMenu(user.userInfo.menus as any))
             next({ ...to, replace: true })
         } else {
             if(to.path === '/system/403' || to.path === '/system/404'){ 
