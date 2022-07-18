@@ -1,6 +1,6 @@
 <template>
   <div class="permission-container">
-    <TableSearchCard @handleSearch="handleSearch"/>
+    <TableSearchCard @handleSearch="handleSearch" />
     <div class="table-header">
       <a-button @click='handleOpenCreate' type="primary">新建</a-button>
       <div class="table-action">
@@ -9,24 +9,30 @@
             <span>刷新</span>
           </template>
           <a-button @click="initData" type="text" shape="circle">
-            <RemixIcon icon="refresh-line"/>
+            <RemixIcon icon="refresh-line" />
           </a-button>
         </a-tooltip>
       </div>
     </div>
     <a-table :pagination="false" :scroll="{ x: 1500 }" :columns="columns" :row-key="(record: any) => record.id"
-             :data-source="state.dataList" :loading="state.loading">
+      :data-source="state.dataList" :loading="state.loading">
       <template #bodyCell="{ column, record }">
         <template v-if="column.dataIndex === 'type'">
           <span>
             {{ PermissionTypeEnum[record.type] }}
           </span>
         </template>
+        <template v-if="column.dataIndex === 'orderBy'">
+          <span
+            class="ml-2 px-2 py-1 bg-purple-100 dark:bg-purple-100 text-xs font-semibold text-purple-800 dark:text-purple-800 rounded uppercase">
+            {{ record.orderBy || '0' }}
+          </span>
+        </template>
         <template v-if="column.dataIndex === 'icon'">
-          <RemixIcon :icon="record.icon"/>
+          <RemixIcon :icon="record.icon" />
         </template>
         <template v-if="column.dataIndex === 'visible'">
-          <a-switch @change="handleOk(record)" v-model:checked="record.visible"/>
+          <a-switch @change="handleOk(record)" v-model:checked="record.visible" />
         </template>
         <template v-if="column.dataIndex === 'createdAt'">
           <span>
@@ -36,23 +42,24 @@
         <template v-if="column.key === 'operation'">
           <span>
             <a @click.stop='handleOpenEdit(record)'>编辑</a>
-            <a-divider type="vertical"/>
-            <a-popconfirm :title="`确定要删除[${record.name}]?`" @confirm="handleDelete(record.id)" ok-text="确定" cancel-text="取消">
+            <a-divider type="vertical" />
+            <a-popconfirm :title="`确定要删除[${record.name}]?`" @confirm="handleDelete(record.id)" ok-text="确定"
+              cancel-text="取消">
               <a>删除</a>
             </a-popconfirm>
           </span>
         </template>
       </template>
     </a-table>
-    <PermissionModal :current-item="state.currentItem" v-model:modalVisible='state.modalVisible' @handleOk="handleOk"/>
+    <PermissionModal :current-item="state.currentItem" v-model:modalVisible='state.modalVisible' @handleOk="handleOk" />
   </div>
 
 </template>
 <script setup lang="ts">
-import {queryMenuTree, createMenu, updateMenu, QueryMenuInput, deleteMenu} from '@/api/menu';
-import {onMounted, reactive} from 'vue';
-import {ICreateMenuInput, IEditMenuInput, IMenu, IState} from './data';
-import {message, TableColumnType} from "ant-design-vue";
+import { queryMenuTree, createMenu, updateMenu, QueryMenuInput, deleteMenu } from '@/api/menu';
+import { onMounted, reactive } from 'vue';
+import { ICreateMenuInput, IEditMenuInput, IMenu, IState } from './data';
+import { message, TableColumnType } from "ant-design-vue";
 import TableSearchCard from './components/TableSearchCard.vue'
 import RemixIcon from '@/components/RemixIcon.vue';
 import PermissionModal from './components/PermissionModal.vue';
@@ -91,6 +98,12 @@ const columns: TableColumnType<IMenu>[] = [
     align: "center",
     dataIndex: "type",
     key: "type",
+  },
+  {
+    title: "排序",
+    align: "center",
+    dataIndex: "orderBy",
+    key: "orderBy",
   },
   {
     title: "图标",
@@ -142,8 +155,8 @@ onMounted(() => {
 // 初始化数据
 async function initData() {
   state.loading = true;
-  const {searchParams} = state
-  const {getMenuTree} = await queryMenuTree(searchParams);
+  const { searchParams } = state
+  const { getMenuTree } = await queryMenuTree(searchParams);
   state.dataList = getMenuTree as unknown as IMenu[];
   state.loading = false;
 }
