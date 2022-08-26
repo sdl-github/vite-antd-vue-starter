@@ -10,31 +10,40 @@ import 'nprogress/nprogress.css'
 const whiteList = ['/login', '/auth-redirect', '/bind', '/register']
 router.beforeEach(async (to, from, next) => {
     NProgress.start()
+    // 登录状态
     if (getToken()) {
+        // 登录状态去往登录页 直接跳转首页  重新beforeEach
         if (to.path === LOGIN_PATH) {
             next({ path: '/' })
         }
         const user = userStore()
         const app = appStore()
+        // 用户信息未获取 获取信息
         if (!user.userInfo.username) {
             await user.getMeInfo()
         }
+        // 用户菜单未构造
         if (app.sideMenu.length === 0) {
-            // 所有菜单
+            // 所有菜单接口
             const {allMenuList} = await getAllMenuList()
+            // 数组转树结构
             const asyncRoutes = buildMenu(allMenuList)
-             // 添加到路由
+             // 添加到vue路由
             asyncRoutes.forEach((item) => {
                 router.addRoute(item)
             })
+            // 最后添加404页面
             router.addRoute({ path: '/:pathMatch(.*)*', redirect: '/system/404' })
-            // 左侧菜单
+            // 设置左侧菜单
             app.setSideMenu(filterMenu(user.userInfo.menus as any))
+            // 确保addRoutes()时动态添加的路由已经被完全加载上去 否则重新beforeEach
             next({ ...to, replace: true })
         } else {
+            // 如果跳转403 404 放行
             if(to.path === '/system/403' || to.path === '/system/404'){ 
                 next()
             }
+            // 不在权限范围内 跳转403
             if(!new Set(user.userInfo.menus?.map(item => item?.path)).has(to.path)){
                 console.log('不在权限范围内', to.path)
                 next({ path: '/system/403' })

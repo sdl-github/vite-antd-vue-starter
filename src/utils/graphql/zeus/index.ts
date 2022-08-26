@@ -5,8 +5,38 @@ export const HOST = "http://101.35.96.91:2333/graphql"
 
 
 export const HEADERS = {}
-
-
+export const apiSubscription = (options: chainOptions) => (query: string) => {
+  try {
+    const queryString = options[0] + '?query=' + encodeURIComponent(query);
+    const wsString = queryString.replace('http', 'ws');
+    const host = (options.length > 1 && options[1]?.websocket?.[0]) || wsString;
+    const webSocketOptions = options[1]?.websocket || [host];
+    const ws = new WebSocket(...webSocketOptions);
+    return {
+      ws,
+      on: (e: (args: any) => void) => {
+        ws.onmessage = (event: any) => {
+          if (event.data) {
+            const parsed = JSON.parse(event.data);
+            const data = parsed.data;
+            return e(data);
+          }
+        };
+      },
+      off: (e: (args: any) => void) => {
+        ws.onclose = e;
+      },
+      error: (e: (args: any) => void) => {
+        ws.onerror = e;
+      },
+      open: (e: () => void) => {
+        ws.onopen = e;
+      },
+    };
+  } catch {
+    throw new Error('No websockets implemented');
+  }
+};
 const handleFetchResponse = (response: Response): Promise<GraphQLResponse> => {
   if (!response.ok) {
     return new Promise((_, reject) => {
@@ -55,48 +85,6 @@ export const apiFetch =
         return response.data;
       });
   };
-
-
-
-
-export const apiSubscription = (options: chainOptions) => (query: string) => {
-  try {
-    const queryString = options[0] + '?query=' + encodeURIComponent(query);
-    const wsString = queryString.replace('http', 'ws');
-    const host = (options.length > 1 && options[1]?.websocket?.[0]) || wsString;
-    const webSocketOptions = options[1]?.websocket || [host];
-    const ws = new WebSocket(...webSocketOptions);
-    return {
-      ws,
-      on: (e: (args: any) => void) => {
-        ws.onmessage = (event: any) => {
-          if (event.data) {
-            const parsed = JSON.parse(event.data);
-            const data = parsed.data;
-            return e(data);
-          }
-        };
-      },
-      off: (e: (args: any) => void) => {
-        ws.onclose = e;
-      },
-      error: (e: (args: any) => void) => {
-        ws.onerror = e;
-      },
-      open: (e: () => void) => {
-        ws.onopen = e;
-      },
-    };
-  } catch {
-    throw new Error('No websockets implemented');
-  }
-};
-
-
-
-
-
-
 
 export const InternalsBuildQuery = ({
   ops,
@@ -168,14 +156,6 @@ export const InternalsBuildQuery = ({
   return ibb;
 };
 
-
-
-
-
-
-
-
-
 export const Thunder =
   (fn: FetchFunction) =>
   <O extends keyof typeof Ops, SCLR extends ScalarDefinition, R extends keyof ValueTypes = GenericOperation<O>>(
@@ -218,9 +198,10 @@ export const SubscriptionThunder =
         scalars: graphqlOptions?.scalars,
       }),
     ) as SubscriptionToGraphQL<Z, GraphQLTypes[R], SCLR>;
-    if (returnedFunction?.on) {
+    if (returnedFunction?.on && graphqlOptions?.scalars) {
+      const wrapped = returnedFunction.on;
       returnedFunction.on = (fnToCall: (args: InputType<GraphQLTypes[R], Z, SCLR>) => void) =>
-        returnedFunction.on((data: InputType<GraphQLTypes[R], Z, SCLR>) => {
+        wrapped((data: InputType<GraphQLTypes[R], Z, SCLR>) => {
           if (graphqlOptions?.scalars) {
             return fnToCall(
               decodeScalarsInResponse({
@@ -273,12 +254,6 @@ export const Gql = Chain(HOST, {
 });
 
 export const ZeusScalars = ZeusSelect<ScalarCoders>();
-
-
-
-
-
-
 
 export const decodeScalarsInResponse = <O extends Operations>({
   response,
@@ -339,10 +314,6 @@ export const traverseResponse = ({
   };
   return ibb;
 };
-
-
-
-
 
 export type AllTypesPropsType = {
   [x: string]:
@@ -428,10 +399,6 @@ export type ThunderGraphQLOptions<SCLR extends ScalarDefinition> = {
   scalars?: SCLR | ScalarCoders;
 };
 
-
-
-
-
 const ExtractScalar = (mappedParts: string[], returns: ReturnTypesType): `scalar.${string}` | undefined => {
   if (mappedParts.length === 0) {
     return;
@@ -505,13 +472,7 @@ export const PrepareScalarPaths = ({ ops, returns }: { returns: ReturnTypesType;
   return ibb;
 };
 
-
 export const purifyGraphQLKey = (k: string) => k.replace(/\([^)]*\)/g, '').replace(/^[^:]*\:/g, '');
-
-
-
-
-
 
 const mapPart = (p: string) => {
   const [isArg, isField] = p.split('<>');
@@ -669,9 +630,6 @@ export const InternalArgsBuilt = ({
   return arb;
 };
 
-
-
-
 export const resolverFor = <X, T extends keyof ResolverInputTypes, Z extends keyof ResolverInputTypes[T]>(
   type: T,
   field: Z,
@@ -680,10 +638,6 @@ export const resolverFor = <X, T extends keyof ResolverInputTypes, Z extends key
     source: any,
   ) => Z extends keyof ModelTypes[T] ? ModelTypes[T][Z] | Promise<ModelTypes[T][Z]> | X : any,
 ) => fn as (args?: any, source?: any) => any;
-
-
-
-
 
 export type UnwrapPromise<T> = T extends Promise<infer R> ? R : T;
 export type ZeusState<T extends (...args: any[]) => Promise<any>> = NonNullable<UnwrapPromise<ReturnType<T>>>;
@@ -830,9 +784,6 @@ type OptionalKeys<T> = {
 
 export type WithOptionalNullables<T> = OptionalKeys<WithNullableKeys<T>> & WithNonNullableKeys<T>;
 
-
-
-
 export type Variable<T extends GraphQLVariableType, Name extends string> = {
   ' __zeus_name': Name;
   ' __zeus_type': T;
@@ -855,7 +806,6 @@ export const GRAPHQL_TYPE_SEPARATOR = `__$GRAPHQL__`;
 export const $ = <Type extends GraphQLVariableType, Name extends string>(name: Name, graphqlType: Type) => {
   return (START_VAR_NAME + name + GRAPHQL_TYPE_SEPARATOR + graphqlType) as unknown as Variable<Type, Name>;
 };
-
 type ZEUS_INTERFACES = GraphQLTypes["BaseResult"]
 export type ScalarCoders = {
 	DateTime?: ScalarResolver;
@@ -868,6 +818,7 @@ export type ValueTypes = {
 hello?: [{	name: string | Variable<any, string>},boolean | `@${string}`],
 	/** 获取我的信息 */
 	me?:ValueTypes["LoginUser"],
+getOnLineLoginUserList?: [{	ip?: string | undefined | null | Variable<any, string>,	name?: string | undefined | null | Variable<any, string>},ValueTypes["OnLineUser"]],
 	/** 查询所有菜单 */
 	allMenuList?:ValueTypes["Menu"],
 getMenuTree?: [{	/** 角色id */
@@ -902,6 +853,11 @@ getUserList?: [{	/** 用户id */
 	includeRole?: boolean | undefined | null | Variable<any, string>,	pageNo?: number | undefined | null | Variable<any, string>,	pageSize?: number | undefined | null | Variable<any, string>},ValueTypes["UserPageResult"]],
 	/** 列出所有存储桶 */
 	listBuckets?:ValueTypes["BucketInfo"],
+getPostTagList?: [{	/** id */
+	id?: string | undefined | null | Variable<any, string>,	/** tag名称 */
+	name?: string | undefined | null | Variable<any, string>,	/** 开始时间YYYY-DD-MM */
+	from?: string | undefined | null | Variable<any, string>,	/** 结束时间YYYY-DD-MM */
+	to?: string | undefined | null | Variable<any, string>,	pageNo?: number | undefined | null | Variable<any, string>,	pageSize?: number | undefined | null | Variable<any, string>},ValueTypes["PostTagPageResult"]],
 		__typename?: boolean | `@${string}`
 }>;
 	["LoginUser"]: AliasType<{
@@ -986,6 +942,21 @@ getUserList?: [{	/** 用户id */
 	children?:ValueTypes["Menu"],
 		__typename?: boolean | `@${string}`
 }>;
+	["OnLineUser"]: AliasType<{
+	/** 登录用户名 */
+	username?:boolean | `@${string}`,
+	/** 浏览器 */
+	loginBrowser?:boolean | `@${string}`,
+	/** ip */
+	loginIp?:boolean | `@${string}`,
+	/** 登录时间 */
+	loginTime?:boolean | `@${string}`,
+	/** 登录地址 */
+	loginAddr?:boolean | `@${string}`,
+	/** token */
+	token?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
 	/** The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
 ["JSONObject"]:unknown;
 	["MenuPageResult"]: AliasType<{
@@ -1037,6 +1008,26 @@ getUserList?: [{	/** 用户id */
 	creationDate?:boolean | `@${string}`,
 		__typename?: boolean | `@${string}`
 }>;
+	["PostTagPageResult"]: AliasType<{
+	data?:ValueTypes["PostTag"],
+	totalCount?:boolean | `@${string}`,
+	hasNextPage?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
+	["PostTag"]: AliasType<{
+	id?:boolean | `@${string}`,
+	/** 创建时间 */
+	createdAt?:boolean | `@${string}`,
+	/** 更新时间 */
+	updatedAt?:boolean | `@${string}`,
+	/** tag名称 */
+	name?:boolean | `@${string}`,
+	/** icon */
+	icon?:boolean | `@${string}`,
+	/** 封面图 */
+	thumbnail?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
 	["Mutation"]: AliasType<{
 login?: [{	password: string | Variable<any, string>,	username: string | Variable<any, string>},ValueTypes["LoginResult"]],
 	logout?:ValueTypes["BaseResponse"],
@@ -1051,6 +1042,9 @@ editUser?: [{	input: ValueTypes["EditUserInput"] | Variable<any, string>},ValueT
 removeUsers?: [{	userIds: Array<string> | Variable<any, string>},ValueTypes["BaseResponse"]],
 resetUserPassword?: [{	userId: string | Variable<any, string>},ValueTypes["BaseResponse"]],
 makeBucket?: [{	bucketName: string | Variable<any, string>},ValueTypes["BaseResponse"]],
+createPostTag?: [{	input: ValueTypes["CreatePostTagInput"] | Variable<any, string>},ValueTypes["BaseResponse"]],
+editPostTag?: [{	input: ValueTypes["EditPostTagInput"] | Variable<any, string>},ValueTypes["BaseResponse"]],
+removePostTags?: [{	ids: Array<string> | Variable<any, string>},ValueTypes["BaseResponse"]],
 		__typename?: boolean | `@${string}`
 }>;
 	["LoginResult"]: AliasType<{
@@ -1179,6 +1173,24 @@ makeBucket?: [{	bucketName: string | Variable<any, string>},ValueTypes["BaseResp
 	note?: string | undefined | null | Variable<any, string>,
 	/** 角色 */
 	roleIds?: Array<string> | undefined | null | Variable<any, string>
+};
+	["CreatePostTagInput"]: {
+	/** tag名称 */
+	name: string | Variable<any, string>,
+	/** icon */
+	icon?: string | undefined | null | Variable<any, string>,
+	/** 封面图 */
+	thumbnail?: string | undefined | null | Variable<any, string>
+};
+	["EditPostTagInput"]: {
+	/** tagid */
+	id: string | Variable<any, string>,
+	/** tag名称 */
+	name: string | Variable<any, string>,
+	/** icon */
+	icon?: string | undefined | null | Variable<any, string>,
+	/** 封面图 */
+	thumbnail?: string | undefined | null | Variable<any, string>
 }
   }
 
@@ -1187,6 +1199,7 @@ export type ResolverInputTypes = {
 hello?: [{	name: string},boolean | `@${string}`],
 	/** 获取我的信息 */
 	me?:ResolverInputTypes["LoginUser"],
+getOnLineLoginUserList?: [{	ip?: string | undefined | null,	name?: string | undefined | null},ResolverInputTypes["OnLineUser"]],
 	/** 查询所有菜单 */
 	allMenuList?:ResolverInputTypes["Menu"],
 getMenuTree?: [{	/** 角色id */
@@ -1221,6 +1234,11 @@ getUserList?: [{	/** 用户id */
 	includeRole?: boolean | undefined | null,	pageNo?: number | undefined | null,	pageSize?: number | undefined | null},ResolverInputTypes["UserPageResult"]],
 	/** 列出所有存储桶 */
 	listBuckets?:ResolverInputTypes["BucketInfo"],
+getPostTagList?: [{	/** id */
+	id?: string | undefined | null,	/** tag名称 */
+	name?: string | undefined | null,	/** 开始时间YYYY-DD-MM */
+	from?: string | undefined | null,	/** 结束时间YYYY-DD-MM */
+	to?: string | undefined | null,	pageNo?: number | undefined | null,	pageSize?: number | undefined | null},ResolverInputTypes["PostTagPageResult"]],
 		__typename?: boolean | `@${string}`
 }>;
 	["LoginUser"]: AliasType<{
@@ -1305,6 +1323,21 @@ getUserList?: [{	/** 用户id */
 	children?:ResolverInputTypes["Menu"],
 		__typename?: boolean | `@${string}`
 }>;
+	["OnLineUser"]: AliasType<{
+	/** 登录用户名 */
+	username?:boolean | `@${string}`,
+	/** 浏览器 */
+	loginBrowser?:boolean | `@${string}`,
+	/** ip */
+	loginIp?:boolean | `@${string}`,
+	/** 登录时间 */
+	loginTime?:boolean | `@${string}`,
+	/** 登录地址 */
+	loginAddr?:boolean | `@${string}`,
+	/** token */
+	token?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
 	/** The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
 ["JSONObject"]:unknown;
 	["MenuPageResult"]: AliasType<{
@@ -1356,6 +1389,26 @@ getUserList?: [{	/** 用户id */
 	creationDate?:boolean | `@${string}`,
 		__typename?: boolean | `@${string}`
 }>;
+	["PostTagPageResult"]: AliasType<{
+	data?:ResolverInputTypes["PostTag"],
+	totalCount?:boolean | `@${string}`,
+	hasNextPage?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
+	["PostTag"]: AliasType<{
+	id?:boolean | `@${string}`,
+	/** 创建时间 */
+	createdAt?:boolean | `@${string}`,
+	/** 更新时间 */
+	updatedAt?:boolean | `@${string}`,
+	/** tag名称 */
+	name?:boolean | `@${string}`,
+	/** icon */
+	icon?:boolean | `@${string}`,
+	/** 封面图 */
+	thumbnail?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
 	["Mutation"]: AliasType<{
 login?: [{	password: string,	username: string},ResolverInputTypes["LoginResult"]],
 	logout?:ResolverInputTypes["BaseResponse"],
@@ -1370,6 +1423,9 @@ editUser?: [{	input: ResolverInputTypes["EditUserInput"]},ResolverInputTypes["Ba
 removeUsers?: [{	userIds: Array<string>},ResolverInputTypes["BaseResponse"]],
 resetUserPassword?: [{	userId: string},ResolverInputTypes["BaseResponse"]],
 makeBucket?: [{	bucketName: string},ResolverInputTypes["BaseResponse"]],
+createPostTag?: [{	input: ResolverInputTypes["CreatePostTagInput"]},ResolverInputTypes["BaseResponse"]],
+editPostTag?: [{	input: ResolverInputTypes["EditPostTagInput"]},ResolverInputTypes["BaseResponse"]],
+removePostTags?: [{	ids: Array<string>},ResolverInputTypes["BaseResponse"]],
 		__typename?: boolean | `@${string}`
 }>;
 	["LoginResult"]: AliasType<{
@@ -1498,6 +1554,24 @@ makeBucket?: [{	bucketName: string},ResolverInputTypes["BaseResponse"]],
 	note?: string | undefined | null,
 	/** 角色 */
 	roleIds?: Array<string> | undefined | null
+};
+	["CreatePostTagInput"]: {
+	/** tag名称 */
+	name: string,
+	/** icon */
+	icon?: string | undefined | null,
+	/** 封面图 */
+	thumbnail?: string | undefined | null
+};
+	["EditPostTagInput"]: {
+	/** tagid */
+	id: string,
+	/** tag名称 */
+	name: string,
+	/** icon */
+	icon?: string | undefined | null,
+	/** 封面图 */
+	thumbnail?: string | undefined | null
 }
   }
 
@@ -1506,6 +1580,8 @@ export type ModelTypes = {
 		hello: string,
 	/** 获取我的信息 */
 	me: ModelTypes["LoginUser"],
+	/** 登录用户列表查询 */
+	getOnLineLoginUserList: Array<ModelTypes["OnLineUser"]>,
 	/** 查询所有菜单 */
 	allMenuList: Array<ModelTypes["Menu"]>,
 	/** 菜单Tree查询 */
@@ -1517,7 +1593,9 @@ export type ModelTypes = {
 	/** 角色列表查询 */
 	getUserList: ModelTypes["UserPageResult"],
 	/** 列出所有存储桶 */
-	listBuckets: Array<ModelTypes["BucketInfo"]>
+	listBuckets: Array<ModelTypes["BucketInfo"]>,
+	/** PostTag列表查询 */
+	getPostTagList: ModelTypes["PostTagPageResult"]
 };
 	["LoginUser"]: {
 		id: string,
@@ -1597,6 +1675,20 @@ export type ModelTypes = {
 	/** children */
 	children?: Array<ModelTypes["Menu"] | undefined> | undefined
 };
+	["OnLineUser"]: {
+		/** 登录用户名 */
+	username: string,
+	/** 浏览器 */
+	loginBrowser: string,
+	/** ip */
+	loginIp: string,
+	/** 登录时间 */
+	loginTime: string,
+	/** 登录地址 */
+	loginAddr: string,
+	/** token */
+	token: string
+};
 	/** The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
 ["JSONObject"]:any;
 	["MenuPageResult"]: {
@@ -1643,6 +1735,24 @@ export type ModelTypes = {
 	/** 创建时间 */
 	creationDate: string
 };
+	["PostTagPageResult"]: {
+		data?: Array<ModelTypes["PostTag"]> | undefined,
+	totalCount: number,
+	hasNextPage: boolean
+};
+	["PostTag"]: {
+		id: string,
+	/** 创建时间 */
+	createdAt?: ModelTypes["DateTime"] | undefined,
+	/** 更新时间 */
+	updatedAt?: ModelTypes["DateTime"] | undefined,
+	/** tag名称 */
+	name: string,
+	/** icon */
+	icon?: string | undefined,
+	/** 封面图 */
+	thumbnail?: string | undefined
+};
 	["Mutation"]: {
 		login: ModelTypes["LoginResult"],
 	logout: ModelTypes["BaseResponse"],
@@ -1667,7 +1777,13 @@ export type ModelTypes = {
 	/** 重置用户密码 */
 	resetUserPassword: ModelTypes["BaseResponse"],
 	/** 创建一个新的存储桶 */
-	makeBucket: ModelTypes["BaseResponse"]
+	makeBucket: ModelTypes["BaseResponse"],
+	/** 创建PostTag */
+	createPostTag: ModelTypes["BaseResponse"],
+	/** 修改PostTag */
+	editPostTag: ModelTypes["BaseResponse"],
+	/** 批量删除PostTag */
+	removePostTags: ModelTypes["BaseResponse"]
 };
 	["LoginResult"]: {
 		/** code */
@@ -1787,6 +1903,24 @@ export type ModelTypes = {
 	note?: string | undefined,
 	/** 角色 */
 	roleIds?: Array<string> | undefined
+};
+	["CreatePostTagInput"]: {
+	/** tag名称 */
+	name: string,
+	/** icon */
+	icon?: string | undefined,
+	/** 封面图 */
+	thumbnail?: string | undefined
+};
+	["EditPostTagInput"]: {
+	/** tagid */
+	id: string,
+	/** tag名称 */
+	name: string,
+	/** icon */
+	icon?: string | undefined,
+	/** 封面图 */
+	thumbnail?: string | undefined
 }
     }
 
@@ -1796,6 +1930,8 @@ export type GraphQLTypes = {
 	hello: string,
 	/** 获取我的信息 */
 	me: GraphQLTypes["LoginUser"],
+	/** 登录用户列表查询 */
+	getOnLineLoginUserList: Array<GraphQLTypes["OnLineUser"]>,
 	/** 查询所有菜单 */
 	allMenuList: Array<GraphQLTypes["Menu"]>,
 	/** 菜单Tree查询 */
@@ -1807,7 +1943,9 @@ export type GraphQLTypes = {
 	/** 角色列表查询 */
 	getUserList: GraphQLTypes["UserPageResult"],
 	/** 列出所有存储桶 */
-	listBuckets: Array<GraphQLTypes["BucketInfo"]>
+	listBuckets: Array<GraphQLTypes["BucketInfo"]>,
+	/** PostTag列表查询 */
+	getPostTagList: GraphQLTypes["PostTagPageResult"]
 };
 	["LoginUser"]: {
 	__typename: "LoginUser",
@@ -1891,6 +2029,21 @@ export type GraphQLTypes = {
 	/** children */
 	children?: Array<GraphQLTypes["Menu"] | undefined> | undefined
 };
+	["OnLineUser"]: {
+	__typename: "OnLineUser",
+	/** 登录用户名 */
+	username: string,
+	/** 浏览器 */
+	loginBrowser: string,
+	/** ip */
+	loginIp: string,
+	/** 登录时间 */
+	loginTime: string,
+	/** 登录地址 */
+	loginAddr: string,
+	/** token */
+	token: string
+};
 	/** The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
 ["JSONObject"]: "scalar" & { name: "JSONObject" };
 	["MenuPageResult"]: {
@@ -1942,6 +2095,26 @@ export type GraphQLTypes = {
 	/** 创建时间 */
 	creationDate: string
 };
+	["PostTagPageResult"]: {
+	__typename: "PostTagPageResult",
+	data?: Array<GraphQLTypes["PostTag"]> | undefined,
+	totalCount: number,
+	hasNextPage: boolean
+};
+	["PostTag"]: {
+	__typename: "PostTag",
+	id: string,
+	/** 创建时间 */
+	createdAt?: GraphQLTypes["DateTime"] | undefined,
+	/** 更新时间 */
+	updatedAt?: GraphQLTypes["DateTime"] | undefined,
+	/** tag名称 */
+	name: string,
+	/** icon */
+	icon?: string | undefined,
+	/** 封面图 */
+	thumbnail?: string | undefined
+};
 	["Mutation"]: {
 	__typename: "Mutation",
 	login: GraphQLTypes["LoginResult"],
@@ -1967,7 +2140,13 @@ export type GraphQLTypes = {
 	/** 重置用户密码 */
 	resetUserPassword: GraphQLTypes["BaseResponse"],
 	/** 创建一个新的存储桶 */
-	makeBucket: GraphQLTypes["BaseResponse"]
+	makeBucket: GraphQLTypes["BaseResponse"],
+	/** 创建PostTag */
+	createPostTag: GraphQLTypes["BaseResponse"],
+	/** 修改PostTag */
+	editPostTag: GraphQLTypes["BaseResponse"],
+	/** 批量删除PostTag */
+	removePostTags: GraphQLTypes["BaseResponse"]
 };
 	["LoginResult"]: {
 	__typename: "LoginResult",
@@ -2095,6 +2274,24 @@ export type GraphQLTypes = {
 	note?: string | undefined,
 	/** 角色 */
 	roleIds?: Array<string> | undefined
+};
+	["CreatePostTagInput"]: {
+		/** tag名称 */
+	name: string,
+	/** icon */
+	icon?: string | undefined,
+	/** 封面图 */
+	thumbnail?: string | undefined
+};
+	["EditPostTagInput"]: {
+		/** tagid */
+	id: string,
+	/** tag名称 */
+	name: string,
+	/** icon */
+	icon?: string | undefined,
+	/** 封面图 */
+	thumbnail?: string | undefined
 }
     }
 /** 用户性别枚举 */
@@ -2114,4 +2311,6 @@ type ZEUS_VARIABLES = {
 	["EditRoleInput"]: ValueTypes["EditRoleInput"];
 	["CreateUserInput"]: ValueTypes["CreateUserInput"];
 	["EditUserInput"]: ValueTypes["EditUserInput"];
+	["CreatePostTagInput"]: ValueTypes["CreatePostTagInput"];
+	["EditPostTagInput"]: ValueTypes["EditPostTagInput"];
 }

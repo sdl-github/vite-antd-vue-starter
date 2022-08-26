@@ -69,3 +69,21 @@ export function logout() {
         }
     })
 }
+
+export function getOnLineUser(ip?: string, name?: string) {
+    return query({
+        getOnLineLoginUserList: [
+            {
+                ip,
+                name
+            }, {
+                token: true,
+                username: true,
+                loginIp: true,
+                loginTime: true,
+                loginBrowser: true,
+                loginAddr: true,
+            }
+        ]
+    })
+}

@@ -5,6 +5,9 @@ export const AllTypesProps: Record<string,any> = {
 		hello:{
 
 		},
+		getOnLineLoginUserList:{
+
+		},
 		getMenuTree:{
 
 		},
@@ -15,6 +18,9 @@ export const AllTypesProps: Record<string,any> = {
 
 		},
 		getUserList:{
+
+		},
+		getPostTagList:{
 
 		}
 	},
@@ -57,6 +63,15 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		makeBucket:{
 
+		},
+		createPostTag:{
+			input:"CreatePostTagInput"
+		},
+		editPostTag:{
+			input:"EditPostTagInput"
+		},
+		removePostTags:{
+
 		}
 	},
 	CreateMenuInput:{
@@ -76,6 +91,12 @@ export const AllTypesProps: Record<string,any> = {
 	},
 	EditUserInput:{
 		gender:"UserGenderEnum"
+	},
+	CreatePostTagInput:{
+
+	},
+	EditPostTagInput:{
+
 	}
 }
 
@@ -83,12 +104,14 @@ export const ReturnTypes: Record<string,any> = {
 	Query:{
 		hello:"String",
 		me:"LoginUser",
+		getOnLineLoginUserList:"OnLineUser",
 		allMenuList:"Menu",
 		getMenuTree:"JSONObject",
 		getMenuList:"MenuPageResult",
 		getRoleList:"RolePageResult",
 		getUserList:"UserPageResult",
-		listBuckets:"BucketInfo"
+		listBuckets:"BucketInfo",
+		getPostTagList:"PostTagPageResult"
 	},
 	LoginUser:{
 		id:"ID",
@@ -133,6 +156,14 @@ export const ReturnTypes: Record<string,any> = {
 		type:"String",
 		children:"Menu"
 	},
+	OnLineUser:{
+		username:"String",
+		loginBrowser:"String",
+		loginIp:"String",
+		loginTime:"String",
+		loginAddr:"String",
+		token:"String"
+	},
 	JSONObject: `scalar.JSONObject` as const,
 	MenuPageResult:{
 		data:"Menu",
@@ -166,6 +197,19 @@ export const ReturnTypes: Record<string,any> = {
 		name:"String",
 		creationDate:"String"
 	},
+	PostTagPageResult:{
+		data:"PostTag",
+		totalCount:"Float",
+		hasNextPage:"Boolean"
+	},
+	PostTag:{
+		id:"ID",
+		createdAt:"DateTime",
+		updatedAt:"DateTime",
+		name:"String",
+		icon:"String",
+		thumbnail:"String"
+	},
 	Mutation:{
 		login:"LoginResult",
 		logout:"BaseResponse",
@@ -179,7 +223,10 @@ export const ReturnTypes: Record<string,any> = {
 		editUser:"BaseResponse",
 		removeUsers:"BaseResponse",
 		resetUserPassword:"BaseResponse",
-		makeBucket:"BaseResponse"
+		makeBucket:"BaseResponse",
+		createPostTag:"BaseResponse",
+		editPostTag:"BaseResponse",
+		removePostTags:"BaseResponse"
 	},
 	LoginResult:{
 		code:"Float",
