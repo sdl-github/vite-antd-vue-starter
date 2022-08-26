@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import FilePond from '@/components/FilePond/index.vue'
 import { userStore } from '@/store/user';
 import { computed } from 'vue';
 
@@ -8,17 +9,14 @@ const userInfo = computed(() => userState.userInfo)
 </script>
 
 <template>
-    <div class="flex">
-        <div class="bg-white w-[350px] h-[300px] rounded flex flex-col items-center p-5">
-            <img class="w-[100px] rounded-[50%]" :src="userInfo.avatar" />
-            <h2 class="my-2 text-lg">
-                {{ userInfo.nickname }}
-                <span class="text-sm">{{ userInfo.phone }}</span>
-            </h2>
-            <div class="mt-2">
-                <span class="bg-pink-100 text-sm text-pink-400 mx-2 px-2 py-1 rounded" v-for="role in userInfo.roles">
-                    {{ role?.name }}</span>
-            </div>
+    <div class="">
+        <div class="w-[100%] h-[120px] rounded flex items-center p-5 bg-[#f0f9ff]">
+            <a-avatar style="background-color: #1890ff" :size="50" :src="userInfo.avatar">{{ userInfo.username }}</a-avatar>
+            <span class="mx-2 font-bold rounded text-sm px-2 py-1 bg-purple-200 text-purple-500">{{ userInfo.nickname }}</span>
+        </div>
+
+        <div class="bg-white w-[100%] h-[600px] rounded p-5 mt-2">
+            <FilePond/>
         </div>
     </div>
 </template>

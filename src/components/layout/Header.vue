@@ -9,8 +9,8 @@
     <div class="user-info">
       <a-dropdown>
         <div>
-          <a-avatar :src="userInfo.avatar" />
-          <span class="mx-2 rounded text-sm px-2 py-1 bg-purple-200 text-purple-500">{{ userInfo.nickname }}</span>
+          <a-avatar style="background-color: #1890ff" :src="userInfo.avatar"> {{ userInfo.username }} </a-avatar>
+          <span class="mx-2 rounded text-xs px-2 py-1 bg-purple-200 text-purple-500">{{ userInfo.nickname }}</span>
         </div>
         <template #overlay>
           <a-menu>

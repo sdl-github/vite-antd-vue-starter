@@ -822,6 +822,11 @@ fastq@^1.6.0:
   dependencies:
     reusify "^1.0.4"
 
+filepond@^4.30.4:
+  version "4.30.4"
+  resolved "https://registry.npmmirror.com/filepond/-/filepond-4.30.4.tgz#036d87d9b0ab27d19fb5e302eae799df90e094e4"
+  integrity sha512-FCwsMvG9iiEs6uobdDrTaKsCgsqys0NuLgPPD8n37AYVYBiiDkrPkk9MSIU5rT2FahYcL1bScYI9huIPtlzqyA==
+
 fill-range@^7.0.1:
   version "7.0.1"
   resolved "https://registry.nlark.com/fill-range/download/fill-range-7.0.1.tgz#1919a6a7c75fe38b2c7c77e5198535da9acdda40"
@@ -1756,10 +1761,20 @@ vscode-vue-languageservice@^0.27.0:
     vscode-pug-languageservice "^0.27.24"
     vscode-typescript-languageservice "^0.27.25"
 
+vue-cropper@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.npmmirror.com/vue-cropper/-/vue-cropper-1.0.5.tgz#eddc55a2165d721fa795c14d5d38117315904650"
+  integrity sha512-D4XXdqWmMWRLOIV9LIh7/mkH6OBOMQDFbRjwntkxmAtxOtwpC9U5ZZ6lSXw5F5cbd4g8znDjk6MuCwIL+fZSrA==
+
 vue-demi@*:
   version "0.12.1"
   resolved "https://registry.npmmirror.com/vue-demi/download/vue-demi-0.12.1.tgz#f7e18efbecffd11ab069d1472d7a06e319b4174c"
   integrity sha1-9+GO++z/0RqwadFHLXoG4xm0F0w=
+
+vue-filepond@^7.0.3:
+  version "7.0.3"
+  resolved "https://registry.npmmirror.com/vue-filepond/-/vue-filepond-7.0.3.tgz#326cd309ef5b13538ed3233e4fff332cb2b41f8c"
+  integrity sha512-pYZ5TxGwFiiiVlRdzlJl0AyHE0/rEZiHm/0sYhIleFjV2VdGWTyxSqErN/AQwrwv32AeiNbui46vVB06Dl07ow==
 
 vue-router@^4.0.12:
   version "4.0.12"
