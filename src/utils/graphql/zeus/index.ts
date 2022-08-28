@@ -853,6 +853,7 @@ getUserList?: [{	/** 用户id */
 	includeRole?: boolean | undefined | null | Variable<any, string>,	pageNo?: number | undefined | null | Variable<any, string>,	pageSize?: number | undefined | null | Variable<any, string>},ValueTypes["UserPageResult"]],
 	/** 列出所有存储桶 */
 	listBuckets?:ValueTypes["BucketInfo"],
+listObjects?: [{	bucketName: string | Variable<any, string>},ValueTypes["FileItem"]],
 getPostTagList?: [{	/** id */
 	id?: string | undefined | null | Variable<any, string>,	/** tag名称 */
 	name?: string | undefined | null | Variable<any, string>,	/** 开始时间YYYY-DD-MM */
@@ -1008,6 +1009,21 @@ getPostTagList?: [{	/** id */
 	creationDate?:boolean | `@${string}`,
 		__typename?: boolean | `@${string}`
 }>;
+	["FileItem"]: AliasType<{
+	/** 对象名称 */
+	name?:boolean | `@${string}`,
+	/** 对象的大小 */
+	size?:boolean | `@${string}`,
+	/** 对象名称的前缀 */
+	prefix?:boolean | `@${string}`,
+	/** 对象的etag值 */
+	etag?:boolean | `@${string}`,
+	/** 最后修改时间 */
+	lastModified?:boolean | `@${string}`,
+	/** 文件url */
+	url?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
 	["PostTagPageResult"]: AliasType<{
 	data?:ValueTypes["PostTag"],
 	totalCount?:boolean | `@${string}`,
@@ -1031,6 +1047,7 @@ getPostTagList?: [{	/** id */
 	["Mutation"]: AliasType<{
 login?: [{	password: string | Variable<any, string>,	username: string | Variable<any, string>},ValueTypes["LoginResult"]],
 	logout?:ValueTypes["BaseResponse"],
+forceUserLogout?: [{	token: string | Variable<any, string>},ValueTypes["BaseResponse"]],
 createMenu?: [{	input: ValueTypes["CreateMenuInput"] | Variable<any, string>},ValueTypes["BaseResponse"]],
 editMenu?: [{	input: ValueTypes["EditMenuInput"] | Variable<any, string>},ValueTypes["BaseResponse"]],
 removeMenus?: [{	menuIds: Array<string> | Variable<any, string>},ValueTypes["BaseResponse"]],
@@ -1234,6 +1251,7 @@ getUserList?: [{	/** 用户id */
 	includeRole?: boolean | undefined | null,	pageNo?: number | undefined | null,	pageSize?: number | undefined | null},ResolverInputTypes["UserPageResult"]],
 	/** 列出所有存储桶 */
 	listBuckets?:ResolverInputTypes["BucketInfo"],
+listObjects?: [{	bucketName: string},ResolverInputTypes["FileItem"]],
 getPostTagList?: [{	/** id */
 	id?: string | undefined | null,	/** tag名称 */
 	name?: string | undefined | null,	/** 开始时间YYYY-DD-MM */
@@ -1389,6 +1407,21 @@ getPostTagList?: [{	/** id */
 	creationDate?:boolean | `@${string}`,
 		__typename?: boolean | `@${string}`
 }>;
+	["FileItem"]: AliasType<{
+	/** 对象名称 */
+	name?:boolean | `@${string}`,
+	/** 对象的大小 */
+	size?:boolean | `@${string}`,
+	/** 对象名称的前缀 */
+	prefix?:boolean | `@${string}`,
+	/** 对象的etag值 */
+	etag?:boolean | `@${string}`,
+	/** 最后修改时间 */
+	lastModified?:boolean | `@${string}`,
+	/** 文件url */
+	url?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
 	["PostTagPageResult"]: AliasType<{
 	data?:ResolverInputTypes["PostTag"],
 	totalCount?:boolean | `@${string}`,
@@ -1412,6 +1445,7 @@ getPostTagList?: [{	/** id */
 	["Mutation"]: AliasType<{
 login?: [{	password: string,	username: string},ResolverInputTypes["LoginResult"]],
 	logout?:ResolverInputTypes["BaseResponse"],
+forceUserLogout?: [{	token: string},ResolverInputTypes["BaseResponse"]],
 createMenu?: [{	input: ResolverInputTypes["CreateMenuInput"]},ResolverInputTypes["BaseResponse"]],
 editMenu?: [{	input: ResolverInputTypes["EditMenuInput"]},ResolverInputTypes["BaseResponse"]],
 removeMenus?: [{	menuIds: Array<string>},ResolverInputTypes["BaseResponse"]],
@@ -1594,6 +1628,8 @@ export type ModelTypes = {
 	getUserList: ModelTypes["UserPageResult"],
 	/** 列出所有存储桶 */
 	listBuckets: Array<ModelTypes["BucketInfo"]>,
+	/** 列出存储桶中所有对象 */
+	listObjects: Array<ModelTypes["FileItem"]>,
 	/** PostTag列表查询 */
 	getPostTagList: ModelTypes["PostTagPageResult"]
 };
@@ -1735,6 +1771,20 @@ export type ModelTypes = {
 	/** 创建时间 */
 	creationDate: string
 };
+	["FileItem"]: {
+		/** 对象名称 */
+	name: string,
+	/** 对象的大小 */
+	size: number,
+	/** 对象名称的前缀 */
+	prefix?: string | undefined,
+	/** 对象的etag值 */
+	etag: string,
+	/** 最后修改时间 */
+	lastModified: ModelTypes["DateTime"],
+	/** 文件url */
+	url: string
+};
 	["PostTagPageResult"]: {
 		data?: Array<ModelTypes["PostTag"]> | undefined,
 	totalCount: number,
@@ -1756,6 +1806,8 @@ export type ModelTypes = {
 	["Mutation"]: {
 		login: ModelTypes["LoginResult"],
 	logout: ModelTypes["BaseResponse"],
+	/** 强制用户退出 */
+	forceUserLogout: ModelTypes["BaseResponse"],
 	/** 创建新菜单 */
 	createMenu: ModelTypes["BaseResponse"],
 	/** 修改菜单信息 */
@@ -1944,6 +1996,8 @@ export type GraphQLTypes = {
 	getUserList: GraphQLTypes["UserPageResult"],
 	/** 列出所有存储桶 */
 	listBuckets: Array<GraphQLTypes["BucketInfo"]>,
+	/** 列出存储桶中所有对象 */
+	listObjects: Array<GraphQLTypes["FileItem"]>,
 	/** PostTag列表查询 */
 	getPostTagList: GraphQLTypes["PostTagPageResult"]
 };
@@ -2095,6 +2149,21 @@ export type GraphQLTypes = {
 	/** 创建时间 */
 	creationDate: string
 };
+	["FileItem"]: {
+	__typename: "FileItem",
+	/** 对象名称 */
+	name: string,
+	/** 对象的大小 */
+	size: number,
+	/** 对象名称的前缀 */
+	prefix?: string | undefined,
+	/** 对象的etag值 */
+	etag: string,
+	/** 最后修改时间 */
+	lastModified: GraphQLTypes["DateTime"],
+	/** 文件url */
+	url: string
+};
 	["PostTagPageResult"]: {
 	__typename: "PostTagPageResult",
 	data?: Array<GraphQLTypes["PostTag"]> | undefined,
@@ -2119,6 +2188,8 @@ export type GraphQLTypes = {
 	__typename: "Mutation",
 	login: GraphQLTypes["LoginResult"],
 	logout: GraphQLTypes["BaseResponse"],
+	/** 强制用户退出 */
+	forceUserLogout: GraphQLTypes["BaseResponse"],
 	/** 创建新菜单 */
 	createMenu: GraphQLTypes["BaseResponse"],
 	/** 修改菜单信息 */

@@ -1,16 +1,20 @@
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import path from 'path';
 
 // https://vitejs.dev/config/
-export default defineConfig({
-  resolve: {
-    // 路径别名
-    alias: {
-      '@': path.resolve(__dirname, 'src'),
+export default defineConfig((env) => {
+  const { mode } = env
+  loadEnv(mode, process.cwd())
+  return {
+    resolve: {
+      // 路径别名
+      alias: {
+        '@': path.resolve(__dirname, 'src'),
+      },
     },
-  },
-  plugins: [
-    vue(),
-  ],
+    plugins: [
+      vue(),
+    ],
+  }
 });

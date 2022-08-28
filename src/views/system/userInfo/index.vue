@@ -16,7 +16,7 @@ const userInfo = computed(() => userState.userInfo)
         </div>
 
         <div class="bg-white w-[100%] h-[600px] rounded p-5 mt-2">
-            <FilePond/>
+            <FilePond :max-files="10" :allow-multiple="true"/>
         </div>
     </div>
 </template>

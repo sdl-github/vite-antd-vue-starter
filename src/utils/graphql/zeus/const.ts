@@ -20,6 +20,9 @@ export const AllTypesProps: Record<string,any> = {
 		getUserList:{
 
 		},
+		listObjects:{
+
+		},
 		getPostTagList:{
 
 		}
@@ -29,6 +32,9 @@ export const AllTypesProps: Record<string,any> = {
 	JSONObject: `scalar.JSONObject` as const,
 	Mutation:{
 		login:{
+
+		},
+		forceUserLogout:{
 
 		},
 		createMenu:{
@@ -111,6 +117,7 @@ export const ReturnTypes: Record<string,any> = {
 		getRoleList:"RolePageResult",
 		getUserList:"UserPageResult",
 		listBuckets:"BucketInfo",
+		listObjects:"FileItem",
 		getPostTagList:"PostTagPageResult"
 	},
 	LoginUser:{
@@ -197,6 +204,14 @@ export const ReturnTypes: Record<string,any> = {
 		name:"String",
 		creationDate:"String"
 	},
+	FileItem:{
+		name:"String",
+		size:"Float",
+		prefix:"String",
+		etag:"String",
+		lastModified:"DateTime",
+		url:"String"
+	},
 	PostTagPageResult:{
 		data:"PostTag",
 		totalCount:"Float",
@@ -213,6 +228,7 @@ export const ReturnTypes: Record<string,any> = {
 	Mutation:{
 		login:"LoginResult",
 		logout:"BaseResponse",
+		forceUserLogout:"BaseResponse",
 		createMenu:"BaseResponse",
 		editMenu:"BaseResponse",
 		removeMenus:"BaseResponse",

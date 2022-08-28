@@ -106,8 +106,10 @@ onMounted(() => {
 })
 
 async function initData() {
+    state.loading = true
     const { getOnLineLoginUserList } = await getOnLineUser()
     state.dataList = getOnLineLoginUserList
+    state.loading = false
 }
 
 </script>

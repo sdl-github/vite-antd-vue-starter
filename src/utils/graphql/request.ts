@@ -1,11 +1,11 @@
 import { notification } from 'ant-design-vue';
 import axios from 'axios';
 import { getToken, removeToken } from '../auth';
-const baseURL = 'http://101.35.96.91:2333/graphql';
-// const baseURL = 'http://localhost:2333/graphql';
 
+export const baseURL = import.meta.env.VITE_BASE_BASE_URL;
+export const apiBaseURL = `${baseURL}/graphql`;
 const request = axios.create({
-    baseURL,
+    baseURL: apiBaseURL,
     timeout: 5000
 })
 
@@ -26,6 +26,7 @@ request.interceptors.response.use(response => {
     return data.data
 },
     err => {
+        log
         const { response: { data } } = err
         handleError(data)
         return Promise.reject(err)

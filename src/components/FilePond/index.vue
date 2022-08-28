@@ -18,9 +18,13 @@
 
 <script setup lang="ts">
 import vueFilePond from "vue-filepond";
+import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 import "filepond/dist/filepond.min.css";
+import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
+
 import { ref } from "vue";
 import { FilePondServerConfigProps } from "filepond";
+import { baseURL } from "@/utils/graphql/request";
 
 type IProps = {
     name?: string
@@ -36,22 +40,20 @@ const props = withDefaults(defineProps<IProps>(),{
     name: 'file',
     label: '点击/拖动文件到此处上传',
     accepted: 'image/jpeg, image/png',
-    url: 'http://101.35.96.91:2333'
+    url: baseURL,
+    maxFiles: 10
 })
 
-const FilePond = vueFilePond();
+const FilePond = vueFilePond(
+    FilePondPluginImagePreview
+);
 const fileList = ref([])
 const server:FilePondServerConfigProps['server']  = {
     url: props.url,
     process: {
-        url: "/file",
+        url: "/file/upload",
         method: 'POST',
-        onload: res => {
-            console.log(res);
-            return res.key
-        },
         ondata: formData => {
-            console.log(formData);
             return formData
         }
     }
