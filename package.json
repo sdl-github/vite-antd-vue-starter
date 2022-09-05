@@ -2,7 +2,8 @@
   "name": "vite-antd-vue-starter",
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite --host --mode dev.local",
+    "dev": "vite --host --mode development",
+    "dev:local": "vite --host --mode dev.local",
     "build:dev": "vite build --mode development",
     "build:prod": "vite build --mode production",
     "serve": "vite preview",

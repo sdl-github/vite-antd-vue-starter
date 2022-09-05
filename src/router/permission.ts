@@ -25,10 +25,10 @@ router.beforeEach(async (to, from, next) => {
         // 用户菜单未构造
         if (app.sideMenu.length === 0) {
             // 所有菜单接口
-            const {allMenuList} = await getAllMenuList()
+            const { allMenuList } = await getAllMenuList()
             // 数组转树结构
             const asyncRoutes = buildMenu(allMenuList)
-             // 添加到vue路由
+            // 添加到vue路由
             asyncRoutes.forEach((item) => {
                 router.addRoute(item)
             })
@@ -40,11 +40,11 @@ router.beforeEach(async (to, from, next) => {
             next({ ...to, replace: true })
         } else {
             // 如果跳转403 404 放行
-            if(to.path === '/system/403' || to.path === '/system/404'){ 
+            if (to.path === '/system/403' || to.path === '/system/404') {
                 next()
             }
             // 不在权限范围内 跳转403
-            if(!new Set(user.userInfo.menus?.map(item => item?.path)).has(to.path)){
+            if (!new Set(user.userInfo.menus?.map(item => item?.path)).has(to.path)) {
                 console.log('不在权限范围内', to.path)
                 next({ path: '/system/403' })
             } else {
@@ -72,10 +72,11 @@ router.afterEach((to) => {
 
 function filterMenu(menus: any[]) {
     const list = menus.filter(item => item.type === 'MENU' && item.visible).map(item => {
-        const { name: title, icon } = item
+        const { title: t, name, icon } = item
+        const title = t || name
         return {
             ...item,
-            name: title,
+            title,
             meta: {
                 title, icon
             }
@@ -88,10 +89,11 @@ function buildMenu(menus: any[]) {
     const modules = import.meta.glob('../**/*.vue')
     const list = menus.filter(item => item.type === 'MENU')
     const menuList = list.map(item => {
-        const { component, name: title, icon, path } = item
+        const { component, title: t, name, icon } = item
+        const title = t || name
         return {
             ...item,
-            name: title,
+            title,
             component: modules[`../${component}.vue`],
             meta: {
                 title, icon

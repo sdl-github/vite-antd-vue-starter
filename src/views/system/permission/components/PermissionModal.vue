@@ -17,6 +17,11 @@
             <a-input :placeholder="requireMessage('名称')" v-model:value="formState.data.name" />
           </a-form-item>
         </a-col>
+        <a-col :span="12">
+          <a-form-item label="标题" name="title">
+            <a-input :placeholder="requireMessage('标题')" v-model:value="formState.data.title" />
+          </a-form-item>
+        </a-col>
         <a-col v-show="validateMenu" :span="12">
           <a-form-item label="图标" name="icon">
             <PopIconSelect v-model:value="formState.data.icon" />
@@ -101,6 +106,7 @@ let formState = reactive<{ data: IMenuActionModal }>({
   data: {
     id: '',
     name: '',
+    title: '',
     icon: '',
     pId: '',
     orderBy: 0,
@@ -125,6 +131,7 @@ watch(() => props.currentItem, (val, old) => {
     formState.data = {
       id: '',
       name: '',
+      title: '',
       icon: '',
       pId: '#',
       orderBy: 0,

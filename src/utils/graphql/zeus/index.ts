@@ -1,1979 +1,737 @@
 /* eslint-disable */
 
-import { AllTypesProps, ReturnTypes, Ops } from './const';
-export const HOST = "http://101.35.96.91:2333/graphql"
-
-
-export const HEADERS = {}
-export const apiSubscription = (options: chainOptions) => (query: string) => {
-  try {
-    const queryString = options[0] + '?query=' + encodeURIComponent(query);
-    const wsString = queryString.replace('http', 'ws');
-    const host = (options.length > 1 && options[1]?.websocket?.[0]) || wsString;
-    const webSocketOptions = options[1]?.websocket || [host];
-    const ws = new WebSocket(...webSocketOptions);
-    return {
-      ws,
-      on: (e: (args: any) => void) => {
-        ws.onmessage = (event: any) => {
-          if (event.data) {
-            const parsed = JSON.parse(event.data);
-            const data = parsed.data;
-            return e(data);
-          }
-        };
-      },
-      off: (e: (args: any) => void) => {
-        ws.onclose = e;
-      },
-      error: (e: (args: any) => void) => {
-        ws.onerror = e;
-      },
-      open: (e: () => void) => {
-        ws.onopen = e;
-      },
-    };
-  } catch {
-    throw new Error('No websockets implemented');
-  }
-};
-const handleFetchResponse = (response: Response): Promise<GraphQLResponse> => {
-  if (!response.ok) {
-    return new Promise((_, reject) => {
-      response
-        .text()
-        .then((text) => {
-          try {
-            reject(JSON.parse(text));
-          } catch (err) {
-            reject(text);
-          }
-        })
-        .catch(reject);
-    });
-  }
-  return response.json();
-};
-
-export const apiFetch =
-  (options: fetchOptions) =>
-  (query: string, variables: Record<string, unknown> = {}) => {
-    const fetchOptions = options[1] || {};
-    if (fetchOptions.method && fetchOptions.method === 'GET') {
-      return fetch(`${options[0]}?query=${encodeURIComponent(query)}`, fetchOptions)
-        .then(handleFetchResponse)
-        .then((response: GraphQLResponse) => {
-          if (response.errors) {
-            throw new GraphQLError(response);
-          }
-          return response.data;
-        });
-    }
-    return fetch(`${options[0]}`, {
-      body: JSON.stringify({ query, variables }),
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      ...fetchOptions,
-    })
-      .then(handleFetchResponse)
-      .then((response: GraphQLResponse) => {
-        if (response.errors) {
-          throw new GraphQLError(response);
-        }
-        return response.data;
-      });
-  };
-
-export const InternalsBuildQuery = ({
-  ops,
-  props,
-  returns,
-  options,
-  scalars,
-}: {
-  props: AllTypesPropsType;
-  returns: ReturnTypesType;
-  ops: Operations;
-  options?: OperationOptions;
-  scalars?: ScalarDefinition;
-}) => {
-  const ibb = (
-    k: string,
-    o: InputValueType | VType,
-    p = '',
-    root = true,
-    vars: Array<{ name: string; graphQLType: string }> = [],
-  ): string => {
-    const keyForPath = purifyGraphQLKey(k);
-    const newPath = [p, keyForPath].join(SEPARATOR);
-    if (!o) {
-      return '';
-    }
-    if (typeof o === 'boolean' || typeof o === 'number') {
-      return k;
-    }
-    if (typeof o === 'string') {
-      return `${k} ${o}`;
-    }
-    if (Array.isArray(o)) {
-      const args = InternalArgsBuilt({
-        props,
-        returns,
-        ops,
-        scalars,
-        vars,
-      })(o[0], newPath);
-      return `${ibb(args ? `${k}(${args})` : k, o[1], p, false, vars)}`;
-    }
-    if (k === '__alias') {
-      return Object.entries(o)
-        .map(([alias, objectUnderAlias]) => {
-          if (typeof objectUnderAlias !== 'object' || Array.isArray(objectUnderAlias)) {
-            throw new Error(
-              'Invalid alias it should be __alias:{ YOUR_ALIAS_NAME: { OPERATION_NAME: { ...selectors }}}',
-            );
-          }
-          const operationName = Object.keys(objectUnderAlias)[0];
-          const operation = objectUnderAlias[operationName];
-          return ibb(`${alias}:${operationName}`, operation, p, false, vars);
-        })
-        .join('\n');
-    }
-    const hasOperationName = root && options?.operationName ? ' ' + options.operationName : '';
-    const keyForDirectives = o.__directives ?? '';
-    const query = `{${Object.entries(o)
-      .filter(([k]) => k !== '__directives')
-      .map((e) => ibb(...e, [p, `field<>${keyForPath}`].join(SEPARATOR), false, vars))
-      .join('\n')}}`;
-    if (!root) {
-      return `${k} ${keyForDirectives}${hasOperationName} ${query}`;
-    }
-    const varsString = vars.map((v) => `${v.name}: ${v.graphQLType}`).join(', ');
-    return `${k} ${keyForDirectives}${hasOperationName}${varsString ? `(${varsString})` : ''} ${query}`;
-  };
-  return ibb;
-};
-
-export const Thunder =
-  (fn: FetchFunction) =>
-  <O extends keyof typeof Ops, SCLR extends ScalarDefinition, R extends keyof ValueTypes = GenericOperation<O>>(
-    operation: O,
-    graphqlOptions?: ThunderGraphQLOptions<SCLR>,
-  ) =>
-  <Z extends ValueTypes[R]>(o: Z | ValueTypes[R], ops?: OperationOptions & { variables?: Record<string, unknown> }) =>
-    fn(
-      Zeus(operation, o, {
-        operationOptions: ops,
-        scalars: graphqlOptions?.scalars,
-      }),
-      ops?.variables,
-    ).then((data) => {
-      if (graphqlOptions?.scalars) {
-        return decodeScalarsInResponse({
-          response: data,
-          initialOp: operation,
-          initialZeusQuery: o as VType,
-          returns: ReturnTypes,
-          scalars: graphqlOptions.scalars,
-          ops: Ops,
-        });
-      }
-      return data;
-    }) as Promise<InputType<GraphQLTypes[R], Z, SCLR>>;
-
-export const Chain = (...options: chainOptions) => Thunder(apiFetch(options));
-
-export const SubscriptionThunder =
-  (fn: SubscriptionFunction) =>
-  <O extends keyof typeof Ops, SCLR extends ScalarDefinition, R extends keyof ValueTypes = GenericOperation<O>>(
-    operation: O,
-    graphqlOptions?: ThunderGraphQLOptions<SCLR>,
-  ) =>
-  <Z extends ValueTypes[R]>(o: Z | ValueTypes[R], ops?: OperationOptions & { variables?: ExtractVariables<Z> }) => {
-    const returnedFunction = fn(
-      Zeus(operation, o, {
-        operationOptions: ops,
-        scalars: graphqlOptions?.scalars,
-      }),
-    ) as SubscriptionToGraphQL<Z, GraphQLTypes[R], SCLR>;
-    if (returnedFunction?.on && graphqlOptions?.scalars) {
-      const wrapped = returnedFunction.on;
-      returnedFunction.on = (fnToCall: (args: InputType<GraphQLTypes[R], Z, SCLR>) => void) =>
-        wrapped((data: InputType<GraphQLTypes[R], Z, SCLR>) => {
-          if (graphqlOptions?.scalars) {
-            return fnToCall(
-              decodeScalarsInResponse({
-                response: data,
-                initialOp: operation,
-                initialZeusQuery: o as VType,
-                returns: ReturnTypes,
-                scalars: graphqlOptions.scalars,
-                ops: Ops,
-              }),
-            );
-          }
-          return fnToCall(data);
-        });
-    }
-    return returnedFunction;
-  };
-
-export const Subscription = (...options: chainOptions) => SubscriptionThunder(apiSubscription(options));
-export const Zeus = <
-  Z extends ValueTypes[R],
-  O extends keyof typeof Ops,
-  R extends keyof ValueTypes = GenericOperation<O>,
->(
-  operation: O,
-  o: Z | ValueTypes[R],
-  ops?: {
-    operationOptions?: OperationOptions;
-    scalars?: ScalarDefinition;
-  },
-) =>
-  InternalsBuildQuery({
-    props: AllTypesProps,
-    returns: ReturnTypes,
-    ops: Ops,
-    options: ops?.operationOptions,
-    scalars: ops?.scalars,
-  })(operation, o as VType);
-
-export const ZeusSelect = <T>() => ((t: unknown) => t) as SelectionFunction<T>;
-
-export const Selector = <T extends keyof ValueTypes>(key: T) => key && ZeusSelect<ValueTypes[T]>();
-
-export const TypeFromSelector = <T extends keyof ValueTypes>(key: T) => key && ZeusSelect<ValueTypes[T]>();
-export const Gql = Chain(HOST, {
-  headers: {
-    'Content-Type': 'application/json',
-    ...HEADERS,
-  },
-});
-
-export const ZeusScalars = ZeusSelect<ScalarCoders>();
-
-export const decodeScalarsInResponse = <O extends Operations>({
-  response,
-  scalars,
-  returns,
-  ops,
-  initialZeusQuery,
-  initialOp,
-}: {
-  ops: O;
-  response: any;
-  returns: ReturnTypesType;
-  scalars?: Record<string, ScalarResolver | undefined>;
-  initialOp: keyof O;
-  initialZeusQuery: InputValueType | VType;
-}) => {
-  if (!scalars) {
-    return response;
-  }
-  const builder = PrepareScalarPaths({
-    ops,
-    returns,
-  });
-
-  const scalarPaths = builder(initialOp as string, ops[initialOp], initialZeusQuery);
-  if (scalarPaths) {
-    const r = traverseResponse({ scalarPaths, resolvers: scalars })('Query', response, ['Query']);
-    return r;
-  }
-  return response;
-};
-
-export const traverseResponse = ({
-  resolvers,
-  scalarPaths,
-}: {
-  scalarPaths: { [x: string]: `scalar.${string}` };
-  resolvers: {
-    [x: string]: ScalarResolver | undefined;
-  };
-}) => {
-  const ibb = (k: string, o: InputValueType | VType, p: string[] = []): unknown => {
-    if (Array.isArray(o)) {
-      return o.map((eachO) => ibb(k, eachO, p));
-    }
-    const scalarPathString = p.join(SEPARATOR);
-    const currentScalarString = scalarPaths[scalarPathString];
-    if (currentScalarString) {
-      const currentDecoder = resolvers[currentScalarString.split('.')[1]]?.decode;
-      if (currentDecoder) {
-        return currentDecoder(o);
-      }
-    }
-    if (typeof o === 'boolean' || typeof o === 'number' || typeof o === 'string' || !o) {
-      return o;
-    }
-    return Object.fromEntries(Object.entries(o).map(([k, v]) => [k, ibb(k, v, [...p, purifyGraphQLKey(k)])]));
-  };
-  return ibb;
-};
-
-export type AllTypesPropsType = {
-  [x: string]:
-    | undefined
-    | `scalar.${string}`
-    | 'enum'
-    | {
-        [x: string]:
-          | undefined
-          | string
-          | {
-              [x: string]: string | undefined;
-            };
-      };
-};
-
-export type ReturnTypesType = {
-  [x: string]:
-    | {
-        [x: string]: string | undefined;
-      }
-    | `scalar.${string}`
-    | undefined;
-};
-export type InputValueType = {
-  [x: string]: undefined | boolean | string | number | [any, undefined | boolean | InputValueType] | InputValueType;
-};
-export type VType =
-  | undefined
-  | boolean
-  | string
-  | number
-  | [any, undefined | boolean | InputValueType]
-  | InputValueType;
-
-export type PlainType = boolean | number | string | null | undefined;
-export type ZeusArgsType =
-  | PlainType
-  | {
-      [x: string]: ZeusArgsType;
-    }
-  | Array<ZeusArgsType>;
-
-export type Operations = Record<string, string>;
-
-export type VariableDefinition = {
-  [x: string]: unknown;
-};
-
-export const SEPARATOR = '|';
-
-export type fetchOptions = Parameters<typeof fetch>;
-type websocketOptions = typeof WebSocket extends new (...args: infer R) => WebSocket ? R : never;
-export type chainOptions = [fetchOptions[0], fetchOptions[1] & { websocket?: websocketOptions }] | [fetchOptions[0]];
-export type FetchFunction = (query: string, variables?: Record<string, unknown>) => Promise<any>;
-export type SubscriptionFunction = (query: string) => any;
-type NotUndefined<T> = T extends undefined ? never : T;
-export type ResolverType<F> = NotUndefined<F extends [infer ARGS, any] ? ARGS : undefined>;
-
-export type OperationOptions = {
-  operationName?: string;
-};
-
-export type ScalarCoder = Record<string, (s: unknown) => string>;
-
-export interface GraphQLResponse {
-  data?: Record<string, any>;
-  errors?: Array<{
-    message: string;
-  }>;
-}
-export class GraphQLError extends Error {
-  constructor(public response: GraphQLResponse) {
-    super('');
-    console.error(response);
-  }
-  toString() {
-    return 'GraphQL Response Error';
-  }
-}
-export type GenericOperation<O> = O extends keyof typeof Ops ? typeof Ops[O] : never;
-export type ThunderGraphQLOptions<SCLR extends ScalarDefinition> = {
-  scalars?: SCLR | ScalarCoders;
-};
-
-const ExtractScalar = (mappedParts: string[], returns: ReturnTypesType): `scalar.${string}` | undefined => {
-  if (mappedParts.length === 0) {
-    return;
-  }
-  const oKey = mappedParts[0];
-  const returnP1 = returns[oKey];
-  if (typeof returnP1 === 'object') {
-    const returnP2 = returnP1[mappedParts[1]];
-    if (returnP2) {
-      return ExtractScalar([returnP2, ...mappedParts.slice(2)], returns);
-    }
-    return undefined;
-  }
-  return returnP1 as `scalar.${string}` | undefined;
-};
-
-export const PrepareScalarPaths = ({ ops, returns }: { returns: ReturnTypesType; ops: Operations }) => {
-  const ibb = (
-    k: string,
-    originalKey: string,
-    o: InputValueType | VType,
-    p: string[] = [],
-    pOriginals: string[] = [],
-    root = true,
-  ): { [x: string]: `scalar.${string}` } | undefined => {
-    if (!o) {
-      return;
-    }
-    if (typeof o === 'boolean' || typeof o === 'number' || typeof o === 'string') {
-      const extractionArray = [...pOriginals, originalKey];
-      const isScalar = ExtractScalar(extractionArray, returns);
-      if (isScalar?.startsWith('scalar')) {
-        const partOfTree = {
-          [[...p, k].join(SEPARATOR)]: isScalar,
-        };
-        return partOfTree;
-      }
-      return {};
-    }
-    if (Array.isArray(o)) {
-      return ibb(k, k, o[1], p, pOriginals, false);
-    }
-    if (k === '__alias') {
-      return Object.entries(o)
-        .map(([alias, objectUnderAlias]) => {
-          if (typeof objectUnderAlias !== 'object' || Array.isArray(objectUnderAlias)) {
-            throw new Error(
-              'Invalid alias it should be __alias:{ YOUR_ALIAS_NAME: { OPERATION_NAME: { ...selectors }}}',
-            );
-          }
-          const operationName = Object.keys(objectUnderAlias)[0];
-          const operation = objectUnderAlias[operationName];
-          return ibb(alias, operationName, operation, p, pOriginals, false);
-        })
-        .reduce((a, b) => ({
-          ...a,
-          ...b,
-        }));
-    }
-    const keyName = root ? ops[k] : k;
-    return Object.entries(o)
-      .filter(([k]) => k !== '__directives')
-      .map(([k, v]) =>
-        ibb(k, k, v, [...p, purifyGraphQLKey(keyName || k)], [...pOriginals, purifyGraphQLKey(originalKey)], false),
-      )
-      .reduce((a, b) => ({
-        ...a,
-        ...b,
-      }));
-  };
-  return ibb;
-};
-
-export const purifyGraphQLKey = (k: string) => k.replace(/\([^)]*\)/g, '').replace(/^[^:]*\:/g, '');
-
-const mapPart = (p: string) => {
-  const [isArg, isField] = p.split('<>');
-  if (isField) {
-    return {
-      v: isField,
-      __type: 'field',
-    } as const;
-  }
-  return {
-    v: isArg,
-    __type: 'arg',
-  } as const;
-};
-
-type Part = ReturnType<typeof mapPart>;
-
-export const ResolveFromPath = (props: AllTypesPropsType, returns: ReturnTypesType, ops: Operations) => {
-  const ResolvePropsType = (mappedParts: Part[]) => {
-    const oKey = ops[mappedParts[0].v];
-    const propsP1 = oKey ? props[oKey] : props[mappedParts[0].v];
-    if (propsP1 === 'enum' && mappedParts.length === 1) {
-      return 'enum';
-    }
-    if (typeof propsP1 === 'string' && propsP1.startsWith('scalar.') && mappedParts.length === 1) {
-      return propsP1;
-    }
-    if (typeof propsP1 === 'object') {
-      if (mappedParts.length < 2) {
-        return 'not';
-      }
-      const propsP2 = propsP1[mappedParts[1].v];
-      if (typeof propsP2 === 'string') {
-        return rpp(
-          `${propsP2}${SEPARATOR}${mappedParts
-            .slice(2)
-            .map((mp) => mp.v)
-            .join(SEPARATOR)}`,
-        );
-      }
-      if (typeof propsP2 === 'object') {
-        if (mappedParts.length < 3) {
-          return 'not';
-        }
-        const propsP3 = propsP2[mappedParts[2].v];
-        if (propsP3 && mappedParts[2].__type === 'arg') {
-          return rpp(
-            `${propsP3}${SEPARATOR}${mappedParts
-              .slice(3)
-              .map((mp) => mp.v)
-              .join(SEPARATOR)}`,
-          );
-        }
-      }
-    }
-  };
-  const ResolveReturnType = (mappedParts: Part[]) => {
-    if (mappedParts.length === 0) {
-      return 'not';
-    }
-    const oKey = ops[mappedParts[0].v];
-    const returnP1 = oKey ? returns[oKey] : returns[mappedParts[0].v];
-    if (typeof returnP1 === 'object') {
-      const returnP2 = returnP1[mappedParts[1].v];
-      if (returnP2) {
-        return rpp(
-          `${returnP2}${SEPARATOR}${mappedParts
-            .slice(2)
-            .map((mp) => mp.v)
-            .join(SEPARATOR)}`,
-        );
-      }
-    }
-  };
-  const rpp = (path: string): 'enum' | 'not' | `scalar.${string}` => {
-    const parts = path.split(SEPARATOR).filter((l) => l.length > 0);
-    const mappedParts = parts.map(mapPart);
-    const propsP1 = ResolvePropsType(mappedParts);
-    if (propsP1) {
-      return propsP1;
-    }
-    const returnP1 = ResolveReturnType(mappedParts);
-    if (returnP1) {
-      return returnP1;
-    }
-    return 'not';
-  };
-  return rpp;
-};
-
-export const InternalArgsBuilt = ({
-  props,
-  ops,
-  returns,
-  scalars,
-  vars,
-}: {
-  props: AllTypesPropsType;
-  returns: ReturnTypesType;
-  ops: Operations;
-  scalars?: ScalarDefinition;
-  vars: Array<{ name: string; graphQLType: string }>;
-}) => {
-  const arb = (a: ZeusArgsType, p = '', root = true): string => {
-    if (typeof a === 'string') {
-      if (a.startsWith(START_VAR_NAME)) {
-        const [varName, graphQLType] = a.replace(START_VAR_NAME, '$').split(GRAPHQL_TYPE_SEPARATOR);
-        const v = vars.find((v) => v.name === varName);
-        if (!v) {
-          vars.push({
-            name: varName,
-            graphQLType,
-          });
-        } else {
-          if (v.graphQLType !== graphQLType) {
-            throw new Error(
-              `Invalid variable exists with two different GraphQL Types, "${v.graphQLType}" and ${graphQLType}`,
-            );
-          }
-        }
-        return varName;
-      }
-    }
-    const checkType = ResolveFromPath(props, returns, ops)(p);
-    if (checkType.startsWith('scalar.')) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const [_, ...splittedScalar] = checkType.split('.');
-      const scalarKey = splittedScalar.join('.');
-      return (scalars?.[scalarKey]?.encode?.(a) as string) || JSON.stringify(a);
-    }
-    if (Array.isArray(a)) {
-      return `[${a.map((arr) => arb(arr, p, false)).join(', ')}]`;
-    }
-    if (typeof a === 'string') {
-      if (checkType === 'enum') {
-        return a;
-      }
-      return `${JSON.stringify(a)}`;
-    }
-    if (typeof a === 'object') {
-      if (a === null) {
-        return `null`;
-      }
-      const returnedObjectString = Object.entries(a)
-        .filter(([, v]) => typeof v !== 'undefined')
-        .map(([k, v]) => `${k}: ${arb(v, [p, k].join(SEPARATOR), false)}`)
-        .join(',\n');
-      if (!root) {
-        return `{${returnedObjectString}}`;
-      }
-      return returnedObjectString;
-    }
-    return `${a}`;
-  };
-  return arb;
-};
-
-export const resolverFor = <X, T extends keyof ResolverInputTypes, Z extends keyof ResolverInputTypes[T]>(
-  type: T,
-  field: Z,
-  fn: (
-    args: Required<ResolverInputTypes[T]>[Z] extends [infer Input, any] ? Input : any,
-    source: any,
-  ) => Z extends keyof ModelTypes[T] ? ModelTypes[T][Z] | Promise<ModelTypes[T][Z]> | X : any,
-) => fn as (args?: any, source?: any) => any;
-
-export type UnwrapPromise<T> = T extends Promise<infer R> ? R : T;
-export type ZeusState<T extends (...args: any[]) => Promise<any>> = NonNullable<UnwrapPromise<ReturnType<T>>>;
-export type ZeusHook<
-  T extends (...args: any[]) => Record<string, (...args: any[]) => Promise<any>>,
-  N extends keyof ReturnType<T>,
-> = ZeusState<ReturnType<T>[N]>;
-
-export type WithTypeNameValue<T> = T & {
-  __typename?: boolean;
-  __directives?: string;
-};
-export type AliasType<T> = WithTypeNameValue<T> & {
-  __alias?: Record<string, WithTypeNameValue<T>>;
-};
-type DeepAnify<T> = {
-  [P in keyof T]?: any;
-};
-type IsPayLoad<T> = T extends [any, infer PayLoad] ? PayLoad : T;
-export type ScalarDefinition = Record<string, ScalarResolver>;
-
-type IsScalar<S, SCLR extends ScalarDefinition> = S extends 'scalar' & { name: infer T }
-  ? T extends keyof SCLR
-    ? SCLR[T]['decode'] extends (s: unknown) => unknown
-      ? ReturnType<SCLR[T]['decode']>
-      : unknown
-    : unknown
-  : S;
-type IsArray<T, U, SCLR extends ScalarDefinition> = T extends Array<infer R>
-  ? InputType<R, U, SCLR>[]
-  : InputType<T, U, SCLR>;
-type FlattenArray<T> = T extends Array<infer R> ? R : T;
-type BaseZeusResolver = boolean | 1 | string | Variable<any, string>;
-
-type IsInterfaced<SRC extends DeepAnify<DST>, DST, SCLR extends ScalarDefinition> = FlattenArray<SRC> extends
-  | ZEUS_INTERFACES
-  | ZEUS_UNIONS
-  ? {
-      [P in keyof SRC]: SRC[P] extends '__union' & infer R
-        ? P extends keyof DST
-          ? IsArray<R, '__typename' extends keyof DST ? DST[P] & { __typename: true } : DST[P], SCLR>
-          : Record<string, unknown>
-        : never;
-    }[keyof DST] & {
-      [P in keyof Omit<
-        Pick<
-          SRC,
-          {
-            [P in keyof DST]: SRC[P] extends '__union' & infer R ? never : P;
-          }[keyof DST]
-        >,
-        '__typename'
-      >]: IsPayLoad<DST[P]> extends BaseZeusResolver ? IsScalar<SRC[P], SCLR> : IsArray<SRC[P], DST[P], SCLR>;
-    }
-  : {
-      [P in keyof Pick<SRC, keyof DST>]: IsPayLoad<DST[P]> extends BaseZeusResolver
-        ? IsScalar<SRC[P], SCLR>
-        : IsArray<SRC[P], DST[P], SCLR>;
-    };
-
-export type MapType<SRC, DST, SCLR extends ScalarDefinition> = SRC extends DeepAnify<DST>
-  ? IsInterfaced<SRC, DST, SCLR>
-  : never;
-// eslint-disable-next-line @typescript-eslint/ban-types
-export type InputType<SRC, DST, SCLR extends ScalarDefinition = {}> = IsPayLoad<DST> extends { __alias: infer R }
-  ? {
-      [P in keyof R]: MapType<SRC, R[P], SCLR>[keyof MapType<SRC, R[P], SCLR>];
-    } & MapType<SRC, Omit<IsPayLoad<DST>, '__alias'>, SCLR>
-  : MapType<SRC, IsPayLoad<DST>, SCLR>;
-export type SubscriptionToGraphQL<Z, T, SCLR extends ScalarDefinition> = {
-  ws: WebSocket;
-  on: (fn: (args: InputType<T, Z, SCLR>) => void) => void;
-  off: (fn: (e: { data?: InputType<T, Z, SCLR>; code?: number; reason?: string; message?: string }) => void) => void;
-  error: (fn: (e: { data?: InputType<T, Z, SCLR>; errors?: string[] }) => void) => void;
-  open: () => void;
-};
-
-// eslint-disable-next-line @typescript-eslint/ban-types
-export type FromSelector<SELECTOR, NAME extends keyof GraphQLTypes, SCLR extends ScalarDefinition = {}> = InputType<
-  GraphQLTypes[NAME],
-  SELECTOR,
-  SCLR
->;
-
-export type ScalarResolver = {
-  encode?: (s: unknown) => string;
-  decode?: (s: unknown) => unknown;
-};
-
-export type SelectionFunction<V> = <T>(t: T | V) => T;
-
-type BuiltInVariableTypes = {
-  ['String']: string;
-  ['Int']: number;
-  ['Float']: number;
-  ['ID']: unknown;
-  ['Boolean']: boolean;
-};
-type AllVariableTypes = keyof BuiltInVariableTypes | keyof ZEUS_VARIABLES;
-type VariableRequired<T extends string> = `${T}!` | T | `[${T}]` | `[${T}]!` | `[${T}!]` | `[${T}!]!`;
-type VR<T extends string> = VariableRequired<VariableRequired<T>>;
-
-export type GraphQLVariableType = VR<AllVariableTypes>;
-
-type ExtractVariableTypeString<T extends string> = T extends VR<infer R1>
-  ? R1 extends VR<infer R2>
-    ? R2 extends VR<infer R3>
-      ? R3 extends VR<infer R4>
-        ? R4 extends VR<infer R5>
-          ? R5
-          : R4
-        : R3
-      : R2
-    : R1
-  : T;
-
-type DecomposeType<T, Type> = T extends `[${infer R}]`
-  ? Array<DecomposeType<R, Type>> | undefined
-  : T extends `${infer R}!`
-  ? NonNullable<DecomposeType<R, Type>>
-  : Type | undefined;
-
-type ExtractTypeFromGraphQLType<T extends string> = T extends keyof ZEUS_VARIABLES
-  ? ZEUS_VARIABLES[T]
-  : T extends keyof BuiltInVariableTypes
-  ? BuiltInVariableTypes[T]
-  : any;
-
-export type GetVariableType<T extends string> = DecomposeType<
-  T,
-  ExtractTypeFromGraphQLType<ExtractVariableTypeString<T>>
->;
-
-type UndefinedKeys<T> = {
-  [K in keyof T]-?: T[K] extends NonNullable<T[K]> ? never : K;
-}[keyof T];
-
-type WithNullableKeys<T> = Pick<T, UndefinedKeys<T>>;
-type WithNonNullableKeys<T> = Omit<T, UndefinedKeys<T>>;
-
-type OptionalKeys<T> = {
-  [P in keyof T]?: T[P];
-};
-
-export type WithOptionalNullables<T> = OptionalKeys<WithNullableKeys<T>> & WithNonNullableKeys<T>;
-
-export type Variable<T extends GraphQLVariableType, Name extends string> = {
-  ' __zeus_name': Name;
-  ' __zeus_type': T;
-};
-
-export type ExtractVariables<Query> = Query extends Variable<infer VType, infer VName>
-  ? { [key in VName]: GetVariableType<VType> }
-  : Query extends [infer Inputs, infer Outputs]
-  ? ExtractVariables<Inputs> & ExtractVariables<Outputs>
-  : Query extends string | number | boolean
-  ? // eslint-disable-next-line @typescript-eslint/ban-types
-    {}
-  : UnionToIntersection<{ [K in keyof Query]: WithOptionalNullables<ExtractVariables<Query[K]>> }[keyof Query]>;
-
-type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never;
-
-export const START_VAR_NAME = `$ZEUS_VAR`;
-export const GRAPHQL_TYPE_SEPARATOR = `__$GRAPHQL__`;
-
-export const $ = <Type extends GraphQLVariableType, Name extends string>(name: Name, graphqlType: Type) => {
-  return (START_VAR_NAME + name + GRAPHQL_TYPE_SEPARATOR + graphqlType) as unknown as Variable<Type, Name>;
-};
+import { AllTypesProps, ReturnTypes } from './const';
 type ZEUS_INTERFACES = GraphQLTypes["BaseResult"]
-export type ScalarCoders = {
-	DateTime?: ScalarResolver;
-	JSONObject?: ScalarResolver;
-}
 type ZEUS_UNIONS = never
 
 export type ValueTypes = {
     ["Query"]: AliasType<{
-hello?: [{	name: string | Variable<any, string>},boolean | `@${string}`],
+hello?: [{	name:string},boolean],
 	/** 获取我的信息 */
 	me?:ValueTypes["LoginUser"],
-getOnLineLoginUserList?: [{	ip?: string | undefined | null | Variable<any, string>,	name?: string | undefined | null | Variable<any, string>},ValueTypes["OnLineUser"]],
+getOnLineLoginUserList?: [{	ip?:string | null,	name?:string | null},ValueTypes["OnLineUser"]],
 	/** 查询所有菜单 */
 	allMenuList?:ValueTypes["Menu"],
 getMenuTree?: [{	/** 角色id */
-	id?: string | undefined | null | Variable<any, string>,	/** 类型 */
-	type?: string | undefined | null | Variable<any, string>,	/** 角色名 */
-	name?: string | undefined | null | Variable<any, string>,	/** 是否可见 */
-	visible?: boolean | undefined | null | Variable<any, string>,	/** 开始时间YYYY-DD-MM */
-	from?: string | undefined | null | Variable<any, string>,	/** 结束时间YYYY-DD-MM */
-	to?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
+	id?:string | null,	/** 类型 */
+	type?:string | null,	/** 角色名 */
+	name?:string | null,	/** 是否可见 */
+	visible?:boolean | null,	/** 开始时间YYYY-DD-MM */
+	from?:string | null,	/** 结束时间YYYY-DD-MM */
+	to?:string | null},boolean],
 getMenuList?: [{	/** 角色id */
-	id?: string | undefined | null | Variable<any, string>,	/** 类型 */
-	type?: string | undefined | null | Variable<any, string>,	/** 角色名 */
-	name?: string | undefined | null | Variable<any, string>,	/** 是否可见 */
-	visible?: boolean | undefined | null | Variable<any, string>,	/** 开始时间YYYY-DD-MM */
-	from?: string | undefined | null | Variable<any, string>,	/** 结束时间YYYY-DD-MM */
-	to?: string | undefined | null | Variable<any, string>,	pageNo?: number | undefined | null | Variable<any, string>,	pageSize?: number | undefined | null | Variable<any, string>},ValueTypes["MenuPageResult"]],
+	id?:string | null,	/** 类型 */
+	type?:string | null,	/** 角色名 */
+	name?:string | null,	/** 是否可见 */
+	visible?:boolean | null,	/** 开始时间YYYY-DD-MM */
+	from?:string | null,	/** 结束时间YYYY-DD-MM */
+	to?:string | null,	pageNo?:number | null,	pageSize?:number | null},ValueTypes["MenuPageResult"]],
 getRoleList?: [{	/** 角色id */
-	id?: string | undefined | null | Variable<any, string>,	/** 角色名 */
-	name?: string | undefined | null | Variable<any, string>,	/** 角色标识 */
-	key?: string | undefined | null | Variable<any, string>,	/** 是否默认标识 */
-	isDefault?: boolean | undefined | null | Variable<any, string>,	/** 开始时间YYYY-DD-MM */
-	from?: string | undefined | null | Variable<any, string>,	/** 结束时间YYYY-DD-MM */
-	to?: string | undefined | null | Variable<any, string>,	/** 是否默认标识 */
-	includeMenu?: boolean | undefined | null | Variable<any, string>,	pageNo?: number | undefined | null | Variable<any, string>,	pageSize?: number | undefined | null | Variable<any, string>},ValueTypes["RolePageResult"]],
+	id?:string | null,	/** 角色名 */
+	name?:string | null,	/** 角色标识 */
+	key?:string | null,	/** 是否默认标识 */
+	isDefault?:boolean | null,	/** 开始时间YYYY-DD-MM */
+	from?:string | null,	/** 结束时间YYYY-DD-MM */
+	to?:string | null,	/** 是否默认标识 */
+	includeMenu?:boolean | null,	pageNo?:number | null,	pageSize?:number | null},ValueTypes["RolePageResult"]],
 getUserList?: [{	/** 用户id */
-	id?: string | undefined | null | Variable<any, string>,	/** 用户名 */
-	username?: string | undefined | null | Variable<any, string>,	/** 用户手机 */
-	phone?: string | undefined | null | Variable<any, string>,	/** 邮箱 */
-	email?: string | undefined | null | Variable<any, string>,	/** 开始时间YYYY-DD-MM */
-	from?: string | undefined | null | Variable<any, string>,	/** 结束时间YYYY-DD-MM */
-	to?: string | undefined | null | Variable<any, string>,	/** 是否包含角色 */
-	includeRole?: boolean | undefined | null | Variable<any, string>,	pageNo?: number | undefined | null | Variable<any, string>,	pageSize?: number | undefined | null | Variable<any, string>},ValueTypes["UserPageResult"]],
-	/** 列出所有存储桶 */
-	listBuckets?:ValueTypes["BucketInfo"],
-listObjects?: [{	bucketName: string | Variable<any, string>},ValueTypes["FileItem"]],
+	id?:string | null,	/** 用户名 */
+	username?:string | null,	/** 用户手机 */
+	phone?:string | null,	/** 邮箱 */
+	email?:string | null,	/** 开始时间YYYY-DD-MM */
+	from?:string | null,	/** 结束时间YYYY-DD-MM */
+	to?:string | null,	/** 是否包含角色 */
+	includeRole?:boolean | null,	pageNo?:number | null,	pageSize?:number | null},ValueTypes["UserPageResult"]],
+getFileList?: [{	/** 文件ID */
+	id?:string | null,	/** 文件名 */
+	name?:string | null,	/** 原始文件名 */
+	originName?:string | null,	/** 文件前缀 */
+	prefix?:string | null,	/** 文件后缀 */
+	extension?:string | null,	/** mimeType */
+	mimeType?:string | null,	/** 存放桶名称 */
+	bucket?:string | null,	/** 存放位置 */
+	path?:ValueTypes["FilePathEnum"] | null,	/** 开始时间YYYY-DD-MM */
+	from?:string | null,	/** 结束时间YYYY-DD-MM */
+	to?:string | null,	pageNo?:number | null,	pageSize?:number | null},ValueTypes["FilePageResult"]],
 getPostTagList?: [{	/** id */
-	id?: string | undefined | null | Variable<any, string>,	/** tag名称 */
-	name?: string | undefined | null | Variable<any, string>,	/** 开始时间YYYY-DD-MM */
-	from?: string | undefined | null | Variable<any, string>,	/** 结束时间YYYY-DD-MM */
-	to?: string | undefined | null | Variable<any, string>,	pageNo?: number | undefined | null | Variable<any, string>,	pageSize?: number | undefined | null | Variable<any, string>},ValueTypes["PostTagPageResult"]],
-		__typename?: boolean | `@${string}`
+	id?:string | null,	/** tag名称 */
+	name?:string | null,	/** 开始时间YYYY-DD-MM */
+	from?:string | null,	/** 结束时间YYYY-DD-MM */
+	to?:string | null,	pageNo?:number | null,	pageSize?:number | null},ValueTypes["PostTagPageResult"]],
+		__typename?: boolean
 }>;
 	["LoginUser"]: AliasType<{
-	id?:boolean | `@${string}`,
+	id?:boolean,
 	/** 创建时间 */
-	createdAt?:boolean | `@${string}`,
+	createdAt?:boolean,
 	/** 更新时间 */
-	updatedAt?:boolean | `@${string}`,
+	updatedAt?:boolean,
 	/** 用户名 */
-	username?:boolean | `@${string}`,
+	username?:boolean,
 	/** 头像 */
-	avatar?:boolean | `@${string}`,
+	avatar?:boolean,
 	/** 性别 */
-	gender?:boolean | `@${string}`,
+	gender?:boolean,
 	/** 邮箱 */
-	email?:boolean | `@${string}`,
+	email?:boolean,
 	/** 昵称 */
-	nickname?:boolean | `@${string}`,
+	nickname?:boolean,
 	/** 手机 */
-	phone?:boolean | `@${string}`,
+	phone?:boolean,
 	/** 备注 */
-	note?:boolean | `@${string}`,
+	note?:boolean,
 	/** 角色 */
 	roles?:ValueTypes["Role"],
 	/** 登录时间 */
-	loginTime?:boolean | `@${string}`,
+	loginTime?:boolean,
 	/** 菜单 */
 	menus?:ValueTypes["Menu"],
 	/** 权限 */
-	permissions?:boolean | `@${string}`,
+	permissions?:boolean,
 	/** 管理员 */
-	isSuperAdmin?:boolean | `@${string}`,
-		__typename?: boolean | `@${string}`
+	isSuperAdmin?:boolean,
+		__typename?: boolean
 }>;
 	/** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
 ["DateTime"]:unknown;
 	/** 用户性别枚举 */
 ["UserGenderEnum"]:UserGenderEnum;
 	["Role"]: AliasType<{
-	id?:boolean | `@${string}`,
+	id?:boolean,
 	/** 创建时间 */
-	createdAt?:boolean | `@${string}`,
+	createdAt?:boolean,
 	/** 更新时间 */
-	updatedAt?:boolean | `@${string}`,
+	updatedAt?:boolean,
 	/** 角色名 */
-	name?:boolean | `@${string}`,
+	name?:boolean,
 	/** 角色level */
-	level?:boolean | `@${string}`,
+	level?:boolean,
 	/** 标识 */
-	key?:boolean | `@${string}`,
+	key?:boolean,
 	/** 是否默认 */
-	isDefault?:boolean | `@${string}`,
+	isDefault?:boolean,
 	/** 权限菜单 */
 	menus?:ValueTypes["Menu"],
-		__typename?: boolean | `@${string}`
+		__typename?: boolean
 }>;
 	["Menu"]: AliasType<{
-	id?:boolean | `@${string}`,
+	id?:boolean,
 	/** 创建时间 */
-	createdAt?:boolean | `@${string}`,
+	createdAt?:boolean,
 	/** 更新时间 */
-	updatedAt?:boolean | `@${string}`,
+	updatedAt?:boolean,
 	/** 菜单名 */
-	name?:boolean | `@${string}`,
+	name?:boolean,
+	/** 标题 */
+	title?:boolean,
 	/** 图标 */
-	icon?:boolean | `@${string}`,
+	icon?:boolean,
 	/** 上级ID */
-	pId?:boolean | `@${string}`,
+	pId?:boolean,
 	/** 排序 */
-	orderBy?:boolean | `@${string}`,
+	orderBy?:boolean,
 	/** 路径 */
-	path?:boolean | `@${string}`,
+	path?:boolean,
 	/** 组件 */
-	component?:boolean | `@${string}`,
+	component?:boolean,
 	/** 可见 */
-	visible?:boolean | `@${string}`,
+	visible?:boolean,
 	/** 权限字符 */
-	permission?:boolean | `@${string}`,
+	permission?:boolean,
 	/** 类型 */
-	type?:boolean | `@${string}`,
+	type?:boolean,
 	/** children */
 	children?:ValueTypes["Menu"],
-		__typename?: boolean | `@${string}`
+		__typename?: boolean
 }>;
 	["OnLineUser"]: AliasType<{
 	/** 登录用户名 */
-	username?:boolean | `@${string}`,
+	username?:boolean,
 	/** 浏览器 */
-	loginBrowser?:boolean | `@${string}`,
+	loginBrowser?:boolean,
 	/** ip */
-	loginIp?:boolean | `@${string}`,
+	loginIp?:boolean,
 	/** 登录时间 */
-	loginTime?:boolean | `@${string}`,
+	loginTime?:boolean,
 	/** 登录地址 */
-	loginAddr?:boolean | `@${string}`,
+	loginAddr?:boolean,
 	/** token */
-	token?:boolean | `@${string}`,
-		__typename?: boolean | `@${string}`
+	token?:boolean,
+		__typename?: boolean
 }>;
 	/** The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
 ["JSONObject"]:unknown;
 	["MenuPageResult"]: AliasType<{
 	data?:ValueTypes["Menu"],
-	totalCount?:boolean | `@${string}`,
-	hasNextPage?:boolean | `@${string}`,
-		__typename?: boolean | `@${string}`
+	totalCount?:boolean,
+	hasNextPage?:boolean,
+		__typename?: boolean
 }>;
 	["RolePageResult"]: AliasType<{
 	data?:ValueTypes["Role"],
-	totalCount?:boolean | `@${string}`,
-	hasNextPage?:boolean | `@${string}`,
-		__typename?: boolean | `@${string}`
+	totalCount?:boolean,
+	hasNextPage?:boolean,
+		__typename?: boolean
 }>;
 	["UserPageResult"]: AliasType<{
 	data?:ValueTypes["User"],
-	totalCount?:boolean | `@${string}`,
-	hasNextPage?:boolean | `@${string}`,
-		__typename?: boolean | `@${string}`
+	totalCount?:boolean,
+	hasNextPage?:boolean,
+		__typename?: boolean
 }>;
 	["User"]: AliasType<{
-	id?:boolean | `@${string}`,
+	id?:boolean,
 	/** 创建时间 */
-	createdAt?:boolean | `@${string}`,
+	createdAt?:boolean,
 	/** 更新时间 */
-	updatedAt?:boolean | `@${string}`,
+	updatedAt?:boolean,
 	/** 用户名 */
-	username?:boolean | `@${string}`,
+	username?:boolean,
 	/** 头像 */
-	avatar?:boolean | `@${string}`,
+	avatar?:boolean,
 	/** 性别 */
-	gender?:boolean | `@${string}`,
+	gender?:boolean,
 	/** 邮箱 */
-	email?:boolean | `@${string}`,
+	email?:boolean,
 	/** 昵称 */
-	nickname?:boolean | `@${string}`,
+	nickname?:boolean,
 	/** 手机 */
-	phone?:boolean | `@${string}`,
+	phone?:boolean,
 	/** 备注 */
-	note?:boolean | `@${string}`,
+	note?:boolean,
 	/** 角色 */
 	roles?:ValueTypes["Role"],
-		__typename?: boolean | `@${string}`
+		__typename?: boolean
 }>;
-	["BucketInfo"]: AliasType<{
-	/** 桶名 */
-	name?:boolean | `@${string}`,
+	["FilePageResult"]: AliasType<{
+	data?:ValueTypes["File"],
+	totalCount?:boolean,
+	hasNextPage?:boolean,
+		__typename?: boolean
+}>;
+	["File"]: AliasType<{
+	id?:boolean,
 	/** 创建时间 */
-	creationDate?:boolean | `@${string}`,
-		__typename?: boolean | `@${string}`
-}>;
-	["FileItem"]: AliasType<{
-	/** 对象名称 */
-	name?:boolean | `@${string}`,
-	/** 对象的大小 */
-	size?:boolean | `@${string}`,
-	/** 对象名称的前缀 */
-	prefix?:boolean | `@${string}`,
-	/** 对象的etag值 */
-	etag?:boolean | `@${string}`,
-	/** 最后修改时间 */
-	lastModified?:boolean | `@${string}`,
+	createdAt?:boolean,
+	/** 更新时间 */
+	updatedAt?:boolean,
+	/** 文件名 */
+	name?:boolean,
+	/** 原始文件名 */
+	originName?:boolean,
+	/** 缩略图 */
+	thumbnail?:boolean,
+	/** 文件前缀 */
+	prefix?:boolean,
+	/** 文件后缀 */
+	extension?:boolean,
+	/** mimeType */
+	mimeType?:boolean,
+	/** 文件大小 */
+	size?:boolean,
+	/** 存放桶名称 */
+	bucket?:boolean,
+	/** 存放位置 */
+	path?:boolean,
 	/** 文件url */
-	url?:boolean | `@${string}`,
-		__typename?: boolean | `@${string}`
+	url?:boolean,
+		__typename?: boolean
 }>;
+	/** 文件位置 */
+["FilePathEnum"]:FilePathEnum;
 	["PostTagPageResult"]: AliasType<{
 	data?:ValueTypes["PostTag"],
-	totalCount?:boolean | `@${string}`,
-	hasNextPage?:boolean | `@${string}`,
-		__typename?: boolean | `@${string}`
+	totalCount?:boolean,
+	hasNextPage?:boolean,
+		__typename?: boolean
 }>;
 	["PostTag"]: AliasType<{
-	id?:boolean | `@${string}`,
+	id?:boolean,
 	/** 创建时间 */
-	createdAt?:boolean | `@${string}`,
+	createdAt?:boolean,
 	/** 更新时间 */
-	updatedAt?:boolean | `@${string}`,
+	updatedAt?:boolean,
 	/** tag名称 */
-	name?:boolean | `@${string}`,
+	name?:boolean,
 	/** icon */
-	icon?:boolean | `@${string}`,
+	icon?:boolean,
 	/** 封面图 */
-	thumbnail?:boolean | `@${string}`,
-		__typename?: boolean | `@${string}`
+	thumbnail?:boolean,
+		__typename?: boolean
 }>;
 	["Mutation"]: AliasType<{
-login?: [{	password: string | Variable<any, string>,	username: string | Variable<any, string>},ValueTypes["LoginResult"]],
+login?: [{	password:string,	username:string},ValueTypes["LoginResult"]],
 	logout?:ValueTypes["BaseResponse"],
-forceUserLogout?: [{	token: string | Variable<any, string>},ValueTypes["BaseResponse"]],
-createMenu?: [{	input: ValueTypes["CreateMenuInput"] | Variable<any, string>},ValueTypes["BaseResponse"]],
-editMenu?: [{	input: ValueTypes["EditMenuInput"] | Variable<any, string>},ValueTypes["BaseResponse"]],
-removeMenus?: [{	menuIds: Array<string> | Variable<any, string>},ValueTypes["BaseResponse"]],
-createRole?: [{	input: ValueTypes["CreateRoleInput"] | Variable<any, string>},ValueTypes["BaseResponse"]],
-editRole?: [{	input: ValueTypes["EditRoleInput"] | Variable<any, string>},ValueTypes["BaseResponse"]],
-removeRoles?: [{	roleIds: Array<string> | Variable<any, string>},ValueTypes["BaseResponse"]],
-createUser?: [{	input: ValueTypes["CreateUserInput"] | Variable<any, string>},ValueTypes["BaseResponse"]],
-editUser?: [{	input: ValueTypes["EditUserInput"] | Variable<any, string>},ValueTypes["BaseResponse"]],
-removeUsers?: [{	userIds: Array<string> | Variable<any, string>},ValueTypes["BaseResponse"]],
-resetUserPassword?: [{	userId: string | Variable<any, string>},ValueTypes["BaseResponse"]],
-makeBucket?: [{	bucketName: string | Variable<any, string>},ValueTypes["BaseResponse"]],
-createPostTag?: [{	input: ValueTypes["CreatePostTagInput"] | Variable<any, string>},ValueTypes["BaseResponse"]],
-editPostTag?: [{	input: ValueTypes["EditPostTagInput"] | Variable<any, string>},ValueTypes["BaseResponse"]],
-removePostTags?: [{	ids: Array<string> | Variable<any, string>},ValueTypes["BaseResponse"]],
-		__typename?: boolean | `@${string}`
+forceUserLogout?: [{	token:string},ValueTypes["BaseResponse"]],
+createMenu?: [{	input:ValueTypes["CreateMenuInput"]},ValueTypes["BaseResponse"]],
+editMenu?: [{	input:ValueTypes["EditMenuInput"]},ValueTypes["BaseResponse"]],
+removeMenus?: [{	menuIds:string[]},ValueTypes["BaseResponse"]],
+createRole?: [{	input:ValueTypes["CreateRoleInput"]},ValueTypes["BaseResponse"]],
+editRole?: [{	input:ValueTypes["EditRoleInput"]},ValueTypes["BaseResponse"]],
+removeRoles?: [{	roleIds:string[]},ValueTypes["BaseResponse"]],
+createUser?: [{	input:ValueTypes["CreateUserInput"]},ValueTypes["BaseResponse"]],
+editUser?: [{	input:ValueTypes["EditUserInput"]},ValueTypes["BaseResponse"]],
+removeUsers?: [{	userIds:string[]},ValueTypes["BaseResponse"]],
+resetUserPassword?: [{	userId:string},ValueTypes["BaseResponse"]],
+createFile?: [{	input:ValueTypes["CreateFileInput"]},ValueTypes["BaseResponse"]],
+updateFile?: [{	input:ValueTypes["EditFileInput"]},ValueTypes["BaseResponse"]],
+delFile?: [{	id:string},ValueTypes["BaseResponse"]],
+createPostTag?: [{	input:ValueTypes["CreatePostTagInput"]},ValueTypes["BaseResponse"]],
+editPostTag?: [{	input:ValueTypes["EditPostTagInput"]},ValueTypes["BaseResponse"]],
+removePostTags?: [{	ids:string[]},ValueTypes["BaseResponse"]],
+		__typename?: boolean
 }>;
 	["LoginResult"]: AliasType<{
 	/** code */
-	code?:boolean | `@${string}`,
+	code?:boolean,
 	/** msg */
-	msg?:boolean | `@${string}`,
+	msg?:boolean,
 	/** data */
 	data?:ValueTypes["LoginType"],
-		__typename?: boolean | `@${string}`
+		__typename?: boolean
 }>;
 	["LoginType"]: AliasType<{
 	/** accessToken */
-	accessToken?:boolean | `@${string}`,
-		__typename?: boolean | `@${string}`
+	accessToken?:boolean,
+		__typename?: boolean
 }>;
 	["BaseResponse"]: AliasType<{
-	code?:boolean | `@${string}`,
-	msg?:boolean | `@${string}`,
-		__typename?: boolean | `@${string}`
+	code?:boolean,
+	msg?:boolean,
+		__typename?: boolean
 }>;
 	["BaseResult"]:AliasType<{
-		code?:boolean | `@${string}`,
-	msg?:boolean | `@${string}`;
+		code?:boolean,
+	msg?:boolean;
 		['...on BaseResponse']?: Omit<ValueTypes["BaseResponse"],keyof ValueTypes["BaseResult"]>;
-		__typename?: boolean | `@${string}`
+		__typename?: boolean
 }>;
 	["CreateMenuInput"]: {
 	/** 菜单名 */
-	name: string | Variable<any, string>,
+	name:string,
+	/** 标题 */
+	title?:string | null,
 	/** 图标 */
-	icon?: string | undefined | null | Variable<any, string>,
+	icon?:string | null,
 	/** 上级ID */
-	pId?: string | undefined | null | Variable<any, string>,
+	pId?:string | null,
 	/** 排序 */
-	orderBy?: number | undefined | null | Variable<any, string>,
+	orderBy?:number | null,
 	/** 路径 */
-	path?: string | undefined | null | Variable<any, string>,
+	path?:string | null,
 	/** 组件 */
-	component?: string | undefined | null | Variable<any, string>,
+	component?:string | null,
 	/** 可见 */
-	visible?: boolean | undefined | null | Variable<any, string>,
+	visible?:boolean | null,
 	/** 权限字符 */
-	permission?: string | undefined | null | Variable<any, string>,
+	permission?:string | null,
 	/** 类型 */
-	type?: string | undefined | null | Variable<any, string>
+	type?:string | null
 };
 	["EditMenuInput"]: {
 	/** id */
-	id: string | Variable<any, string>,
+	id:string,
+	/** 标题 */
+	title?:string | null,
 	/** 菜单名 */
-	name?: string | undefined | null | Variable<any, string>,
+	name?:string | null,
 	/** 图标 */
-	icon?: string | undefined | null | Variable<any, string>,
+	icon?:string | null,
 	/** 上级ID */
-	pId?: string | undefined | null | Variable<any, string>,
+	pId?:string | null,
 	/** 排序 */
-	orderBy?: number | undefined | null | Variable<any, string>,
+	orderBy?:number | null,
 	/** 路径 */
-	path?: string | undefined | null | Variable<any, string>,
+	path?:string | null,
 	/** 组件 */
-	component?: string | undefined | null | Variable<any, string>,
+	component?:string | null,
 	/** 可见 */
-	visible?: boolean | undefined | null | Variable<any, string>,
+	visible?:boolean | null,
 	/** 权限字符 */
-	permission?: string | undefined | null | Variable<any, string>,
+	permission?:string | null,
 	/** 类型 */
-	type?: string | undefined | null | Variable<any, string>
+	type?:string | null
 };
 	["CreateRoleInput"]: {
 	/** 角色名 */
-	name: string | Variable<any, string>,
+	name:string,
 	/** 角色标识 */
-	key: string | Variable<any, string>,
+	key:string,
 	/** 权限等级 */
-	level: number | Variable<any, string>,
+	level:number,
 	/** 菜单ID */
-	menuIds?: Array<string> | undefined | null | Variable<any, string>
+	menuIds?:string[]
 };
 	["EditRoleInput"]: {
 	/** 角色id */
-	id: string | Variable<any, string>,
+	id:string,
 	/** 角色名 */
-	name?: string | undefined | null | Variable<any, string>,
+	name?:string | null,
 	/** 角色标识 */
-	key?: string | undefined | null | Variable<any, string>,
+	key?:string | null,
 	/** 权限等级 */
-	level?: number | undefined | null | Variable<any, string>,
+	level?:number | null,
 	/** 菜单ID */
-	menuIds?: Array<string> | undefined | null | Variable<any, string>
+	menuIds?:string[]
 };
 	["CreateUserInput"]: {
 	/** 用户名 */
-	username: string | Variable<any, string>,
+	username:string,
 	/** 头像 */
-	avatar?: string | undefined | null | Variable<any, string>,
+	avatar?:string | null,
 	/** 密码 */
-	password: string | Variable<any, string>,
+	password:string,
 	/** 性别 */
-	gender?: ValueTypes["UserGenderEnum"] | undefined | null | Variable<any, string>,
+	gender?:ValueTypes["UserGenderEnum"] | null,
 	/** 邮箱 */
-	email?: string | undefined | null | Variable<any, string>,
+	email?:string | null,
 	/** 昵称 */
-	nickname?: string | undefined | null | Variable<any, string>,
+	nickname?:string | null,
 	/** 手机 */
-	phone?: string | undefined | null | Variable<any, string>,
+	phone?:string | null,
 	/** 备注 */
-	note?: string | undefined | null | Variable<any, string>,
+	note?:string | null,
 	/** 角色 */
-	roleIds?: Array<string> | undefined | null | Variable<any, string>
+	roleIds?:string[]
 };
 	["EditUserInput"]: {
 	/** 角色id */
-	id: string | Variable<any, string>,
+	id:string,
 	/** 头像 */
-	avatar?: string | undefined | null | Variable<any, string>,
+	avatar?:string | null,
 	/** 性别 */
-	gender?: ValueTypes["UserGenderEnum"] | undefined | null | Variable<any, string>,
+	gender?:ValueTypes["UserGenderEnum"] | null,
 	/** 邮箱 */
-	email?: string | undefined | null | Variable<any, string>,
+	email?:string | null,
 	/** 昵称 */
-	nickname?: string | undefined | null | Variable<any, string>,
+	nickname?:string | null,
 	/** 手机 */
-	phone?: string | undefined | null | Variable<any, string>,
+	phone?:string | null,
 	/** 备注 */
-	note?: string | undefined | null | Variable<any, string>,
+	note?:string | null,
 	/** 角色 */
-	roleIds?: Array<string> | undefined | null | Variable<any, string>
+	roleIds?:string[]
 };
-	["CreatePostTagInput"]: {
-	/** tag名称 */
-	name: string | Variable<any, string>,
-	/** icon */
-	icon?: string | undefined | null | Variable<any, string>,
-	/** 封面图 */
-	thumbnail?: string | undefined | null | Variable<any, string>
+	["CreateFileInput"]: {
+	/** 文件名 */
+	name:string,
+	/** 原始文件名 */
+	originName:string,
+	/** 缩略图 */
+	thumbnail?:string | null,
+	/** 文件前缀 */
+	prefix?:string | null,
+	/** 文件后缀 */
+	extension?:string | null,
+	/** mimeType */
+	mimeType:string,
+	/** 文件大小 */
+	size:number,
+	/** 存放桶名称 */
+	bucket:string,
+	/** 存放位置 */
+	path:ValueTypes["FilePathEnum"]
 };
-	["EditPostTagInput"]: {
-	/** tagid */
-	id: string | Variable<any, string>,
-	/** tag名称 */
-	name: string | Variable<any, string>,
-	/** icon */
-	icon?: string | undefined | null | Variable<any, string>,
-	/** 封面图 */
-	thumbnail?: string | undefined | null | Variable<any, string>
-}
-  }
-
-export type ResolverInputTypes = {
-    ["Query"]: AliasType<{
-hello?: [{	name: string},boolean | `@${string}`],
-	/** 获取我的信息 */
-	me?:ResolverInputTypes["LoginUser"],
-getOnLineLoginUserList?: [{	ip?: string | undefined | null,	name?: string | undefined | null},ResolverInputTypes["OnLineUser"]],
-	/** 查询所有菜单 */
-	allMenuList?:ResolverInputTypes["Menu"],
-getMenuTree?: [{	/** 角色id */
-	id?: string | undefined | null,	/** 类型 */
-	type?: string | undefined | null,	/** 角色名 */
-	name?: string | undefined | null,	/** 是否可见 */
-	visible?: boolean | undefined | null,	/** 开始时间YYYY-DD-MM */
-	from?: string | undefined | null,	/** 结束时间YYYY-DD-MM */
-	to?: string | undefined | null},boolean | `@${string}`],
-getMenuList?: [{	/** 角色id */
-	id?: string | undefined | null,	/** 类型 */
-	type?: string | undefined | null,	/** 角色名 */
-	name?: string | undefined | null,	/** 是否可见 */
-	visible?: boolean | undefined | null,	/** 开始时间YYYY-DD-MM */
-	from?: string | undefined | null,	/** 结束时间YYYY-DD-MM */
-	to?: string | undefined | null,	pageNo?: number | undefined | null,	pageSize?: number | undefined | null},ResolverInputTypes["MenuPageResult"]],
-getRoleList?: [{	/** 角色id */
-	id?: string | undefined | null,	/** 角色名 */
-	name?: string | undefined | null,	/** 角色标识 */
-	key?: string | undefined | null,	/** 是否默认标识 */
-	isDefault?: boolean | undefined | null,	/** 开始时间YYYY-DD-MM */
-	from?: string | undefined | null,	/** 结束时间YYYY-DD-MM */
-	to?: string | undefined | null,	/** 是否默认标识 */
-	includeMenu?: boolean | undefined | null,	pageNo?: number | undefined | null,	pageSize?: number | undefined | null},ResolverInputTypes["RolePageResult"]],
-getUserList?: [{	/** 用户id */
-	id?: string | undefined | null,	/** 用户名 */
-	username?: string | undefined | null,	/** 用户手机 */
-	phone?: string | undefined | null,	/** 邮箱 */
-	email?: string | undefined | null,	/** 开始时间YYYY-DD-MM */
-	from?: string | undefined | null,	/** 结束时间YYYY-DD-MM */
-	to?: string | undefined | null,	/** 是否包含角色 */
-	includeRole?: boolean | undefined | null,	pageNo?: number | undefined | null,	pageSize?: number | undefined | null},ResolverInputTypes["UserPageResult"]],
-	/** 列出所有存储桶 */
-	listBuckets?:ResolverInputTypes["BucketInfo"],
-listObjects?: [{	bucketName: string},ResolverInputTypes["FileItem"]],
-getPostTagList?: [{	/** id */
-	id?: string | undefined | null,	/** tag名称 */
-	name?: string | undefined | null,	/** 开始时间YYYY-DD-MM */
-	from?: string | undefined | null,	/** 结束时间YYYY-DD-MM */
-	to?: string | undefined | null,	pageNo?: number | undefined | null,	pageSize?: number | undefined | null},ResolverInputTypes["PostTagPageResult"]],
-		__typename?: boolean | `@${string}`
-}>;
-	["LoginUser"]: AliasType<{
-	id?:boolean | `@${string}`,
-	/** 创建时间 */
-	createdAt?:boolean | `@${string}`,
-	/** 更新时间 */
-	updatedAt?:boolean | `@${string}`,
-	/** 用户名 */
-	username?:boolean | `@${string}`,
-	/** 头像 */
-	avatar?:boolean | `@${string}`,
-	/** 性别 */
-	gender?:boolean | `@${string}`,
-	/** 邮箱 */
-	email?:boolean | `@${string}`,
-	/** 昵称 */
-	nickname?:boolean | `@${string}`,
-	/** 手机 */
-	phone?:boolean | `@${string}`,
-	/** 备注 */
-	note?:boolean | `@${string}`,
-	/** 角色 */
-	roles?:ResolverInputTypes["Role"],
-	/** 登录时间 */
-	loginTime?:boolean | `@${string}`,
-	/** 菜单 */
-	menus?:ResolverInputTypes["Menu"],
-	/** 权限 */
-	permissions?:boolean | `@${string}`,
-	/** 管理员 */
-	isSuperAdmin?:boolean | `@${string}`,
-		__typename?: boolean | `@${string}`
-}>;
-	/** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
-["DateTime"]:unknown;
-	/** 用户性别枚举 */
-["UserGenderEnum"]:UserGenderEnum;
-	["Role"]: AliasType<{
-	id?:boolean | `@${string}`,
-	/** 创建时间 */
-	createdAt?:boolean | `@${string}`,
-	/** 更新时间 */
-	updatedAt?:boolean | `@${string}`,
-	/** 角色名 */
-	name?:boolean | `@${string}`,
-	/** 角色level */
-	level?:boolean | `@${string}`,
-	/** 标识 */
-	key?:boolean | `@${string}`,
-	/** 是否默认 */
-	isDefault?:boolean | `@${string}`,
-	/** 权限菜单 */
-	menus?:ResolverInputTypes["Menu"],
-		__typename?: boolean | `@${string}`
-}>;
-	["Menu"]: AliasType<{
-	id?:boolean | `@${string}`,
-	/** 创建时间 */
-	createdAt?:boolean | `@${string}`,
-	/** 更新时间 */
-	updatedAt?:boolean | `@${string}`,
-	/** 菜单名 */
-	name?:boolean | `@${string}`,
-	/** 图标 */
-	icon?:boolean | `@${string}`,
-	/** 上级ID */
-	pId?:boolean | `@${string}`,
-	/** 排序 */
-	orderBy?:boolean | `@${string}`,
-	/** 路径 */
-	path?:boolean | `@${string}`,
-	/** 组件 */
-	component?:boolean | `@${string}`,
-	/** 可见 */
-	visible?:boolean | `@${string}`,
-	/** 权限字符 */
-	permission?:boolean | `@${string}`,
-	/** 类型 */
-	type?:boolean | `@${string}`,
-	/** children */
-	children?:ResolverInputTypes["Menu"],
-		__typename?: boolean | `@${string}`
-}>;
-	["OnLineUser"]: AliasType<{
-	/** 登录用户名 */
-	username?:boolean | `@${string}`,
-	/** 浏览器 */
-	loginBrowser?:boolean | `@${string}`,
-	/** ip */
-	loginIp?:boolean | `@${string}`,
-	/** 登录时间 */
-	loginTime?:boolean | `@${string}`,
-	/** 登录地址 */
-	loginAddr?:boolean | `@${string}`,
-	/** token */
-	token?:boolean | `@${string}`,
-		__typename?: boolean | `@${string}`
-}>;
-	/** The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
-["JSONObject"]:unknown;
-	["MenuPageResult"]: AliasType<{
-	data?:ResolverInputTypes["Menu"],
-	totalCount?:boolean | `@${string}`,
-	hasNextPage?:boolean | `@${string}`,
-		__typename?: boolean | `@${string}`
-}>;
-	["RolePageResult"]: AliasType<{
-	data?:ResolverInputTypes["Role"],
-	totalCount?:boolean | `@${string}`,
-	hasNextPage?:boolean | `@${string}`,
-		__typename?: boolean | `@${string}`
-}>;
-	["UserPageResult"]: AliasType<{
-	data?:ResolverInputTypes["User"],
-	totalCount?:boolean | `@${string}`,
-	hasNextPage?:boolean | `@${string}`,
-		__typename?: boolean | `@${string}`
-}>;
-	["User"]: AliasType<{
-	id?:boolean | `@${string}`,
-	/** 创建时间 */
-	createdAt?:boolean | `@${string}`,
-	/** 更新时间 */
-	updatedAt?:boolean | `@${string}`,
-	/** 用户名 */
-	username?:boolean | `@${string}`,
-	/** 头像 */
-	avatar?:boolean | `@${string}`,
-	/** 性别 */
-	gender?:boolean | `@${string}`,
-	/** 邮箱 */
-	email?:boolean | `@${string}`,
-	/** 昵称 */
-	nickname?:boolean | `@${string}`,
-	/** 手机 */
-	phone?:boolean | `@${string}`,
-	/** 备注 */
-	note?:boolean | `@${string}`,
-	/** 角色 */
-	roles?:ResolverInputTypes["Role"],
-		__typename?: boolean | `@${string}`
-}>;
-	["BucketInfo"]: AliasType<{
-	/** 桶名 */
-	name?:boolean | `@${string}`,
-	/** 创建时间 */
-	creationDate?:boolean | `@${string}`,
-		__typename?: boolean | `@${string}`
-}>;
-	["FileItem"]: AliasType<{
-	/** 对象名称 */
-	name?:boolean | `@${string}`,
-	/** 对象的大小 */
-	size?:boolean | `@${string}`,
-	/** 对象名称的前缀 */
-	prefix?:boolean | `@${string}`,
-	/** 对象的etag值 */
-	etag?:boolean | `@${string}`,
-	/** 最后修改时间 */
-	lastModified?:boolean | `@${string}`,
-	/** 文件url */
-	url?:boolean | `@${string}`,
-		__typename?: boolean | `@${string}`
-}>;
-	["PostTagPageResult"]: AliasType<{
-	data?:ResolverInputTypes["PostTag"],
-	totalCount?:boolean | `@${string}`,
-	hasNextPage?:boolean | `@${string}`,
-		__typename?: boolean | `@${string}`
-}>;
-	["PostTag"]: AliasType<{
-	id?:boolean | `@${string}`,
-	/** 创建时间 */
-	createdAt?:boolean | `@${string}`,
-	/** 更新时间 */
-	updatedAt?:boolean | `@${string}`,
-	/** tag名称 */
-	name?:boolean | `@${string}`,
-	/** icon */
-	icon?:boolean | `@${string}`,
-	/** 封面图 */
-	thumbnail?:boolean | `@${string}`,
-		__typename?: boolean | `@${string}`
-}>;
-	["Mutation"]: AliasType<{
-login?: [{	password: string,	username: string},ResolverInputTypes["LoginResult"]],
-	logout?:ResolverInputTypes["BaseResponse"],
-forceUserLogout?: [{	token: string},ResolverInputTypes["BaseResponse"]],
-createMenu?: [{	input: ResolverInputTypes["CreateMenuInput"]},ResolverInputTypes["BaseResponse"]],
-editMenu?: [{	input: ResolverInputTypes["EditMenuInput"]},ResolverInputTypes["BaseResponse"]],
-removeMenus?: [{	menuIds: Array<string>},ResolverInputTypes["BaseResponse"]],
-createRole?: [{	input: ResolverInputTypes["CreateRoleInput"]},ResolverInputTypes["BaseResponse"]],
-editRole?: [{	input: ResolverInputTypes["EditRoleInput"]},ResolverInputTypes["BaseResponse"]],
-removeRoles?: [{	roleIds: Array<string>},ResolverInputTypes["BaseResponse"]],
-createUser?: [{	input: ResolverInputTypes["CreateUserInput"]},ResolverInputTypes["BaseResponse"]],
-editUser?: [{	input: ResolverInputTypes["EditUserInput"]},ResolverInputTypes["BaseResponse"]],
-removeUsers?: [{	userIds: Array<string>},ResolverInputTypes["BaseResponse"]],
-resetUserPassword?: [{	userId: string},ResolverInputTypes["BaseResponse"]],
-makeBucket?: [{	bucketName: string},ResolverInputTypes["BaseResponse"]],
-createPostTag?: [{	input: ResolverInputTypes["CreatePostTagInput"]},ResolverInputTypes["BaseResponse"]],
-editPostTag?: [{	input: ResolverInputTypes["EditPostTagInput"]},ResolverInputTypes["BaseResponse"]],
-removePostTags?: [{	ids: Array<string>},ResolverInputTypes["BaseResponse"]],
-		__typename?: boolean | `@${string}`
-}>;
-	["LoginResult"]: AliasType<{
-	/** code */
-	code?:boolean | `@${string}`,
-	/** msg */
-	msg?:boolean | `@${string}`,
-	/** data */
-	data?:ResolverInputTypes["LoginType"],
-		__typename?: boolean | `@${string}`
-}>;
-	["LoginType"]: AliasType<{
-	/** accessToken */
-	accessToken?:boolean | `@${string}`,
-		__typename?: boolean | `@${string}`
-}>;
-	["BaseResponse"]: AliasType<{
-	code?:boolean | `@${string}`,
-	msg?:boolean | `@${string}`,
-		__typename?: boolean | `@${string}`
-}>;
-	["BaseResult"]:AliasType<{
-		code?:boolean | `@${string}`,
-	msg?:boolean | `@${string}`;
-		['...on BaseResponse']?: Omit<ResolverInputTypes["BaseResponse"],keyof ResolverInputTypes["BaseResult"]>;
-		__typename?: boolean | `@${string}`
-}>;
-	["CreateMenuInput"]: {
-	/** 菜单名 */
-	name: string,
-	/** 图标 */
-	icon?: string | undefined | null,
-	/** 上级ID */
-	pId?: string | undefined | null,
-	/** 排序 */
-	orderBy?: number | undefined | null,
-	/** 路径 */
-	path?: string | undefined | null,
-	/** 组件 */
-	component?: string | undefined | null,
-	/** 可见 */
-	visible?: boolean | undefined | null,
-	/** 权限字符 */
-	permission?: string | undefined | null,
-	/** 类型 */
-	type?: string | undefined | null
-};
-	["EditMenuInput"]: {
+	["EditFileInput"]: {
 	/** id */
-	id: string,
-	/** 菜单名 */
-	name?: string | undefined | null,
-	/** 图标 */
-	icon?: string | undefined | null,
-	/** 上级ID */
-	pId?: string | undefined | null,
-	/** 排序 */
-	orderBy?: number | undefined | null,
-	/** 路径 */
-	path?: string | undefined | null,
-	/** 组件 */
-	component?: string | undefined | null,
-	/** 可见 */
-	visible?: boolean | undefined | null,
-	/** 权限字符 */
-	permission?: string | undefined | null,
-	/** 类型 */
-	type?: string | undefined | null
-};
-	["CreateRoleInput"]: {
-	/** 角色名 */
-	name: string,
-	/** 角色标识 */
-	key: string,
-	/** 权限等级 */
-	level: number,
-	/** 菜单ID */
-	menuIds?: Array<string> | undefined | null
-};
-	["EditRoleInput"]: {
-	/** 角色id */
-	id: string,
-	/** 角色名 */
-	name?: string | undefined | null,
-	/** 角色标识 */
-	key?: string | undefined | null,
-	/** 权限等级 */
-	level?: number | undefined | null,
-	/** 菜单ID */
-	menuIds?: Array<string> | undefined | null
-};
-	["CreateUserInput"]: {
-	/** 用户名 */
-	username: string,
-	/** 头像 */
-	avatar?: string | undefined | null,
-	/** 密码 */
-	password: string,
-	/** 性别 */
-	gender?: ResolverInputTypes["UserGenderEnum"] | undefined | null,
-	/** 邮箱 */
-	email?: string | undefined | null,
-	/** 昵称 */
-	nickname?: string | undefined | null,
-	/** 手机 */
-	phone?: string | undefined | null,
-	/** 备注 */
-	note?: string | undefined | null,
-	/** 角色 */
-	roleIds?: Array<string> | undefined | null
-};
-	["EditUserInput"]: {
-	/** 角色id */
-	id: string,
-	/** 头像 */
-	avatar?: string | undefined | null,
-	/** 性别 */
-	gender?: ResolverInputTypes["UserGenderEnum"] | undefined | null,
-	/** 邮箱 */
-	email?: string | undefined | null,
-	/** 昵称 */
-	nickname?: string | undefined | null,
-	/** 手机 */
-	phone?: string | undefined | null,
-	/** 备注 */
-	note?: string | undefined | null,
-	/** 角色 */
-	roleIds?: Array<string> | undefined | null
+	id:string,
+	/** 文件名 */
+	name:string
 };
 	["CreatePostTagInput"]: {
 	/** tag名称 */
-	name: string,
+	name:string,
 	/** icon */
-	icon?: string | undefined | null,
+	icon?:string | null,
 	/** 封面图 */
-	thumbnail?: string | undefined | null
+	thumbnail?:string | null
 };
 	["EditPostTagInput"]: {
 	/** tagid */
-	id: string,
+	id:string,
 	/** tag名称 */
-	name: string,
+	name:string,
 	/** icon */
-	icon?: string | undefined | null,
+	icon?:string | null,
 	/** 封面图 */
-	thumbnail?: string | undefined | null
+	thumbnail?:string | null
 }
   }
 
 export type ModelTypes = {
     ["Query"]: {
-		hello: string,
+		hello:string,
 	/** 获取我的信息 */
-	me: ModelTypes["LoginUser"],
+	me:ModelTypes["LoginUser"],
 	/** 登录用户列表查询 */
-	getOnLineLoginUserList: Array<ModelTypes["OnLineUser"]>,
+	getOnLineLoginUserList:ModelTypes["OnLineUser"][],
 	/** 查询所有菜单 */
-	allMenuList: Array<ModelTypes["Menu"]>,
+	allMenuList:ModelTypes["Menu"][],
 	/** 菜单Tree查询 */
-	getMenuTree: Array<ModelTypes["JSONObject"]>,
+	getMenuTree:ModelTypes["JSONObject"][],
 	/** 菜单列表查询 */
-	getMenuList: ModelTypes["MenuPageResult"],
+	getMenuList:ModelTypes["MenuPageResult"],
 	/** 角色列表查询 */
-	getRoleList: ModelTypes["RolePageResult"],
+	getRoleList:ModelTypes["RolePageResult"],
 	/** 角色列表查询 */
-	getUserList: ModelTypes["UserPageResult"],
-	/** 列出所有存储桶 */
-	listBuckets: Array<ModelTypes["BucketInfo"]>,
-	/** 列出存储桶中所有对象 */
-	listObjects: Array<ModelTypes["FileItem"]>,
+	getUserList:ModelTypes["UserPageResult"],
+	/** 列出所有文件 */
+	getFileList:ModelTypes["FilePageResult"],
 	/** PostTag列表查询 */
-	getPostTagList: ModelTypes["PostTagPageResult"]
+	getPostTagList:ModelTypes["PostTagPageResult"]
 };
 	["LoginUser"]: {
-		id: string,
+		id:string,
 	/** 创建时间 */
-	createdAt?: ModelTypes["DateTime"] | undefined,
+	createdAt?:ModelTypes["DateTime"],
 	/** 更新时间 */
-	updatedAt?: ModelTypes["DateTime"] | undefined,
+	updatedAt?:ModelTypes["DateTime"],
 	/** 用户名 */
-	username: string,
+	username:string,
 	/** 头像 */
-	avatar?: string | undefined,
+	avatar?:string,
 	/** 性别 */
-	gender?: ModelTypes["UserGenderEnum"] | undefined,
+	gender?:ModelTypes["UserGenderEnum"],
 	/** 邮箱 */
-	email?: string | undefined,
+	email?:string,
 	/** 昵称 */
-	nickname?: string | undefined,
+	nickname?:string,
 	/** 手机 */
-	phone?: string | undefined,
+	phone?:string,
 	/** 备注 */
-	note?: string | undefined,
+	note?:string,
 	/** 角色 */
-	roles?: Array<ModelTypes["Role"] | undefined> | undefined,
+	roles?:(ModelTypes["Role"] | undefined)[],
 	/** 登录时间 */
-	loginTime?: ModelTypes["DateTime"] | undefined,
+	loginTime?:ModelTypes["DateTime"],
 	/** 菜单 */
-	menus?: Array<ModelTypes["Menu"] | undefined> | undefined,
+	menus?:(ModelTypes["Menu"] | undefined)[],
 	/** 权限 */
-	permissions?: Array<string | undefined> | undefined,
+	permissions?:(string | undefined)[],
 	/** 管理员 */
-	isSuperAdmin?: boolean | undefined
+	isSuperAdmin?:boolean
 };
 	/** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
 ["DateTime"]:any;
-	["UserGenderEnum"]:UserGenderEnum;
+	/** 用户性别枚举 */
+["UserGenderEnum"]: GraphQLTypes["UserGenderEnum"];
 	["Role"]: {
-		id: string,
+		id:string,
 	/** 创建时间 */
-	createdAt?: ModelTypes["DateTime"] | undefined,
+	createdAt?:ModelTypes["DateTime"],
 	/** 更新时间 */
-	updatedAt?: ModelTypes["DateTime"] | undefined,
+	updatedAt?:ModelTypes["DateTime"],
 	/** 角色名 */
-	name: string,
+	name:string,
 	/** 角色level */
-	level: number,
+	level:number,
 	/** 标识 */
-	key?: string | undefined,
+	key?:string,
 	/** 是否默认 */
-	isDefault?: boolean | undefined,
+	isDefault?:boolean,
 	/** 权限菜单 */
-	menus?: Array<ModelTypes["Menu"] | undefined> | undefined
+	menus?:(ModelTypes["Menu"] | undefined)[]
 };
 	["Menu"]: {
-		id: string,
+		id:string,
 	/** 创建时间 */
-	createdAt?: ModelTypes["DateTime"] | undefined,
+	createdAt?:ModelTypes["DateTime"],
 	/** 更新时间 */
-	updatedAt?: ModelTypes["DateTime"] | undefined,
+	updatedAt?:ModelTypes["DateTime"],
 	/** 菜单名 */
-	name: string,
+	name:string,
+	/** 标题 */
+	title?:string,
 	/** 图标 */
-	icon?: string | undefined,
+	icon?:string,
 	/** 上级ID */
-	pId?: string | undefined,
+	pId?:string,
 	/** 排序 */
-	orderBy?: number | undefined,
+	orderBy?:number,
 	/** 路径 */
-	path?: string | undefined,
+	path?:string,
 	/** 组件 */
-	component?: string | undefined,
+	component?:string,
 	/** 可见 */
-	visible?: boolean | undefined,
+	visible?:boolean,
 	/** 权限字符 */
-	permission?: string | undefined,
+	permission?:string,
 	/** 类型 */
-	type?: string | undefined,
+	type?:string,
 	/** children */
-	children?: Array<ModelTypes["Menu"] | undefined> | undefined
+	children?:(ModelTypes["Menu"] | undefined)[]
 };
 	["OnLineUser"]: {
 		/** 登录用户名 */
-	username: string,
+	username:string,
 	/** 浏览器 */
-	loginBrowser: string,
+	loginBrowser:string,
 	/** ip */
-	loginIp: string,
+	loginIp:string,
 	/** 登录时间 */
-	loginTime: string,
+	loginTime:string,
 	/** 登录地址 */
-	loginAddr: string,
+	loginAddr:string,
 	/** token */
-	token: string
+	token:string
 };
 	/** The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
 ["JSONObject"]:any;
 	["MenuPageResult"]: {
-		data?: Array<ModelTypes["Menu"]> | undefined,
-	totalCount: number,
-	hasNextPage: boolean
+		data?:ModelTypes["Menu"][],
+	totalCount:number,
+	hasNextPage:boolean
 };
 	["RolePageResult"]: {
-		data?: Array<ModelTypes["Role"]> | undefined,
-	totalCount: number,
-	hasNextPage: boolean
+		data?:ModelTypes["Role"][],
+	totalCount:number,
+	hasNextPage:boolean
 };
 	["UserPageResult"]: {
-		data?: Array<ModelTypes["User"]> | undefined,
-	totalCount: number,
-	hasNextPage: boolean
+		data?:ModelTypes["User"][],
+	totalCount:number,
+	hasNextPage:boolean
 };
 	["User"]: {
-		id: string,
+		id:string,
 	/** 创建时间 */
-	createdAt?: ModelTypes["DateTime"] | undefined,
+	createdAt?:ModelTypes["DateTime"],
 	/** 更新时间 */
-	updatedAt?: ModelTypes["DateTime"] | undefined,
+	updatedAt?:ModelTypes["DateTime"],
 	/** 用户名 */
-	username: string,
+	username:string,
 	/** 头像 */
-	avatar?: string | undefined,
+	avatar?:string,
 	/** 性别 */
-	gender?: ModelTypes["UserGenderEnum"] | undefined,
+	gender?:ModelTypes["UserGenderEnum"],
 	/** 邮箱 */
-	email?: string | undefined,
+	email?:string,
 	/** 昵称 */
-	nickname?: string | undefined,
+	nickname?:string,
 	/** 手机 */
-	phone?: string | undefined,
+	phone?:string,
 	/** 备注 */
-	note?: string | undefined,
+	note?:string,
 	/** 角色 */
-	roles?: Array<ModelTypes["Role"] | undefined> | undefined
+	roles?:(ModelTypes["Role"] | undefined)[]
 };
-	["BucketInfo"]: {
-		/** 桶名 */
-	name: string,
+	["FilePageResult"]: {
+		data?:ModelTypes["File"][],
+	totalCount:number,
+	hasNextPage:boolean
+};
+	["File"]: {
+		id:string,
 	/** 创建时间 */
-	creationDate: string
-};
-	["FileItem"]: {
-		/** 对象名称 */
-	name: string,
-	/** 对象的大小 */
-	size: number,
-	/** 对象名称的前缀 */
-	prefix?: string | undefined,
-	/** 对象的etag值 */
-	etag: string,
-	/** 最后修改时间 */
-	lastModified: ModelTypes["DateTime"],
+	createdAt?:ModelTypes["DateTime"],
+	/** 更新时间 */
+	updatedAt?:ModelTypes["DateTime"],
+	/** 文件名 */
+	name:string,
+	/** 原始文件名 */
+	originName:string,
+	/** 缩略图 */
+	thumbnail?:string,
+	/** 文件前缀 */
+	prefix?:string,
+	/** 文件后缀 */
+	extension?:string,
+	/** mimeType */
+	mimeType:string,
+	/** 文件大小 */
+	size:number,
+	/** 存放桶名称 */
+	bucket:string,
+	/** 存放位置 */
+	path:ModelTypes["FilePathEnum"],
 	/** 文件url */
-	url: string
+	url:string
 };
+	/** 文件位置 */
+["FilePathEnum"]: GraphQLTypes["FilePathEnum"];
 	["PostTagPageResult"]: {
-		data?: Array<ModelTypes["PostTag"]> | undefined,
-	totalCount: number,
-	hasNextPage: boolean
+		data?:ModelTypes["PostTag"][],
+	totalCount:number,
+	hasNextPage:boolean
 };
 	["PostTag"]: {
-		id: string,
+		id:string,
 	/** 创建时间 */
-	createdAt?: ModelTypes["DateTime"] | undefined,
+	createdAt?:ModelTypes["DateTime"],
 	/** 更新时间 */
-	updatedAt?: ModelTypes["DateTime"] | undefined,
+	updatedAt?:ModelTypes["DateTime"],
 	/** tag名称 */
-	name: string,
+	name:string,
 	/** icon */
-	icon?: string | undefined,
+	icon?:string,
 	/** 封面图 */
-	thumbnail?: string | undefined
+	thumbnail?:string
 };
 	["Mutation"]: {
-		login: ModelTypes["LoginResult"],
-	logout: ModelTypes["BaseResponse"],
+		login:ModelTypes["LoginResult"],
+	logout:ModelTypes["BaseResponse"],
 	/** 强制用户退出 */
-	forceUserLogout: ModelTypes["BaseResponse"],
+	forceUserLogout:ModelTypes["BaseResponse"],
 	/** 创建新菜单 */
-	createMenu: ModelTypes["BaseResponse"],
+	createMenu:ModelTypes["BaseResponse"],
 	/** 修改菜单信息 */
-	editMenu: ModelTypes["BaseResponse"],
+	editMenu:ModelTypes["BaseResponse"],
 	/** 批量删除用户 */
-	removeMenus: ModelTypes["BaseResponse"],
+	removeMenus:ModelTypes["BaseResponse"],
 	/** 新增角色 */
-	createRole: ModelTypes["BaseResponse"],
+	createRole:ModelTypes["BaseResponse"],
 	/** 修改角色 */
-	editRole: ModelTypes["BaseResponse"],
+	editRole:ModelTypes["BaseResponse"],
 	/** 批量删除角色 */
-	removeRoles: ModelTypes["BaseResponse"],
+	removeRoles:ModelTypes["BaseResponse"],
 	/** 创建新用户 */
-	createUser: ModelTypes["BaseResponse"],
+	createUser:ModelTypes["BaseResponse"],
 	/** 修改用户信息 */
-	editUser: ModelTypes["BaseResponse"],
+	editUser:ModelTypes["BaseResponse"],
 	/** 批量删除用户 */
-	removeUsers: ModelTypes["BaseResponse"],
+	removeUsers:ModelTypes["BaseResponse"],
 	/** 重置用户密码 */
-	resetUserPassword: ModelTypes["BaseResponse"],
-	/** 创建一个新的存储桶 */
-	makeBucket: ModelTypes["BaseResponse"],
+	resetUserPassword:ModelTypes["BaseResponse"],
+	/** 新建文件 */
+	createFile:ModelTypes["BaseResponse"],
+	/** 新建文件信息 */
+	updateFile:ModelTypes["BaseResponse"],
+	/** 删除文件 */
+	delFile:ModelTypes["BaseResponse"],
 	/** 创建PostTag */
-	createPostTag: ModelTypes["BaseResponse"],
+	createPostTag:ModelTypes["BaseResponse"],
 	/** 修改PostTag */
-	editPostTag: ModelTypes["BaseResponse"],
+	editPostTag:ModelTypes["BaseResponse"],
 	/** 批量删除PostTag */
-	removePostTags: ModelTypes["BaseResponse"]
+	removePostTags:ModelTypes["BaseResponse"]
 };
 	["LoginResult"]: {
 		/** code */
-	code?: number | undefined,
+	code?:number,
 	/** msg */
-	msg?: string | undefined,
+	msg?:string,
 	/** data */
-	data?: ModelTypes["LoginType"] | undefined
+	data?:ModelTypes["LoginType"]
 };
 	["LoginType"]: {
 		/** accessToken */
-	accessToken: string
+	accessToken:string
 };
 	["BaseResponse"]: {
-		code: number,
-	msg: string
+		code:number,
+	msg:string
 };
 	["BaseResult"]: ModelTypes["BaseResponse"];
-	["CreateMenuInput"]: {
-	/** 菜单名 */
-	name: string,
-	/** 图标 */
-	icon?: string | undefined,
-	/** 上级ID */
-	pId?: string | undefined,
-	/** 排序 */
-	orderBy?: number | undefined,
-	/** 路径 */
-	path?: string | undefined,
-	/** 组件 */
-	component?: string | undefined,
-	/** 可见 */
-	visible?: boolean | undefined,
-	/** 权限字符 */
-	permission?: string | undefined,
-	/** 类型 */
-	type?: string | undefined
-};
-	["EditMenuInput"]: {
-	/** id */
-	id: string,
-	/** 菜单名 */
-	name?: string | undefined,
-	/** 图标 */
-	icon?: string | undefined,
-	/** 上级ID */
-	pId?: string | undefined,
-	/** 排序 */
-	orderBy?: number | undefined,
-	/** 路径 */
-	path?: string | undefined,
-	/** 组件 */
-	component?: string | undefined,
-	/** 可见 */
-	visible?: boolean | undefined,
-	/** 权限字符 */
-	permission?: string | undefined,
-	/** 类型 */
-	type?: string | undefined
-};
-	["CreateRoleInput"]: {
-	/** 角色名 */
-	name: string,
-	/** 角色标识 */
-	key: string,
-	/** 权限等级 */
-	level: number,
-	/** 菜单ID */
-	menuIds?: Array<string> | undefined
-};
-	["EditRoleInput"]: {
-	/** 角色id */
-	id: string,
-	/** 角色名 */
-	name?: string | undefined,
-	/** 角色标识 */
-	key?: string | undefined,
-	/** 权限等级 */
-	level?: number | undefined,
-	/** 菜单ID */
-	menuIds?: Array<string> | undefined
-};
-	["CreateUserInput"]: {
-	/** 用户名 */
-	username: string,
-	/** 头像 */
-	avatar?: string | undefined,
-	/** 密码 */
-	password: string,
-	/** 性别 */
-	gender?: ModelTypes["UserGenderEnum"] | undefined,
-	/** 邮箱 */
-	email?: string | undefined,
-	/** 昵称 */
-	nickname?: string | undefined,
-	/** 手机 */
-	phone?: string | undefined,
-	/** 备注 */
-	note?: string | undefined,
-	/** 角色 */
-	roleIds?: Array<string> | undefined
-};
-	["EditUserInput"]: {
-	/** 角色id */
-	id: string,
-	/** 头像 */
-	avatar?: string | undefined,
-	/** 性别 */
-	gender?: ModelTypes["UserGenderEnum"] | undefined,
-	/** 邮箱 */
-	email?: string | undefined,
-	/** 昵称 */
-	nickname?: string | undefined,
-	/** 手机 */
-	phone?: string | undefined,
-	/** 备注 */
-	note?: string | undefined,
-	/** 角色 */
-	roleIds?: Array<string> | undefined
-};
-	["CreatePostTagInput"]: {
-	/** tag名称 */
-	name: string,
-	/** icon */
-	icon?: string | undefined,
-	/** 封面图 */
-	thumbnail?: string | undefined
-};
-	["EditPostTagInput"]: {
-	/** tagid */
-	id: string,
-	/** tag名称 */
-	name: string,
-	/** icon */
-	icon?: string | undefined,
-	/** 封面图 */
-	thumbnail?: string | undefined
-}
+	["CreateMenuInput"]: GraphQLTypes["CreateMenuInput"];
+	["EditMenuInput"]: GraphQLTypes["EditMenuInput"];
+	["CreateRoleInput"]: GraphQLTypes["CreateRoleInput"];
+	["EditRoleInput"]: GraphQLTypes["EditRoleInput"];
+	["CreateUserInput"]: GraphQLTypes["CreateUserInput"];
+	["EditUserInput"]: GraphQLTypes["EditUserInput"];
+	["CreateFileInput"]: GraphQLTypes["CreateFileInput"];
+	["EditFileInput"]: GraphQLTypes["EditFileInput"];
+	["CreatePostTagInput"]: GraphQLTypes["CreatePostTagInput"];
+	["EditPostTagInput"]: GraphQLTypes["EditPostTagInput"]
     }
 
 export type GraphQLTypes = {
@@ -1994,10 +752,8 @@ export type GraphQLTypes = {
 	getRoleList: GraphQLTypes["RolePageResult"],
 	/** 角色列表查询 */
 	getUserList: GraphQLTypes["UserPageResult"],
-	/** 列出所有存储桶 */
-	listBuckets: Array<GraphQLTypes["BucketInfo"]>,
-	/** 列出存储桶中所有对象 */
-	listObjects: Array<GraphQLTypes["FileItem"]>,
+	/** 列出所有文件 */
+	getFileList: GraphQLTypes["FilePageResult"],
 	/** PostTag列表查询 */
 	getPostTagList: GraphQLTypes["PostTagPageResult"]
 };
@@ -2005,83 +761,85 @@ export type GraphQLTypes = {
 	__typename: "LoginUser",
 	id: string,
 	/** 创建时间 */
-	createdAt?: GraphQLTypes["DateTime"] | undefined,
+	createdAt?: GraphQLTypes["DateTime"],
 	/** 更新时间 */
-	updatedAt?: GraphQLTypes["DateTime"] | undefined,
+	updatedAt?: GraphQLTypes["DateTime"],
 	/** 用户名 */
 	username: string,
 	/** 头像 */
-	avatar?: string | undefined,
+	avatar?: string,
 	/** 性别 */
-	gender?: GraphQLTypes["UserGenderEnum"] | undefined,
+	gender?: GraphQLTypes["UserGenderEnum"],
 	/** 邮箱 */
-	email?: string | undefined,
+	email?: string,
 	/** 昵称 */
-	nickname?: string | undefined,
+	nickname?: string,
 	/** 手机 */
-	phone?: string | undefined,
+	phone?: string,
 	/** 备注 */
-	note?: string | undefined,
+	note?: string,
 	/** 角色 */
-	roles?: Array<GraphQLTypes["Role"] | undefined> | undefined,
+	roles?: Array<GraphQLTypes["Role"] | undefined>,
 	/** 登录时间 */
-	loginTime?: GraphQLTypes["DateTime"] | undefined,
+	loginTime?: GraphQLTypes["DateTime"],
 	/** 菜单 */
-	menus?: Array<GraphQLTypes["Menu"] | undefined> | undefined,
+	menus?: Array<GraphQLTypes["Menu"] | undefined>,
 	/** 权限 */
-	permissions?: Array<string | undefined> | undefined,
+	permissions?: Array<string | undefined>,
 	/** 管理员 */
-	isSuperAdmin?: boolean | undefined
+	isSuperAdmin?: boolean
 };
 	/** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
-["DateTime"]: "scalar" & { name: "DateTime" };
+["DateTime"]:any;
 	/** 用户性别枚举 */
 ["UserGenderEnum"]: UserGenderEnum;
 	["Role"]: {
 	__typename: "Role",
 	id: string,
 	/** 创建时间 */
-	createdAt?: GraphQLTypes["DateTime"] | undefined,
+	createdAt?: GraphQLTypes["DateTime"],
 	/** 更新时间 */
-	updatedAt?: GraphQLTypes["DateTime"] | undefined,
+	updatedAt?: GraphQLTypes["DateTime"],
 	/** 角色名 */
 	name: string,
 	/** 角色level */
 	level: number,
 	/** 标识 */
-	key?: string | undefined,
+	key?: string,
 	/** 是否默认 */
-	isDefault?: boolean | undefined,
+	isDefault?: boolean,
 	/** 权限菜单 */
-	menus?: Array<GraphQLTypes["Menu"] | undefined> | undefined
+	menus?: Array<GraphQLTypes["Menu"] | undefined>
 };
 	["Menu"]: {
 	__typename: "Menu",
 	id: string,
 	/** 创建时间 */
-	createdAt?: GraphQLTypes["DateTime"] | undefined,
+	createdAt?: GraphQLTypes["DateTime"],
 	/** 更新时间 */
-	updatedAt?: GraphQLTypes["DateTime"] | undefined,
+	updatedAt?: GraphQLTypes["DateTime"],
 	/** 菜单名 */
 	name: string,
+	/** 标题 */
+	title?: string,
 	/** 图标 */
-	icon?: string | undefined,
+	icon?: string,
 	/** 上级ID */
-	pId?: string | undefined,
+	pId?: string,
 	/** 排序 */
-	orderBy?: number | undefined,
+	orderBy?: number,
 	/** 路径 */
-	path?: string | undefined,
+	path?: string,
 	/** 组件 */
-	component?: string | undefined,
+	component?: string,
 	/** 可见 */
-	visible?: boolean | undefined,
+	visible?: boolean,
 	/** 权限字符 */
-	permission?: string | undefined,
+	permission?: string,
 	/** 类型 */
-	type?: string | undefined,
+	type?: string,
 	/** children */
-	children?: Array<GraphQLTypes["Menu"] | undefined> | undefined
+	children?: Array<GraphQLTypes["Menu"] | undefined>
 };
 	["OnLineUser"]: {
 	__typename: "OnLineUser",
@@ -2099,22 +857,22 @@ export type GraphQLTypes = {
 	token: string
 };
 	/** The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
-["JSONObject"]: "scalar" & { name: "JSONObject" };
+["JSONObject"]:any;
 	["MenuPageResult"]: {
 	__typename: "MenuPageResult",
-	data?: Array<GraphQLTypes["Menu"]> | undefined,
+	data?: Array<GraphQLTypes["Menu"]>,
 	totalCount: number,
 	hasNextPage: boolean
 };
 	["RolePageResult"]: {
 	__typename: "RolePageResult",
-	data?: Array<GraphQLTypes["Role"]> | undefined,
+	data?: Array<GraphQLTypes["Role"]>,
 	totalCount: number,
 	hasNextPage: boolean
 };
 	["UserPageResult"]: {
 	__typename: "UserPageResult",
-	data?: Array<GraphQLTypes["User"]> | undefined,
+	data?: Array<GraphQLTypes["User"]>,
 	totalCount: number,
 	hasNextPage: boolean
 };
@@ -2122,51 +880,65 @@ export type GraphQLTypes = {
 	__typename: "User",
 	id: string,
 	/** 创建时间 */
-	createdAt?: GraphQLTypes["DateTime"] | undefined,
+	createdAt?: GraphQLTypes["DateTime"],
 	/** 更新时间 */
-	updatedAt?: GraphQLTypes["DateTime"] | undefined,
+	updatedAt?: GraphQLTypes["DateTime"],
 	/** 用户名 */
 	username: string,
 	/** 头像 */
-	avatar?: string | undefined,
+	avatar?: string,
 	/** 性别 */
-	gender?: GraphQLTypes["UserGenderEnum"] | undefined,
+	gender?: GraphQLTypes["UserGenderEnum"],
 	/** 邮箱 */
-	email?: string | undefined,
+	email?: string,
 	/** 昵称 */
-	nickname?: string | undefined,
+	nickname?: string,
 	/** 手机 */
-	phone?: string | undefined,
+	phone?: string,
 	/** 备注 */
-	note?: string | undefined,
+	note?: string,
 	/** 角色 */
-	roles?: Array<GraphQLTypes["Role"] | undefined> | undefined
+	roles?: Array<GraphQLTypes["Role"] | undefined>
 };
-	["BucketInfo"]: {
-	__typename: "BucketInfo",
-	/** 桶名 */
-	name: string,
+	["FilePageResult"]: {
+	__typename: "FilePageResult",
+	data?: Array<GraphQLTypes["File"]>,
+	totalCount: number,
+	hasNextPage: boolean
+};
+	["File"]: {
+	__typename: "File",
+	id: string,
 	/** 创建时间 */
-	creationDate: string
-};
-	["FileItem"]: {
-	__typename: "FileItem",
-	/** 对象名称 */
+	createdAt?: GraphQLTypes["DateTime"],
+	/** 更新时间 */
+	updatedAt?: GraphQLTypes["DateTime"],
+	/** 文件名 */
 	name: string,
-	/** 对象的大小 */
+	/** 原始文件名 */
+	originName: string,
+	/** 缩略图 */
+	thumbnail?: string,
+	/** 文件前缀 */
+	prefix?: string,
+	/** 文件后缀 */
+	extension?: string,
+	/** mimeType */
+	mimeType: string,
+	/** 文件大小 */
 	size: number,
-	/** 对象名称的前缀 */
-	prefix?: string | undefined,
-	/** 对象的etag值 */
-	etag: string,
-	/** 最后修改时间 */
-	lastModified: GraphQLTypes["DateTime"],
+	/** 存放桶名称 */
+	bucket: string,
+	/** 存放位置 */
+	path: GraphQLTypes["FilePathEnum"],
 	/** 文件url */
 	url: string
 };
+	/** 文件位置 */
+["FilePathEnum"]: FilePathEnum;
 	["PostTagPageResult"]: {
 	__typename: "PostTagPageResult",
-	data?: Array<GraphQLTypes["PostTag"]> | undefined,
+	data?: Array<GraphQLTypes["PostTag"]>,
 	totalCount: number,
 	hasNextPage: boolean
 };
@@ -2174,15 +946,15 @@ export type GraphQLTypes = {
 	__typename: "PostTag",
 	id: string,
 	/** 创建时间 */
-	createdAt?: GraphQLTypes["DateTime"] | undefined,
+	createdAt?: GraphQLTypes["DateTime"],
 	/** 更新时间 */
-	updatedAt?: GraphQLTypes["DateTime"] | undefined,
+	updatedAt?: GraphQLTypes["DateTime"],
 	/** tag名称 */
 	name: string,
 	/** icon */
-	icon?: string | undefined,
+	icon?: string,
 	/** 封面图 */
-	thumbnail?: string | undefined
+	thumbnail?: string
 };
 	["Mutation"]: {
 	__typename: "Mutation",
@@ -2210,8 +982,12 @@ export type GraphQLTypes = {
 	removeUsers: GraphQLTypes["BaseResponse"],
 	/** 重置用户密码 */
 	resetUserPassword: GraphQLTypes["BaseResponse"],
-	/** 创建一个新的存储桶 */
-	makeBucket: GraphQLTypes["BaseResponse"],
+	/** 新建文件 */
+	createFile: GraphQLTypes["BaseResponse"],
+	/** 新建文件信息 */
+	updateFile: GraphQLTypes["BaseResponse"],
+	/** 删除文件 */
+	delFile: GraphQLTypes["BaseResponse"],
 	/** 创建PostTag */
 	createPostTag: GraphQLTypes["BaseResponse"],
 	/** 修改PostTag */
@@ -2222,11 +998,11 @@ export type GraphQLTypes = {
 	["LoginResult"]: {
 	__typename: "LoginResult",
 	/** code */
-	code?: number | undefined,
+	code?: number,
 	/** msg */
-	msg?: string | undefined,
+	msg?: string,
 	/** data */
-	data?: GraphQLTypes["LoginType"] | undefined
+	data?: GraphQLTypes["LoginType"]
 };
 	["LoginType"]: {
 	__typename: "LoginType",
@@ -2247,44 +1023,48 @@ export type GraphQLTypes = {
 	["CreateMenuInput"]: {
 		/** 菜单名 */
 	name: string,
+	/** 标题 */
+	title?: string,
 	/** 图标 */
-	icon?: string | undefined,
+	icon?: string,
 	/** 上级ID */
-	pId?: string | undefined,
+	pId?: string,
 	/** 排序 */
-	orderBy?: number | undefined,
+	orderBy?: number,
 	/** 路径 */
-	path?: string | undefined,
+	path?: string,
 	/** 组件 */
-	component?: string | undefined,
+	component?: string,
 	/** 可见 */
-	visible?: boolean | undefined,
+	visible?: boolean,
 	/** 权限字符 */
-	permission?: string | undefined,
+	permission?: string,
 	/** 类型 */
-	type?: string | undefined
+	type?: string
 };
 	["EditMenuInput"]: {
 		/** id */
 	id: string,
+	/** 标题 */
+	title?: string,
 	/** 菜单名 */
-	name?: string | undefined,
+	name?: string,
 	/** 图标 */
-	icon?: string | undefined,
+	icon?: string,
 	/** 上级ID */
-	pId?: string | undefined,
+	pId?: string,
 	/** 排序 */
-	orderBy?: number | undefined,
+	orderBy?: number,
 	/** 路径 */
-	path?: string | undefined,
+	path?: string,
 	/** 组件 */
-	component?: string | undefined,
+	component?: string,
 	/** 可见 */
-	visible?: boolean | undefined,
+	visible?: boolean,
 	/** 权限字符 */
-	permission?: string | undefined,
+	permission?: string,
 	/** 类型 */
-	type?: string | undefined
+	type?: string
 };
 	["CreateRoleInput"]: {
 		/** 角色名 */
@@ -2294,65 +1074,91 @@ export type GraphQLTypes = {
 	/** 权限等级 */
 	level: number,
 	/** 菜单ID */
-	menuIds?: Array<string> | undefined
+	menuIds?: Array<string>
 };
 	["EditRoleInput"]: {
 		/** 角色id */
 	id: string,
 	/** 角色名 */
-	name?: string | undefined,
+	name?: string,
 	/** 角色标识 */
-	key?: string | undefined,
+	key?: string,
 	/** 权限等级 */
-	level?: number | undefined,
+	level?: number,
 	/** 菜单ID */
-	menuIds?: Array<string> | undefined
+	menuIds?: Array<string>
 };
 	["CreateUserInput"]: {
 		/** 用户名 */
 	username: string,
 	/** 头像 */
-	avatar?: string | undefined,
+	avatar?: string,
 	/** 密码 */
 	password: string,
 	/** 性别 */
-	gender?: GraphQLTypes["UserGenderEnum"] | undefined,
+	gender?: GraphQLTypes["UserGenderEnum"],
 	/** 邮箱 */
-	email?: string | undefined,
+	email?: string,
 	/** 昵称 */
-	nickname?: string | undefined,
+	nickname?: string,
 	/** 手机 */
-	phone?: string | undefined,
+	phone?: string,
 	/** 备注 */
-	note?: string | undefined,
+	note?: string,
 	/** 角色 */
-	roleIds?: Array<string> | undefined
+	roleIds?: Array<string>
 };
 	["EditUserInput"]: {
 		/** 角色id */
 	id: string,
 	/** 头像 */
-	avatar?: string | undefined,
+	avatar?: string,
 	/** 性别 */
-	gender?: GraphQLTypes["UserGenderEnum"] | undefined,
+	gender?: GraphQLTypes["UserGenderEnum"],
 	/** 邮箱 */
-	email?: string | undefined,
+	email?: string,
 	/** 昵称 */
-	nickname?: string | undefined,
+	nickname?: string,
 	/** 手机 */
-	phone?: string | undefined,
+	phone?: string,
 	/** 备注 */
-	note?: string | undefined,
+	note?: string,
 	/** 角色 */
-	roleIds?: Array<string> | undefined
+	roleIds?: Array<string>
+};
+	["CreateFileInput"]: {
+		/** 文件名 */
+	name: string,
+	/** 原始文件名 */
+	originName: string,
+	/** 缩略图 */
+	thumbnail?: string,
+	/** 文件前缀 */
+	prefix?: string,
+	/** 文件后缀 */
+	extension?: string,
+	/** mimeType */
+	mimeType: string,
+	/** 文件大小 */
+	size: number,
+	/** 存放桶名称 */
+	bucket: string,
+	/** 存放位置 */
+	path: GraphQLTypes["FilePathEnum"]
+};
+	["EditFileInput"]: {
+		/** id */
+	id: string,
+	/** 文件名 */
+	name: string
 };
 	["CreatePostTagInput"]: {
 		/** tag名称 */
 	name: string,
 	/** icon */
-	icon?: string | undefined,
+	icon?: string,
 	/** 封面图 */
-	thumbnail?: string | undefined
+	thumbnail?: string
 };
 	["EditPostTagInput"]: {
 		/** tagid */
@@ -2360,9 +1166,9 @@ export type GraphQLTypes = {
 	/** tag名称 */
 	name: string,
 	/** icon */
-	icon?: string | undefined,
+	icon?: string,
 	/** 封面图 */
-	thumbnail?: string | undefined
+	thumbnail?: string
 }
     }
 /** 用户性别枚举 */
@@ -2371,17 +1177,525 @@ export const enum UserGenderEnum {
 	MALE = "MALE",
 	FEMALE = "FEMALE"
 }
-
-type ZEUS_VARIABLES = {
-	["DateTime"]: ValueTypes["DateTime"];
-	["UserGenderEnum"]: ValueTypes["UserGenderEnum"];
-	["JSONObject"]: ValueTypes["JSONObject"];
-	["CreateMenuInput"]: ValueTypes["CreateMenuInput"];
-	["EditMenuInput"]: ValueTypes["EditMenuInput"];
-	["CreateRoleInput"]: ValueTypes["CreateRoleInput"];
-	["EditRoleInput"]: ValueTypes["EditRoleInput"];
-	["CreateUserInput"]: ValueTypes["CreateUserInput"];
-	["EditUserInput"]: ValueTypes["EditUserInput"];
-	["CreatePostTagInput"]: ValueTypes["CreatePostTagInput"];
-	["EditPostTagInput"]: ValueTypes["EditPostTagInput"];
+/** 文件位置 */
+export const enum FilePathEnum {
+	MINIO = "MINIO",
+	LOCAL = "LOCAL"
 }
+export class GraphQLError extends Error {
+    constructor(public response: GraphQLResponse) {
+      super("");
+      console.error(response);
+    }
+    toString() {
+      return "GraphQL Response Error";
+    }
+  }
+
+
+export type UnwrapPromise<T> = T extends Promise<infer R> ? R : T;
+export type ZeusState<T extends (...args: any[]) => Promise<any>> = NonNullable<
+  UnwrapPromise<ReturnType<T>>
+>;
+export type ZeusHook<
+  T extends (
+    ...args: any[]
+  ) => Record<string, (...args: any[]) => Promise<any>>,
+  N extends keyof ReturnType<T>
+> = ZeusState<ReturnType<T>[N]>;
+
+type WithTypeNameValue<T> = T & {
+  __typename?: boolean;
+};
+type AliasType<T> = WithTypeNameValue<T> & {
+  __alias?: Record<string, WithTypeNameValue<T>>;
+};
+export interface GraphQLResponse {
+  data?: Record<string, any>;
+  errors?: Array<{
+    message: string;
+  }>;
+}
+type DeepAnify<T> = {
+  [P in keyof T]?: any;
+};
+type IsPayLoad<T> = T extends [any, infer PayLoad] ? PayLoad : T;
+type IsArray<T, U> = T extends Array<infer R> ? InputType<R, U>[] : InputType<T, U>;
+type FlattenArray<T> = T extends Array<infer R> ? R : T;
+
+type IsInterfaced<SRC extends DeepAnify<DST>, DST> = FlattenArray<SRC> extends ZEUS_INTERFACES | ZEUS_UNIONS
+  ? {
+      [P in keyof SRC]: SRC[P] extends '__union' & infer R
+        ? P extends keyof DST
+          ? IsArray<R, '__typename' extends keyof DST ? DST[P] & { __typename: true } : DST[P]>
+          : {}
+        : never;
+    }[keyof DST] &
+      {
+        [P in keyof Omit<
+          Pick<
+            SRC,
+            {
+              [P in keyof DST]: SRC[P] extends '__union' & infer R ? never : P;
+            }[keyof DST]
+          >,
+          '__typename'
+        >]: IsPayLoad<DST[P]> extends boolean ? SRC[P] : IsArray<SRC[P], DST[P]>;
+      }
+  : {
+      [P in keyof Pick<SRC, keyof DST>]: IsPayLoad<DST[P]> extends boolean ? SRC[P] : IsArray<SRC[P], DST[P]>;
+    };
+
+export type MapType<SRC, DST> = SRC extends DeepAnify<DST> ? IsInterfaced<SRC, DST> : never;
+export type InputType<SRC, DST> = IsPayLoad<DST> extends { __alias: infer R }
+  ? {
+      [P in keyof R]: MapType<SRC, R[P]>;
+    } &
+      MapType<SRC, Omit<IsPayLoad<DST>, '__alias'>>
+  : MapType<SRC, IsPayLoad<DST>>;
+type Func<P extends any[], R> = (...args: P) => R;
+type AnyFunc = Func<any, any>;
+export type ArgsType<F extends AnyFunc> = F extends Func<infer P, any> ? P : never;
+export type OperationOptions = {
+  variables?: Record<string, any>;
+  operationName?: string;
+};
+export type SubscriptionToGraphQL<Z, T> = {
+  ws: WebSocket;
+  on: (fn: (args: InputType<T, Z>) => void) => void;
+  off: (fn: (e: { data?: InputType<T, Z>; code?: number; reason?: string; message?: string }) => void) => void;
+  error: (fn: (e: { data?: InputType<T, Z>; errors?: string[] }) => void) => void;
+  open: () => void;
+};
+export type SelectionFunction<V> = <T>(t: T | V) => T;
+export type fetchOptions = ArgsType<typeof fetch>;
+type websocketOptions = typeof WebSocket extends new (
+  ...args: infer R
+) => WebSocket
+  ? R
+  : never;
+export type chainOptions =
+  | [fetchOptions[0], fetchOptions[1] & {websocket?: websocketOptions}]
+  | [fetchOptions[0]];
+export type FetchFunction = (
+  query: string,
+  variables?: Record<string, any>,
+) => Promise<any>;
+export type SubscriptionFunction = (query: string) => any;
+type NotUndefined<T> = T extends undefined ? never : T;
+export type ResolverType<F> = NotUndefined<F extends [infer ARGS, any] ? ARGS : undefined>;
+
+
+
+export const ZeusSelect = <T>() => ((t: any) => t) as SelectionFunction<T>;
+
+export const ScalarResolver = (scalar: string, value: any) => {
+  switch (scalar) {
+    case 'String':
+      return  `${JSON.stringify(value)}`;
+    case 'Int':
+      return `${value}`;
+    case 'Float':
+      return `${value}`;
+    case 'Boolean':
+      return `${value}`;
+    case 'ID':
+      return `"${value}"`;
+    case 'enum':
+      return `${value}`;
+    case 'scalar':
+      return `${value}`;
+    default:
+      return false;
+  }
+};
+
+
+export const TypesPropsResolver = ({
+    value,
+    type,
+    name,
+    key,
+    blockArrays
+}: {
+    value: any;
+    type: string;
+    name: string;
+    key?: string;
+    blockArrays?: boolean;
+}): string => {
+    if (value === null) {
+        return `null`;
+    }
+    let resolvedValue = AllTypesProps[type][name];
+    if (key) {
+        resolvedValue = resolvedValue[key];
+    }
+    if (!resolvedValue) {
+        throw new Error(`Cannot resolve ${type} ${name}${key ? ` ${key}` : ''}`)
+    }
+    const typeResolved = resolvedValue.type;
+    const isArray = resolvedValue.array;
+    const isArrayRequired = resolvedValue.arrayRequired;
+    if (typeof value === 'string' && value.startsWith(`ZEUS_VAR$`)) {
+        const isRequired = resolvedValue.required ? '!' : '';
+        let t = `${typeResolved}`;
+        if (isArray) {
+          if (isRequired) {
+              t = `${t}!`;
+          }
+          t = `[${t}]`;
+          if(isArrayRequired){
+            t = `${t}!`;
+          }
+        }else{
+          if (isRequired) {
+                t = `${t}!`;
+          }
+        }
+        return `\$${value.split(`ZEUS_VAR$`)[1]}__ZEUS_VAR__${t}`;
+    }
+    if (isArray && !blockArrays) {
+        return `[${value
+        .map((v: any) => TypesPropsResolver({ value: v, type, name, key, blockArrays: true }))
+        .join(',')}]`;
+    }
+    const reslovedScalar = ScalarResolver(typeResolved, value);
+    if (!reslovedScalar) {
+        const resolvedType = AllTypesProps[typeResolved];
+        if (typeof resolvedType === 'object') {
+        const argsKeys = Object.keys(resolvedType);
+        return `{${argsKeys
+            .filter((ak) => value[ak] !== undefined)
+            .map(
+            (ak) => `${ak}:${TypesPropsResolver({ value: value[ak], type: typeResolved, name: ak })}`
+            )}}`;
+        }
+        return ScalarResolver(AllTypesProps[typeResolved], value) as string;
+    }
+    return reslovedScalar;
+};
+
+
+const isArrayFunction = (
+  parent: string[],
+  a: any[]
+) => {
+  const [values, r] = a;
+  const [mainKey, key, ...keys] = parent;
+  const keyValues = Object.keys(values).filter((k) => typeof values[k] !== 'undefined');
+
+  if (!keys.length) {
+      return keyValues.length > 0
+        ? `(${keyValues
+            .map(
+              (v) =>
+                `${v}:${TypesPropsResolver({
+                  value: values[v],
+                  type: mainKey,
+                  name: key,
+                  key: v
+                })}`
+            )
+            .join(',')})${r ? traverseToSeekArrays(parent, r) : ''}`
+        : traverseToSeekArrays(parent, r);
+    }
+
+  const [typeResolverKey] = keys.splice(keys.length - 1, 1);
+  let valueToResolve = ReturnTypes[mainKey][key];
+  for (const k of keys) {
+    valueToResolve = ReturnTypes[valueToResolve][k];
+  }
+
+  const argumentString =
+    keyValues.length > 0
+      ? `(${keyValues
+          .map(
+            (v) =>
+              `${v}:${TypesPropsResolver({
+                value: values[v],
+                type: valueToResolve,
+                name: typeResolverKey,
+                key: v
+              })}`
+          )
+          .join(',')})${r ? traverseToSeekArrays(parent, r) : ''}`
+      : traverseToSeekArrays(parent, r);
+  return argumentString;
+};
+
+
+const resolveKV = (k: string, v: boolean | string | { [x: string]: boolean | string }) =>
+  typeof v === 'boolean' ? k : typeof v === 'object' ? `${k}{${objectToTree(v)}}` : `${k}${v}`;
+
+
+const objectToTree = (o: { [x: string]: boolean | string }): string =>
+  `{${Object.keys(o).map((k) => `${resolveKV(k, o[k])}`).join(' ')}}`;
+
+
+const traverseToSeekArrays = (parent: string[], a?: any): string => {
+  if (!a) return '';
+  if (Object.keys(a).length === 0) {
+    return '';
+  }
+  let b: Record<string, any> = {};
+  if (Array.isArray(a)) {
+    return isArrayFunction([...parent], a);
+  } else {
+    if (typeof a === 'object') {
+      Object.keys(a)
+        .filter((k) => typeof a[k] !== 'undefined')
+        .forEach((k) => {
+        if (k === '__alias') {
+          Object.keys(a[k]).forEach((aliasKey) => {
+            const aliasOperations = a[k][aliasKey];
+            const aliasOperationName = Object.keys(aliasOperations)[0];
+            const aliasOperation = aliasOperations[aliasOperationName];
+            b[
+              `${aliasOperationName}__alias__${aliasKey}: ${aliasOperationName}`
+            ] = traverseToSeekArrays([...parent, aliasOperationName], aliasOperation);
+          });
+        } else {
+          b[k] = traverseToSeekArrays([...parent, k], a[k]);
+        }
+      });
+    } else {
+      return '';
+    }
+  }
+  return objectToTree(b);
+};  
+
+
+const buildQuery = (type: string, a?: Record<any, any>) => 
+  traverseToSeekArrays([type], a);
+
+
+const inspectVariables = (query: string) => {
+  const regex = /\$\b\w*__ZEUS_VAR__\[?[^!^\]^\s^,^\)^\}]*[!]?[\]]?[!]?/g;
+  let result;
+  const AllVariables: string[] = [];
+  while ((result = regex.exec(query))) {
+    if (AllVariables.includes(result[0])) {
+      continue;
+    }
+    AllVariables.push(result[0]);
+  }
+  if (!AllVariables.length) {
+    return query;
+  }
+  let filteredQuery = query;
+  AllVariables.forEach((variable) => {
+    while (filteredQuery.includes(variable)) {
+      filteredQuery = filteredQuery.replace(variable, variable.split('__ZEUS_VAR__')[0]);
+    }
+  });
+  return `(${AllVariables.map((a) => a.split('__ZEUS_VAR__'))
+    .map(([variableName, variableType]) => `${variableName}:${variableType}`)
+    .join(', ')})${filteredQuery}`;
+};
+
+
+export const queryConstruct = (t: 'query' | 'mutation' | 'subscription', tName: string, operationName?: string) => (o: Record<any, any>) =>
+  `${t.toLowerCase()}${operationName ? ' ' + operationName : ''}${inspectVariables(buildQuery(tName, o))}`;
+  
+
+export const fullChainConstruct = (fn: FetchFunction) => (t: 'query' | 'mutation' | 'subscription', tName: string) => (
+  o: Record<any, any>,
+  options?: OperationOptions,
+) => fn(queryConstruct(t, tName, options?.operationName)(o), options?.variables).then((r:any) => { 
+  seekForAliases(r)
+  return r
+});
+
+
+export const fullSubscriptionConstruct = (fn: SubscriptionFunction) => (
+  t: 'query' | 'mutation' | 'subscription',
+  tName: string,
+) => (o: Record<any, any>, options?: OperationOptions) =>
+  fn(queryConstruct(t, tName, options?.operationName)(o));
+
+
+const seekForAliases = (response: any) => {
+  const traverseAlias = (value: any) => {
+    if (Array.isArray(value)) {
+      value.forEach(seekForAliases);
+    } else {
+      if (typeof value === 'object') {
+        seekForAliases(value);
+      }
+    }
+  };
+  if (typeof response === 'object' && response) {
+    const keys = Object.keys(response);
+    if (keys.length < 1) {
+      return;
+    }
+    keys.forEach((k) => {
+      const value = response[k];
+      if (k.indexOf('__alias__') !== -1) {
+        const [operation, alias] = k.split('__alias__');
+        response[alias] = {
+          [operation]: value,
+        };
+        delete response[k];
+      }
+      traverseAlias(value);
+    });
+  }
+};
+
+
+export const $ = (t: TemplateStringsArray): any => `ZEUS_VAR$${t.join('')}`;
+
+
+export const resolverFor = <
+  X,
+  T extends keyof ValueTypes,
+  Z extends keyof ValueTypes[T],
+>(
+  type: T,
+  field: Z,
+  fn: (
+    args: Required<ValueTypes[T]>[Z] extends [infer Input, any] ? Input : any,
+    source: any,
+  ) => Z extends keyof ModelTypes[T] ? ModelTypes[T][Z] | Promise<ModelTypes[T][Z]> | X : any,
+) => fn as (args?: any,source?: any) => any;
+
+
+const handleFetchResponse = (
+  response: Parameters<Extract<Parameters<ReturnType<typeof fetch>['then']>[0], Function>>[0]
+): Promise<GraphQLResponse> => {
+  if (!response.ok) {
+    return new Promise((_, reject) => {
+      response.text().then(text => {
+        try { reject(JSON.parse(text)); }
+        catch (err) { reject(text); }
+      }).catch(reject);
+    });
+  }
+  return response.json();
+};
+
+export const apiFetch = (options: fetchOptions) => (query: string, variables: Record<string, any> = {}) => {
+    let fetchFunction = fetch;
+    let queryString = query;
+    let fetchOptions = options[1] || {};
+    if (fetchOptions.method && fetchOptions.method === 'GET') {
+      queryString = encodeURIComponent(query);
+      return fetchFunction(`${options[0]}?query=${queryString}`, fetchOptions)
+        .then(handleFetchResponse)
+        .then((response: GraphQLResponse) => {
+          if (response.errors) {
+            throw new GraphQLError(response);
+          }
+          return response.data;
+        });
+    }
+    return fetchFunction(`${options[0]}`, {
+      body: JSON.stringify({ query: queryString, variables }),
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      ...fetchOptions
+    })
+      .then(handleFetchResponse)
+      .then((response: GraphQLResponse) => {
+        if (response.errors) {
+          throw new GraphQLError(response);
+        }
+        return response.data;
+      });
+  };
+  
+
+export const apiSubscription = (options: chainOptions) => (
+    query: string,
+  ) => {
+    try {
+      const queryString = options[0] + '?query=' + encodeURIComponent(query);
+      const wsString = queryString.replace('http', 'ws');
+      const host = (options.length > 1 && options[1]?.websocket?.[0]) || wsString;
+      const webSocketOptions = options[1]?.websocket || [host];
+      const ws = new WebSocket(...webSocketOptions);
+      return {
+        ws,
+        on: (e: (args: any) => void) => {
+          ws.onmessage = (event:any) => {
+            if(event.data){
+              const parsed = JSON.parse(event.data)
+              const data = parsed.data
+              if (data) {
+                seekForAliases(data);
+              }
+              return e(data);
+            }
+          };
+        },
+        off: (e: (args: any) => void) => {
+          ws.onclose = e;
+        },
+        error: (e: (args: any) => void) => {
+          ws.onerror = e;
+        },
+        open: (e: () => void) => {
+          ws.onopen = e;
+        },
+      };
+    } catch {
+      throw new Error('No websockets implemented');
+    }
+  };
+
+
+
+const allOperations = {
+    "query": "Query",
+    "mutation": "Mutation"
+}
+
+export type GenericOperation<O> = O extends 'query'
+  ? "Query"
+  : O extends 'mutation'
+  ? "Mutation"
+  : never
+
+export const Thunder = (fn: FetchFunction) => <
+  O extends 'query' | 'mutation',
+  R extends keyof ValueTypes = GenericOperation<O>
+>(
+  operation: O,
+) => <Z extends ValueTypes[R]>(o: Z | ValueTypes[R], ops?: OperationOptions) =>
+  fullChainConstruct(fn)(operation, allOperations[operation])(o as any, ops) as Promise<InputType<GraphQLTypes[R], Z>>;
+
+export const Chain = (...options: chainOptions) => Thunder(apiFetch(options));  
+  
+export const SubscriptionThunder = (fn: SubscriptionFunction) => <
+  O extends 'query' | 'mutation',
+  R extends keyof ValueTypes = GenericOperation<O>
+>(
+  operation: O,
+) => <Z extends ValueTypes[R]>(
+  o: Z | ValueTypes[R],
+  ops?: OperationOptions
+)=>
+  fullSubscriptionConstruct(fn)(operation, allOperations[operation])(
+    o as any,
+    ops,
+  ) as SubscriptionToGraphQL<Z, GraphQLTypes[R]>;
+
+export const Subscription = (...options: chainOptions) => SubscriptionThunder(apiSubscription(options));
+export const Zeus = <
+  Z extends ValueTypes[R],
+  O extends 'query' | 'mutation',
+  R extends keyof ValueTypes = GenericOperation<O>
+>(
+  operation: O,
+  o: Z | ValueTypes[R],
+  operationName?: string,
+) => queryConstruct(operation, allOperations[operation], operationName)(o as any);
+export const Selector = <T extends keyof ValueTypes>(key: T) => ZeusSelect<ValueTypes[T]>();
+  
+
+export const Gql = Chain('http://101.35.96.91:2333/graphql')

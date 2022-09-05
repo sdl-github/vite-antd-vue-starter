@@ -26,7 +26,6 @@ request.interceptors.response.use(response => {
     return data.data
 },
     err => {
-        log
         const { response: { data } } = err
         handleError(data)
         return Promise.reject(err)

@@ -3,106 +3,905 @@
 export const AllTypesProps: Record<string,any> = {
 	Query:{
 		hello:{
-
+			name:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
 		},
 		getOnLineLoginUserList:{
-
+			ip:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			name:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
 		},
 		getMenuTree:{
-
+			id:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			type:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			name:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			visible:{
+				type:"Boolean",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			from:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			to:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
 		},
 		getMenuList:{
-
+			id:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			type:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			name:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			visible:{
+				type:"Boolean",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			from:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			to:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			pageNo:{
+				type:"Float",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			pageSize:{
+				type:"Float",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
 		},
 		getRoleList:{
-
+			id:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			name:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			key:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			isDefault:{
+				type:"Boolean",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			from:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			to:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			includeMenu:{
+				type:"Boolean",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			pageNo:{
+				type:"Float",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			pageSize:{
+				type:"Float",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
 		},
 		getUserList:{
-
+			id:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			username:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			phone:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			email:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			from:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			to:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			includeRole:{
+				type:"Boolean",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			pageNo:{
+				type:"Float",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			pageSize:{
+				type:"Float",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
 		},
-		listObjects:{
-
+		getFileList:{
+			id:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			name:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			originName:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			prefix:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			extension:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			mimeType:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			bucket:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			path:{
+				type:"FilePathEnum",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			from:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			to:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			pageNo:{
+				type:"Float",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			pageSize:{
+				type:"Float",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
 		},
 		getPostTagList:{
-
+			id:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			name:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			from:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			to:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			pageNo:{
+				type:"Float",
+				array:false,
+				arrayRequired:false,
+				required:false
+			},
+			pageSize:{
+				type:"Float",
+				array:false,
+				arrayRequired:false,
+				required:false
+			}
 		}
 	},
-	DateTime: `scalar.DateTime` as const,
-	UserGenderEnum: "enum" as const,
-	JSONObject: `scalar.JSONObject` as const,
+	DateTime: "String",
+	UserGenderEnum: "enum",
+	JSONObject: "String",
+	FilePathEnum: "enum",
 	Mutation:{
 		login:{
-
+			password:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:true
+			},
+			username:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
 		},
 		forceUserLogout:{
-
+			token:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
 		},
 		createMenu:{
-			input:"CreateMenuInput"
+			input:{
+				type:"CreateMenuInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
 		},
 		editMenu:{
-			input:"EditMenuInput"
+			input:{
+				type:"EditMenuInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
 		},
 		removeMenus:{
-
+			menuIds:{
+				type:"String",
+				array:true,
+				arrayRequired:true,
+				required:true
+			}
 		},
 		createRole:{
-			input:"CreateRoleInput"
+			input:{
+				type:"CreateRoleInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
 		},
 		editRole:{
-			input:"EditRoleInput"
+			input:{
+				type:"EditRoleInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
 		},
 		removeRoles:{
-
+			roleIds:{
+				type:"String",
+				array:true,
+				arrayRequired:true,
+				required:true
+			}
 		},
 		createUser:{
-			input:"CreateUserInput"
+			input:{
+				type:"CreateUserInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
 		},
 		editUser:{
-			input:"EditUserInput"
+			input:{
+				type:"EditUserInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
 		},
 		removeUsers:{
-
+			userIds:{
+				type:"String",
+				array:true,
+				arrayRequired:true,
+				required:true
+			}
 		},
 		resetUserPassword:{
-
+			userId:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
 		},
-		makeBucket:{
-
+		createFile:{
+			input:{
+				type:"CreateFileInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		updateFile:{
+			input:{
+				type:"EditFileInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
+		},
+		delFile:{
+			id:{
+				type:"String",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
 		},
 		createPostTag:{
-			input:"CreatePostTagInput"
+			input:{
+				type:"CreatePostTagInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
 		},
 		editPostTag:{
-			input:"EditPostTagInput"
+			input:{
+				type:"EditPostTagInput",
+				array:false,
+				arrayRequired:false,
+				required:true
+			}
 		},
 		removePostTags:{
-
+			ids:{
+				type:"String",
+				array:true,
+				arrayRequired:true,
+				required:true
+			}
 		}
 	},
 	CreateMenuInput:{
-
+		name:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		title:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		icon:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		pId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		orderBy:{
+			type:"Float",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		path:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		component:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		visible:{
+			type:"Boolean",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		permission:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		type:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
 	},
 	EditMenuInput:{
-
+		id:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		title:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		name:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		icon:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		pId:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		orderBy:{
+			type:"Float",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		path:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		component:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		visible:{
+			type:"Boolean",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		permission:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		type:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
 	},
 	CreateRoleInput:{
-
+		name:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		key:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		level:{
+			type:"Float",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		menuIds:{
+			type:"String",
+			array:true,
+			arrayRequired:false,
+			required:true
+		}
 	},
 	EditRoleInput:{
-
+		id:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		name:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		key:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		level:{
+			type:"Float",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		menuIds:{
+			type:"String",
+			array:true,
+			arrayRequired:false,
+			required:true
+		}
 	},
 	CreateUserInput:{
-		gender:"UserGenderEnum"
+		username:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		avatar:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		password:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		gender:{
+			type:"UserGenderEnum",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		email:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		nickname:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		phone:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		note:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		roleIds:{
+			type:"String",
+			array:true,
+			arrayRequired:false,
+			required:true
+		}
 	},
 	EditUserInput:{
-		gender:"UserGenderEnum"
+		id:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		avatar:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		gender:{
+			type:"UserGenderEnum",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		email:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		nickname:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		phone:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		note:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		roleIds:{
+			type:"String",
+			array:true,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	CreateFileInput:{
+		name:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		originName:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		thumbnail:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		prefix:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		extension:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		mimeType:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		size:{
+			type:"Float",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		bucket:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		path:{
+			type:"FilePathEnum",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
+	},
+	EditFileInput:{
+		id:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		name:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		}
 	},
 	CreatePostTagInput:{
-
+		name:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		icon:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		thumbnail:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
 	},
 	EditPostTagInput:{
-
+		id:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		name:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:true
+		},
+		icon:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		},
+		thumbnail:{
+			type:"String",
+			array:false,
+			arrayRequired:false,
+			required:false
+		}
 	}
 }
 
@@ -116,8 +915,7 @@ export const ReturnTypes: Record<string,any> = {
 		getMenuList:"MenuPageResult",
 		getRoleList:"RolePageResult",
 		getUserList:"UserPageResult",
-		listBuckets:"BucketInfo",
-		listObjects:"FileItem",
+		getFileList:"FilePageResult",
 		getPostTagList:"PostTagPageResult"
 	},
 	LoginUser:{
@@ -137,7 +935,6 @@ export const ReturnTypes: Record<string,any> = {
 		permissions:"String",
 		isSuperAdmin:"Boolean"
 	},
-	DateTime: `scalar.DateTime` as const,
 	Role:{
 		id:"ID",
 		createdAt:"DateTime",
@@ -153,6 +950,7 @@ export const ReturnTypes: Record<string,any> = {
 		createdAt:"DateTime",
 		updatedAt:"DateTime",
 		name:"String",
+		title:"String",
 		icon:"String",
 		pId:"String",
 		orderBy:"Float",
@@ -171,7 +969,6 @@ export const ReturnTypes: Record<string,any> = {
 		loginAddr:"String",
 		token:"String"
 	},
-	JSONObject: `scalar.JSONObject` as const,
 	MenuPageResult:{
 		data:"Menu",
 		totalCount:"Float",
@@ -200,16 +997,24 @@ export const ReturnTypes: Record<string,any> = {
 		note:"String",
 		roles:"Role"
 	},
-	BucketInfo:{
-		name:"String",
-		creationDate:"String"
+	FilePageResult:{
+		data:"File",
+		totalCount:"Float",
+		hasNextPage:"Boolean"
 	},
-	FileItem:{
+	File:{
+		id:"ID",
+		createdAt:"DateTime",
+		updatedAt:"DateTime",
 		name:"String",
-		size:"Float",
+		originName:"String",
+		thumbnail:"String",
 		prefix:"String",
-		etag:"String",
-		lastModified:"DateTime",
+		extension:"String",
+		mimeType:"String",
+		size:"Float",
+		bucket:"String",
+		path:"FilePathEnum",
 		url:"String"
 	},
 	PostTagPageResult:{
@@ -239,7 +1044,9 @@ export const ReturnTypes: Record<string,any> = {
 		editUser:"BaseResponse",
 		removeUsers:"BaseResponse",
 		resetUserPassword:"BaseResponse",
-		makeBucket:"BaseResponse",
+		createFile:"BaseResponse",
+		updateFile:"BaseResponse",
+		delFile:"BaseResponse",
 		createPostTag:"BaseResponse",
 		editPostTag:"BaseResponse",
 		removePostTags:"BaseResponse"
@@ -261,9 +1068,4 @@ export const ReturnTypes: Record<string,any> = {
 		code:"Float",
 		msg:"String"
 	}
-}
-
-export const Ops = {
-query: "Query" as const,
-	mutation: "Mutation" as const
 }

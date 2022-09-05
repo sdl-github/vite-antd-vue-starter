@@ -22,6 +22,7 @@ export const queryMenuList = async (input?: QueryMenuInput) => {
                 totalCount: true,
                 data: {
                     id: true,
+                    title: true,
                     name: true,
                     orderBy: true,
                     icon: true,
@@ -104,6 +105,8 @@ export const getAllMenuList = async () => {
             createdAt: true,
             /** 更新时间 */
             updatedAt: true,
+            /** 菜单名 */
+            title: true,
             /** 菜单名 */
             name: true,
             /** 图标 */

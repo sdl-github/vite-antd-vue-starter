@@ -42,6 +42,7 @@ export function meInfo() {
             },
             menus: {
                 id: true,
+                title: true,
                 name: true,
                 orderBy: true,
                 icon: true,

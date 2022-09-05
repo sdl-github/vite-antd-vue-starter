@@ -86,12 +86,17 @@ const state = reactive<IState>({
 
 const columns: TableColumnType<IMenu>[] = [
   {
-    title: "名称",
+    title: "名称标识",
     align: "center",
-    fixed: "left",
     width: 200,
     dataIndex: "name",
     key: "name",
+  },
+  {
+    title: "标题",
+    align: "center",
+    dataIndex: "title",
+    key: "title",
   },
   {
     title: "类型",
