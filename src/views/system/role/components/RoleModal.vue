@@ -1,5 +1,5 @@
 <template>
-    <a-modal v-model:visible="modalVisible" :destroy-on-close="true" :title="currentItem?.id ? '编辑' : '创建'"
+    <a-modal :visible="modalVisible" :destroy-on-close="true" :title="currentItem?.id ? '编辑' : '创建'"
         :confirm-loading="confirmLoading" okText='确定' cancelText='取消' @ok="handleOk" @cancel='handleCancel'>
         <a-form ref="formRef" :model="formState.data" :label-col="{ span: 6 }" :wrapper-col="{ span: 16 }"
             autocomplete="off">
