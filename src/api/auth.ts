@@ -88,3 +88,20 @@ export function getOnLineUser(ip?: string, name?: string) {
         ]
     })
 }
+
+/**
+ * 强制下线
+ * @param token 
+ * @returns 
+ */
+export function forceLogout(token: string) {
+    return mutation({
+        forceUserLogout: [
+            { token },
+            {
+                code: true,
+                msg: true
+            }
+        ]
+    })
+}

@@ -1,6 +1,19 @@
 <template>
-    <div>
-        <a-table :pagination="false" :scroll="{ x: 1500 }" :columns="columns" :row-key="(record: any) => record.id"
+    <div class="online-user-container">
+        <TableSearchCard @handleSearch='handleSearch' />
+        <div class="table-header">
+            <div class="table-action">
+                <a-tooltip placement="top">
+                    <template #title>
+                        <span>刷新</span>
+                    </template>
+                    <a-button @click="initData" type="text" shape="circle">
+                        <RemixIcon icon="refresh-line" />
+                    </a-button>
+                </a-tooltip>
+            </div>
+        </div>
+        <a-table :pagination="true" :scroll="{ x: 1500 }" :columns="columns" :row-key="(record: any) => record.id"
             :data-source="state.dataList" :loading="state.loading">
             <template #bodyCell="{ column, record }">
                 <template v-if="column.dataIndex === 'loginTime'">
@@ -16,7 +29,10 @@
                 </template>
                 <template v-if="column.key === 'operation'">
                     <span>
-                        <a>强退</a>
+                        <a-popconfirm :title="`确定要强制下线用户${record.username}?`" ok-text="确定" cancel-text="取消"
+                            @confirm="handleForceLogout(record.token)">
+                            <a>强退</a>
+                        </a-popconfirm>
                     </span>
                 </template>
             </template>
@@ -26,10 +42,13 @@
 
 
 <script setup lang="ts">
-import { getOnLineUser } from '@/api/auth';
+import TableSearchCard from "./components/TableSearchCard.vue";
+import { forceLogout, getOnLineUser } from '@/api/auth';
 import { ModelTypes } from '@/utils/graphql/zeus';
-import { TableColumnType } from 'ant-design-vue';
+import { message, TableColumnType } from 'ant-design-vue';
 import { onMounted, reactive } from 'vue';
+import RemixIcon from '@/components/RemixIcon.vue'
+
 type IOnLineUser = ModelTypes["OnLineUser"]
 type IState = {
     pageNo: number,
@@ -107,9 +126,56 @@ onMounted(() => {
 
 async function initData() {
     state.loading = true
-    const { getOnLineLoginUserList } = await getOnLineUser()
+    const { searchParams: { ip, name } } = state
+    const { getOnLineLoginUserList } = await getOnLineUser(ip, name)
     state.dataList = getOnLineLoginUserList
     state.loading = false
 }
 
+async function handleForceLogout(token: string) {
+    await forceLogout(token)
+    message.success('成功');
+    initData()
+}
+
+function handleSearch(params: { name: string, ip: string }) {
+    state.searchParams = params
+    initData()
+}
+
 </script>
+
+<style lang="scss" scoped>
+    .search-card {
+      margin-bottom: 16px;
+      background: #fff;
+    }
+    
+    .online-user-container {
+      width: 100%;
+    
+      .table-header {
+        height: 64px;
+        padding: 16px 0;
+        display: flex;
+        justify-content: flex-end;
+      }
+    
+      .table-action {
+        display: flex;
+        align-items: center;
+        margin-left: 16px;
+      }
+    
+      .pagination-card{
+        height: 60px;
+        width: 100%;
+        background: #fff;
+        margin: 10px 0;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 0 20px;
+      }
+    }
+    </style>
