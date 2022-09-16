@@ -1,7 +1,16 @@
 <template>
   <div id="app">
+    <button @click="test">test</button>
     <FilePond
       ref="filePondRef"
+      labelFileProcessing="上传中..."
+      labelFileProcessingComplete="上传成功"
+      labelFileProcessingError="上传出错"
+      labelFileLoadError="加载出错"
+      labelFileLoading="上传中..."
+      labelTapToCancel="取消"
+      labelTapToRetry="重试"
+      labelTapToUndo="撤回"
       :label-idle="label"
       :name="name"
       :accepted-file-types="accepted"
@@ -12,6 +21,8 @@
       :maxFiles="maxFiles"
       @init="handleFilePondInit"
       @addfile="handleAddfile"
+      @onaddfile="handleOnAddfile"
+      @onupdatefiles="handleOnUpdatefiles"
     />
   </div>
 </template>
@@ -47,14 +58,28 @@ const props = withDefaults(defineProps<IProps>(),{
 const FilePond = vueFilePond(
     FilePondPluginImagePreview
 );
-const fileList = ref([])
+const fileList = ref(["cat.jpeg"])
 const server:FilePondServerConfigProps['server']  = {
     url: props.url,
+    fetch: {
+        url: 'fetch',
+        onload: e => {
+            console.log(e);
+            return e
+        },
+        ondata: res => {
+            return res
+        }
+    },
     process: {
         url: "/file/upload",
         method: 'POST',
         ondata: formData => {
             return formData
+        },
+        onload: response => {
+            const {data} = JSON.parse(response)
+            return data
         }
     }
 }
@@ -64,5 +89,16 @@ function handleFilePondInit() {
 
 function handleAddfile() {
     console.log("FilePond has handleAddfile");
+}
+function handleOnAddfile(file) {
+    // console.log(file);
+}
+function handleOnUpdatefiles(fileList) {
+    console.log("FilePond   handleOnUpdatefiles");
+
+    console.log(fileList);
+}
+function test() {
+    console.log(fileList.value);
 }
 </script>

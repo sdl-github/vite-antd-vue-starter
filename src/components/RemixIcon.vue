@@ -19,6 +19,5 @@ export default {
 <style lang="scss" scoped>
 [class*='ri'] {
     font-size: 16px;
-    vertical-align: -1px;
 }
 </style>

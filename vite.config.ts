@@ -7,6 +7,9 @@ export default defineConfig((env) => {
   const { mode } = env
   loadEnv(mode, process.cwd())
   return {
+    server: {
+      port: 3001
+    },
     resolve: {
       // 路径别名
       alias: {

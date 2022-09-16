@@ -123,7 +123,6 @@ const state = reactive<IState>({
 onMounted(() => {
     initData()
 })
-
 async function initData() {
     state.loading = true
     const { searchParams: { ip, name } } = state
