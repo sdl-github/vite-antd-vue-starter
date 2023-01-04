@@ -20,14 +20,14 @@ function onSelect(value: string) {
 </script>
 
 <template>
-    <a-popover placement="bottom" trigger="click" destroyTooltipOnHide  v-model:visible="visible">
+    <a-popover placement="bottom" trigger="click" destroyTooltipOnHide v-model:visible="visible">
         <template #content>
             <div class="icon_select_content">
                 <RemixIconSelect @onSelect='onSelect' />
             </div>
         </template>
 
-        <a-input placeholder="请选择" v-model:value="value">
+        <a-input placeholder="请选择" :value="value">
             <template v-if="value" #prefix>
                 <RemixIcon :icon='value' />
             </template>

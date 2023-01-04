@@ -25,13 +25,13 @@ async function initData() {
     treeData.value = node as any
 }
 
-function handleChange(value:string) {
+function handleChange(value: string) {
     emits('update:value', value)
 }
 </script>
 
 <template>
-    <a-tree-select @change="handleChange" v-model:value="value" show-search style="width: 100%" :field-names="{
+    <a-tree-select @change="handleChange" :value="value" show-search style="width: 100%" :field-names="{
         children: 'children',
         label: 'name',
         value: 'id',

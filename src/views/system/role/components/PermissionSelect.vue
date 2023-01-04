@@ -25,7 +25,7 @@ const emits = defineEmits(['handleSave', 'handleCancel']);
 
 watchEffect(() => {
     if (props?.currentRole?.id) {
-        const ids = props?.currentRole?.menus?.map((item:any) => item.id);
+        const ids = props?.currentRole?.menus?.map((item: any) => item.id);
         const sonIds = deepTreeToList(treeData.value)
         const checked = sonIds.filter(item => ids.includes(item));
         checkedKeys.value = checked as any;
@@ -79,7 +79,7 @@ function handleSave() {
 </script>
 
 <template>
-    <a-drawer v-model:visible="visible" title="权限配置" placement="right" @close="emits('handleCancel')">
+    <a-drawer :visible="visible" title="权限配置" placement="right" @close="emits('handleCancel')">
         <template #extra>
             <a-button class="mr-2" @click="emits('handleCancel')">取消</a-button>
             <a-button @click="handleSave" type="primary">保存</a-button>
