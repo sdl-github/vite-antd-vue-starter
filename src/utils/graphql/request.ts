@@ -38,8 +38,11 @@ function handleError(data: any) {
         const { code, message } = data.errors[0]
         let msg = message
         if (code === 'UNAUTHENTICATED') {
-            removeToken()
-            setTimeout(() => { window.location.href = '/login' }, 1000)
+            console.log(code);
+            console.log(data);
+
+            // removeToken()
+            // setTimeout(() => { window.location.href = '/login' }, 1000)
             msg = '登录已经过期，请重新登录';
         }
         if (code === 'NOT_PERMISSION') {

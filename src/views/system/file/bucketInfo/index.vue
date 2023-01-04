@@ -26,7 +26,6 @@
 </template>
 
 <script setup lang="ts">
-import { listObjects } from "@/api/file";
 import { ModelTypes } from "@/utils/graphql/zeus";
 import { TableColumnType } from "ant-design-vue";
 import { onMounted, reactive, toRefs } from "vue";
@@ -93,8 +92,6 @@ async function initData() {
   const { bucket } = route.query as { bucket: string };
   state.bucket = bucket;
   state.loading = true;
-  const { listObjects: dataList } = await listObjects(bucket);
-  state.dataList = dataList;
   state.loading = false;
 }
 

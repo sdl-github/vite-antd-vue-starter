@@ -1,39 +1,49 @@
 <template>
-  <div id="login">
-    <a-form ref="formRef" :model="form" :rules="rules">
-      <a-form-item name="username">
-        <a-input
-            placeholder="用户名"
-            allow-clear
-            v-model:value="form.username"
-            @keyup.enter="passwordRef.focus()"
-        />
-      </a-form-item>
-      <a-form-item name="password">
-        <a-input-password
-            ref="passwordRef"
-            type="password"
-            v-model:value="form.password"
-            placeholder="密码"
-            allow-clear
-            @keyup.enter="handleLogin"
-        />
-      </a-form-item>
-      <a-form-item>
-        <a-button
-            type="primary"
-            class="login-btn"
-            :loading="loading"
-            @click.stop="handleLogin"
-        >
-          登录
-        </a-button>
-      </a-form-item>
-    </a-form>
+  <div class="flex z-10 h-[100vh] fixed w-full overflow-hidden bg-cover" :style="{ background: `url(${bg})`}">
+    <img class="absolute opacity-30 left-[600px] top-[100px] select-none" :src="bg_a" />
+    <img class="absolute opacity-30 select-none" :src="bg_b" />
+    <div class="flex-1 flex items-center justify-center p-[20px]">
+      <div class="w-[400px] bg-white p-10 rounded">
+        <div class="h-[50px] text-xl text-bold">登录</div>
+        <a-form ref="formRef" :model="form" :rules="rules">
+          <a-form-item name="username">
+            <a-input
+                placeholder="用户名"
+                allow-clear
+                v-model:value="form.username"
+                @keyup.enter="passwordRef.focus()"
+            />
+          </a-form-item>
+          <a-form-item name="password">
+            <a-input-password
+                ref="passwordRef"
+                type="password"
+                v-model:value="form.password"
+                placeholder="密码"
+                allow-clear
+                @keyup.enter="handleLogin"
+            />
+          </a-form-item>
+          <a-form-item>
+            <a-button
+                type="primary"
+                class="login-btn"
+                :loading="loading"
+                @click.stop="handleLogin"
+            >
+              登录
+            </a-button>
+          </a-form-item>
+        </a-form>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import bg from '@/assets/images/bg.png'
+import bg_a from '@/assets/images/bg_a.png'
+import bg_b from '@/assets/images/bg_b.png'
 import {FormInstance, notification} from "ant-design-vue";
 import {ref, reactive} from "vue";
 import {useRouter} from "vue-router";
@@ -83,6 +93,6 @@ const handleLogin = () => {
 }
 
 .login-btn {
-  width: 236px;
+  width: 100%;
 }
 </style>

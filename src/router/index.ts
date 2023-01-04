@@ -17,7 +17,7 @@ const staticRoutes: RouteRecordRaw[] = [
         path: LOGIN_PATH,
         component: () => import('@/views/login.vue'),
         meta: {
-            title: 'login'
+            title: '登录'
         }
     },
 

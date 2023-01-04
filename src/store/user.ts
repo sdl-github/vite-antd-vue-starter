@@ -29,13 +29,13 @@ export const userStore = defineStore({
         },
         async logout() {
             const app = appStore()
-            this.userInfo = {} as any
             app.setSideMenu([])
             try {
                 await logout()
             } catch (e) {
                 console.log(e);
             } finally {
+                this.userInfo = {} as any
                 removeToken()
             }
         }
