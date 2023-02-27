@@ -1,20 +1,13 @@
 <template>
   <a-spin :spinning="loading">
-    <a-select
-        :value="value"
-        mode="tags"
-        style="width: 100%"
-        placeholder="请选择"
-        @change="handleChange"
-        :options="options"
-    >
+    <a-select :value="value" mode="tags" style="width: 100%" placeholder="请选择" @change="handleChange" :options="options">
     </a-select>
   </a-spin>
 </template>
 <script setup lang="ts">
-import {SelectProps} from "ant-design-vue";
-import {onMounted, ref} from "vue";
-import {queryRoleList} from "@/api/role";
+import { SelectProps } from "ant-design-vue";
+import { onMounted, ref } from "vue";
+import { queryRolePage } from "@/api/role";
 
 const props = defineProps({
   value: {
@@ -32,9 +25,9 @@ onMounted(() => {
 
 async function initData() {
   loading.value = true
-  const {getRoleList: {data}} = await queryRoleList()
+  const { queryRolePage: { data } } = await queryRolePage()
   options.value = data?.map((item) => {
-    return {label: item.name, value: item.id}
+    return { label: item.name, value: item.id }
   })
   loading.value = false
 }
@@ -45,6 +38,4 @@ function handleChange(v: Array<String>) {
 
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

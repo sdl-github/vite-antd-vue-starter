@@ -20,7 +20,7 @@ router.beforeEach(async (to, from, next) => {
         const app = appStore()
         // 用户信息未获取 获取信息
         if (!user.userInfo.username) {
-            await user.getMeInfo()
+            await user.queryUserInfo()
         }
         // 用户菜单未构造
         if (app.sideMenu.length === 0) {

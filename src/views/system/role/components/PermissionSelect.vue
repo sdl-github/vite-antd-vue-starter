@@ -2,10 +2,9 @@
 import { queryMenuTree } from '@/api/menu';
 import { onMounted, ref, watch, watchEffect } from 'vue';
 import { message, TreeSelect } from 'ant-design-vue';
-import RemixIcon from '@/components/RemixIcon.vue';
 const fileName = {
     children: 'children',
-    title: 'name',
+    title: 'title',
     key: 'id',
 }
 const props = defineProps({

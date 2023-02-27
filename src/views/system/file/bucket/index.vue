@@ -18,7 +18,6 @@
 </template>
 
 <script setup lang="ts">
-import { listBuckets } from "@/api/file";
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 onMounted(() => {
@@ -29,8 +28,6 @@ const bucketList = ref();
 const router = useRouter();
 
 async function initData() {
-  const { listBuckets: buckets } = await listBuckets();
-  bucketList.value = buckets;
 }
 
 function handleBucketInfo(index: number) {

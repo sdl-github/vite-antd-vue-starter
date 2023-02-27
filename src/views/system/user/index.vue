@@ -17,7 +17,7 @@
     </div>
     <a-table :pagination="false" :scroll="{ x: 1500 }" :columns="columns" :row-key="(record: any) => record.id"
       :data-source="state.dataList" :loading="state.loading">
-      <template #bodyCell="{ column, record }">
+      <template #bodyCell="{ column, record }: { column: TableColumnType<IUser>, record: IUser }">
         <template v-if="column.dataIndex === 'avatar'">
           <span>
             <a-avatar :src="record.avatar">{{ record.username }}</a-avatar>
@@ -40,7 +40,7 @@
         </template>
         <template v-if="column.dataIndex === 'gender'">
           <span>
-            {{ GenderEnum[record.gender] }}
+            {{ GenderEnum[record.gender!] }}
           </span>
         </template>
         <template v-if="column.dataIndex === 'createdAt'">
@@ -49,8 +49,8 @@
           </span>
         </template>
         <template v-if="column.dataIndex === 'roles'">
-          <span v-if="record.roles.length > 0">
-            <a-tag style="margin: 5px" v-for="role in record.roles" :key="role.id" color="blue">{{ role.name }}</a-tag>
+          <span v-if="record.roles!.length > 0">
+            <a-tag style="margin: 5px" v-for="role in record.roles" :key="role?.id" color="blue">{{ role.name }}</a-tag>
           </span>
           <span v-else> -- </span>
         </template>
@@ -79,7 +79,7 @@
 <script setup lang="ts">
 import TableSearchCard from "./components/TableSearchCard.vue";
 import UserModal from './components/UserModal.vue'
-import { createUser, delUsers, editUser, queryUserList } from "@/api/user";
+import { createUser, delUsers, editUser, queryUserPage } from "@/api/user";
 import { onMounted, reactive } from "vue";
 import { ICreateUserInput, IEditUserInput, IState, IUser, IUserActionModal } from "./data";
 import type { TableColumnType } from "ant-design-vue";
@@ -181,8 +181,8 @@ async function initData() {
   state.loading = true;
   const { pageNo, pageSize, searchParams } = state;
   const {
-    getUserList: { data, totalCount },
-  } = await queryUserList({
+    queryUserPage: { data, totalCount },
+  } = await queryUserPage({
     pageNo,
     pageSize,
     includeRole: true,
@@ -198,7 +198,7 @@ function formatDate(date: string) {
   return dayjs(date).format("YYYY-MM-DD HH:mm");
 };
 // 格式化内容
-function formatValue(value: string) {
+function formatValue(value?: string) {
   return value ? value : '--'
 }
 // 打开编辑
@@ -302,7 +302,7 @@ function handleShowSizeChange(current: number, pageSize: number) {
     margin-left: 16px;
   }
 
-  .pagination-card{
+  .pagination-card {
     height: 60px;
     width: 100%;
     background: #fff;

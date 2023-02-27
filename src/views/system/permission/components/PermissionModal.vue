@@ -1,8 +1,7 @@
 <template>
   <a-modal :visible="modalVisible" :destroy-on-close="true" :title="currentItem?.id ? '编辑' : '创建'"
     :confirm-loading="confirmLoading" :width="600" okText='确定' cancelText='取消' @ok="handleOk" @cancel='handleCancel'>
-    <a-form ref="formRef" :model="formState.data" :label-col="{ span: 6 }" :wrapper-col="{ span: 16 }"
-      autocomplete="off">
+    <a-form ref="formRef" :model="formState.data" :label-col="{ span: 6 }" :wrapper-col="{ span: 16 }" autocomplete="off">
       <a-row :gutter="[16, 8]">
         <a-col :span="12">
           <a-form-item label="类型" name="type">
@@ -102,6 +101,9 @@ const rules = {
   }]
 }
 const confirmLoading = ref(false)
+function genFormModel() {
+  
+}
 let formState = reactive<{ data: IMenuActionModal }>({
   data: {
     id: '',
@@ -126,7 +128,7 @@ const validateMenu = computed(() => {
 
 watch(() => props.currentItem, (val, old) => {
   if (val.id) {
-    formState.data = val as IMenuActionModal
+    formState.data = Object.assign({}, val) as IMenuActionModal
   } else {
     formState.data = {
       id: '',
@@ -164,5 +166,4 @@ function handleCancel() {
 
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

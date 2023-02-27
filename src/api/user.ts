@@ -14,9 +14,9 @@ export type UserQueryInput = {
 }
 
 // 查询用户
-export const queryUserList = async (input?: UserQueryInput) => {
+export const queryUserPage = async (input?: UserQueryInput) => {
     return query({
-        getUserList: [
+        queryUserPage: [
             {
                 ...input,
             },

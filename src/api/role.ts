@@ -14,9 +14,9 @@ export type QueryRoleInput = {
 }
 
 // 查询角色
-export const queryRoleList = async (input?: QueryRoleInput) => {
+export const queryRolePage = async (input?: QueryRoleInput) => {
     return query({
-        getRoleList: [
+        queryRolePage: [
             {
                 ...input
             },

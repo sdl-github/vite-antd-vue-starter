@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 import { AllTypesProps, ReturnTypes, Ops } from './const';
-export const HOST = "http://101.35.96.91:2333/graphql"
+export const HOST = "http://localhost:4000/graphql"
 
 
 export const HEADERS = {}
@@ -52,7 +52,7 @@ const handleFetchResponse = (response: Response): Promise<GraphQLResponse> => {
         .catch(reject);
     });
   }
-  return response.json();
+  return response.json() as Promise<GraphQLResponse>;
 };
 
 export const apiFetch =
@@ -313,7 +313,12 @@ export const traverseResponse = ({
     if (typeof o === 'boolean' || typeof o === 'number' || typeof o === 'string' || !o) {
       return o;
     }
-    return Object.fromEntries(Object.entries(o).map(([k, v]) => [k, ibb(k, v, [...p, purifyGraphQLKey(k)])]));
+    const entries = Object.entries(o).map(([k, v]) => [k, ibb(k, v, [...p, purifyGraphQLKey(k)])] as const);
+    const objectFromEntries = entries.reduce<Record<string, unknown>>((a, [k, v]) => {
+      a[k] = v;
+      return a;
+    }, {});
+    return objectFromEntries;
   };
   return ibb;
 };
@@ -649,8 +654,8 @@ export const resolverFor = <X, T extends keyof ResolverInputTypes, Z extends key
   fn: (
     args: Required<ResolverInputTypes[T]>[Z] extends [infer Input, any] ? Input : any,
     source: any,
-  ) => Z extends keyof ModelTypes[T] ? ModelTypes[T][Z] | Promise<ModelTypes[T][Z]> | X : any,
-) => fn as (args?: any, source?: any) => any;
+  ) => Z extends keyof ModelTypes[T] ? ModelTypes[T][Z] | Promise<ModelTypes[T][Z]> | X : never,
+) => fn as (args?: any, source?: any) => ReturnType<typeof fn>;
 
 export type UnwrapPromise<T> = T extends Promise<infer R> ? R : T;
 export type ZeusState<T extends (...args: any[]) => Promise<any>> = NonNullable<UnwrapPromise<ReturnType<T>>>;
@@ -692,9 +697,9 @@ type IsInterfaced<SRC extends DeepAnify<DST>, DST, SCLR extends ScalarDefinition
       [P in keyof SRC]: SRC[P] extends '__union' & infer R
         ? P extends keyof DST
           ? IsArray<R, '__typename' extends keyof DST ? DST[P] & { __typename: true } : DST[P], SCLR>
-          : Record<string, unknown>
+          : IsArray<R, '__typename' extends keyof DST ? { __typename: true } : never, SCLR>
         : never;
-    }[keyof DST] & {
+    }[keyof SRC] & {
       [P in keyof Omit<
         Pick<
           SRC,
@@ -827,61 +832,82 @@ export type ScalarCoders = {
 type ZEUS_UNIONS = never
 
 export type ValueTypes = {
-    ["Query"]: AliasType<{
-hello?: [{	name: string | Variable<any, string>},boolean | `@${string}`],
-	/** 获取我的信息 */
-	me?:ValueTypes["LoginUser"],
-getOnLineLoginUserList?: [{	ip?: string | undefined | null | Variable<any, string>,	name?: string | undefined | null | Variable<any, string>},ValueTypes["OnLineUser"]],
-	/** 查询所有菜单 */
-	allMenuList?:ValueTypes["Menu"],
-getMenuTree?: [{	/** 角色id */
-	id?: string | undefined | null | Variable<any, string>,	/** 类型 */
-	type?: string | undefined | null | Variable<any, string>,	/** 角色名 */
-	name?: string | undefined | null | Variable<any, string>,	/** 是否可见 */
-	visible?: boolean | undefined | null | Variable<any, string>,	/** 开始时间YYYY-DD-MM */
-	from?: string | undefined | null | Variable<any, string>,	/** 结束时间YYYY-DD-MM */
-	to?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
-getMenuList?: [{	/** 角色id */
-	id?: string | undefined | null | Variable<any, string>,	/** 类型 */
-	type?: string | undefined | null | Variable<any, string>,	/** 角色名 */
-	name?: string | undefined | null | Variable<any, string>,	/** 是否可见 */
-	visible?: boolean | undefined | null | Variable<any, string>,	/** 开始时间YYYY-DD-MM */
-	from?: string | undefined | null | Variable<any, string>,	/** 结束时间YYYY-DD-MM */
-	to?: string | undefined | null | Variable<any, string>,	pageNo?: number | undefined | null | Variable<any, string>,	pageSize?: number | undefined | null | Variable<any, string>},ValueTypes["MenuPageResult"]],
-getRoleList?: [{	/** 角色id */
-	id?: string | undefined | null | Variable<any, string>,	/** 角色名 */
-	name?: string | undefined | null | Variable<any, string>,	/** 角色标识 */
-	key?: string | undefined | null | Variable<any, string>,	/** 是否默认标识 */
-	isDefault?: boolean | undefined | null | Variable<any, string>,	/** 开始时间YYYY-DD-MM */
-	from?: string | undefined | null | Variable<any, string>,	/** 结束时间YYYY-DD-MM */
-	to?: string | undefined | null | Variable<any, string>,	/** 是否默认标识 */
-	includeMenu?: boolean | undefined | null | Variable<any, string>,	pageNo?: number | undefined | null | Variable<any, string>,	pageSize?: number | undefined | null | Variable<any, string>},ValueTypes["RolePageResult"]],
-getUserList?: [{	/** 用户id */
-	id?: string | undefined | null | Variable<any, string>,	/** 用户名 */
-	username?: string | undefined | null | Variable<any, string>,	/** 用户手机 */
-	phone?: string | undefined | null | Variable<any, string>,	/** 邮箱 */
-	email?: string | undefined | null | Variable<any, string>,	/** 开始时间YYYY-DD-MM */
-	from?: string | undefined | null | Variable<any, string>,	/** 结束时间YYYY-DD-MM */
-	to?: string | undefined | null | Variable<any, string>,	/** 是否包含角色 */
-	includeRole?: boolean | undefined | null | Variable<any, string>,	pageNo?: number | undefined | null | Variable<any, string>,	pageSize?: number | undefined | null | Variable<any, string>},ValueTypes["UserPageResult"]],
-getFileList?: [{	/** 文件ID */
-	id?: string | undefined | null | Variable<any, string>,	/** 文件名 */
-	name?: string | undefined | null | Variable<any, string>,	/** 原始文件名 */
-	originName?: string | undefined | null | Variable<any, string>,	/** 文件前缀 */
-	prefix?: string | undefined | null | Variable<any, string>,	/** 文件后缀 */
-	extension?: string | undefined | null | Variable<any, string>,	/** mimeType */
-	mimeType?: string | undefined | null | Variable<any, string>,	/** 存放桶名称 */
-	bucket?: string | undefined | null | Variable<any, string>,	/** 存放位置 */
-	path?: ValueTypes["FilePathEnum"] | undefined | null | Variable<any, string>,	/** 开始时间YYYY-DD-MM */
-	from?: string | undefined | null | Variable<any, string>,	/** 结束时间YYYY-DD-MM */
-	to?: string | undefined | null | Variable<any, string>,	pageNo?: number | undefined | null | Variable<any, string>,	pageSize?: number | undefined | null | Variable<any, string>},ValueTypes["FilePageResult"]],
-getPostTagList?: [{	/** id */
-	id?: string | undefined | null | Variable<any, string>,	/** tag名称 */
-	name?: string | undefined | null | Variable<any, string>,	/** 开始时间YYYY-DD-MM */
-	from?: string | undefined | null | Variable<any, string>,	/** 结束时间YYYY-DD-MM */
-	to?: string | undefined | null | Variable<any, string>,	pageNo?: number | undefined | null | Variable<any, string>,	pageSize?: number | undefined | null | Variable<any, string>},ValueTypes["PostTagPageResult"]],
+    ["Menu"]: AliasType<{
+	id?:boolean | `@${string}`,
+	/** 创建时间 */
+	createdAt?:boolean | `@${string}`,
+	/** 更新时间 */
+	updatedAt?:boolean | `@${string}`,
+	/** 菜单名 */
+	name?:boolean | `@${string}`,
+	/** 标题 */
+	title?:boolean | `@${string}`,
+	/** 图标 */
+	icon?:boolean | `@${string}`,
+	/** 上级ID */
+	pId?:boolean | `@${string}`,
+	/** 排序 */
+	orderBy?:boolean | `@${string}`,
+	/** 路径 */
+	path?:boolean | `@${string}`,
+	/** 组件 */
+	component?:boolean | `@${string}`,
+	/** 可见 */
+	visible?:boolean | `@${string}`,
+	/** 权限字符 */
+	permission?:boolean | `@${string}`,
+	/** 类型 */
+	type?:boolean | `@${string}`,
+	/** children */
+	children?:ValueTypes["Menu"],
 		__typename?: boolean | `@${string}`
 }>;
+	/** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
+["DateTime"]:unknown;
+	["Role"]: AliasType<{
+	id?:boolean | `@${string}`,
+	/** 创建时间 */
+	createdAt?:boolean | `@${string}`,
+	/** 更新时间 */
+	updatedAt?:boolean | `@${string}`,
+	/** 角色名 */
+	name?:boolean | `@${string}`,
+	/** 角色level */
+	level?:boolean | `@${string}`,
+	/** 标识 */
+	key?:boolean | `@${string}`,
+	/** 是否默认 */
+	isDefault?:boolean | `@${string}`,
+	/** 权限菜单 */
+	menus?:ValueTypes["Menu"],
+		__typename?: boolean | `@${string}`
+}>;
+	["User"]: AliasType<{
+	id?:boolean | `@${string}`,
+	/** 创建时间 */
+	createdAt?:boolean | `@${string}`,
+	/** 更新时间 */
+	updatedAt?:boolean | `@${string}`,
+	/** 用户名 */
+	username?:boolean | `@${string}`,
+	/** 头像 */
+	avatar?:boolean | `@${string}`,
+	/** 性别 */
+	gender?:boolean | `@${string}`,
+	/** 邮箱 */
+	email?:boolean | `@${string}`,
+	/** 昵称 */
+	nickname?:boolean | `@${string}`,
+	/** 手机 */
+	phone?:boolean | `@${string}`,
+	/** 备注 */
+	note?:boolean | `@${string}`,
+	/** 角色 */
+	roles?:ValueTypes["Role"],
+		__typename?: boolean | `@${string}`
+}>;
+	/** 用户性别枚举 */
+["UserGenderEnum"]:UserGenderEnum;
 	["LoginUser"]: AliasType<{
 	id?:boolean | `@${string}`,
 	/** 创建时间 */
@@ -914,58 +940,6 @@ getPostTagList?: [{	/** id */
 	isSuperAdmin?:boolean | `@${string}`,
 		__typename?: boolean | `@${string}`
 }>;
-	/** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
-["DateTime"]:unknown;
-	/** 用户性别枚举 */
-["UserGenderEnum"]:UserGenderEnum;
-	["Role"]: AliasType<{
-	id?:boolean | `@${string}`,
-	/** 创建时间 */
-	createdAt?:boolean | `@${string}`,
-	/** 更新时间 */
-	updatedAt?:boolean | `@${string}`,
-	/** 角色名 */
-	name?:boolean | `@${string}`,
-	/** 角色level */
-	level?:boolean | `@${string}`,
-	/** 标识 */
-	key?:boolean | `@${string}`,
-	/** 是否默认 */
-	isDefault?:boolean | `@${string}`,
-	/** 权限菜单 */
-	menus?:ValueTypes["Menu"],
-		__typename?: boolean | `@${string}`
-}>;
-	["Menu"]: AliasType<{
-	id?:boolean | `@${string}`,
-	/** 创建时间 */
-	createdAt?:boolean | `@${string}`,
-	/** 更新时间 */
-	updatedAt?:boolean | `@${string}`,
-	/** 菜单名 */
-	name?:boolean | `@${string}`,
-	/** 标题 */
-	title?:boolean | `@${string}`,
-	/** 图标 */
-	icon?:boolean | `@${string}`,
-	/** 上级ID */
-	pId?:boolean | `@${string}`,
-	/** 排序 */
-	orderBy?:boolean | `@${string}`,
-	/** 路径 */
-	path?:boolean | `@${string}`,
-	/** 组件 */
-	component?:boolean | `@${string}`,
-	/** 可见 */
-	visible?:boolean | `@${string}`,
-	/** 权限字符 */
-	permission?:boolean | `@${string}`,
-	/** 类型 */
-	type?:boolean | `@${string}`,
-	/** children */
-	children?:ValueTypes["Menu"],
-		__typename?: boolean | `@${string}`
-}>;
 	["OnLineUser"]: AliasType<{
 	/** 登录用户名 */
 	username?:boolean | `@${string}`,
@@ -981,12 +955,14 @@ getPostTagList?: [{	/** id */
 	token?:boolean | `@${string}`,
 		__typename?: boolean | `@${string}`
 }>;
-	/** The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
-["JSONObject"]:unknown;
-	["MenuPageResult"]: AliasType<{
-	data?:ValueTypes["Menu"],
-	totalCount?:boolean | `@${string}`,
-	hasNextPage?:boolean | `@${string}`,
+	["BaseResponse"]: AliasType<{
+	code?:boolean | `@${string}`,
+	msg?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
+	["LoginResult"]: AliasType<{
+	/** accessToken */
+	accessToken?:boolean | `@${string}`,
 		__typename?: boolean | `@${string}`
 }>;
 	["RolePageResult"]: AliasType<{
@@ -1001,125 +977,10 @@ getPostTagList?: [{	/** id */
 	hasNextPage?:boolean | `@${string}`,
 		__typename?: boolean | `@${string}`
 }>;
-	["User"]: AliasType<{
-	id?:boolean | `@${string}`,
-	/** 创建时间 */
-	createdAt?:boolean | `@${string}`,
-	/** 更新时间 */
-	updatedAt?:boolean | `@${string}`,
-	/** 用户名 */
-	username?:boolean | `@${string}`,
-	/** 头像 */
-	avatar?:boolean | `@${string}`,
-	/** 性别 */
-	gender?:boolean | `@${string}`,
-	/** 邮箱 */
-	email?:boolean | `@${string}`,
-	/** 昵称 */
-	nickname?:boolean | `@${string}`,
-	/** 手机 */
-	phone?:boolean | `@${string}`,
-	/** 备注 */
-	note?:boolean | `@${string}`,
-	/** 角色 */
-	roles?:ValueTypes["Role"],
-		__typename?: boolean | `@${string}`
-}>;
-	["FilePageResult"]: AliasType<{
-	data?:ValueTypes["File"],
+	["MenuPageResult"]: AliasType<{
+	data?:ValueTypes["Menu"],
 	totalCount?:boolean | `@${string}`,
 	hasNextPage?:boolean | `@${string}`,
-		__typename?: boolean | `@${string}`
-}>;
-	["File"]: AliasType<{
-	id?:boolean | `@${string}`,
-	/** 创建时间 */
-	createdAt?:boolean | `@${string}`,
-	/** 更新时间 */
-	updatedAt?:boolean | `@${string}`,
-	/** 文件名 */
-	name?:boolean | `@${string}`,
-	/** 原始文件名 */
-	originName?:boolean | `@${string}`,
-	/** 缩略图 */
-	thumbnail?:boolean | `@${string}`,
-	/** 文件前缀 */
-	prefix?:boolean | `@${string}`,
-	/** 文件后缀 */
-	extension?:boolean | `@${string}`,
-	/** mimeType */
-	mimeType?:boolean | `@${string}`,
-	/** 文件大小 */
-	size?:boolean | `@${string}`,
-	/** 存放桶名称 */
-	bucket?:boolean | `@${string}`,
-	/** 存放位置 */
-	path?:boolean | `@${string}`,
-	/** 文件url */
-	url?:boolean | `@${string}`,
-		__typename?: boolean | `@${string}`
-}>;
-	/** 文件位置 */
-["FilePathEnum"]:FilePathEnum;
-	["PostTagPageResult"]: AliasType<{
-	data?:ValueTypes["PostTag"],
-	totalCount?:boolean | `@${string}`,
-	hasNextPage?:boolean | `@${string}`,
-		__typename?: boolean | `@${string}`
-}>;
-	["PostTag"]: AliasType<{
-	id?:boolean | `@${string}`,
-	/** 创建时间 */
-	createdAt?:boolean | `@${string}`,
-	/** 更新时间 */
-	updatedAt?:boolean | `@${string}`,
-	/** tag名称 */
-	name?:boolean | `@${string}`,
-	/** icon */
-	icon?:boolean | `@${string}`,
-	/** 封面图 */
-	thumbnail?:boolean | `@${string}`,
-		__typename?: boolean | `@${string}`
-}>;
-	["Mutation"]: AliasType<{
-login?: [{	password: string | Variable<any, string>,	username: string | Variable<any, string>},ValueTypes["LoginResult"]],
-	logout?:ValueTypes["BaseResponse"],
-forceUserLogout?: [{	token: string | Variable<any, string>},ValueTypes["BaseResponse"]],
-createMenu?: [{	input: ValueTypes["CreateMenuInput"] | Variable<any, string>},ValueTypes["BaseResponse"]],
-editMenu?: [{	input: ValueTypes["EditMenuInput"] | Variable<any, string>},ValueTypes["BaseResponse"]],
-removeMenus?: [{	menuIds: Array<string> | Variable<any, string>},ValueTypes["BaseResponse"]],
-createRole?: [{	input: ValueTypes["CreateRoleInput"] | Variable<any, string>},ValueTypes["BaseResponse"]],
-editRole?: [{	input: ValueTypes["EditRoleInput"] | Variable<any, string>},ValueTypes["BaseResponse"]],
-removeRoles?: [{	roleIds: Array<string> | Variable<any, string>},ValueTypes["BaseResponse"]],
-createUser?: [{	input: ValueTypes["CreateUserInput"] | Variable<any, string>},ValueTypes["BaseResponse"]],
-editUser?: [{	input: ValueTypes["EditUserInput"] | Variable<any, string>},ValueTypes["BaseResponse"]],
-removeUsers?: [{	userIds: Array<string> | Variable<any, string>},ValueTypes["BaseResponse"]],
-resetUserPassword?: [{	userId: string | Variable<any, string>},ValueTypes["BaseResponse"]],
-createFile?: [{	input: ValueTypes["CreateFileInput"] | Variable<any, string>},ValueTypes["BaseResponse"]],
-updateFile?: [{	input: ValueTypes["EditFileInput"] | Variable<any, string>},ValueTypes["BaseResponse"]],
-delFile?: [{	id: string | Variable<any, string>},ValueTypes["BaseResponse"]],
-createPostTag?: [{	input: ValueTypes["CreatePostTagInput"] | Variable<any, string>},ValueTypes["BaseResponse"]],
-editPostTag?: [{	input: ValueTypes["EditPostTagInput"] | Variable<any, string>},ValueTypes["BaseResponse"]],
-removePostTags?: [{	ids: Array<string> | Variable<any, string>},ValueTypes["BaseResponse"]],
-		__typename?: boolean | `@${string}`
-}>;
-	["LoginResult"]: AliasType<{
-	/** code */
-	code?:boolean | `@${string}`,
-	/** msg */
-	msg?:boolean | `@${string}`,
-	/** data */
-	data?:ValueTypes["LoginType"],
-		__typename?: boolean | `@${string}`
-}>;
-	["LoginType"]: AliasType<{
-	/** accessToken */
-	accessToken?:boolean | `@${string}`,
-		__typename?: boolean | `@${string}`
-}>;
-	["BaseResponse"]: AliasType<{
-	code?:boolean | `@${string}`,
-	msg?:boolean | `@${string}`,
 		__typename?: boolean | `@${string}`
 }>;
 	["BaseResult"]:AliasType<{
@@ -1234,108 +1095,143 @@ removePostTags?: [{	ids: Array<string> | Variable<any, string>},ValueTypes["Base
 	/** 角色 */
 	roleIds?: Array<string> | undefined | null | Variable<any, string>
 };
-	["CreateFileInput"]: {
-	/** 文件名 */
-	name: string | Variable<any, string>,
-	/** 原始文件名 */
-	originName: string | Variable<any, string>,
-	/** 缩略图 */
-	thumbnail?: string | undefined | null | Variable<any, string>,
-	/** 文件前缀 */
-	prefix?: string | undefined | null | Variable<any, string>,
-	/** 文件后缀 */
-	extension?: string | undefined | null | Variable<any, string>,
-	/** mimeType */
-	mimeType: string | Variable<any, string>,
-	/** 文件大小 */
-	size: number | Variable<any, string>,
-	/** 存放桶名称 */
-	bucket: string | Variable<any, string>,
-	/** 存放位置 */
-	path: ValueTypes["FilePathEnum"] | Variable<any, string>
-};
-	["EditFileInput"]: {
-	/** id */
-	id: string | Variable<any, string>,
-	/** 文件名 */
-	name: string | Variable<any, string>
-};
-	["CreatePostTagInput"]: {
-	/** tag名称 */
-	name: string | Variable<any, string>,
-	/** icon */
-	icon?: string | undefined | null | Variable<any, string>,
-	/** 封面图 */
-	thumbnail?: string | undefined | null | Variable<any, string>
-};
-	["EditPostTagInput"]: {
-	/** tagid */
-	id: string | Variable<any, string>,
-	/** tag名称 */
-	name: string | Variable<any, string>,
-	/** icon */
-	icon?: string | undefined | null | Variable<any, string>,
-	/** 封面图 */
-	thumbnail?: string | undefined | null | Variable<any, string>
-}
+	["Query"]: AliasType<{
+	/** 获取我的信息 */
+	userInfo?:ValueTypes["LoginUser"],
+getOnLineLoginUserList?: [{	ip?: string | undefined | null | Variable<any, string>,	name?: string | undefined | null | Variable<any, string>},ValueTypes["OnLineUser"]],
+getOauthUrl?: [{	type: string | Variable<any, string>},boolean | `@${string}`],
+hello?: [{	name: string | Variable<any, string>},boolean | `@${string}`],
+	/** 查询所有菜单 */
+	allMenuList?:ValueTypes["Menu"],
+getMenuTree?: [{	/** 角色id */
+	id?: string | undefined | null | Variable<any, string>,	/** 类型 */
+	type?: string | undefined | null | Variable<any, string>,	/** 角色名 */
+	name?: string | undefined | null | Variable<any, string>,	/** 是否可见 */
+	visible?: boolean | undefined | null | Variable<any, string>,	/** 开始时间YYYY-DD-MM */
+	from?: string | undefined | null | Variable<any, string>,	/** 结束时间YYYY-DD-MM */
+	to?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
+getMenuList?: [{	/** 角色id */
+	id?: string | undefined | null | Variable<any, string>,	/** 类型 */
+	type?: string | undefined | null | Variable<any, string>,	/** 角色名 */
+	name?: string | undefined | null | Variable<any, string>,	/** 是否可见 */
+	visible?: boolean | undefined | null | Variable<any, string>,	/** 开始时间YYYY-DD-MM */
+	from?: string | undefined | null | Variable<any, string>,	/** 结束时间YYYY-DD-MM */
+	to?: string | undefined | null | Variable<any, string>,	pageNo?: number | undefined | null | Variable<any, string>,	pageSize?: number | undefined | null | Variable<any, string>},ValueTypes["MenuPageResult"]],
+queryRolePage?: [{	/** 角色id */
+	id?: string | undefined | null | Variable<any, string>,	/** 角色名 */
+	name?: string | undefined | null | Variable<any, string>,	/** 角色标识 */
+	key?: string | undefined | null | Variable<any, string>,	/** 是否默认标识 */
+	isDefault?: boolean | undefined | null | Variable<any, string>,	/** 开始时间YYYY-DD-MM */
+	from?: string | undefined | null | Variable<any, string>,	/** 结束时间YYYY-DD-MM */
+	to?: string | undefined | null | Variable<any, string>,	/** 是否默认标识 */
+	includeMenu?: boolean | undefined | null | Variable<any, string>,	pageNo?: number | undefined | null | Variable<any, string>,	pageSize?: number | undefined | null | Variable<any, string>},ValueTypes["RolePageResult"]],
+queryUserPage?: [{	/** 用户id */
+	id?: string | undefined | null | Variable<any, string>,	/** 用户名 */
+	username?: string | undefined | null | Variable<any, string>,	/** 用户手机 */
+	phone?: string | undefined | null | Variable<any, string>,	/** 邮箱 */
+	email?: string | undefined | null | Variable<any, string>,	/** 开始时间YYYY-DD-MM */
+	from?: string | undefined | null | Variable<any, string>,	/** 结束时间YYYY-DD-MM */
+	to?: string | undefined | null | Variable<any, string>,	/** 是否包含角色 */
+	includeRole?: boolean | undefined | null | Variable<any, string>,	pageNo?: number | undefined | null | Variable<any, string>,	pageSize?: number | undefined | null | Variable<any, string>},ValueTypes["UserPageResult"]],
+		__typename?: boolean | `@${string}`
+}>;
+	/** The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
+["JSONObject"]:unknown;
+	["Mutation"]: AliasType<{
+login?: [{	password: string | Variable<any, string>,	username: string | Variable<any, string>},ValueTypes["LoginResult"]],
+	logout?:ValueTypes["BaseResponse"],
+forceUserLogout?: [{	token: string | Variable<any, string>},ValueTypes["BaseResponse"]],
+createMenu?: [{	input: ValueTypes["CreateMenuInput"] | Variable<any, string>},ValueTypes["BaseResponse"]],
+editMenu?: [{	input: ValueTypes["EditMenuInput"] | Variable<any, string>},ValueTypes["BaseResponse"]],
+removeMenus?: [{	menuIds: Array<string> | Variable<any, string>},ValueTypes["BaseResponse"]],
+createRole?: [{	input: ValueTypes["CreateRoleInput"] | Variable<any, string>},ValueTypes["BaseResponse"]],
+editRole?: [{	input: ValueTypes["EditRoleInput"] | Variable<any, string>},ValueTypes["BaseResponse"]],
+removeRoles?: [{	roleIds: Array<string> | Variable<any, string>},ValueTypes["BaseResponse"]],
+createUser?: [{	input: ValueTypes["CreateUserInput"] | Variable<any, string>},ValueTypes["BaseResponse"]],
+editUser?: [{	input: ValueTypes["EditUserInput"] | Variable<any, string>},ValueTypes["BaseResponse"]],
+removeUsers?: [{	userIds: Array<string> | Variable<any, string>},ValueTypes["BaseResponse"]],
+resetUserPassword?: [{	userId: string | Variable<any, string>},ValueTypes["BaseResponse"]],
+		__typename?: boolean | `@${string}`
+}>
   }
 
 export type ResolverInputTypes = {
-    ["Query"]: AliasType<{
-hello?: [{	name: string},boolean | `@${string}`],
-	/** 获取我的信息 */
-	me?:ResolverInputTypes["LoginUser"],
-getOnLineLoginUserList?: [{	ip?: string | undefined | null,	name?: string | undefined | null},ResolverInputTypes["OnLineUser"]],
-	/** 查询所有菜单 */
-	allMenuList?:ResolverInputTypes["Menu"],
-getMenuTree?: [{	/** 角色id */
-	id?: string | undefined | null,	/** 类型 */
-	type?: string | undefined | null,	/** 角色名 */
-	name?: string | undefined | null,	/** 是否可见 */
-	visible?: boolean | undefined | null,	/** 开始时间YYYY-DD-MM */
-	from?: string | undefined | null,	/** 结束时间YYYY-DD-MM */
-	to?: string | undefined | null},boolean | `@${string}`],
-getMenuList?: [{	/** 角色id */
-	id?: string | undefined | null,	/** 类型 */
-	type?: string | undefined | null,	/** 角色名 */
-	name?: string | undefined | null,	/** 是否可见 */
-	visible?: boolean | undefined | null,	/** 开始时间YYYY-DD-MM */
-	from?: string | undefined | null,	/** 结束时间YYYY-DD-MM */
-	to?: string | undefined | null,	pageNo?: number | undefined | null,	pageSize?: number | undefined | null},ResolverInputTypes["MenuPageResult"]],
-getRoleList?: [{	/** 角色id */
-	id?: string | undefined | null,	/** 角色名 */
-	name?: string | undefined | null,	/** 角色标识 */
-	key?: string | undefined | null,	/** 是否默认标识 */
-	isDefault?: boolean | undefined | null,	/** 开始时间YYYY-DD-MM */
-	from?: string | undefined | null,	/** 结束时间YYYY-DD-MM */
-	to?: string | undefined | null,	/** 是否默认标识 */
-	includeMenu?: boolean | undefined | null,	pageNo?: number | undefined | null,	pageSize?: number | undefined | null},ResolverInputTypes["RolePageResult"]],
-getUserList?: [{	/** 用户id */
-	id?: string | undefined | null,	/** 用户名 */
-	username?: string | undefined | null,	/** 用户手机 */
-	phone?: string | undefined | null,	/** 邮箱 */
-	email?: string | undefined | null,	/** 开始时间YYYY-DD-MM */
-	from?: string | undefined | null,	/** 结束时间YYYY-DD-MM */
-	to?: string | undefined | null,	/** 是否包含角色 */
-	includeRole?: boolean | undefined | null,	pageNo?: number | undefined | null,	pageSize?: number | undefined | null},ResolverInputTypes["UserPageResult"]],
-getFileList?: [{	/** 文件ID */
-	id?: string | undefined | null,	/** 文件名 */
-	name?: string | undefined | null,	/** 原始文件名 */
-	originName?: string | undefined | null,	/** 文件前缀 */
-	prefix?: string | undefined | null,	/** 文件后缀 */
-	extension?: string | undefined | null,	/** mimeType */
-	mimeType?: string | undefined | null,	/** 存放桶名称 */
-	bucket?: string | undefined | null,	/** 存放位置 */
-	path?: ResolverInputTypes["FilePathEnum"] | undefined | null,	/** 开始时间YYYY-DD-MM */
-	from?: string | undefined | null,	/** 结束时间YYYY-DD-MM */
-	to?: string | undefined | null,	pageNo?: number | undefined | null,	pageSize?: number | undefined | null},ResolverInputTypes["FilePageResult"]],
-getPostTagList?: [{	/** id */
-	id?: string | undefined | null,	/** tag名称 */
-	name?: string | undefined | null,	/** 开始时间YYYY-DD-MM */
-	from?: string | undefined | null,	/** 结束时间YYYY-DD-MM */
-	to?: string | undefined | null,	pageNo?: number | undefined | null,	pageSize?: number | undefined | null},ResolverInputTypes["PostTagPageResult"]],
+    ["Menu"]: AliasType<{
+	id?:boolean | `@${string}`,
+	/** 创建时间 */
+	createdAt?:boolean | `@${string}`,
+	/** 更新时间 */
+	updatedAt?:boolean | `@${string}`,
+	/** 菜单名 */
+	name?:boolean | `@${string}`,
+	/** 标题 */
+	title?:boolean | `@${string}`,
+	/** 图标 */
+	icon?:boolean | `@${string}`,
+	/** 上级ID */
+	pId?:boolean | `@${string}`,
+	/** 排序 */
+	orderBy?:boolean | `@${string}`,
+	/** 路径 */
+	path?:boolean | `@${string}`,
+	/** 组件 */
+	component?:boolean | `@${string}`,
+	/** 可见 */
+	visible?:boolean | `@${string}`,
+	/** 权限字符 */
+	permission?:boolean | `@${string}`,
+	/** 类型 */
+	type?:boolean | `@${string}`,
+	/** children */
+	children?:ResolverInputTypes["Menu"],
 		__typename?: boolean | `@${string}`
 }>;
+	/** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
+["DateTime"]:unknown;
+	["Role"]: AliasType<{
+	id?:boolean | `@${string}`,
+	/** 创建时间 */
+	createdAt?:boolean | `@${string}`,
+	/** 更新时间 */
+	updatedAt?:boolean | `@${string}`,
+	/** 角色名 */
+	name?:boolean | `@${string}`,
+	/** 角色level */
+	level?:boolean | `@${string}`,
+	/** 标识 */
+	key?:boolean | `@${string}`,
+	/** 是否默认 */
+	isDefault?:boolean | `@${string}`,
+	/** 权限菜单 */
+	menus?:ResolverInputTypes["Menu"],
+		__typename?: boolean | `@${string}`
+}>;
+	["User"]: AliasType<{
+	id?:boolean | `@${string}`,
+	/** 创建时间 */
+	createdAt?:boolean | `@${string}`,
+	/** 更新时间 */
+	updatedAt?:boolean | `@${string}`,
+	/** 用户名 */
+	username?:boolean | `@${string}`,
+	/** 头像 */
+	avatar?:boolean | `@${string}`,
+	/** 性别 */
+	gender?:boolean | `@${string}`,
+	/** 邮箱 */
+	email?:boolean | `@${string}`,
+	/** 昵称 */
+	nickname?:boolean | `@${string}`,
+	/** 手机 */
+	phone?:boolean | `@${string}`,
+	/** 备注 */
+	note?:boolean | `@${string}`,
+	/** 角色 */
+	roles?:ResolverInputTypes["Role"],
+		__typename?: boolean | `@${string}`
+}>;
+	/** 用户性别枚举 */
+["UserGenderEnum"]:UserGenderEnum;
 	["LoginUser"]: AliasType<{
 	id?:boolean | `@${string}`,
 	/** 创建时间 */
@@ -1368,58 +1264,6 @@ getPostTagList?: [{	/** id */
 	isSuperAdmin?:boolean | `@${string}`,
 		__typename?: boolean | `@${string}`
 }>;
-	/** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
-["DateTime"]:unknown;
-	/** 用户性别枚举 */
-["UserGenderEnum"]:UserGenderEnum;
-	["Role"]: AliasType<{
-	id?:boolean | `@${string}`,
-	/** 创建时间 */
-	createdAt?:boolean | `@${string}`,
-	/** 更新时间 */
-	updatedAt?:boolean | `@${string}`,
-	/** 角色名 */
-	name?:boolean | `@${string}`,
-	/** 角色level */
-	level?:boolean | `@${string}`,
-	/** 标识 */
-	key?:boolean | `@${string}`,
-	/** 是否默认 */
-	isDefault?:boolean | `@${string}`,
-	/** 权限菜单 */
-	menus?:ResolverInputTypes["Menu"],
-		__typename?: boolean | `@${string}`
-}>;
-	["Menu"]: AliasType<{
-	id?:boolean | `@${string}`,
-	/** 创建时间 */
-	createdAt?:boolean | `@${string}`,
-	/** 更新时间 */
-	updatedAt?:boolean | `@${string}`,
-	/** 菜单名 */
-	name?:boolean | `@${string}`,
-	/** 标题 */
-	title?:boolean | `@${string}`,
-	/** 图标 */
-	icon?:boolean | `@${string}`,
-	/** 上级ID */
-	pId?:boolean | `@${string}`,
-	/** 排序 */
-	orderBy?:boolean | `@${string}`,
-	/** 路径 */
-	path?:boolean | `@${string}`,
-	/** 组件 */
-	component?:boolean | `@${string}`,
-	/** 可见 */
-	visible?:boolean | `@${string}`,
-	/** 权限字符 */
-	permission?:boolean | `@${string}`,
-	/** 类型 */
-	type?:boolean | `@${string}`,
-	/** children */
-	children?:ResolverInputTypes["Menu"],
-		__typename?: boolean | `@${string}`
-}>;
 	["OnLineUser"]: AliasType<{
 	/** 登录用户名 */
 	username?:boolean | `@${string}`,
@@ -1435,12 +1279,14 @@ getPostTagList?: [{	/** id */
 	token?:boolean | `@${string}`,
 		__typename?: boolean | `@${string}`
 }>;
-	/** The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
-["JSONObject"]:unknown;
-	["MenuPageResult"]: AliasType<{
-	data?:ResolverInputTypes["Menu"],
-	totalCount?:boolean | `@${string}`,
-	hasNextPage?:boolean | `@${string}`,
+	["BaseResponse"]: AliasType<{
+	code?:boolean | `@${string}`,
+	msg?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
+	["LoginResult"]: AliasType<{
+	/** accessToken */
+	accessToken?:boolean | `@${string}`,
 		__typename?: boolean | `@${string}`
 }>;
 	["RolePageResult"]: AliasType<{
@@ -1455,125 +1301,10 @@ getPostTagList?: [{	/** id */
 	hasNextPage?:boolean | `@${string}`,
 		__typename?: boolean | `@${string}`
 }>;
-	["User"]: AliasType<{
-	id?:boolean | `@${string}`,
-	/** 创建时间 */
-	createdAt?:boolean | `@${string}`,
-	/** 更新时间 */
-	updatedAt?:boolean | `@${string}`,
-	/** 用户名 */
-	username?:boolean | `@${string}`,
-	/** 头像 */
-	avatar?:boolean | `@${string}`,
-	/** 性别 */
-	gender?:boolean | `@${string}`,
-	/** 邮箱 */
-	email?:boolean | `@${string}`,
-	/** 昵称 */
-	nickname?:boolean | `@${string}`,
-	/** 手机 */
-	phone?:boolean | `@${string}`,
-	/** 备注 */
-	note?:boolean | `@${string}`,
-	/** 角色 */
-	roles?:ResolverInputTypes["Role"],
-		__typename?: boolean | `@${string}`
-}>;
-	["FilePageResult"]: AliasType<{
-	data?:ResolverInputTypes["File"],
+	["MenuPageResult"]: AliasType<{
+	data?:ResolverInputTypes["Menu"],
 	totalCount?:boolean | `@${string}`,
 	hasNextPage?:boolean | `@${string}`,
-		__typename?: boolean | `@${string}`
-}>;
-	["File"]: AliasType<{
-	id?:boolean | `@${string}`,
-	/** 创建时间 */
-	createdAt?:boolean | `@${string}`,
-	/** 更新时间 */
-	updatedAt?:boolean | `@${string}`,
-	/** 文件名 */
-	name?:boolean | `@${string}`,
-	/** 原始文件名 */
-	originName?:boolean | `@${string}`,
-	/** 缩略图 */
-	thumbnail?:boolean | `@${string}`,
-	/** 文件前缀 */
-	prefix?:boolean | `@${string}`,
-	/** 文件后缀 */
-	extension?:boolean | `@${string}`,
-	/** mimeType */
-	mimeType?:boolean | `@${string}`,
-	/** 文件大小 */
-	size?:boolean | `@${string}`,
-	/** 存放桶名称 */
-	bucket?:boolean | `@${string}`,
-	/** 存放位置 */
-	path?:boolean | `@${string}`,
-	/** 文件url */
-	url?:boolean | `@${string}`,
-		__typename?: boolean | `@${string}`
-}>;
-	/** 文件位置 */
-["FilePathEnum"]:FilePathEnum;
-	["PostTagPageResult"]: AliasType<{
-	data?:ResolverInputTypes["PostTag"],
-	totalCount?:boolean | `@${string}`,
-	hasNextPage?:boolean | `@${string}`,
-		__typename?: boolean | `@${string}`
-}>;
-	["PostTag"]: AliasType<{
-	id?:boolean | `@${string}`,
-	/** 创建时间 */
-	createdAt?:boolean | `@${string}`,
-	/** 更新时间 */
-	updatedAt?:boolean | `@${string}`,
-	/** tag名称 */
-	name?:boolean | `@${string}`,
-	/** icon */
-	icon?:boolean | `@${string}`,
-	/** 封面图 */
-	thumbnail?:boolean | `@${string}`,
-		__typename?: boolean | `@${string}`
-}>;
-	["Mutation"]: AliasType<{
-login?: [{	password: string,	username: string},ResolverInputTypes["LoginResult"]],
-	logout?:ResolverInputTypes["BaseResponse"],
-forceUserLogout?: [{	token: string},ResolverInputTypes["BaseResponse"]],
-createMenu?: [{	input: ResolverInputTypes["CreateMenuInput"]},ResolverInputTypes["BaseResponse"]],
-editMenu?: [{	input: ResolverInputTypes["EditMenuInput"]},ResolverInputTypes["BaseResponse"]],
-removeMenus?: [{	menuIds: Array<string>},ResolverInputTypes["BaseResponse"]],
-createRole?: [{	input: ResolverInputTypes["CreateRoleInput"]},ResolverInputTypes["BaseResponse"]],
-editRole?: [{	input: ResolverInputTypes["EditRoleInput"]},ResolverInputTypes["BaseResponse"]],
-removeRoles?: [{	roleIds: Array<string>},ResolverInputTypes["BaseResponse"]],
-createUser?: [{	input: ResolverInputTypes["CreateUserInput"]},ResolverInputTypes["BaseResponse"]],
-editUser?: [{	input: ResolverInputTypes["EditUserInput"]},ResolverInputTypes["BaseResponse"]],
-removeUsers?: [{	userIds: Array<string>},ResolverInputTypes["BaseResponse"]],
-resetUserPassword?: [{	userId: string},ResolverInputTypes["BaseResponse"]],
-createFile?: [{	input: ResolverInputTypes["CreateFileInput"]},ResolverInputTypes["BaseResponse"]],
-updateFile?: [{	input: ResolverInputTypes["EditFileInput"]},ResolverInputTypes["BaseResponse"]],
-delFile?: [{	id: string},ResolverInputTypes["BaseResponse"]],
-createPostTag?: [{	input: ResolverInputTypes["CreatePostTagInput"]},ResolverInputTypes["BaseResponse"]],
-editPostTag?: [{	input: ResolverInputTypes["EditPostTagInput"]},ResolverInputTypes["BaseResponse"]],
-removePostTags?: [{	ids: Array<string>},ResolverInputTypes["BaseResponse"]],
-		__typename?: boolean | `@${string}`
-}>;
-	["LoginResult"]: AliasType<{
-	/** code */
-	code?:boolean | `@${string}`,
-	/** msg */
-	msg?:boolean | `@${string}`,
-	/** data */
-	data?:ResolverInputTypes["LoginType"],
-		__typename?: boolean | `@${string}`
-}>;
-	["LoginType"]: AliasType<{
-	/** accessToken */
-	accessToken?:boolean | `@${string}`,
-		__typename?: boolean | `@${string}`
-}>;
-	["BaseResponse"]: AliasType<{
-	code?:boolean | `@${string}`,
-	msg?:boolean | `@${string}`,
 		__typename?: boolean | `@${string}`
 }>;
 	["BaseResult"]:AliasType<{
@@ -1688,74 +1419,139 @@ removePostTags?: [{	ids: Array<string>},ResolverInputTypes["BaseResponse"]],
 	/** 角色 */
 	roleIds?: Array<string> | undefined | null
 };
-	["CreateFileInput"]: {
-	/** 文件名 */
-	name: string,
-	/** 原始文件名 */
-	originName: string,
-	/** 缩略图 */
-	thumbnail?: string | undefined | null,
-	/** 文件前缀 */
-	prefix?: string | undefined | null,
-	/** 文件后缀 */
-	extension?: string | undefined | null,
-	/** mimeType */
-	mimeType: string,
-	/** 文件大小 */
-	size: number,
-	/** 存放桶名称 */
-	bucket: string,
-	/** 存放位置 */
-	path: ResolverInputTypes["FilePathEnum"]
-};
-	["EditFileInput"]: {
-	/** id */
-	id: string,
-	/** 文件名 */
-	name: string
-};
-	["CreatePostTagInput"]: {
-	/** tag名称 */
-	name: string,
-	/** icon */
-	icon?: string | undefined | null,
-	/** 封面图 */
-	thumbnail?: string | undefined | null
-};
-	["EditPostTagInput"]: {
-	/** tagid */
-	id: string,
-	/** tag名称 */
-	name: string,
-	/** icon */
-	icon?: string | undefined | null,
-	/** 封面图 */
-	thumbnail?: string | undefined | null
-}
+	["Query"]: AliasType<{
+	/** 获取我的信息 */
+	userInfo?:ResolverInputTypes["LoginUser"],
+getOnLineLoginUserList?: [{	ip?: string | undefined | null,	name?: string | undefined | null},ResolverInputTypes["OnLineUser"]],
+getOauthUrl?: [{	type: string},boolean | `@${string}`],
+hello?: [{	name: string},boolean | `@${string}`],
+	/** 查询所有菜单 */
+	allMenuList?:ResolverInputTypes["Menu"],
+getMenuTree?: [{	/** 角色id */
+	id?: string | undefined | null,	/** 类型 */
+	type?: string | undefined | null,	/** 角色名 */
+	name?: string | undefined | null,	/** 是否可见 */
+	visible?: boolean | undefined | null,	/** 开始时间YYYY-DD-MM */
+	from?: string | undefined | null,	/** 结束时间YYYY-DD-MM */
+	to?: string | undefined | null},boolean | `@${string}`],
+getMenuList?: [{	/** 角色id */
+	id?: string | undefined | null,	/** 类型 */
+	type?: string | undefined | null,	/** 角色名 */
+	name?: string | undefined | null,	/** 是否可见 */
+	visible?: boolean | undefined | null,	/** 开始时间YYYY-DD-MM */
+	from?: string | undefined | null,	/** 结束时间YYYY-DD-MM */
+	to?: string | undefined | null,	pageNo?: number | undefined | null,	pageSize?: number | undefined | null},ResolverInputTypes["MenuPageResult"]],
+queryRolePage?: [{	/** 角色id */
+	id?: string | undefined | null,	/** 角色名 */
+	name?: string | undefined | null,	/** 角色标识 */
+	key?: string | undefined | null,	/** 是否默认标识 */
+	isDefault?: boolean | undefined | null,	/** 开始时间YYYY-DD-MM */
+	from?: string | undefined | null,	/** 结束时间YYYY-DD-MM */
+	to?: string | undefined | null,	/** 是否默认标识 */
+	includeMenu?: boolean | undefined | null,	pageNo?: number | undefined | null,	pageSize?: number | undefined | null},ResolverInputTypes["RolePageResult"]],
+queryUserPage?: [{	/** 用户id */
+	id?: string | undefined | null,	/** 用户名 */
+	username?: string | undefined | null,	/** 用户手机 */
+	phone?: string | undefined | null,	/** 邮箱 */
+	email?: string | undefined | null,	/** 开始时间YYYY-DD-MM */
+	from?: string | undefined | null,	/** 结束时间YYYY-DD-MM */
+	to?: string | undefined | null,	/** 是否包含角色 */
+	includeRole?: boolean | undefined | null,	pageNo?: number | undefined | null,	pageSize?: number | undefined | null},ResolverInputTypes["UserPageResult"]],
+		__typename?: boolean | `@${string}`
+}>;
+	/** The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
+["JSONObject"]:unknown;
+	["Mutation"]: AliasType<{
+login?: [{	password: string,	username: string},ResolverInputTypes["LoginResult"]],
+	logout?:ResolverInputTypes["BaseResponse"],
+forceUserLogout?: [{	token: string},ResolverInputTypes["BaseResponse"]],
+createMenu?: [{	input: ResolverInputTypes["CreateMenuInput"]},ResolverInputTypes["BaseResponse"]],
+editMenu?: [{	input: ResolverInputTypes["EditMenuInput"]},ResolverInputTypes["BaseResponse"]],
+removeMenus?: [{	menuIds: Array<string>},ResolverInputTypes["BaseResponse"]],
+createRole?: [{	input: ResolverInputTypes["CreateRoleInput"]},ResolverInputTypes["BaseResponse"]],
+editRole?: [{	input: ResolverInputTypes["EditRoleInput"]},ResolverInputTypes["BaseResponse"]],
+removeRoles?: [{	roleIds: Array<string>},ResolverInputTypes["BaseResponse"]],
+createUser?: [{	input: ResolverInputTypes["CreateUserInput"]},ResolverInputTypes["BaseResponse"]],
+editUser?: [{	input: ResolverInputTypes["EditUserInput"]},ResolverInputTypes["BaseResponse"]],
+removeUsers?: [{	userIds: Array<string>},ResolverInputTypes["BaseResponse"]],
+resetUserPassword?: [{	userId: string},ResolverInputTypes["BaseResponse"]],
+		__typename?: boolean | `@${string}`
+}>
   }
 
 export type ModelTypes = {
-    ["Query"]: {
-		hello: string,
-	/** 获取我的信息 */
-	me: ModelTypes["LoginUser"],
-	/** 登录用户列表查询 */
-	getOnLineLoginUserList: Array<ModelTypes["OnLineUser"]>,
-	/** 查询所有菜单 */
-	allMenuList: Array<ModelTypes["Menu"]>,
-	/** 菜单Tree查询 */
-	getMenuTree: Array<ModelTypes["JSONObject"]>,
-	/** 菜单列表查询 */
-	getMenuList: ModelTypes["MenuPageResult"],
-	/** 角色列表查询 */
-	getRoleList: ModelTypes["RolePageResult"],
-	/** 角色列表查询 */
-	getUserList: ModelTypes["UserPageResult"],
-	/** 列出所有文件 */
-	getFileList: ModelTypes["FilePageResult"],
-	/** PostTag列表查询 */
-	getPostTagList: ModelTypes["PostTagPageResult"]
+    ["Menu"]: {
+		id: string,
+	/** 创建时间 */
+	createdAt?: ModelTypes["DateTime"] | undefined,
+	/** 更新时间 */
+	updatedAt?: ModelTypes["DateTime"] | undefined,
+	/** 菜单名 */
+	name: string,
+	/** 标题 */
+	title?: string | undefined,
+	/** 图标 */
+	icon?: string | undefined,
+	/** 上级ID */
+	pId?: string | undefined,
+	/** 排序 */
+	orderBy?: number | undefined,
+	/** 路径 */
+	path?: string | undefined,
+	/** 组件 */
+	component?: string | undefined,
+	/** 可见 */
+	visible?: boolean | undefined,
+	/** 权限字符 */
+	permission?: string | undefined,
+	/** 类型 */
+	type?: string | undefined,
+	/** children */
+	children?: Array<ModelTypes["Menu"] | undefined> | undefined
 };
+	/** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
+["DateTime"]:any;
+	["Role"]: {
+		id: string,
+	/** 创建时间 */
+	createdAt?: ModelTypes["DateTime"] | undefined,
+	/** 更新时间 */
+	updatedAt?: ModelTypes["DateTime"] | undefined,
+	/** 角色名 */
+	name: string,
+	/** 角色level */
+	level: number,
+	/** 标识 */
+	key?: string | undefined,
+	/** 是否默认 */
+	isDefault?: boolean | undefined,
+	/** 权限菜单 */
+	menus?: Array<ModelTypes["Menu"] | undefined> | undefined
+};
+	["User"]: {
+		id: string,
+	/** 创建时间 */
+	createdAt?: ModelTypes["DateTime"] | undefined,
+	/** 更新时间 */
+	updatedAt?: ModelTypes["DateTime"] | undefined,
+	/** 用户名 */
+	username: string,
+	/** 头像 */
+	avatar?: string | undefined,
+	/** 性别 */
+	gender?: ModelTypes["UserGenderEnum"] | undefined,
+	/** 邮箱 */
+	email?: string | undefined,
+	/** 昵称 */
+	nickname?: string | undefined,
+	/** 手机 */
+	phone?: string | undefined,
+	/** 备注 */
+	note?: string | undefined,
+	/** 角色 */
+	roles?: Array<ModelTypes["Role"] | undefined> | undefined
+};
+	["UserGenderEnum"]:UserGenderEnum;
 	["LoginUser"]: {
 		id: string,
 	/** 创建时间 */
@@ -1787,75 +1583,27 @@ export type ModelTypes = {
 	/** 管理员 */
 	isSuperAdmin?: boolean | undefined
 };
-	/** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
-["DateTime"]:any;
-	["UserGenderEnum"]:UserGenderEnum;
-	["Role"]: {
-		id: string,
-	/** 创建时间 */
-	createdAt?: ModelTypes["DateTime"] | undefined,
-	/** 更新时间 */
-	updatedAt?: ModelTypes["DateTime"] | undefined,
-	/** 角色名 */
-	name: string,
-	/** 角色level */
-	level: number,
-	/** 标识 */
-	key?: string | undefined,
-	/** 是否默认 */
-	isDefault?: boolean | undefined,
-	/** 权限菜单 */
-	menus?: Array<ModelTypes["Menu"] | undefined> | undefined
-};
-	["Menu"]: {
-		id: string,
-	/** 创建时间 */
-	createdAt?: ModelTypes["DateTime"] | undefined,
-	/** 更新时间 */
-	updatedAt?: ModelTypes["DateTime"] | undefined,
-	/** 菜单名 */
-	name: string,
-	/** 标题 */
-	title?: string | undefined,
-	/** 图标 */
-	icon?: string | undefined,
-	/** 上级ID */
-	pId?: string | undefined,
-	/** 排序 */
-	orderBy?: number | undefined,
-	/** 路径 */
-	path?: string | undefined,
-	/** 组件 */
-	component?: string | undefined,
-	/** 可见 */
-	visible?: boolean | undefined,
-	/** 权限字符 */
-	permission?: string | undefined,
-	/** 类型 */
-	type?: string | undefined,
-	/** children */
-	children?: Array<ModelTypes["Menu"] | undefined> | undefined
-};
 	["OnLineUser"]: {
 		/** 登录用户名 */
-	username: string,
+	username?: string | undefined,
 	/** 浏览器 */
-	loginBrowser: string,
+	loginBrowser?: string | undefined,
 	/** ip */
-	loginIp: string,
+	loginIp?: string | undefined,
 	/** 登录时间 */
-	loginTime: string,
+	loginTime?: string | undefined,
 	/** 登录地址 */
-	loginAddr: string,
+	loginAddr?: string | undefined,
 	/** token */
-	token: string
+	token?: string | undefined
 };
-	/** The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
-["JSONObject"]:any;
-	["MenuPageResult"]: {
-		data?: Array<ModelTypes["Menu"]> | undefined,
-	totalCount: number,
-	hasNextPage: boolean
+	["BaseResponse"]: {
+		code: number,
+	msg: string
+};
+	["LoginResult"]: {
+		/** accessToken */
+	accessToken: string
 };
 	["RolePageResult"]: {
 		data?: Array<ModelTypes["Role"]> | undefined,
@@ -1867,133 +1615,10 @@ export type ModelTypes = {
 	totalCount: number,
 	hasNextPage: boolean
 };
-	["User"]: {
-		id: string,
-	/** 创建时间 */
-	createdAt?: ModelTypes["DateTime"] | undefined,
-	/** 更新时间 */
-	updatedAt?: ModelTypes["DateTime"] | undefined,
-	/** 用户名 */
-	username: string,
-	/** 头像 */
-	avatar?: string | undefined,
-	/** 性别 */
-	gender?: ModelTypes["UserGenderEnum"] | undefined,
-	/** 邮箱 */
-	email?: string | undefined,
-	/** 昵称 */
-	nickname?: string | undefined,
-	/** 手机 */
-	phone?: string | undefined,
-	/** 备注 */
-	note?: string | undefined,
-	/** 角色 */
-	roles?: Array<ModelTypes["Role"] | undefined> | undefined
-};
-	["FilePageResult"]: {
-		data?: Array<ModelTypes["File"]> | undefined,
+	["MenuPageResult"]: {
+		data?: Array<ModelTypes["Menu"]> | undefined,
 	totalCount: number,
 	hasNextPage: boolean
-};
-	["File"]: {
-		id: string,
-	/** 创建时间 */
-	createdAt?: ModelTypes["DateTime"] | undefined,
-	/** 更新时间 */
-	updatedAt?: ModelTypes["DateTime"] | undefined,
-	/** 文件名 */
-	name: string,
-	/** 原始文件名 */
-	originName: string,
-	/** 缩略图 */
-	thumbnail?: string | undefined,
-	/** 文件前缀 */
-	prefix?: string | undefined,
-	/** 文件后缀 */
-	extension?: string | undefined,
-	/** mimeType */
-	mimeType: string,
-	/** 文件大小 */
-	size: number,
-	/** 存放桶名称 */
-	bucket: string,
-	/** 存放位置 */
-	path: ModelTypes["FilePathEnum"],
-	/** 文件url */
-	url: string
-};
-	["FilePathEnum"]:FilePathEnum;
-	["PostTagPageResult"]: {
-		data?: Array<ModelTypes["PostTag"]> | undefined,
-	totalCount: number,
-	hasNextPage: boolean
-};
-	["PostTag"]: {
-		id: string,
-	/** 创建时间 */
-	createdAt?: ModelTypes["DateTime"] | undefined,
-	/** 更新时间 */
-	updatedAt?: ModelTypes["DateTime"] | undefined,
-	/** tag名称 */
-	name: string,
-	/** icon */
-	icon?: string | undefined,
-	/** 封面图 */
-	thumbnail?: string | undefined
-};
-	["Mutation"]: {
-		login: ModelTypes["LoginResult"],
-	logout: ModelTypes["BaseResponse"],
-	/** 强制用户退出 */
-	forceUserLogout: ModelTypes["BaseResponse"],
-	/** 创建新菜单 */
-	createMenu: ModelTypes["BaseResponse"],
-	/** 修改菜单信息 */
-	editMenu: ModelTypes["BaseResponse"],
-	/** 批量删除用户 */
-	removeMenus: ModelTypes["BaseResponse"],
-	/** 新增角色 */
-	createRole: ModelTypes["BaseResponse"],
-	/** 修改角色 */
-	editRole: ModelTypes["BaseResponse"],
-	/** 批量删除角色 */
-	removeRoles: ModelTypes["BaseResponse"],
-	/** 创建新用户 */
-	createUser: ModelTypes["BaseResponse"],
-	/** 修改用户信息 */
-	editUser: ModelTypes["BaseResponse"],
-	/** 批量删除用户 */
-	removeUsers: ModelTypes["BaseResponse"],
-	/** 重置用户密码 */
-	resetUserPassword: ModelTypes["BaseResponse"],
-	/** 新建文件 */
-	createFile: ModelTypes["BaseResponse"],
-	/** 新建文件信息 */
-	updateFile: ModelTypes["BaseResponse"],
-	/** 删除文件 */
-	delFile: ModelTypes["BaseResponse"],
-	/** 创建PostTag */
-	createPostTag: ModelTypes["BaseResponse"],
-	/** 修改PostTag */
-	editPostTag: ModelTypes["BaseResponse"],
-	/** 批量删除PostTag */
-	removePostTags: ModelTypes["BaseResponse"]
-};
-	["LoginResult"]: {
-		/** code */
-	code?: number | undefined,
-	/** msg */
-	msg?: string | undefined,
-	/** data */
-	data?: ModelTypes["LoginType"] | undefined
-};
-	["LoginType"]: {
-		/** accessToken */
-	accessToken: string
-};
-	["BaseResponse"]: {
-		code: number,
-	msg: string
 };
 	["BaseResult"]: ModelTypes["BaseResponse"];
 	["CreateMenuInput"]: {
@@ -2102,75 +1727,132 @@ export type ModelTypes = {
 	/** 角色 */
 	roleIds?: Array<string> | undefined
 };
-	["CreateFileInput"]: {
-	/** 文件名 */
-	name: string,
-	/** 原始文件名 */
-	originName: string,
-	/** 缩略图 */
-	thumbnail?: string | undefined,
-	/** 文件前缀 */
-	prefix?: string | undefined,
-	/** 文件后缀 */
-	extension?: string | undefined,
-	/** mimeType */
-	mimeType: string,
-	/** 文件大小 */
-	size: number,
-	/** 存放桶名称 */
-	bucket: string,
-	/** 存放位置 */
-	path: ModelTypes["FilePathEnum"]
+	["Query"]: {
+		/** 获取我的信息 */
+	userInfo: ModelTypes["LoginUser"],
+	/** 登录用户列表查询 */
+	getOnLineLoginUserList: Array<ModelTypes["OnLineUser"]>,
+	/** 获取oauth登录链接 */
+	getOauthUrl: string,
+	hello: string,
+	/** 查询所有菜单 */
+	allMenuList: Array<ModelTypes["Menu"]>,
+	/** 菜单Tree查询 */
+	getMenuTree: Array<ModelTypes["JSONObject"]>,
+	/** 菜单列表查询 */
+	getMenuList: ModelTypes["MenuPageResult"],
+	/** 角色列表查询 */
+	queryRolePage: ModelTypes["RolePageResult"],
+	/** 角色列表查询 */
+	queryUserPage: ModelTypes["UserPageResult"]
 };
-	["EditFileInput"]: {
-	/** id */
-	id: string,
-	/** 文件名 */
-	name: string
-};
-	["CreatePostTagInput"]: {
-	/** tag名称 */
-	name: string,
-	/** icon */
-	icon?: string | undefined,
-	/** 封面图 */
-	thumbnail?: string | undefined
-};
-	["EditPostTagInput"]: {
-	/** tagid */
-	id: string,
-	/** tag名称 */
-	name: string,
-	/** icon */
-	icon?: string | undefined,
-	/** 封面图 */
-	thumbnail?: string | undefined
+	/** The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
+["JSONObject"]:any;
+	["Mutation"]: {
+		login: ModelTypes["LoginResult"],
+	logout: ModelTypes["BaseResponse"],
+	/** 强制用户退出 */
+	forceUserLogout: ModelTypes["BaseResponse"],
+	/** 创建新菜单 */
+	createMenu: ModelTypes["BaseResponse"],
+	/** 修改菜单信息 */
+	editMenu: ModelTypes["BaseResponse"],
+	/** 批量删除用户 */
+	removeMenus: ModelTypes["BaseResponse"],
+	/** 新增角色 */
+	createRole: ModelTypes["BaseResponse"],
+	/** 修改角色 */
+	editRole: ModelTypes["BaseResponse"],
+	/** 批量删除角色 */
+	removeRoles: ModelTypes["BaseResponse"],
+	/** 创建新用户 */
+	createUser: ModelTypes["BaseResponse"],
+	/** 修改用户信息 */
+	editUser: ModelTypes["BaseResponse"],
+	/** 批量删除用户 */
+	removeUsers: ModelTypes["BaseResponse"],
+	/** 重置用户密码 */
+	resetUserPassword: ModelTypes["BaseResponse"]
 }
     }
 
 export type GraphQLTypes = {
-    ["Query"]: {
-	__typename: "Query",
-	hello: string,
-	/** 获取我的信息 */
-	me: GraphQLTypes["LoginUser"],
-	/** 登录用户列表查询 */
-	getOnLineLoginUserList: Array<GraphQLTypes["OnLineUser"]>,
-	/** 查询所有菜单 */
-	allMenuList: Array<GraphQLTypes["Menu"]>,
-	/** 菜单Tree查询 */
-	getMenuTree: Array<GraphQLTypes["JSONObject"]>,
-	/** 菜单列表查询 */
-	getMenuList: GraphQLTypes["MenuPageResult"],
-	/** 角色列表查询 */
-	getRoleList: GraphQLTypes["RolePageResult"],
-	/** 角色列表查询 */
-	getUserList: GraphQLTypes["UserPageResult"],
-	/** 列出所有文件 */
-	getFileList: GraphQLTypes["FilePageResult"],
-	/** PostTag列表查询 */
-	getPostTagList: GraphQLTypes["PostTagPageResult"]
+    ["Menu"]: {
+	__typename: "Menu",
+	id: string,
+	/** 创建时间 */
+	createdAt?: GraphQLTypes["DateTime"] | undefined,
+	/** 更新时间 */
+	updatedAt?: GraphQLTypes["DateTime"] | undefined,
+	/** 菜单名 */
+	name: string,
+	/** 标题 */
+	title?: string | undefined,
+	/** 图标 */
+	icon?: string | undefined,
+	/** 上级ID */
+	pId?: string | undefined,
+	/** 排序 */
+	orderBy?: number | undefined,
+	/** 路径 */
+	path?: string | undefined,
+	/** 组件 */
+	component?: string | undefined,
+	/** 可见 */
+	visible?: boolean | undefined,
+	/** 权限字符 */
+	permission?: string | undefined,
+	/** 类型 */
+	type?: string | undefined,
+	/** children */
+	children?: Array<GraphQLTypes["Menu"] | undefined> | undefined
 };
+	/** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
+["DateTime"]: "scalar" & { name: "DateTime" };
+	["Role"]: {
+	__typename: "Role",
+	id: string,
+	/** 创建时间 */
+	createdAt?: GraphQLTypes["DateTime"] | undefined,
+	/** 更新时间 */
+	updatedAt?: GraphQLTypes["DateTime"] | undefined,
+	/** 角色名 */
+	name: string,
+	/** 角色level */
+	level: number,
+	/** 标识 */
+	key?: string | undefined,
+	/** 是否默认 */
+	isDefault?: boolean | undefined,
+	/** 权限菜单 */
+	menus?: Array<GraphQLTypes["Menu"] | undefined> | undefined
+};
+	["User"]: {
+	__typename: "User",
+	id: string,
+	/** 创建时间 */
+	createdAt?: GraphQLTypes["DateTime"] | undefined,
+	/** 更新时间 */
+	updatedAt?: GraphQLTypes["DateTime"] | undefined,
+	/** 用户名 */
+	username: string,
+	/** 头像 */
+	avatar?: string | undefined,
+	/** 性别 */
+	gender?: GraphQLTypes["UserGenderEnum"] | undefined,
+	/** 邮箱 */
+	email?: string | undefined,
+	/** 昵称 */
+	nickname?: string | undefined,
+	/** 手机 */
+	phone?: string | undefined,
+	/** 备注 */
+	note?: string | undefined,
+	/** 角色 */
+	roles?: Array<GraphQLTypes["Role"] | undefined> | undefined
+};
+	/** 用户性别枚举 */
+["UserGenderEnum"]: UserGenderEnum;
 	["LoginUser"]: {
 	__typename: "LoginUser",
 	id: string,
@@ -2203,80 +1885,30 @@ export type GraphQLTypes = {
 	/** 管理员 */
 	isSuperAdmin?: boolean | undefined
 };
-	/** The javascript `Date` as string. Type represents date and time as the ISO Date string. */
-["DateTime"]: "scalar" & { name: "DateTime" };
-	/** 用户性别枚举 */
-["UserGenderEnum"]: UserGenderEnum;
-	["Role"]: {
-	__typename: "Role",
-	id: string,
-	/** 创建时间 */
-	createdAt?: GraphQLTypes["DateTime"] | undefined,
-	/** 更新时间 */
-	updatedAt?: GraphQLTypes["DateTime"] | undefined,
-	/** 角色名 */
-	name: string,
-	/** 角色level */
-	level: number,
-	/** 标识 */
-	key?: string | undefined,
-	/** 是否默认 */
-	isDefault?: boolean | undefined,
-	/** 权限菜单 */
-	menus?: Array<GraphQLTypes["Menu"] | undefined> | undefined
-};
-	["Menu"]: {
-	__typename: "Menu",
-	id: string,
-	/** 创建时间 */
-	createdAt?: GraphQLTypes["DateTime"] | undefined,
-	/** 更新时间 */
-	updatedAt?: GraphQLTypes["DateTime"] | undefined,
-	/** 菜单名 */
-	name: string,
-	/** 标题 */
-	title?: string | undefined,
-	/** 图标 */
-	icon?: string | undefined,
-	/** 上级ID */
-	pId?: string | undefined,
-	/** 排序 */
-	orderBy?: number | undefined,
-	/** 路径 */
-	path?: string | undefined,
-	/** 组件 */
-	component?: string | undefined,
-	/** 可见 */
-	visible?: boolean | undefined,
-	/** 权限字符 */
-	permission?: string | undefined,
-	/** 类型 */
-	type?: string | undefined,
-	/** children */
-	children?: Array<GraphQLTypes["Menu"] | undefined> | undefined
-};
 	["OnLineUser"]: {
 	__typename: "OnLineUser",
 	/** 登录用户名 */
-	username: string,
+	username?: string | undefined,
 	/** 浏览器 */
-	loginBrowser: string,
+	loginBrowser?: string | undefined,
 	/** ip */
-	loginIp: string,
+	loginIp?: string | undefined,
 	/** 登录时间 */
-	loginTime: string,
+	loginTime?: string | undefined,
 	/** 登录地址 */
-	loginAddr: string,
+	loginAddr?: string | undefined,
 	/** token */
-	token: string
+	token?: string | undefined
 };
-	/** The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
-["JSONObject"]: "scalar" & { name: "JSONObject" };
-	["MenuPageResult"]: {
-	__typename: "MenuPageResult",
-	data?: Array<GraphQLTypes["Menu"]> | undefined,
-	totalCount: number,
-	hasNextPage: boolean
+	["BaseResponse"]: {
+	__typename: "BaseResponse",
+	code: number,
+	msg: string
+};
+	["LoginResult"]: {
+	__typename: "LoginResult",
+	/** accessToken */
+	accessToken: string
 };
 	["RolePageResult"]: {
 	__typename: "RolePageResult",
@@ -2290,143 +1922,11 @@ export type GraphQLTypes = {
 	totalCount: number,
 	hasNextPage: boolean
 };
-	["User"]: {
-	__typename: "User",
-	id: string,
-	/** 创建时间 */
-	createdAt?: GraphQLTypes["DateTime"] | undefined,
-	/** 更新时间 */
-	updatedAt?: GraphQLTypes["DateTime"] | undefined,
-	/** 用户名 */
-	username: string,
-	/** 头像 */
-	avatar?: string | undefined,
-	/** 性别 */
-	gender?: GraphQLTypes["UserGenderEnum"] | undefined,
-	/** 邮箱 */
-	email?: string | undefined,
-	/** 昵称 */
-	nickname?: string | undefined,
-	/** 手机 */
-	phone?: string | undefined,
-	/** 备注 */
-	note?: string | undefined,
-	/** 角色 */
-	roles?: Array<GraphQLTypes["Role"] | undefined> | undefined
-};
-	["FilePageResult"]: {
-	__typename: "FilePageResult",
-	data?: Array<GraphQLTypes["File"]> | undefined,
+	["MenuPageResult"]: {
+	__typename: "MenuPageResult",
+	data?: Array<GraphQLTypes["Menu"]> | undefined,
 	totalCount: number,
 	hasNextPage: boolean
-};
-	["File"]: {
-	__typename: "File",
-	id: string,
-	/** 创建时间 */
-	createdAt?: GraphQLTypes["DateTime"] | undefined,
-	/** 更新时间 */
-	updatedAt?: GraphQLTypes["DateTime"] | undefined,
-	/** 文件名 */
-	name: string,
-	/** 原始文件名 */
-	originName: string,
-	/** 缩略图 */
-	thumbnail?: string | undefined,
-	/** 文件前缀 */
-	prefix?: string | undefined,
-	/** 文件后缀 */
-	extension?: string | undefined,
-	/** mimeType */
-	mimeType: string,
-	/** 文件大小 */
-	size: number,
-	/** 存放桶名称 */
-	bucket: string,
-	/** 存放位置 */
-	path: GraphQLTypes["FilePathEnum"],
-	/** 文件url */
-	url: string
-};
-	/** 文件位置 */
-["FilePathEnum"]: FilePathEnum;
-	["PostTagPageResult"]: {
-	__typename: "PostTagPageResult",
-	data?: Array<GraphQLTypes["PostTag"]> | undefined,
-	totalCount: number,
-	hasNextPage: boolean
-};
-	["PostTag"]: {
-	__typename: "PostTag",
-	id: string,
-	/** 创建时间 */
-	createdAt?: GraphQLTypes["DateTime"] | undefined,
-	/** 更新时间 */
-	updatedAt?: GraphQLTypes["DateTime"] | undefined,
-	/** tag名称 */
-	name: string,
-	/** icon */
-	icon?: string | undefined,
-	/** 封面图 */
-	thumbnail?: string | undefined
-};
-	["Mutation"]: {
-	__typename: "Mutation",
-	login: GraphQLTypes["LoginResult"],
-	logout: GraphQLTypes["BaseResponse"],
-	/** 强制用户退出 */
-	forceUserLogout: GraphQLTypes["BaseResponse"],
-	/** 创建新菜单 */
-	createMenu: GraphQLTypes["BaseResponse"],
-	/** 修改菜单信息 */
-	editMenu: GraphQLTypes["BaseResponse"],
-	/** 批量删除用户 */
-	removeMenus: GraphQLTypes["BaseResponse"],
-	/** 新增角色 */
-	createRole: GraphQLTypes["BaseResponse"],
-	/** 修改角色 */
-	editRole: GraphQLTypes["BaseResponse"],
-	/** 批量删除角色 */
-	removeRoles: GraphQLTypes["BaseResponse"],
-	/** 创建新用户 */
-	createUser: GraphQLTypes["BaseResponse"],
-	/** 修改用户信息 */
-	editUser: GraphQLTypes["BaseResponse"],
-	/** 批量删除用户 */
-	removeUsers: GraphQLTypes["BaseResponse"],
-	/** 重置用户密码 */
-	resetUserPassword: GraphQLTypes["BaseResponse"],
-	/** 新建文件 */
-	createFile: GraphQLTypes["BaseResponse"],
-	/** 新建文件信息 */
-	updateFile: GraphQLTypes["BaseResponse"],
-	/** 删除文件 */
-	delFile: GraphQLTypes["BaseResponse"],
-	/** 创建PostTag */
-	createPostTag: GraphQLTypes["BaseResponse"],
-	/** 修改PostTag */
-	editPostTag: GraphQLTypes["BaseResponse"],
-	/** 批量删除PostTag */
-	removePostTags: GraphQLTypes["BaseResponse"]
-};
-	["LoginResult"]: {
-	__typename: "LoginResult",
-	/** code */
-	code?: number | undefined,
-	/** msg */
-	msg?: string | undefined,
-	/** data */
-	data?: GraphQLTypes["LoginType"] | undefined
-};
-	["LoginType"]: {
-	__typename: "LoginType",
-	/** accessToken */
-	accessToken: string
-};
-	["BaseResponse"]: {
-	__typename: "BaseResponse",
-	code: number,
-	msg: string
 };
 	["BaseResult"]: {
 	__typename:"BaseResponse",
@@ -2540,49 +2040,54 @@ export type GraphQLTypes = {
 	/** 角色 */
 	roleIds?: Array<string> | undefined
 };
-	["CreateFileInput"]: {
-		/** 文件名 */
-	name: string,
-	/** 原始文件名 */
-	originName: string,
-	/** 缩略图 */
-	thumbnail?: string | undefined,
-	/** 文件前缀 */
-	prefix?: string | undefined,
-	/** 文件后缀 */
-	extension?: string | undefined,
-	/** mimeType */
-	mimeType: string,
-	/** 文件大小 */
-	size: number,
-	/** 存放桶名称 */
-	bucket: string,
-	/** 存放位置 */
-	path: GraphQLTypes["FilePathEnum"]
+	["Query"]: {
+	__typename: "Query",
+	/** 获取我的信息 */
+	userInfo: GraphQLTypes["LoginUser"],
+	/** 登录用户列表查询 */
+	getOnLineLoginUserList: Array<GraphQLTypes["OnLineUser"]>,
+	/** 获取oauth登录链接 */
+	getOauthUrl: string,
+	hello: string,
+	/** 查询所有菜单 */
+	allMenuList: Array<GraphQLTypes["Menu"]>,
+	/** 菜单Tree查询 */
+	getMenuTree: Array<GraphQLTypes["JSONObject"]>,
+	/** 菜单列表查询 */
+	getMenuList: GraphQLTypes["MenuPageResult"],
+	/** 角色列表查询 */
+	queryRolePage: GraphQLTypes["RolePageResult"],
+	/** 角色列表查询 */
+	queryUserPage: GraphQLTypes["UserPageResult"]
 };
-	["EditFileInput"]: {
-		/** id */
-	id: string,
-	/** 文件名 */
-	name: string
-};
-	["CreatePostTagInput"]: {
-		/** tag名称 */
-	name: string,
-	/** icon */
-	icon?: string | undefined,
-	/** 封面图 */
-	thumbnail?: string | undefined
-};
-	["EditPostTagInput"]: {
-		/** tagid */
-	id: string,
-	/** tag名称 */
-	name: string,
-	/** icon */
-	icon?: string | undefined,
-	/** 封面图 */
-	thumbnail?: string | undefined
+	/** The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
+["JSONObject"]: "scalar" & { name: "JSONObject" };
+	["Mutation"]: {
+	__typename: "Mutation",
+	login: GraphQLTypes["LoginResult"],
+	logout: GraphQLTypes["BaseResponse"],
+	/** 强制用户退出 */
+	forceUserLogout: GraphQLTypes["BaseResponse"],
+	/** 创建新菜单 */
+	createMenu: GraphQLTypes["BaseResponse"],
+	/** 修改菜单信息 */
+	editMenu: GraphQLTypes["BaseResponse"],
+	/** 批量删除用户 */
+	removeMenus: GraphQLTypes["BaseResponse"],
+	/** 新增角色 */
+	createRole: GraphQLTypes["BaseResponse"],
+	/** 修改角色 */
+	editRole: GraphQLTypes["BaseResponse"],
+	/** 批量删除角色 */
+	removeRoles: GraphQLTypes["BaseResponse"],
+	/** 创建新用户 */
+	createUser: GraphQLTypes["BaseResponse"],
+	/** 修改用户信息 */
+	editUser: GraphQLTypes["BaseResponse"],
+	/** 批量删除用户 */
+	removeUsers: GraphQLTypes["BaseResponse"],
+	/** 重置用户密码 */
+	resetUserPassword: GraphQLTypes["BaseResponse"]
 }
     }
 /** 用户性别枚举 */
@@ -2591,25 +2096,15 @@ export const enum UserGenderEnum {
 	MALE = "MALE",
 	FEMALE = "FEMALE"
 }
-/** 文件位置 */
-export const enum FilePathEnum {
-	MINIO = "MINIO",
-	LOCAL = "LOCAL"
-}
 
 type ZEUS_VARIABLES = {
 	["DateTime"]: ValueTypes["DateTime"];
 	["UserGenderEnum"]: ValueTypes["UserGenderEnum"];
-	["JSONObject"]: ValueTypes["JSONObject"];
-	["FilePathEnum"]: ValueTypes["FilePathEnum"];
 	["CreateMenuInput"]: ValueTypes["CreateMenuInput"];
 	["EditMenuInput"]: ValueTypes["EditMenuInput"];
 	["CreateRoleInput"]: ValueTypes["CreateRoleInput"];
 	["EditRoleInput"]: ValueTypes["EditRoleInput"];
 	["CreateUserInput"]: ValueTypes["CreateUserInput"];
 	["EditUserInput"]: ValueTypes["EditUserInput"];
-	["CreateFileInput"]: ValueTypes["CreateFileInput"];
-	["EditFileInput"]: ValueTypes["EditFileInput"];
-	["CreatePostTagInput"]: ValueTypes["CreatePostTagInput"];
-	["EditPostTagInput"]: ValueTypes["EditPostTagInput"];
+	["JSONObject"]: ValueTypes["JSONObject"];
 }

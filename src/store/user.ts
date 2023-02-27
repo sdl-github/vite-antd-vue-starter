@@ -1,4 +1,4 @@
-import { loginAccount, logout, meInfo } from "@/api/auth";
+import { loginAccount, logout, queryUserInfo } from "@/api/auth";
 import { removeToken, setToken } from "@/utils/auth";
 import { ModelTypes } from "@/utils/graphql/zeus";
 import { defineStore } from "pinia";
@@ -16,16 +16,16 @@ export const userStore = defineStore({
     actions: {
         async login(username: string, password: string) {
             try {
-                const { login: { data: { accessToken } } }: any = await loginAccount(username, password)
+                const { login: { accessToken } } = await loginAccount(username, password)
                 setToken(accessToken);
                 return true
             } catch (e) {
                 return false;
             }
         },
-        async getMeInfo() {
-            const { me } = await meInfo()
-            this.userInfo = me as any
+        async queryUserInfo() {
+            const { userInfo } = await queryUserInfo()
+            this.userInfo = userInfo as any
         },
         async logout() {
             const app = appStore()

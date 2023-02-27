@@ -7,19 +7,15 @@ export function loginAccount(username: string, password: string) {
             username,
             password
         }, {
-            code: true,
-            msg: true,
-            data: {
-                accessToken: true
-            }
+            accessToken: true
         }]
     })
 }
 
 // 获取个人信息
-export function meInfo() {
+export function queryUserInfo() {
     return query({
-        me: {
+        userInfo: {
             id: true,
             /** 用户名 */
             username: true,

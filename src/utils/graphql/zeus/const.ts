@@ -1,11 +1,34 @@
 /* eslint-disable */
 
 export const AllTypesProps: Record<string,any> = {
+	DateTime: `scalar.DateTime` as const,
+	UserGenderEnum: "enum" as const,
+	CreateMenuInput:{
+
+	},
+	EditMenuInput:{
+
+	},
+	CreateRoleInput:{
+
+	},
+	EditRoleInput:{
+
+	},
+	CreateUserInput:{
+		gender:"UserGenderEnum"
+	},
+	EditUserInput:{
+		gender:"UserGenderEnum"
+	},
 	Query:{
-		hello:{
+		getOnLineLoginUserList:{
 
 		},
-		getOnLineLoginUserList:{
+		getOauthUrl:{
+
+		},
+		hello:{
 
 		},
 		getMenuTree:{
@@ -14,23 +37,14 @@ export const AllTypesProps: Record<string,any> = {
 		getMenuList:{
 
 		},
-		getRoleList:{
+		queryRolePage:{
 
 		},
-		getUserList:{
-
-		},
-		getFileList:{
-			path:"FilePathEnum"
-		},
-		getPostTagList:{
+		queryUserPage:{
 
 		}
 	},
-	DateTime: `scalar.DateTime` as const,
-	UserGenderEnum: "enum" as const,
 	JSONObject: `scalar.JSONObject` as const,
-	FilePathEnum: "enum" as const,
 	Mutation:{
 		login:{
 
@@ -67,70 +81,50 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		resetUserPassword:{
 
-		},
-		createFile:{
-			input:"CreateFileInput"
-		},
-		updateFile:{
-			input:"EditFileInput"
-		},
-		delFile:{
-
-		},
-		createPostTag:{
-			input:"CreatePostTagInput"
-		},
-		editPostTag:{
-			input:"EditPostTagInput"
-		},
-		removePostTags:{
-
 		}
-	},
-	CreateMenuInput:{
-
-	},
-	EditMenuInput:{
-
-	},
-	CreateRoleInput:{
-
-	},
-	EditRoleInput:{
-
-	},
-	CreateUserInput:{
-		gender:"UserGenderEnum"
-	},
-	EditUserInput:{
-		gender:"UserGenderEnum"
-	},
-	CreateFileInput:{
-		path:"FilePathEnum"
-	},
-	EditFileInput:{
-
-	},
-	CreatePostTagInput:{
-
-	},
-	EditPostTagInput:{
-
 	}
 }
 
 export const ReturnTypes: Record<string,any> = {
-	Query:{
-		hello:"String",
-		me:"LoginUser",
-		getOnLineLoginUserList:"OnLineUser",
-		allMenuList:"Menu",
-		getMenuTree:"JSONObject",
-		getMenuList:"MenuPageResult",
-		getRoleList:"RolePageResult",
-		getUserList:"UserPageResult",
-		getFileList:"FilePageResult",
-		getPostTagList:"PostTagPageResult"
+	Menu:{
+		id:"ID",
+		createdAt:"DateTime",
+		updatedAt:"DateTime",
+		name:"String",
+		title:"String",
+		icon:"String",
+		pId:"String",
+		orderBy:"Float",
+		path:"String",
+		component:"String",
+		visible:"Boolean",
+		permission:"String",
+		type:"String",
+		children:"Menu"
+	},
+	DateTime: `scalar.DateTime` as const,
+	Role:{
+		id:"ID",
+		createdAt:"DateTime",
+		updatedAt:"DateTime",
+		name:"String",
+		level:"Float",
+		key:"String",
+		isDefault:"Boolean",
+		menus:"Menu"
+	},
+	User:{
+		id:"ID",
+		createdAt:"DateTime",
+		updatedAt:"DateTime",
+		username:"String",
+		avatar:"String",
+		gender:"UserGenderEnum",
+		email:"String",
+		nickname:"String",
+		phone:"String",
+		note:"String",
+		roles:"Role"
 	},
 	LoginUser:{
 		id:"ID",
@@ -149,33 +143,6 @@ export const ReturnTypes: Record<string,any> = {
 		permissions:"String",
 		isSuperAdmin:"Boolean"
 	},
-	DateTime: `scalar.DateTime` as const,
-	Role:{
-		id:"ID",
-		createdAt:"DateTime",
-		updatedAt:"DateTime",
-		name:"String",
-		level:"Float",
-		key:"String",
-		isDefault:"Boolean",
-		menus:"Menu"
-	},
-	Menu:{
-		id:"ID",
-		createdAt:"DateTime",
-		updatedAt:"DateTime",
-		name:"String",
-		title:"String",
-		icon:"String",
-		pId:"String",
-		orderBy:"Float",
-		path:"String",
-		component:"String",
-		visible:"Boolean",
-		permission:"String",
-		type:"String",
-		children:"Menu"
-	},
 	OnLineUser:{
 		username:"String",
 		loginBrowser:"String",
@@ -184,11 +151,12 @@ export const ReturnTypes: Record<string,any> = {
 		loginAddr:"String",
 		token:"String"
 	},
-	JSONObject: `scalar.JSONObject` as const,
-	MenuPageResult:{
-		data:"Menu",
-		totalCount:"Float",
-		hasNextPage:"Boolean"
+	BaseResponse:{
+		code:"Float",
+		msg:"String"
+	},
+	LoginResult:{
+		accessToken:"String"
 	},
 	RolePageResult:{
 		data:"Role",
@@ -200,52 +168,28 @@ export const ReturnTypes: Record<string,any> = {
 		totalCount:"Float",
 		hasNextPage:"Boolean"
 	},
-	User:{
-		id:"ID",
-		createdAt:"DateTime",
-		updatedAt:"DateTime",
-		username:"String",
-		avatar:"String",
-		gender:"UserGenderEnum",
-		email:"String",
-		nickname:"String",
-		phone:"String",
-		note:"String",
-		roles:"Role"
-	},
-	FilePageResult:{
-		data:"File",
+	MenuPageResult:{
+		data:"Menu",
 		totalCount:"Float",
 		hasNextPage:"Boolean"
 	},
-	File:{
-		id:"ID",
-		createdAt:"DateTime",
-		updatedAt:"DateTime",
-		name:"String",
-		originName:"String",
-		thumbnail:"String",
-		prefix:"String",
-		extension:"String",
-		mimeType:"String",
-		size:"Float",
-		bucket:"String",
-		path:"FilePathEnum",
-		url:"String"
+	BaseResult:{
+		"...on BaseResponse": "BaseResponse",
+		code:"Float",
+		msg:"String"
 	},
-	PostTagPageResult:{
-		data:"PostTag",
-		totalCount:"Float",
-		hasNextPage:"Boolean"
+	Query:{
+		userInfo:"LoginUser",
+		getOnLineLoginUserList:"OnLineUser",
+		getOauthUrl:"String",
+		hello:"String",
+		allMenuList:"Menu",
+		getMenuTree:"JSONObject",
+		getMenuList:"MenuPageResult",
+		queryRolePage:"RolePageResult",
+		queryUserPage:"UserPageResult"
 	},
-	PostTag:{
-		id:"ID",
-		createdAt:"DateTime",
-		updatedAt:"DateTime",
-		name:"String",
-		icon:"String",
-		thumbnail:"String"
-	},
+	JSONObject: `scalar.JSONObject` as const,
 	Mutation:{
 		login:"LoginResult",
 		logout:"BaseResponse",
@@ -259,30 +203,7 @@ export const ReturnTypes: Record<string,any> = {
 		createUser:"BaseResponse",
 		editUser:"BaseResponse",
 		removeUsers:"BaseResponse",
-		resetUserPassword:"BaseResponse",
-		createFile:"BaseResponse",
-		updateFile:"BaseResponse",
-		delFile:"BaseResponse",
-		createPostTag:"BaseResponse",
-		editPostTag:"BaseResponse",
-		removePostTags:"BaseResponse"
-	},
-	LoginResult:{
-		code:"Float",
-		msg:"String",
-		data:"LoginType"
-	},
-	LoginType:{
-		accessToken:"String"
-	},
-	BaseResponse:{
-		code:"Float",
-		msg:"String"
-	},
-	BaseResult:{
-		"...on BaseResponse": "BaseResponse",
-		code:"Float",
-		msg:"String"
+		resetUserPassword:"BaseResponse"
 	}
 }
 

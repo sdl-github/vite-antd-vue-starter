@@ -3,7 +3,7 @@ import RemixIcon from "@/components/RemixIcon.vue";
 import RoleModal from './components/RoleModal.vue';
 import PermissionSelect from './components/PermissionSelect.vue'
 import TableSearchCard from './components/TableSearchCard.vue';
-import { createRole, delRoles, queryRoleList, updateRole } from '@/api/role';
+import { createRole, delRoles, queryRolePage, updateRole } from '@/api/role';
 import dayjs from 'dayjs';
 import { onMounted, reactive } from 'vue';
 import { message } from 'ant-design-vue';
@@ -65,8 +65,8 @@ async function initData() {
     state.loading = true;
     const { pageNo, pageSize, searchParams } = state;
     const {
-        getRoleList: { data, totalCount },
-    } = await queryRoleList({
+        queryRolePage: { data, totalCount },
+    } = await queryRolePage({
         includeMenu: true,
         pageNo,
         pageSize,
