@@ -8,7 +8,7 @@ export default defineConfig((env) => {
   loadEnv(mode, process.cwd())
   return {
     server: {
-      port: 3001
+      port: 4001
     },
     resolve: {
       // 路径别名

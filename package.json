@@ -7,7 +7,7 @@
     "build:dev": "vite build --mode development",
     "build:prod": "vite build --mode production",
     "serve": "vite preview",
-    "z": "npx graphql-zeus http://localhost:4000/graphql ./src/utils/graphql --ts"
+    "z": "npx graphql-zeus http://123.60.183.170:4000/graphql ./src/utils/graphql --ts"
   },
   "dependencies": {
     "@ant-design/icons-vue": "^6.1.0",

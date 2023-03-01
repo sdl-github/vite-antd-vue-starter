@@ -52,7 +52,7 @@ export const queryRolePage = async (input?: QueryRoleInput) => {
 // 编辑角色
 export const updateRole = async (input: ValueTypes["EditRoleInput"]) => {
     return mutation({
-        editRole: [
+        updateRole: [
             { input },
             {
                 code: true,
@@ -78,7 +78,7 @@ export const createRole = async (input: ValueTypes["CreateRoleInput"]) => {
 // 批量删除角色
 export const delRoles = async (roleIds: string[]) => {
     return mutation({
-        removeRoles: [
+        deleteRoles: [
             { roleIds },
             {
                 code: true,

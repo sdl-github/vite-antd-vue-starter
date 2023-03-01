@@ -1,26 +1,6 @@
 /* eslint-disable */
 
 export const AllTypesProps: Record<string,any> = {
-	DateTime: `scalar.DateTime` as const,
-	UserGenderEnum: "enum" as const,
-	CreateMenuInput:{
-
-	},
-	EditMenuInput:{
-
-	},
-	CreateRoleInput:{
-
-	},
-	EditRoleInput:{
-
-	},
-	CreateUserInput:{
-		gender:"UserGenderEnum"
-	},
-	EditUserInput:{
-		gender:"UserGenderEnum"
-	},
 	Query:{
 		getOnLineLoginUserList:{
 
@@ -44,6 +24,8 @@ export const AllTypesProps: Record<string,any> = {
 
 		}
 	},
+	DateTime: `scalar.DateTime` as const,
+	UserGenderEnum: "enum" as const,
 	JSONObject: `scalar.JSONObject` as const,
 	Mutation:{
 		login:{
@@ -55,76 +37,65 @@ export const AllTypesProps: Record<string,any> = {
 		createMenu:{
 			input:"CreateMenuInput"
 		},
-		editMenu:{
+		updateMenu:{
 			input:"EditMenuInput"
 		},
-		removeMenus:{
+		deleteMenus:{
 
 		},
 		createRole:{
 			input:"CreateRoleInput"
 		},
-		editRole:{
+		updateRole:{
 			input:"EditRoleInput"
 		},
-		removeRoles:{
+		deleteRoles:{
 
 		},
 		createUser:{
 			input:"CreateUserInput"
 		},
-		editUser:{
+		updateUser:{
 			input:"EditUserInput"
 		},
-		removeUsers:{
+		deleteUsers:{
 
 		},
 		resetUserPassword:{
 
 		}
+	},
+	CreateMenuInput:{
+
+	},
+	EditMenuInput:{
+
+	},
+	CreateRoleInput:{
+
+	},
+	EditRoleInput:{
+
+	},
+	CreateUserInput:{
+		gender:"UserGenderEnum"
+	},
+	EditUserInput:{
+		gender:"UserGenderEnum"
 	}
 }
 
 export const ReturnTypes: Record<string,any> = {
-	Menu:{
-		id:"ID",
-		createdAt:"DateTime",
-		updatedAt:"DateTime",
-		name:"String",
-		title:"String",
-		icon:"String",
-		pId:"String",
-		orderBy:"Float",
-		path:"String",
-		component:"String",
-		visible:"Boolean",
-		permission:"String",
-		type:"String",
-		children:"Menu"
-	},
-	DateTime: `scalar.DateTime` as const,
-	Role:{
-		id:"ID",
-		createdAt:"DateTime",
-		updatedAt:"DateTime",
-		name:"String",
-		level:"Float",
-		key:"String",
-		isDefault:"Boolean",
-		menus:"Menu"
-	},
-	User:{
-		id:"ID",
-		createdAt:"DateTime",
-		updatedAt:"DateTime",
-		username:"String",
-		avatar:"String",
-		gender:"UserGenderEnum",
-		email:"String",
-		nickname:"String",
-		phone:"String",
-		note:"String",
-		roles:"Role"
+	Query:{
+		userInfo:"LoginUser",
+		getOnLineLoginUserList:"OnLineUser",
+		getOauthUrl:"String",
+		hello:"String",
+		allMenuList:"Menu",
+		getMenuTree:"JSONObject",
+		getMenuList:"MenuPageResult",
+		queryRolePage:"RolePageResult",
+		queryUserPage:"UserPageResult"
 	},
 	LoginUser:{
 		id:"ID",
@@ -143,6 +114,33 @@ export const ReturnTypes: Record<string,any> = {
 		permissions:"String",
 		isSuperAdmin:"Boolean"
 	},
+	DateTime: `scalar.DateTime` as const,
+	Role:{
+		id:"ID",
+		createdAt:"DateTime",
+		updatedAt:"DateTime",
+		name:"String",
+		level:"Float",
+		key:"String",
+		isDefault:"Boolean",
+		menus:"Menu"
+	},
+	Menu:{
+		id:"ID",
+		createdAt:"DateTime",
+		updatedAt:"DateTime",
+		name:"String",
+		title:"String",
+		icon:"String",
+		pId:"String",
+		orderBy:"Float",
+		path:"String",
+		component:"String",
+		visible:"Boolean",
+		permission:"String",
+		type:"String",
+		children:"Menu"
+	},
 	OnLineUser:{
 		username:"String",
 		loginBrowser:"String",
@@ -151,12 +149,11 @@ export const ReturnTypes: Record<string,any> = {
 		loginAddr:"String",
 		token:"String"
 	},
-	BaseResponse:{
-		code:"Float",
-		msg:"String"
-	},
-	LoginResult:{
-		accessToken:"String"
+	JSONObject: `scalar.JSONObject` as const,
+	MenuPageResult:{
+		data:"Menu",
+		totalCount:"Float",
+		hasNextPage:"Boolean"
 	},
 	RolePageResult:{
 		data:"Role",
@@ -168,42 +165,45 @@ export const ReturnTypes: Record<string,any> = {
 		totalCount:"Float",
 		hasNextPage:"Boolean"
 	},
-	MenuPageResult:{
-		data:"Menu",
-		totalCount:"Float",
-		hasNextPage:"Boolean"
+	User:{
+		id:"ID",
+		createdAt:"DateTime",
+		updatedAt:"DateTime",
+		username:"String",
+		avatar:"String",
+		gender:"UserGenderEnum",
+		email:"String",
+		nickname:"String",
+		phone:"String",
+		note:"String",
+		roles:"Role"
 	},
-	BaseResult:{
-		"...on BaseResponse": "BaseResponse",
-		code:"Float",
-		msg:"String"
-	},
-	Query:{
-		userInfo:"LoginUser",
-		getOnLineLoginUserList:"OnLineUser",
-		getOauthUrl:"String",
-		hello:"String",
-		allMenuList:"Menu",
-		getMenuTree:"JSONObject",
-		getMenuList:"MenuPageResult",
-		queryRolePage:"RolePageResult",
-		queryUserPage:"UserPageResult"
-	},
-	JSONObject: `scalar.JSONObject` as const,
 	Mutation:{
 		login:"LoginResult",
 		logout:"BaseResponse",
 		forceUserLogout:"BaseResponse",
 		createMenu:"BaseResponse",
-		editMenu:"BaseResponse",
-		removeMenus:"BaseResponse",
+		updateMenu:"BaseResponse",
+		deleteMenus:"BaseResponse",
 		createRole:"BaseResponse",
-		editRole:"BaseResponse",
-		removeRoles:"BaseResponse",
+		updateRole:"BaseResponse",
+		deleteRoles:"BaseResponse",
 		createUser:"BaseResponse",
-		editUser:"BaseResponse",
-		removeUsers:"BaseResponse",
+		updateUser:"BaseResponse",
+		deleteUsers:"BaseResponse",
 		resetUserPassword:"BaseResponse"
+	},
+	LoginResult:{
+		accessToken:"String"
+	},
+	BaseResponse:{
+		code:"Float",
+		msg:"String"
+	},
+	BaseResult:{
+		"...on BaseResponse": "BaseResponse",
+		code:"Float",
+		msg:"String"
 	}
 }
 

@@ -68,7 +68,7 @@ export const createMenu = async (input: createMenuInput) => {
  */
 export const deleteMenu = async (menuIds: string[]) => {
     return mutation({
-        removeMenus: [
+        deleteMenus: [
             {
                 menuIds
             },
@@ -83,7 +83,7 @@ export const deleteMenu = async (menuIds: string[]) => {
  */
 export const updateMenu = async (input: editMenuInput) => {
     return mutation({
-        editMenu: [
+        updateMenu: [
             {
                 input,
             },

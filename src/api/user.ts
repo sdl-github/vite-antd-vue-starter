@@ -72,7 +72,7 @@ export const createUser = async (input: ValueTypes["CreateUserInput"]) => {
 // 修改用户
 export const editUser = async (input: ValueTypes["EditUserInput"]) => {
     return mutation({
-        editUser: [
+        updateUser: [
             {
                 input
             },
@@ -87,7 +87,7 @@ export const editUser = async (input: ValueTypes["EditUserInput"]) => {
 // 删除用户
 export const delUsers = async (userIds: string[]) => {
     return mutation({
-        removeUsers: [
+        deleteUsers: [
             {
                 userIds
             }, {

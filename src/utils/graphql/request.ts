@@ -2,7 +2,7 @@ import { notification } from 'ant-design-vue';
 import axios from 'axios';
 import { getToken, removeToken } from '../auth';
 
-export const baseURL = import.meta.env.VITE_BASE_BASE_URL;
+export const baseURL = import.meta.env.VITE_BASE_URL;
 export const apiBaseURL = `${baseURL}/graphql`;
 const request = axios.create({
     baseURL: apiBaseURL,
@@ -38,11 +38,7 @@ function handleError(data: any) {
         const { code, message } = data.errors[0]
         let msg = message
         if (code === 'UNAUTHENTICATED') {
-            console.log(code);
-            console.log(data);
-
-            // removeToken()
-            // setTimeout(() => { window.location.href = '/login' }, 1000)
+            removeToken()
             msg = '登录已经过期，请重新登录';
         }
         if (code === 'NOT_PERMISSION') {
