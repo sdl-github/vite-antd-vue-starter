@@ -42,7 +42,6 @@
 
 <script setup lang='ts'>
 import { onMounted, reactive } from 'vue';
-import { getFileList } from '@/api/file';
 import UploadModal from './components/UploadModal.vue'
 import RemixIcon from '@/components/RemixIcon.vue'
 import Icon from '@ant-design/icons-vue';
@@ -122,14 +121,6 @@ onMounted(() => {
 })
 
 async function initData() {
-  state.loading = true;
-  const { pageNo, pageSize, searchParams } = state;
-  const { getFileList: { data, totalCount } } = await getFileList({
-    pageNo, pageSize, ...searchParams
-  })
-  state.total = totalCount
-  state.dataList = data as any
-  state.loading = false;
 }
 
 function handleOpenUpload() {

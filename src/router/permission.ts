@@ -25,9 +25,9 @@ router.beforeEach(async (to, from, next) => {
         // 用户菜单未构造
         if (app.sideMenu.length === 0) {
             // 所有菜单接口
-            const { allMenuList } = await getAllMenuList()
+            const { queryMenuList } = await getAllMenuList(true)
             // 数组转树结构
-            const asyncRoutes = buildMenu(allMenuList)
+            const asyncRoutes = buildMenu(queryMenuList)
             // 添加到vue路由
             asyncRoutes.forEach((item) => {
                 router.addRoute(item)
@@ -35,7 +35,7 @@ router.beforeEach(async (to, from, next) => {
             // 最后添加404页面
             router.addRoute({ path: '/:pathMatch(.*)*', redirect: '/system/404' })
             // 设置左侧菜单
-            app.setSideMenu(filterMenu(user.userInfo.menus as any))
+            app.setSideMenu(filterMenu(queryMenuList))
             // 确保addRoutes()时动态添加的路由已经被完全加载上去 否则重新beforeEach
             next({ ...to, replace: true })
         } else {
@@ -43,14 +43,7 @@ router.beforeEach(async (to, from, next) => {
             if (to.path === '/system/403' || to.path === '/system/404') {
                 next()
             }
-            // 不在权限范围内 跳转403
-            if (!new Set(user.userInfo.menus?.map(item => item?.path)).has(to.path)) {
-                console.log('不在权限范围内', to.path)
-                next({ path: '/system/403' })
-            } else {
-                console.log('在权限范围内', to.path)
-                next()
-            }
+            next()
         }
     } else {
         // 没有token

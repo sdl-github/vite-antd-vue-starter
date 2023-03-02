@@ -12,37 +12,9 @@ export type QueryMenuInput = {
     to?: string
 }
 
-export const queryMenuList = async (input?: QueryMenuInput) => {
-    return query({
-        getMenuList: [
-            {
-                ...input,
-            },
-            {
-                totalCount: true,
-                data: {
-                    id: true,
-                    title: true,
-                    name: true,
-                    orderBy: true,
-                    icon: true,
-                    path: true,
-                    pId: true,
-                    component: true,
-                    visible: true,
-                    type: true,
-                    permission: true,
-                    createdAt: true,
-                    children: {}
-                }
-            }
-        ]
-    })
-}
-
 export const queryMenuTree = async (input?: QueryMenuInput) => {
     return query({
-        getMenuTree: [{ ...input }, true]
+        queryMenuTree: [{ ...input }, true]
     })
 }
 
@@ -97,9 +69,9 @@ export const updateMenu = async (input: editMenuInput) => {
 
 
 
-export const getAllMenuList = async () => {
+export const getAllMenuList = async (onlyUser: boolean = false) => {
     return query({
-        allMenuList: {
+        queryMenuList: [{ onlyUser }, {
             id: true,
             /** 创建时间 */
             createdAt: true,
@@ -125,6 +97,6 @@ export const getAllMenuList = async () => {
             permission: true,
             /** 类型 */
             type: true
-        }
+        }]
     })
 }

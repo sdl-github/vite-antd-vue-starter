@@ -838,22 +838,14 @@ export type ValueTypes = {
 getOnLineLoginUserList?: [{	ip?: string | undefined | null | Variable<any, string>,	name?: string | undefined | null | Variable<any, string>},ValueTypes["OnLineUser"]],
 getOauthUrl?: [{	type: string | Variable<any, string>},boolean | `@${string}`],
 hello?: [{	name: string | Variable<any, string>},boolean | `@${string}`],
-	/** 查询所有菜单 */
-	allMenuList?:ValueTypes["Menu"],
-getMenuTree?: [{	/** 角色id */
+queryMenuList?: [{	onlyUser: boolean | Variable<any, string>},ValueTypes["Menu"]],
+queryMenuTree?: [{	/** 角色id */
 	id?: string | undefined | null | Variable<any, string>,	/** 类型 */
 	type?: string | undefined | null | Variable<any, string>,	/** 角色名 */
 	name?: string | undefined | null | Variable<any, string>,	/** 是否可见 */
 	visible?: boolean | undefined | null | Variable<any, string>,	/** 开始时间YYYY-DD-MM */
 	from?: string | undefined | null | Variable<any, string>,	/** 结束时间YYYY-DD-MM */
 	to?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
-getMenuList?: [{	/** 角色id */
-	id?: string | undefined | null | Variable<any, string>,	/** 类型 */
-	type?: string | undefined | null | Variable<any, string>,	/** 角色名 */
-	name?: string | undefined | null | Variable<any, string>,	/** 是否可见 */
-	visible?: boolean | undefined | null | Variable<any, string>,	/** 开始时间YYYY-DD-MM */
-	from?: string | undefined | null | Variable<any, string>,	/** 结束时间YYYY-DD-MM */
-	to?: string | undefined | null | Variable<any, string>,	pageNo?: number | undefined | null | Variable<any, string>,	pageSize?: number | undefined | null | Variable<any, string>},ValueTypes["MenuPageResult"]],
 queryRolePage?: [{	/** 角色id */
 	id?: string | undefined | null | Variable<any, string>,	/** 角色名 */
 	name?: string | undefined | null | Variable<any, string>,	/** 角色标识 */
@@ -896,10 +888,6 @@ queryUserPage?: [{	/** 用户id */
 	roles?:ValueTypes["Role"],
 	/** 登录时间 */
 	loginTime?:boolean | `@${string}`,
-	/** 菜单 */
-	menus?:ValueTypes["Menu"],
-	/** 权限 */
-	permissions?:boolean | `@${string}`,
 	/** 管理员 */
 	isSuperAdmin?:boolean | `@${string}`,
 		__typename?: boolean | `@${string}`
@@ -973,12 +961,6 @@ queryUserPage?: [{	/** 用户id */
 }>;
 	/** The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
 ["JSONObject"]:unknown;
-	["MenuPageResult"]: AliasType<{
-	data?:ValueTypes["Menu"],
-	totalCount?:boolean | `@${string}`,
-	hasNextPage?:boolean | `@${string}`,
-		__typename?: boolean | `@${string}`
-}>;
 	["RolePageResult"]: AliasType<{
 	data?:ValueTypes["Role"],
 	totalCount?:boolean | `@${string}`,
@@ -1162,22 +1144,14 @@ export type ResolverInputTypes = {
 getOnLineLoginUserList?: [{	ip?: string | undefined | null,	name?: string | undefined | null},ResolverInputTypes["OnLineUser"]],
 getOauthUrl?: [{	type: string},boolean | `@${string}`],
 hello?: [{	name: string},boolean | `@${string}`],
-	/** 查询所有菜单 */
-	allMenuList?:ResolverInputTypes["Menu"],
-getMenuTree?: [{	/** 角色id */
+queryMenuList?: [{	onlyUser: boolean},ResolverInputTypes["Menu"]],
+queryMenuTree?: [{	/** 角色id */
 	id?: string | undefined | null,	/** 类型 */
 	type?: string | undefined | null,	/** 角色名 */
 	name?: string | undefined | null,	/** 是否可见 */
 	visible?: boolean | undefined | null,	/** 开始时间YYYY-DD-MM */
 	from?: string | undefined | null,	/** 结束时间YYYY-DD-MM */
 	to?: string | undefined | null},boolean | `@${string}`],
-getMenuList?: [{	/** 角色id */
-	id?: string | undefined | null,	/** 类型 */
-	type?: string | undefined | null,	/** 角色名 */
-	name?: string | undefined | null,	/** 是否可见 */
-	visible?: boolean | undefined | null,	/** 开始时间YYYY-DD-MM */
-	from?: string | undefined | null,	/** 结束时间YYYY-DD-MM */
-	to?: string | undefined | null,	pageNo?: number | undefined | null,	pageSize?: number | undefined | null},ResolverInputTypes["MenuPageResult"]],
 queryRolePage?: [{	/** 角色id */
 	id?: string | undefined | null,	/** 角色名 */
 	name?: string | undefined | null,	/** 角色标识 */
@@ -1220,10 +1194,6 @@ queryUserPage?: [{	/** 用户id */
 	roles?:ResolverInputTypes["Role"],
 	/** 登录时间 */
 	loginTime?:boolean | `@${string}`,
-	/** 菜单 */
-	menus?:ResolverInputTypes["Menu"],
-	/** 权限 */
-	permissions?:boolean | `@${string}`,
 	/** 管理员 */
 	isSuperAdmin?:boolean | `@${string}`,
 		__typename?: boolean | `@${string}`
@@ -1297,12 +1267,6 @@ queryUserPage?: [{	/** 用户id */
 }>;
 	/** The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
 ["JSONObject"]:unknown;
-	["MenuPageResult"]: AliasType<{
-	data?:ResolverInputTypes["Menu"],
-	totalCount?:boolean | `@${string}`,
-	hasNextPage?:boolean | `@${string}`,
-		__typename?: boolean | `@${string}`
-}>;
 	["RolePageResult"]: AliasType<{
 	data?:ResolverInputTypes["Role"],
 	totalCount?:boolean | `@${string}`,
@@ -1489,11 +1453,9 @@ export type ModelTypes = {
 	getOauthUrl: string,
 	hello: string,
 	/** 查询所有菜单 */
-	allMenuList: Array<ModelTypes["Menu"]>,
+	queryMenuList: Array<ModelTypes["Menu"]>,
 	/** 菜单Tree查询 */
-	getMenuTree: Array<ModelTypes["JSONObject"]>,
-	/** 菜单列表查询 */
-	getMenuList: ModelTypes["MenuPageResult"],
+	queryMenuTree: Array<ModelTypes["JSONObject"]>,
 	/** 角色列表查询 */
 	queryRolePage: ModelTypes["RolePageResult"],
 	/** 角色列表查询 */
@@ -1523,10 +1485,6 @@ export type ModelTypes = {
 	roles?: Array<ModelTypes["Role"] | undefined> | undefined,
 	/** 登录时间 */
 	loginTime?: ModelTypes["DateTime"] | undefined,
-	/** 菜单 */
-	menus?: Array<ModelTypes["Menu"] | undefined> | undefined,
-	/** 权限 */
-	permissions?: Array<string | undefined> | undefined,
 	/** 管理员 */
 	isSuperAdmin?: boolean | undefined
 };
@@ -1595,11 +1553,6 @@ export type ModelTypes = {
 };
 	/** The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
 ["JSONObject"]:any;
-	["MenuPageResult"]: {
-		data?: Array<ModelTypes["Menu"] | undefined> | undefined,
-	totalCount: number,
-	hasNextPage: boolean
-};
 	["RolePageResult"]: {
 		data?: Array<ModelTypes["Role"] | undefined> | undefined,
 	totalCount: number,
@@ -1787,11 +1740,9 @@ export type GraphQLTypes = {
 	getOauthUrl: string,
 	hello: string,
 	/** 查询所有菜单 */
-	allMenuList: Array<GraphQLTypes["Menu"]>,
+	queryMenuList: Array<GraphQLTypes["Menu"]>,
 	/** 菜单Tree查询 */
-	getMenuTree: Array<GraphQLTypes["JSONObject"]>,
-	/** 菜单列表查询 */
-	getMenuList: GraphQLTypes["MenuPageResult"],
+	queryMenuTree: Array<GraphQLTypes["JSONObject"]>,
 	/** 角色列表查询 */
 	queryRolePage: GraphQLTypes["RolePageResult"],
 	/** 角色列表查询 */
@@ -1822,10 +1773,6 @@ export type GraphQLTypes = {
 	roles?: Array<GraphQLTypes["Role"] | undefined> | undefined,
 	/** 登录时间 */
 	loginTime?: GraphQLTypes["DateTime"] | undefined,
-	/** 菜单 */
-	menus?: Array<GraphQLTypes["Menu"] | undefined> | undefined,
-	/** 权限 */
-	permissions?: Array<string | undefined> | undefined,
 	/** 管理员 */
 	isSuperAdmin?: boolean | undefined
 };
@@ -1898,12 +1845,6 @@ export type GraphQLTypes = {
 };
 	/** The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf). */
 ["JSONObject"]: "scalar" & { name: "JSONObject" };
-	["MenuPageResult"]: {
-	__typename: "MenuPageResult",
-	data?: Array<GraphQLTypes["Menu"] | undefined> | undefined,
-	totalCount: number,
-	hasNextPage: boolean
-};
 	["RolePageResult"]: {
 	__typename: "RolePageResult",
 	data?: Array<GraphQLTypes["Role"] | undefined> | undefined,

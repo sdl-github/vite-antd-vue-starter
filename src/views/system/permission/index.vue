@@ -32,7 +32,7 @@
           <RemixIcon :icon="record.icon" />
         </template>
         <template v-if="column.dataIndex === 'visible'">
-          <a-switch @change="handleOk(record)" v-model:checked="record.visible" />
+          <a-switch @change="handleVisible(record)" v-model:checked="record.visible" />
         </template>
         <template v-if="column.dataIndex === 'createdAt'">
           <span>
@@ -161,8 +161,8 @@ onMounted(() => {
 async function initData() {
   state.loading = true;
   const { searchParams } = state
-  const { getMenuTree } = await queryMenuTree(searchParams);
-  state.dataList = getMenuTree as unknown as IMenu[];
+  const { queryMenuTree:data } = await queryMenuTree(searchParams);
+  state.dataList = data as unknown as IMenu[];
   state.loading = false;
 }
 
@@ -180,9 +180,13 @@ function handleOpenEdit(record: IMenu) {
   state.currentItem = record;
   state.modalVisible = true;
 }
+function handleVisible(v: IMenu) {
+  const { id, visible, name } = v
+  const data = { id, visible, name }
+  handleOk(data)
+}
 
-async function handleOk(v: any) {
-  console.log(v);
+async function handleOk(v: IMenu) {
   let success;
   if (v.id) {
     success = await handleUpdate(v)

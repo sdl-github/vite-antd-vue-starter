@@ -36,21 +36,6 @@ export function queryUserInfo() {
                 name: true,
                 key: true
             },
-            menus: {
-                id: true,
-                title: true,
-                name: true,
-                orderBy: true,
-                icon: true,
-                path: true,
-                pId: true,
-                component: true,
-                visible: true,
-                type: true,
-                permission: true,
-            },
-            /** 权限 */
-            permissions: true,
             /** 管理员 */
             isSuperAdmin: true,
         }

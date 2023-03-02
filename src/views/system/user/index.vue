@@ -160,7 +160,7 @@ const columns: TableColumnType<IUser>[] = [
   {
     title: "创建时间",
     align: "center",
-    width: 160,
+    width: 180,
     dataIndex: "createdAt",
   },
   {

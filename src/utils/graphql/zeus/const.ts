@@ -11,10 +11,10 @@ export const AllTypesProps: Record<string,any> = {
 		hello:{
 
 		},
-		getMenuTree:{
+		queryMenuList:{
 
 		},
-		getMenuList:{
+		queryMenuTree:{
 
 		},
 		queryRolePage:{
@@ -91,9 +91,8 @@ export const ReturnTypes: Record<string,any> = {
 		getOnLineLoginUserList:"OnLineUser",
 		getOauthUrl:"String",
 		hello:"String",
-		allMenuList:"Menu",
-		getMenuTree:"JSONObject",
-		getMenuList:"MenuPageResult",
+		queryMenuList:"Menu",
+		queryMenuTree:"JSONObject",
 		queryRolePage:"RolePageResult",
 		queryUserPage:"UserPageResult"
 	},
@@ -110,8 +109,6 @@ export const ReturnTypes: Record<string,any> = {
 		note:"String",
 		roles:"Role",
 		loginTime:"DateTime",
-		menus:"Menu",
-		permissions:"String",
 		isSuperAdmin:"Boolean"
 	},
 	DateTime: `scalar.DateTime` as const,
@@ -150,11 +147,6 @@ export const ReturnTypes: Record<string,any> = {
 		token:"String"
 	},
 	JSONObject: `scalar.JSONObject` as const,
-	MenuPageResult:{
-		data:"Menu",
-		totalCount:"Float",
-		hasNextPage:"Boolean"
-	},
 	RolePageResult:{
 		data:"Role",
 		totalCount:"Float",

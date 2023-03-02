@@ -55,8 +55,8 @@ function deepTreeToList(tree: any[]) {
 }
 
 async function initData() {
-    const { getMenuTree } = await queryMenuTree();
-    treeData.value = getMenuTree as any
+    const { queryMenuTree: data } = await queryMenuTree();
+    treeData.value = data as any
 }
 
 function handleCheck(checkedKeys: string[], e: any) {

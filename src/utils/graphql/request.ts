@@ -6,7 +6,7 @@ export const baseURL = import.meta.env.VITE_BASE_URL;
 export const apiBaseURL = `${baseURL}/graphql`;
 const request = axios.create({
     baseURL: apiBaseURL,
-    timeout: 5000
+    timeout: 50000
 })
 
 request.interceptors.request.use(config => {
@@ -51,7 +51,7 @@ function handleError(data: any) {
             message: '提示',
             description: msg || "网络错误，请稍候再试",
         });
-        throw new Error(msg);
+        throw new Error(code || msg);
     }
 }
 

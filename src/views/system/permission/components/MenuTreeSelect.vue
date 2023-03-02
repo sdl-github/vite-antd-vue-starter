@@ -13,13 +13,13 @@ onMounted(() => {
 });
 
 async function initData() {
-    const { getMenuTree } = await queryMenuTree();
+    const { queryMenuTree: data } = await queryMenuTree();
     const node = [
         {
             id: "#",
-            name: "根目录",
+            title: "根目录",
             value: "",
-            children: getMenuTree,
+            children: data,
         }
     ]
     treeData.value = node as any
@@ -33,7 +33,7 @@ function handleChange(value: string) {
 <template>
     <a-tree-select @change="handleChange" :value="value" show-search style="width: 100%" :field-names="{
         children: 'children',
-        label: 'name',
+        label: 'title',
         value: 'id',
     }" :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }" placeholder="请选择" allow-clear :tree-data="treeData">
     </a-tree-select>

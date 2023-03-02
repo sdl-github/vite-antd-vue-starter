@@ -10,13 +10,9 @@ const userInfo = computed(() => userState.userInfo)
 
 <template>
     <div class="">
-        <div class="w-[100%] h-[120px] rounded flex items-center p-5 bg-[#f0f9ff]">
-            <a-avatar style="background-color: #1890ff" :size="50" :src="userInfo.avatar">{{ userInfo.username }}</a-avatar>
-            <span class="mx-2 font-bold rounded text-sm px-2 py-1 bg-purple-200 text-purple-500">{{ userInfo.nickname }}</span>
-        </div>
-
-        <div class="bg-white w-[100%] h-[600px] rounded p-5 mt-2">
-            <FilePond :max-files="10" :allow-multiple="true"/>
+        <div class="w-[100%] h-[220px] rounded flex items-center justify-center flex-col p-5 bg-[#f0f9ff]">
+            <a-avatar style="background-color: #1890ff" :size="60" :src="userInfo.avatar">{{ userInfo.username }}</a-avatar>
+            <span class="my-4 font-bold rounded text-sm px-2 py-1 bg-purple-200 text-purple-500">{{ userInfo.nickname }}</span>
         </div>
     </div>
 </template>
