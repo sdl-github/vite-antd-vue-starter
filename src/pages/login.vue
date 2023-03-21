@@ -38,7 +38,7 @@ const handleLogin = () => {
 </script>
 
 <template>
-  <div class="flex z-10 h-[100vh] fixed w-full overflow-hidden bg-cover">
+  <div class="login-warp flex z-10 h-[100vh] fixed w-full overflow-hidden bg-cover">
     <div class="flex-1 flex items-center justify-center p-[20px]">
       <div class="w-[400px] bg-white p-10 rounded">
         <div class="h-[50px] text-xl text-bold">
@@ -66,8 +66,8 @@ const handleLogin = () => {
 </template>
 
 <style lang="scss" scoped>
-#login {
-  background: rgba(244, 244, 244, 1);
+.login-warp  {
+  background: linear-gradient(to bottom, #4392f1, #8f16b7);
   height: 100vh;
   display: flex;
   justify-content: center;
