@@ -1,3 +1,8 @@
+<route lang="yaml">
+meta:
+  layout: DashboardLayout
+</route>
+
 <script setup lang="ts">
 import { onMounted, reactive } from 'vue'
 import type { TableColumnType } from 'ant-design-vue'

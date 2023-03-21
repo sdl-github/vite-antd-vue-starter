@@ -1,3 +1,8 @@
+<route lang="yaml">
+meta:
+  layout: DashboardLayout
+</route>
+
 <script setup lang="ts">
 import type { TableColumnType } from 'ant-design-vue'
 import { message } from 'ant-design-vue'

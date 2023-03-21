@@ -1,3 +1,8 @@
+<route lang="yaml">
+meta:
+  layout: DashboardLayout
+</route>
+
 <script setup lang="ts">
 import { reactive } from 'vue'
 const state = reactive({

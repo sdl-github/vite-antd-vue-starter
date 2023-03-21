@@ -8,11 +8,11 @@ const title = computed(() => appStore.title)
 </script>
 
 <template>
-  <div class="flex items-center justify-center p-1 h-[50px]">
-    <div class="i-logos-vue" />
-    <h1 v-show="!collapsed" class="text-white mx-2 transition-all">
+  <div class="flex items-center justify-center h-[50px]">
+    <div class="text-[30px] i-twemoji-dragon" />
+    <div v-show="!collapsed" class="text-white ml-2 font-bold text-sm">
       {{ title }}
-    </h1>
+    </div>
   </div>
 </template>
 

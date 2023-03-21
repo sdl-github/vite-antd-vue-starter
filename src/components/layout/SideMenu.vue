@@ -21,9 +21,11 @@ const collapsed = computed(() => appStore.collapsed)
 
 const theme = computed(() => appStore.theme)
 
+const { path } = route
+const paths = path.split('/').map(p => `/${p}`)
+state.openKeys = paths
 watchEffect(() => {
-  const { path, matched } = route
-  state.openKeys = matched.map(item => item.path)
+  const { path } = route
   state.selectedKeys = [path]
 })
 </script>

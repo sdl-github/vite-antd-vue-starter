@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { reactive, ref, watch } from 'vue'
 import type { FormInstance } from 'ant-design-vue'
-import type { IUser, IUserActionModal } from '@/views/system/user/data'
-import UserRoleItem from '@/views/system/user/components/UserRoleSelect.vue'
+import type { IUser, IUserActionModal } from '@/pages/system/user/data'
+import UserRoleItem from '@/pages/system/user/components/UserRoleSelect.vue'
 import { UserGenderEnum } from '@/utils/graphql/zeus'
 
 const props = defineProps({

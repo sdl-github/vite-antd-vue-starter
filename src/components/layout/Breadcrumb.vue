@@ -1,24 +1,21 @@
 <script setup lang="ts">
-import { ref, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
-const menus = ref<Array<{ name: string; path: string }>>()
+const userStore = useUserStore()
+const menus = computed(() => userStore.menus)
 
-watchEffect(() => {
-  menus.value = route.matched.map((item) => {
-    return {
-      name: item.meta.title as string,
-      path: item.path,
-    }
-  })
+const breadcrumbs = computed(() => {
+  const path = route.path
+  const menu = menus.value.find(menu => menu.path === path)
+  return [menu?.title]
 })
 </script>
 
 <template>
   <a-breadcrumb>
-    <a-breadcrumb-item v-for="(menu, index) in menus" :key="index">
-      {{ menu.name }}
+    <a-breadcrumb-item v-for="(breadcrumb, index) in breadcrumbs" :key="index">
+      {{ breadcrumb }}
     </a-breadcrumb-item>
   </a-breadcrumb>
 </template>
