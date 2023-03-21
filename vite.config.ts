@@ -5,6 +5,8 @@ import presetIcons from '@unocss/preset-icons'
 import vue from '@vitejs/plugin-vue';
 import autoImport from 'unplugin-auto-import/vite'
 import vueJsx from '@vitejs/plugin-vue-jsx'
+import pages from 'vite-plugin-pages';
+import layouts from 'vite-plugin-vue-layouts';
 import components from 'unplugin-vue-components/vite';
 import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers';
 import path from 'path';
@@ -25,6 +27,8 @@ export default defineConfig((env) => {
     plugins: [
       vue(),
       vueJsx(),
+      layouts(),
+      pages(),
       autoImport({
         imports: [
           'vue',
@@ -35,6 +39,7 @@ export default defineConfig((env) => {
           'src/composables',
           'src/stores',
           'src/utils',
+          'src/constants',
         ],
         vueTemplate: true,
       }),

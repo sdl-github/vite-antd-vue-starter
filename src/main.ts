@@ -1,14 +1,14 @@
 import { createApp } from 'vue';
-import router from './router';
 import App from './App.vue';
 import registerFormateTimeDirective from '@/directives/formateDate'
 import { createPinia } from 'pinia';
 import VueCropper from "vue-cropper";
-
+import router from './router';
 import 'vue-cropper/dist/index.css'
 import '@/assets/styles/index.scss'
 import '@/router/permission'
 import 'uno.css'
+
 
 const pinia = createPinia()
 const app = createApp(App);

@@ -36,7 +36,6 @@ import Breadcrumb from "./Breadcrumb.vue";
 import { computed, defineComponent } from "vue";
 import { appStore } from "@/stores/app";
 import { userStore } from "@/stores/user";
-import { LOGIN_PATH } from "@/router";
 import { useRouter } from "vue-router";
 
 export default defineComponent({
