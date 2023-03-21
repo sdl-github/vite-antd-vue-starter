@@ -1,30 +1,12 @@
-<template>
-  <a-card class="search_card flex" :bordered="false">
-    <a-input class="search-item"  v-model:value="form.name" placeholder="请输入名称" />
-    <a-button class="search-btn" @click="handleSearch" type="primary">
-      <template #icon>
-        <SearchOutlined />
-      </template>
-      <span>搜索</span>
-    </a-button>
-    <a-button class="search-btn" @click="handleResetSearch" style="margin-left:20px">
-      <template #icon>
-        <RedoOutlined />
-      </template>
-      <span>重置</span>
-    </a-button>
-  </a-card>
-</template>
-
 <script setup lang="ts">
-import { SearchOutlined, RedoOutlined } from "@ant-design/icons-vue";
-import { ref } from "vue";
+import { RedoOutlined, SearchOutlined } from '@ant-design/icons-vue'
+import { ref } from 'vue'
+
+const emits = defineEmits(['handleSearch'])
 
 const form = ref({
-  name: "",
-});
-
-const emits = defineEmits(["handleSearch"]);
+  name: '',
+})
 
 // 搜索
 function handleSearch() {
@@ -33,12 +15,29 @@ function handleSearch() {
 // 重置搜索
 function handleResetSearch() {
   form.value = {
-    name: "",
-  };
+    name: '',
+  }
   emits('handleSearch', form)
 }
-
 </script>
+
+<template>
+  <a-card class="search_card flex" :bordered="false">
+    <a-input v-model:value="form.name" class="search-item" placeholder="请输入名称" />
+    <a-button class="search-btn" type="primary" @click="handleSearch">
+      <template #icon>
+        <SearchOutlined />
+      </template>
+      <span>搜索</span>
+    </a-button>
+    <a-button class="search-btn" style="margin-left:20px" @click="handleResetSearch">
+      <template #icon>
+        <RedoOutlined />
+      </template>
+      <span>重置</span>
+    </a-button>
+  </a-card>
+</template>
 
 <style lang="scss" scoped>
 .search-item{

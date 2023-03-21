@@ -1,3 +1,78 @@
+<script setup lang="ts">
+import type { TableColumnType } from 'ant-design-vue'
+import { onMounted, reactive, toRefs } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import type { ModelTypes } from '@/utils/graphql/zeus'
+
+type IFileItem = ModelTypes['FileItem']
+
+interface IState {
+  bucket: string
+  pageNo: number
+  pageSize: number
+  total: number
+  dataList: IFileItem[]
+  loading: boolean
+}
+
+const route = useRoute()
+const router = useRouter()
+const columns: TableColumnType<IFileItem>[] = [
+  {
+    title: '文件名',
+    width: 100,
+    align: 'center',
+    dataIndex: 'name',
+    key: 'name',
+    ellipsis: true,
+  },
+  {
+    title: '预览',
+    width: 100,
+    align: 'center',
+    dataIndex: 'preview',
+    key: 'preview',
+  },
+  {
+    title: 'url',
+    align: 'center',
+    width: 120,
+    dataIndex: 'url',
+    key: 'url',
+    ellipsis: true,
+  },
+  {
+    title: '操作',
+    width: 180,
+    fixed: 'right',
+    key: 'operation',
+    align: 'center',
+  },
+]
+const state = reactive<IState>({
+  loading: false,
+  bucket: '',
+  pageNo: 1,
+  pageSize: 10,
+  total: 0,
+  dataList: [],
+})
+const { loading, bucket, dataList } = toRefs(state)
+onMounted(() => {
+  initData()
+})
+async function initData() {
+  const { bucket } = route.query as { bucket: string }
+  state.bucket = bucket
+  state.loading = true
+  state.loading = false
+}
+
+function handleBack() {
+  router.back()
+}
+</script>
+
 <template>
   <a-table
     :pagination="false"
@@ -25,78 +100,4 @@
   </a-table>
 </template>
 
-<script setup lang="ts">
-import { ModelTypes } from "@/utils/graphql/zeus";
-import { TableColumnType } from "ant-design-vue";
-import { onMounted, reactive, toRefs } from "vue";
-import { useRoute, useRouter } from "vue-router";
-
-type IFileItem = ModelTypes["FileItem"];
-
-type IState = {
-  bucket: string;
-  pageNo: number;
-  pageSize: number;
-  total: number;
-  dataList: IFileItem[];
-  loading: boolean;
-};
-
-const route = useRoute();
-const router = useRouter();
-const columns: TableColumnType<IFileItem>[] = [
-  {
-    title: "文件名",
-    width: 100,
-    align: "center",
-    dataIndex: "name",
-    key: "name",
-    ellipsis: true,
-  },
-  {
-    title: "预览",
-    width: 100,
-    align: "center",
-    dataIndex: "preview",
-    key: "preview",
-  },
-  {
-    title: "url",
-    align: "center",
-    width: 120,
-    dataIndex: "url",
-    key: "url",
-    ellipsis: true,
-  },
-  {
-    title: "操作",
-    width: 180,
-    fixed: "right",
-    key: "operation",
-    align: "center",
-  },
-];
-const state = reactive<IState>({
-  loading: false,
-  bucket: "",
-  pageNo: 1,
-  pageSize: 10,
-  total: 0,
-  dataList: [],
-});
-const { loading, bucket, dataList } = toRefs(state);
-onMounted(() => {
-  initData();
-});
-async function initData() {
-  const { bucket } = route.query as { bucket: string };
-  state.bucket = bucket;
-  state.loading = true;
-  state.loading = false;
-}
-
-function handleBack() {
-  router.back();
-}
-</script>
 <style scoped lang="scss"></style>

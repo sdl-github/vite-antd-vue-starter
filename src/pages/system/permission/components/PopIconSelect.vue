@@ -1,32 +1,27 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from 'vue'
 
 const props = defineProps({
-    value: {
-        type: Array,
-        default: () => [],
-    },
-});
-const visible = ref(false);
+  value: {
+    type: Array,
+    default: () => [],
+  },
+})
 const emits = defineEmits(['update:value'])
-
+const visible = ref(false)
 function onSelect(value: string) {
-    visible.value = false;
-    emits('update:value', value);
+  visible.value = false
+  emits('update:value', value)
 }
-
 </script>
 
 <template>
-    <a-popover placement="bottom" trigger="click" destroyTooltipOnHide v-model:visible="visible">
-        <template #content>
-            <div class="icon_select_content">
-                
-            </div>
-        </template>
-        <a-input placeholder="请选择" :value="value">
-        </a-input>
-    </a-popover>
+  <a-popover v-model:visible="visible" placement="bottom" trigger="click" destroy-tooltip-on-hide>
+    <template #content>
+      <div class="icon_select_content" />
+    </template>
+    <a-input placeholder="请选择" :value="value" />
+  </a-popover>
 </template>
 
 <style lang="scss" scoped>

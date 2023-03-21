@@ -1,3 +1,7 @@
+<script lang="ts" setup>
+
+</script>
+
 <template>
   <a-layout class="layout">
     <SideMenu />
@@ -7,9 +11,6 @@
     </a-layout>
   </a-layout>
 </template>
-<script lang="ts" setup>
- 
-</script>
 
 <style scoped lang="scss">
 .layout {
