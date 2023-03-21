@@ -5,7 +5,7 @@
       @click="handleClickMenu(menu)"
     >
       <template #icon>
-        <RemixIcon :icon="menu?.meta?.icon" />
+        <div :class="`i-ri-${menu?.meta?.icon}`"></div>
       </template>
       <span>
         {{ menu?.meta?.title }}
@@ -15,7 +15,7 @@
   <template v-else>
     <a-sub-menu :key="menu.path">
       <template #icon>
-        <RemixIcon :icon="menu?.meta?.icon" />
+        <div :class="`i-ri-${menu?.meta?.icon}`"></div>
       </template>
       <template #title>
         {{ menu?.meta?.title }}
@@ -26,14 +26,12 @@
 </template>
 
 <script lang="ts">
-import RemixIcon from "@/components/RemixIcon.vue";
 import { defineComponent } from "vue";
 import { useRouter } from "vue-router";
 
 export default defineComponent({
   name: "MenuItem",
   components: {
-    RemixIcon,
   },
   props: {
     menu: {
@@ -48,7 +46,6 @@ export default defineComponent({
       router.push(path);
     };
     return {
-      RemixIcon,
       handleClickMenu,
     };
   },

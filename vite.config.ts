@@ -1,10 +1,11 @@
 import { defineConfig, loadEnv } from 'vite';
 import uno from 'unocss/vite'
+import { presetAttributify, presetUno } from "unocss";
+import presetIcons from '@unocss/preset-icons'
 import vue from '@vitejs/plugin-vue';
 import components from 'unplugin-vue-components/vite';
 import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers';
 import path from 'path';
-
 // https://vitejs.dev/config/
 export default defineConfig((env) => {
   const { mode } = env
@@ -21,7 +22,13 @@ export default defineConfig((env) => {
     },
     plugins: [
       vue(),
-      uno(),
+      uno({
+        presets: [
+          presetAttributify(),
+          presetUno(),
+          presetIcons()
+        ]
+      }),
       components({
         resolvers: [AntDesignVueResolver()]
       })

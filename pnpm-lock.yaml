@@ -2,9 +2,12 @@ lockfileVersion: 5.4
 
 specifiers:
   '@ant-design/icons-vue': ^6.1.0
+  '@iconify-json/logos': ^1.1.23
+  '@iconify-json/ri': ^1.1.5
   '@types/js-cookie': ^3.0.3
   '@types/node': ^18.14.4
   '@types/nprogress': ^0.2.0
+  '@unocss/preset-icons': ^0.50.6
   '@vitejs/plugin-vue': ^4.0.0
   ant-design-vue: ^3.2.15
   axios: ^1.3.4
@@ -15,7 +18,6 @@ specifiers:
   js-cookie: ^3.0.1
   nprogress: ^0.2.0
   pinia: ^2.0.32
-  remixicon: ^2.5.0
   sass: ^1.58.3
   typescript: ^4.9.5
   unocss: ^0.50.6
@@ -38,16 +40,18 @@ dependencies:
   js-cookie: 3.0.1
   nprogress: 0.2.0
   pinia: 2.0.32_hmuptsblhheur2tugfgucj7gc4
-  remixicon: 2.5.0
   vue: 3.2.47
   vue-cropper: 1.0.5
   vue-filepond: 7.0.3_filepond@4.30.4+vue@3.2.47
   vue-router: 4.1.6_vue@3.2.47
 
 devDependencies:
+  '@iconify-json/logos': 1.1.23
+  '@iconify-json/ri': 1.1.5
   '@types/js-cookie': 3.0.3
   '@types/node': 18.14.4
   '@types/nprogress': 0.2.0
+  '@unocss/preset-icons': 0.50.6
   '@vitejs/plugin-vue': 4.0.0_vite@4.1.4+vue@3.2.47
   sass: 1.58.3
   typescript: 4.9.5
@@ -333,6 +337,18 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
+
+  /@iconify-json/logos/1.1.23:
+    resolution: {integrity: sha512-bV1w4OQaHy6YZH/RhpxRc/BrzgF+7mW8HZ+ZltHbeokriwCf7gAKx6HWVOcLT0gZbO7MMM8HxnzvS7vlzhwNyw==}
+    dependencies:
+      '@iconify/types': 2.0.0
+    dev: true
+
+  /@iconify-json/ri/1.1.5:
+    resolution: {integrity: sha512-OrxKcKFHanTSPmU5esvSn5YfpNgjwJJ+6rkK1I1pIRCPXfuvmlTJGUjf+L5ZQHUiMWLQz+M2bqXx8iBUtW35Gg==}
+    dependencies:
+      '@iconify/types': 2.0.0
+    dev: true
 
   /@iconify/types/2.0.0:
     resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
@@ -1418,10 +1434,6 @@ packages:
 
   /regenerator-runtime/0.13.11:
     resolution: {integrity: sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==}
-    dev: false
-
-  /remixicon/2.5.0:
-    resolution: {integrity: sha512-q54ra2QutYDZpuSnFjmeagmEiN9IMo56/zz5dDNitzKD23oFRw77cWo4TsrAdmdkPiEn8mxlrTqxnkujDbEGww==}
     dev: false
 
   /resize-observer-polyfill/1.5.1:

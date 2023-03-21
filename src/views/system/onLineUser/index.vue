@@ -8,7 +8,7 @@
                         <span>刷新</span>
                     </template>
                     <a-button @click="initData" type="text" shape="circle">
-                        <RemixIcon icon="refresh-line" />
+                        <div class="i-ri-refresh-line"></div>
                     </a-button>
                 </a-tooltip>
             </div>
@@ -47,7 +47,6 @@ import { forceLogout, getOnLineUser } from '@/api/auth';
 import { ModelTypes } from '@/utils/graphql/zeus';
 import { message, TableColumnType } from 'ant-design-vue';
 import { onMounted, reactive } from 'vue';
-import RemixIcon from '@/components/RemixIcon.vue'
 
 type IOnLineUser = ModelTypes["OnLineUser"]
 type IState = {

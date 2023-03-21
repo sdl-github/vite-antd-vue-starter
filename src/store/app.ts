@@ -4,7 +4,7 @@ export const appStore = defineStore({
     id: "app",
     state: () => {
         return {
-            title: 'super admin',
+            title: 'Super Admin',
             theme: 'dark',
             logo: '',
             collapsed: false,

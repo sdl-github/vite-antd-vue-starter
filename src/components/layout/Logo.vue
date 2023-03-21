@@ -1,6 +1,6 @@
 <template>
-  <div class="flex items-center justify-center p-1">
-    <img :src="logo || defaultLogo" class="w-10" />
+  <div class="flex items-center justify-center p-1 h-[50px]">
+    <div class="i-logos-vue"></div>
     <h1 v-show="!collapsed" class="text-white mx-2 transition-all">{{ title }}</h1>
   </div>
 </template>

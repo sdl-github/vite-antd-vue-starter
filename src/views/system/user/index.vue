@@ -10,7 +10,7 @@
             <span>刷新</span>
           </template>
           <a-button @click="initData" type="text" shape="circle">
-            <RemixIcon icon="refresh-line" />
+            <div class="i-ri-refresh-line"></div>
           </a-button>
         </a-tooltip>
       </div>
@@ -83,7 +83,6 @@ import { createUser, delUsers, editUser, queryUserPage } from "@/api/user";
 import { onMounted, reactive } from "vue";
 import { ICreateUserInput, IEditUserInput, IState, IUser, IUserActionModal } from "./data";
 import type { TableColumnType } from "ant-design-vue";
-import RemixIcon from "@/components/RemixIcon.vue";
 import dayjs from "dayjs";
 import { message } from "ant-design-vue";
 

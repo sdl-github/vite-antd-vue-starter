@@ -1,8 +1,7 @@
 <template>
   <a-layout-header class="layout-header">
     <div class="layout-action">
-      <RemixIcon class="trigger" @click="setCollapsed(!collapsed)"
-        :icon="collapsed ? 'menu-unfold-fill' : 'menu-fold-fill'" />
+      <div class="trigger" @click="setCollapsed(!collapsed)" :class="collapsed ? 'i-ri-menu-unfold-fill' : 'i-ri-menu-fold-fill'"></div>
       <Breadcrumb />
     </div>
 
@@ -16,13 +15,13 @@
           <a-menu>
             <a-menu-item>
               <template #icon>
-                <RemixIcon icon="user-line" />
+                <div class="i-ri-user-line"></div>
               </template>
               <router-link to="/system/userInfo">个人信息</router-link>
             </a-menu-item>
             <a-menu-item @click="handleLogout">
               <template #icon>
-                <RemixIcon icon='logout-box-line' />
+                <div class="i-ri-logout-box-line"></div>
               </template>
               退出
             </a-menu-item>
@@ -33,7 +32,6 @@
   </a-layout-header>
 </template>
 <script lang="ts">
-import RemixIcon from "@/components/RemixIcon.vue";
 import Breadcrumb from "./Breadcrumb.vue";
 import { computed, defineComponent } from "vue";
 import { appStore } from "@/store/app";
@@ -43,7 +41,7 @@ import { useRouter } from "vue-router";
 
 export default defineComponent({
   name: "Header",
-  components: { RemixIcon, Breadcrumb },
+  components: { Breadcrumb },
   setup() {
     const store = appStore();
     const user = userStore();

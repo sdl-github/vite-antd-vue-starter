@@ -5,7 +5,7 @@
         <template #icon>
           <icon>
             <template #component>
-              <RemixIcon icon="upload-cloud-line" />
+              <div class="i-ri-upload-cloud-line"></div>
             </template>
           </icon>
         </template>
@@ -17,7 +17,7 @@
             <span>刷新</span>
           </template>
           <a-button @click="initData" type="text" shape="circle">
-            <RemixIcon icon="refresh-line" />
+            <div class="i-ri-refresh-line"></div>
           </a-button>
         </a-tooltip>
       </div>
@@ -43,7 +43,6 @@
 <script setup lang='ts'>
 import { onMounted, reactive } from 'vue';
 import UploadModal from './components/UploadModal.vue'
-import RemixIcon from '@/components/RemixIcon.vue'
 import Icon from '@ant-design/icons-vue';
 const state = reactive({
   pageNo: 1,

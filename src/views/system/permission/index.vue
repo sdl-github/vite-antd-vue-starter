@@ -9,7 +9,7 @@
             <span>刷新</span>
           </template>
           <a-button @click="initData" type="text" shape="circle">
-            <RemixIcon icon="refresh-line" />
+            <div class="i-ri-refresh-line"></div>
           </a-button>
         </a-tooltip>
       </div>
@@ -29,7 +29,7 @@
           </span>
         </template>
         <template v-if="column.dataIndex === 'icon'">
-          <RemixIcon :icon="record.icon" />
+          {{ record.icon }}
         </template>
         <template v-if="column.dataIndex === 'visible'">
           <a-switch @change="handleVisible(record)" v-model:checked="record.visible" />
@@ -61,7 +61,6 @@ import { onMounted, reactive } from 'vue';
 import { ICreateMenuInput, IEditMenuInput, IMenu, IState } from './data';
 import { message, TableColumnType } from "ant-design-vue";
 import TableSearchCard from './components/TableSearchCard.vue'
-import RemixIcon from '@/components/RemixIcon.vue';
 import PermissionModal from './components/PermissionModal.vue';
 import dayjs from 'dayjs';
 

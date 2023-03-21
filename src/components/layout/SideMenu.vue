@@ -13,7 +13,6 @@
 import { appStore } from "@/store/app";
 import { computed, defineComponent, reactive, watchEffect } from "vue";
 import Logo from "@/components/layout/Logo.vue";
-import RemixIcon from "@/components/RemixIcon.vue";
 import MenuItem from "@/components/layout/MenuItem.vue";
 import { useRoute } from "vue-router";
 
@@ -23,7 +22,7 @@ type IState = {
 };
 
 export default defineComponent({
-  components: { RemixIcon, MenuItem, Logo },
+  components: { MenuItem, Logo },
   setup() {
     const state = reactive<IState>({
       selectedKeys: [],

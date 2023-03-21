@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import RemixIconSelect from '@/components/RemixIconSelect/index.vue';
-import RemixIcon from '@/components/RemixIcon.vue';
 import { ref } from 'vue';
 
 const props = defineProps({
@@ -23,14 +21,10 @@ function onSelect(value: string) {
     <a-popover placement="bottom" trigger="click" destroyTooltipOnHide v-model:visible="visible">
         <template #content>
             <div class="icon_select_content">
-                <RemixIconSelect @onSelect='onSelect' />
+                
             </div>
         </template>
-
         <a-input placeholder="请选择" :value="value">
-            <template v-if="value" #prefix>
-                <RemixIcon :icon='value' />
-            </template>
         </a-input>
     </a-popover>
 </template>

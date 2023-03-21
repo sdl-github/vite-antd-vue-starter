@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import RemixIcon from "@/components/RemixIcon.vue";
 import RoleModal from './components/RoleModal.vue';
 import PermissionSelect from './components/PermissionSelect.vue'
 import TableSearchCard from './components/TableSearchCard.vue';
@@ -182,7 +181,7 @@ function handleCancel() {
                         <span>刷新</span>
                     </template>
                     <a-button @click="initData" type="text" shape="circle">
-                        <RemixIcon icon="refresh-line" />
+                        <div class="i-ri-refresh-line"></div>
                     </a-button>
                 </a-tooltip>
             </div>
