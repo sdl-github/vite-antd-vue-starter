@@ -11,7 +11,7 @@
     </div>
 </template>
 <script setup lang="ts">
-import { useStore } from '@/store/counter'
+import { useStore } from '@/stores/counter'
 const store = useStore()
 console.log(store);
 

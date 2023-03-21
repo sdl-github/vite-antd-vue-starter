@@ -10,7 +10,7 @@
 </template>
 
 <script lang='ts'>
-import { appStore } from "@/store/app";
+import { appStore } from "@/stores/app";
 import { computed, defineComponent, reactive, watchEffect } from "vue";
 import Logo from "@/components/layout/Logo.vue";
 import MenuItem from "@/components/layout/MenuItem.vue";

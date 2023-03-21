@@ -1,7 +1,7 @@
 import { getAllMenuList } from "@/api/menu";
 import router, { LOGIN_PATH } from "@/router/index";
-import { appStore } from "@/store/app";
-import { userStore } from "@/store/user";
+import { appStore } from "@/stores/app";
+import { userStore } from "@/stores/user";
 import { getToken } from "@/utils/auth";
 import { listToTree } from "@/utils/tools";
 import NProgress from 'nprogress'

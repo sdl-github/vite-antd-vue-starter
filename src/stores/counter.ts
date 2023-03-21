@@ -1,6 +1,5 @@
 import { defineStore } from "pinia";
 
-
 export const useStore = defineStore({
     // id: 必须的，在所有 Store 中唯一
     id: "main",

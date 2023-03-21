@@ -3,6 +3,7 @@ import uno from 'unocss/vite'
 import { presetAttributify, presetUno } from "unocss";
 import presetIcons from '@unocss/preset-icons'
 import vue from '@vitejs/plugin-vue';
+import autoImport from 'unplugin-auto-import/vite'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import components from 'unplugin-vue-components/vite';
 import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers';
@@ -24,6 +25,20 @@ export default defineConfig((env) => {
     plugins: [
       vue(),
       vueJsx(),
+      autoImport({
+        imports: [
+          'vue',
+          'vue-router',
+        ],
+        dts: 'src/auto-imports.d.ts',
+        dirs: [
+          'src/composables',
+          'src/stores',
+          'src/utils',
+        ],
+        vueTemplate: true,
+      }),
+
       uno({
         presets: [
           presetAttributify(),
@@ -32,7 +47,8 @@ export default defineConfig((env) => {
         ]
       }),
       components({
-        resolvers: [AntDesignVueResolver()]
+        resolvers: [AntDesignVueResolver()],
+        dts: 'src/components.d.ts'
       })
     ],
   }

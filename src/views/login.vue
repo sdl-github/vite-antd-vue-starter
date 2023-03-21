@@ -42,7 +42,7 @@
 import {FormInstance, notification} from "ant-design-vue";
 import {ref, reactive} from "vue";
 import {useRouter} from "vue-router";
-import {userStore} from "@/store/user";
+import {userStore} from "@/stores/user";
 
 const rules = {
   username: [{required: true, message: "请输入用户名", trigger: "blur"}],

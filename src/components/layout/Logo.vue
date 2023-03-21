@@ -5,7 +5,7 @@
   </div>
 </template>
 <script lang="ts">
-import { appStore } from "@/store/app";
+import { appStore } from "@/stores/app";
 import { computed, defineComponent } from "vue";
 import defaultLogo from '@/assets/logo.png'
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { userStore } from '@/store/user';
+import { userStore } from '@/stores/user';
 import { computed } from 'vue';
 
 const userState = userStore()
