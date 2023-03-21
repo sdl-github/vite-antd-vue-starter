@@ -1,43 +1,21 @@
 <template>
-  <a-card class="search_card" :bordered="false">
-    <a-row :gutter="[16, 16]">
-      <a-col :md="9" :sm="24">
-        <a-form-item :label-col="{ span: 5 }" :wrapper-col="{ span: 18 }" label="名称">
-          <a-input v-model:value="form.username" placeholder="请输入" />
-        </a-form-item>
-      </a-col>
-      <a-col :md="9" :sm="24">
-        <a-form-item :label-col="{ span: 5 }" :wrapper-col="{ span: 18 }" label="手机">
-          <a-input v-model:value="form.phone" placeholder="请输入" />
-        </a-form-item>
-      </a-col>
-      <a-col :md="9" :sm="24">
-        <a-form-item :label-col="{ span: 5 }" :wrapper-col="{ span: 18 }" label="邮箱">
-          <a-input v-model:value="form.email" placeholder="请输入" />
-        </a-form-item>
-      </a-col>
-      <a-col :md="9" :sm="24">
-        <a-form-item :label-col="{ span: 5 }" :wrapper-col="{ span: 18 }" label="创建时间">
-          <a-range-picker v-model:value="date" style="width: 100%" />
-        </a-form-item>
-      </a-col>
-      <a-col :md="6" :sm="24">
-        <span style="display: flex;">
-          <a-button @click="handleSearch" type="primary">
-            <template #icon>
-              <SearchOutlined />
-            </template>
-            <span>搜索</span>
-          </a-button>
-          <a-button @click="handleResetSearch" style="margin-left:20px">
-            <template #icon>
-              <RedoOutlined />
-            </template>
-            <span>重置</span>
-          </a-button>
-        </span>
-      </a-col>
-    </a-row>
+  <a-card class="search_card flex" :bordered="false">
+    <a-input class="search-item" v-model:value="form.username" placeholder="请输入用户名" />
+      <a-input class="search-item" v-model:value="form.phone" placeholder="请输入手机" />
+      <a-input class="search-item" v-model:value="form.email" placeholder="请输入邮箱" />
+      <a-range-picker class="search-item" v-model:value="date" />
+      <a-button class="search-btn" @click="handleSearch" type="primary">
+        <template #icon>
+          <SearchOutlined />
+        </template>
+        <span>搜索</span>
+      </a-button>
+      <a-button class="search-btn" @click="handleResetSearch">
+        <template #icon>
+          <RedoOutlined />
+        </template>
+        <span>重置</span>
+      </a-button>
   </a-card>
 </template>
 
@@ -82,4 +60,11 @@ function handleResetSearch() {
 </script>
 
 <style lang="scss" scoped>
+.search-item{
+  width: 200px;
+  margin-left: 20px;
+}
+.search-btn{
+  margin-left: 20px;
+}
 </style>

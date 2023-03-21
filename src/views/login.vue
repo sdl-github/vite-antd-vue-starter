@@ -1,7 +1,5 @@
 <template>
-  <div class="flex z-10 h-[100vh] fixed w-full overflow-hidden bg-cover" :style="{ background: `url(${bg})`}">
-    <img class="absolute opacity-30 left-[600px] top-[100px] select-none" :src="bg_a" />
-    <img class="absolute opacity-30 select-none" :src="bg_b" />
+  <div class="flex z-10 h-[100vh] fixed w-full overflow-hidden bg-cover">
     <div class="flex-1 flex items-center justify-center p-[20px]">
       <div class="w-[400px] bg-white p-10 rounded">
         <div class="h-[50px] text-xl text-bold">登录</div>
@@ -41,9 +39,6 @@
 </template>
 
 <script setup lang="ts">
-import bg from '@/assets/images/bg.png'
-import bg_a from '@/assets/images/bg_a.png'
-import bg_b from '@/assets/images/bg_b.png'
 import {FormInstance, notification} from "ant-design-vue";
 import {ref, reactive} from "vue";
 import {useRouter} from "vue-router";

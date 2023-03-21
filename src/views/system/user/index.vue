@@ -1,7 +1,6 @@
 <template>
   <div class="user-container">
     <TableSearchCard @handleSearch='handleSearch' />
-
     <div class="table-header">
       <a-button @click='handleOpenCreate' type="primary">新建</a-button>
       <div class="table-action">

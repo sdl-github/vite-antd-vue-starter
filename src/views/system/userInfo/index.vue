@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import FilePond from '@/components/FilePond/index.vue'
 import { userStore } from '@/store/user';
 import { computed } from 'vue';
 

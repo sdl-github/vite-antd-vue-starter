@@ -1,33 +1,19 @@
 <template>
   <a-card class="search_card" :bordered="false">
-    <a-row :gutter="[16, 16]">
-      <a-col :md="9" :sm="24">
-        <a-form-item :label-col="{ span: 5 }" :wrapper-col="{ span: 18 }" label="用户名">
-          <a-input v-model:value="form.name" placeholder="请输入" />
-        </a-form-item>
-      </a-col>
-      <a-col :md="9" :sm="24">
-        <a-form-item :label-col="{ span: 5 }" :wrapper-col="{ span: 18 }" label="IP">
-          <a-input v-model:value="form.ip" placeholder="请输入" />
-        </a-form-item>
-      </a-col>
-      <a-col :md="6" :sm="24">
-        <span style="display: flex;">
-          <a-button @click="handleSearch" type="primary">
-            <template #icon>
-              <SearchOutlined />
-            </template>
-            <span>搜索</span>
-          </a-button>
-          <a-button @click="handleResetSearch" style="margin-left:20px">
-            <template #icon>
-              <RedoOutlined />
-            </template>
-            <span>重置</span>
-          </a-button>
-        </span>
-      </a-col>
-    </a-row>
+    <a-input class="search-item" v-model:value="form.name" placeholder="请输入用户名" />
+    <a-input class="search-item" v-model:value="form.ip" placeholder="请输入IP" />
+    <a-button class="search-btn" @click="handleSearch" type="primary">
+      <template #icon>
+        <SearchOutlined />
+      </template>
+      <span>搜索</span>
+    </a-button>
+    <a-button class="search-btn" @click="handleResetSearch">
+      <template #icon>
+        <RedoOutlined />
+      </template>
+      <span>重置</span>
+    </a-button>
   </a-card>
 </template>
 
@@ -59,4 +45,12 @@ function handleResetSearch() {
 </script>
 
 <style lang="scss" scoped>
+.search-item {
+  width: 200px;
+  margin-left: 20px;
+}
+
+.search-btn {
+  margin-left: 20px;
+}
 </style>
