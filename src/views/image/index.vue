@@ -4,7 +4,6 @@
             <a-button @click="handleResetImage" type="primary">清除</a-button>
             <a-button @click="handleSetImage" type="primary">加载图片</a-button>
         </div>
-
         <a-card hoverable style="width: 240px">
             <template #cover>
                 <div v-if="state.loading" class="loading">
