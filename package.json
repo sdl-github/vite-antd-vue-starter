@@ -8,6 +8,7 @@
     "build:prod": "vite build --mode production",
     "serve": "vite preview",
     "z": "npx graphql-zeus http://123.60.183.170:4000/graphql ./src/utils/graphql --ts",
+    "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
@@ -43,7 +44,6 @@
     "unplugin-auto-import": "^0.15.1",
     "unplugin-vue-components": "^0.24.1",
     "vite": "^4.1.4",
-    "vite-plugin-eslint": "^1.8.1",
     "vite-plugin-pages": "^0.29.0",
     "vite-plugin-vue-layouts": "^0.8.0",
     "vue-tsc": "^1.2.0"

@@ -46,10 +46,10 @@ const formState = reactive<{ data: IUserActionModal }>({
   },
 })
 
-watch(() => props.currentItem, (val, old) => {
+watch(() => props.currentItem, (val) => {
   if (val.id) {
     const { roles } = val as IUser
-    formState.data = { ...val, roleIds: roles?.map(item => item?.id) } as IUserActionModal
+    formState.data = { ...val, roleIds: roles?.map((item: any) => item?.id) } as IUserActionModal
   }
   else {
     formState.data = {} as IUserActionModal

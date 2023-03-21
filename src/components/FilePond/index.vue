@@ -35,7 +35,6 @@ const server: FilePondServerConfigProps['server'] = {
   fetch: {
     url: 'fetch',
     onload: (e) => {
-      console.log(e)
       return e
     },
     ondata: (res) => {
@@ -55,22 +54,16 @@ const server: FilePondServerConfigProps['server'] = {
   },
 }
 function handleFilePondInit() {
-  console.log('FilePond has initialized')
 }
 
 function handleAddfile() {
-  console.log('FilePond has handleAddfile')
 }
-function handleOnAddfile(file) {
+function handleOnAddfile(file: any) {
   // console.log(file);
 }
-function handleOnUpdatefiles(fileList) {
-  console.log('FilePond   handleOnUpdatefiles')
-
-  console.log(fileList)
+function handleOnUpdatefiles(fileList: any) {
 }
 function test() {
-  console.log(fileList.value)
 }
 </script>
 
@@ -80,7 +73,6 @@ function test() {
       test
     </button>
     <FilePond
-      ref="filePondRef"
       label-file-processing="上传中..."
       label-file-processing-complete="上传成功"
       label-file-processing-error="上传出错"

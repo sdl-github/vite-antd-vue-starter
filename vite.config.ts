@@ -9,7 +9,6 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 import pages from 'vite-plugin-pages'
 import layouts from 'vite-plugin-vue-layouts'
 import components from 'unplugin-vue-components/vite'
-import eslintPlugin from 'vite-plugin-eslint'
 import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 // https://vitejs.dev/config/
 export default defineConfig((env) => {
@@ -55,7 +54,6 @@ export default defineConfig((env) => {
         resolvers: [AntDesignVueResolver()],
         dts: 'src/components.d.ts',
       }),
-      eslintPlugin(),
     ],
   }
 })

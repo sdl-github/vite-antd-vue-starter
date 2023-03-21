@@ -74,7 +74,6 @@ async function initData() {
     pageSize,
     ...searchParams,
   })
-  console.log(data)
   state.total = totalCount
   state.dataList = data as any
   state.loading = false
@@ -166,7 +165,7 @@ function handleSearch(params: any) {
   initData()
 }
 
-function handleSave(v) {
+function handleSave(v: any) {
   handleOk(v)
 }
 
@@ -177,7 +176,7 @@ function handleCancel() {
 
 <template>
   <div class="role-container">
-    <TableSearchCard @handleSearch="handleSearch" />
+    <TableSearchCard @handle-search="handleSearch" />
     <div class="table-header">
       <a-button type="primary" @click="handleOpenCreate">
         新建
@@ -239,10 +238,12 @@ function handleCancel() {
     </div>
 
     <PermissionSelect
-      :visible="state.drawerVisible" :current-role="state.currentItem" @handleSave="handleSave"
-      @handleCancel="handleCancel"
+      :visible="state.drawerVisible"
+      :current-role="state.currentItem"
+      @handle-save="handleSave"
+      @handle-cancel="handleCancel"
     />
-    <RoleModal v-model:modalVisible="state.modalVisible" :current-item="state.currentItem" @handleOk="handleOk" />
+    <RoleModal v-model:modalVisible="state.modalVisible" :current-item="state.currentItem" @handle-ok="handleOk" />
   </div>
 </template>
 

@@ -6,12 +6,12 @@ const state = reactive({
   error: false,
 })
 
-const handleImageLoad = (e: any, img: any) => {
+const handleImageLoad = (_e: any, _img: any) => {
   state.loading = false
   state.error = false
 }
 
-const handleImageError = (e: any) => {
+const handleImageError = (_e: any) => {
   state.loading = false
   state.error = true
 }

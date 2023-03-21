@@ -9,10 +9,10 @@ export default defineComponent({
   props: {
     menu: {
       type: Object,
-      default: {},
+      default: () => {},
     },
   },
-  setup(props) {
+  setup() {
     const router = useRouter()
     const handleClickMenu = (menu: any) => {
       const { path } = menu

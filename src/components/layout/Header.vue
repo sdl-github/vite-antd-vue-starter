@@ -9,7 +9,6 @@ const router = useRouter()
 const userStore = useUserStore()
 const appStore = useAppStore()
 const { toggle } = appStore
-const theme = computed(() => appStore.theme)
 const collapsed = computed(() => appStore.collapsed)
 const user = computed(() => userStore.user)
 const handleLogout = async () => {

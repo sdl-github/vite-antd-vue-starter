@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-const props = defineProps({
+defineProps({
   value: {
     type: Array,
     default: () => [],
@@ -9,6 +9,7 @@ const props = defineProps({
 })
 const emits = defineEmits(['update:value'])
 const visible = ref(false)
+
 function onSelect(value: string) {
   visible.value = false
   emits('update:value', value)

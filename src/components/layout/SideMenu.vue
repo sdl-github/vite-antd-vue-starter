@@ -4,7 +4,6 @@ import { useRoute } from 'vue-router'
 import Logo from '@/components/layout/Logo.vue'
 import MenuItem from '@/components/layout/MenuItem.vue'
 import { useAppStore } from '@/stores/app'
-import { useUserStore } from '@/stores/user'
 import { useMenu } from '@/composables/menu'
 
 interface IState {
@@ -13,7 +12,6 @@ interface IState {
 }
 const route = useRoute()
 const appStore = useAppStore()
-const userStore = useUserStore()
 const { menus } = useMenu()
 const state = reactive<IState>({
   selectedKeys: [],

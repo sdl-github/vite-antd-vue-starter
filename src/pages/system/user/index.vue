@@ -6,7 +6,6 @@ meta:
 <script setup lang="ts">
 import { onMounted, reactive } from 'vue'
 import type { TableColumnType } from 'ant-design-vue'
-import dayjs from 'dayjs'
 import { message } from 'ant-design-vue'
 import type { ICreateUserInput, IEditUserInput, IState, IUser, IUserActionModal } from './data'
 import UserModal from './components/UserModal.vue'
@@ -119,10 +118,6 @@ async function initData() {
   state.loading = false
 }
 
-// 格式化时间
-function formatDate(date: string) {
-  return dayjs(date).format('YYYY-MM-DD HH:mm')
-}
 // 格式化内容
 function formatValue(value?: string) {
   return value || '--'
@@ -212,7 +207,7 @@ function handleShowSizeChange(current: number, pageSize: number) {
 
 <template>
   <div class="user-container">
-    <TableSearchCard @handleSearch="handleSearch" />
+    <TableSearchCard @handle-search="handleSearch" />
     <div class="table-header">
       <a-button type="primary" @click="handleOpenCreate">
         新建
@@ -265,7 +260,7 @@ function handleShowSizeChange(current: number, pageSize: number) {
         </template>
         <template v-if="column.dataIndex === 'roles'">
           <span v-if="record.roles!.length > 0">
-            <a-tag v-for="role in record.roles" :key="role?.id" style="margin: 5px" color="blue">{{ role.name }}</a-tag>
+            <a-tag v-for="role in record.roles" :key="role?.id" style="margin: 5px" color="blue">{{ role?.name }}</a-tag>
           </span>
           <span v-else> -- </span>
         </template>
@@ -292,7 +287,7 @@ function handleShowSizeChange(current: number, pageSize: number) {
       />
     </div>
 
-    <UserModal v-model:modalVisible="state.modalVisible" :current-item="state.currentItem" @handleOk="handleOk" />
+    <UserModal v-model:modalVisible="state.modalVisible" :current-item="state.currentItem" @handle-ok="handleOk" />
   </div>
 </template>
 

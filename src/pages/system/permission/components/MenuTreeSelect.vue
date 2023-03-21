@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { queryMenuTree } from '@/api/menu'
-const props = defineProps({
+defineProps({
   value: {
     type: String,
   },

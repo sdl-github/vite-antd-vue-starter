@@ -3,7 +3,7 @@ import type { SelectProps } from 'ant-design-vue'
 import { onMounted, ref } from 'vue'
 import { queryRolePage } from '@/api/role'
 
-const props = defineProps({
+defineProps({
   value: {
     type: Array,
     default: () => [],

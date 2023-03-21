@@ -198,7 +198,7 @@ function handleSearch(params: QueryMenuInput) {
 
 <template>
   <div class="permission-container">
-    <TableSearchCard @handleSearch="handleSearch" />
+    <TableSearchCard @handle-search="handleSearch" />
     <div class="table-header">
       <a-button type="primary" @click="handleOpenCreate">
         新建
@@ -256,7 +256,7 @@ function handleSearch(params: QueryMenuInput) {
         </template>
       </template>
     </a-table>
-    <PermissionModal v-model:modalVisible="state.modalVisible" :current-item="state.currentItem" @handleOk="handleOk" />
+    <PermissionModal v-model:modalVisible="state.modalVisible" :current-item="state.currentItem" @handle-ok="handleOk" />
   </div>
 </template>
 

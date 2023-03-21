@@ -102,7 +102,7 @@ function handleSearch(params: { name: string; ip: string }) {
 
 <template>
   <div class="online-user-container">
-    <TableSearchCard @handleSearch="handleSearch" />
+    <TableSearchCard @handle-search="handleSearch" />
     <div class="table-header">
       <div class="table-action">
         <a-tooltip placement="top">

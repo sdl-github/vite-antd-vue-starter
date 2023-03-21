@@ -3,9 +3,6 @@ import dayjs from 'dayjs'
 
 export default function registerFormateTimeDirective(app: App) {
   app.directive('time', {
-    created(el, bindings) {
-
-    },
     mounted(el, bindings) {
       const { isTimestamp = false, format = 'YYYY-MM-DD HH:mm:ss' } = bindings.value || {}
       const textContent = el.textContent

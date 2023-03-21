@@ -17,7 +17,7 @@ watchEffect(() => {
 
 <template>
   <a-breadcrumb>
-    <a-breadcrumb-item v-for="menu in menus">
+    <a-breadcrumb-item v-for="(menu, index) in menus" :key="index">
       {{ menu.name }}
     </a-breadcrumb-item>
   </a-breadcrumb>
