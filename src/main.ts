@@ -1,8 +1,8 @@
-import {createApp} from 'vue';
+import { createApp } from 'vue';
 import router from './router';
 import App from './App.vue';
 import registerFormateTimeDirective from '@/directives/formateDate'
-import {createPinia} from 'pinia';
+import { createPinia } from 'pinia';
 import Antd from 'ant-design-vue';
 import VueCropper from "vue-cropper";
 
@@ -10,6 +10,7 @@ import 'vue-cropper/dist/index.css'
 import '@/assets/styles/index.scss'
 import '@/router/permission'
 import 'ant-design-vue/dist/antd.css';
+import 'uno.css'
 
 const pinia = createPinia()
 const app = createApp(App);
