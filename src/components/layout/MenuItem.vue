@@ -5,20 +5,20 @@
       @click="handleClickMenu(menu)"
     >
       <template #icon>
-        <div :class="`i-ri-${menu?.meta?.icon}`"></div>
+        <div :class="`i-ri-${menu?.icon}`"></div>
       </template>
       <span>
-        {{ menu?.meta?.title }}
+        {{ menu?.title }}
       </span>
     </a-menu-item>
   </template>
   <template v-else>
     <a-sub-menu :key="menu.path">
       <template #icon>
-        <div :class="`i-ri-${menu?.meta?.icon}`"></div>
+        <div :class="`i-ri-${menu?.icon}`"></div>
       </template>
       <template #title>
-        {{ menu?.meta?.title }}
+        {{ menu?.title }}
       </template>
       <MenuItem v-for="sub in menu.children" :menu="sub" :key="sub.path" />
     </a-sub-menu>

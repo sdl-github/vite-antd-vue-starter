@@ -6,43 +6,39 @@
       <MenuItem v-for="menu in menus" :menu="menu" :key="menu.path" />
     </a-menu>
   </a-layout-sider>
-
 </template>
 
-<script lang='ts'>
-import { appStore } from "@/stores/app";
-import { computed, defineComponent, reactive, watchEffect } from "vue";
+<script lang='ts' setup>
+import { computed, reactive, watchEffect } from "vue";
 import Logo from "@/components/layout/Logo.vue";
 import MenuItem from "@/components/layout/MenuItem.vue";
 import { useRoute } from "vue-router";
+import { useAppStore } from "@/stores/app";
+import { useUserStore } from "@/stores/user";
+import { useMenu } from "@/composables/menu";
 
 type IState = {
   selectedKeys: string[];
   openKeys: string[];
 };
-
-export default defineComponent({
-  components: { MenuItem, Logo },
-  setup() {
-    const state = reactive<IState>({
-      selectedKeys: [],
-      openKeys: [],
-    });
-    const store = appStore();
-    const route = useRoute();
-    watchEffect(() => {
-      const { path, matched } = route;
-      state.openKeys = matched.map((item) => item.path);
-      state.selectedKeys = [path];
-    });
-    return {
-      collapsed: computed(() => store.collapsed),
-      theme: computed(() => store.theme),
-      state,
-      menus: computed(() => store.sideMenu),
-    };
-  },
+const route = useRoute();
+const appStore = useAppStore()
+const userStore = useUserStore()
+const { menus } = useMenu()
+const state = reactive<IState>({
+  selectedKeys: [],
+  openKeys: [],
 });
+const collapsed = computed(() => appStore.collapsed)
+
+const theme = computed(() => appStore.theme)
+
+watchEffect(() => {
+  const { path, matched } = route;
+  state.openKeys = matched.map((item) => item.path);
+  state.selectedKeys = [path];
+});
+
 </script>
 
 <style scoped lang='scss'>

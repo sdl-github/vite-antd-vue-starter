@@ -9,7 +9,7 @@ const menus = ref<Array<{ name: string, path: string }>>()
 watchEffect(() => {
     menus.value = route.matched.map(item => {
         return {
-            name: item.meta.title,
+            name: item.meta.title as string,
             path: item.path
         }
     })

@@ -3,12 +3,8 @@
     <router-view />
   </a-layout-content>
 </template>
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({
-  name: "Main",
-});
+<script lang="ts" setup>
+ 
 </script>
 
 <style lang="scss" scoped>

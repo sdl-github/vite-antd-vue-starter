@@ -1,43 +1,57 @@
-import { loginAccount, logout, queryUserInfo } from "@/api/auth";
-import { removeToken, setToken } from "@/utils/auth";
-import { ModelTypes } from "@/utils/graphql/zeus";
 import { defineStore } from "pinia";
-import { appStore } from "./app";
+import { login, logout, userInfo } from "@/api/auth";
+import { queryMenuList as queryMenu } from '@/api/menu'
+import { ModelTypes } from "@/utils/graphql/zeus";
 
-export type IUserInfo = ModelTypes["LoginUser"]
+type LoginUser = ModelTypes['LoginUser']
+export const useUserStore = defineStore('user', () => {
 
-export const userStore = defineStore({
-    id: "user",
-    state: () => {
-        return {
-            userInfo: {} as IUserInfo
+    const user = ref<LoginUser>()
+    const menus = ref<ModelTypes['Menu'][]>([])
+
+    async function loginByAccount(username: string, password: string) {
+        try {
+            const { login: { accessToken } } = await login(username, password)
+            setToken(accessToken);
+            return true
+        } catch (e) {
+            return false;
         }
-    },
-    actions: {
-        async login(username: string, password: string) {
-            try {
-                const { login: { accessToken } } = await loginAccount(username, password)
-                setToken(accessToken);
-                return true
-            } catch (e) {
-                return false;
-            }
-        },
-        async queryUserInfo() {
-            const { userInfo } = await queryUserInfo()
-            this.userInfo = userInfo as any
-        },
-        async logout() {
-            const app = appStore()
-            app.setSideMenu([])
-            try {
-                await logout()
-            } catch (e) {
-                console.log(e);
-            } finally {
-                this.userInfo = {} as any
-                removeToken()
-            }
+    }
+
+    async function queryUserInfo() {
+        const res = await userInfo()
+        user.value = res.userInfo as LoginUser
+        return res
+    }
+
+    async function queryMenuList() {
+        const res = await queryMenu()
+        menus.value = res.queryMenuList
+        return res
+    }
+
+    async function init() {
+        return await Promise.all([queryUserInfo(), queryMenuList()])
+    }
+
+    async function exit() {
+        try {
+            await logout()
+        } catch (e) {
+            console.log(e);
+        } finally {
+            user.value = {} as any
+            removeToken()
         }
+    }
+
+    return {
+        user,
+        menus,
+        init,
+        loginByAccount,
+        queryUserInfo,
+        exit
     }
 })

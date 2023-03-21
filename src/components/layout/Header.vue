@@ -1,15 +1,16 @@
 <template>
   <a-layout-header class="layout-header">
     <div class="layout-action">
-      <div class="trigger" @click="setCollapsed(!collapsed)" :class="collapsed ? 'i-ri-menu-unfold-fill' : 'i-ri-menu-fold-fill'"></div>
+      <div class="trigger" @click="toggle"
+        :class="collapsed ? 'i-ri-menu-unfold-fill' : 'i-ri-menu-fold-fill'"></div>
       <Breadcrumb />
     </div>
 
     <div class="user-info">
       <a-dropdown>
         <div>
-          <a-avatar style="background-color: #1890ff" :src="userInfo.avatar"> {{ userInfo.username }} </a-avatar>
-          <span class="mx-2 rounded text-xs px-2 py-1 bg-purple-200 text-purple-500">{{ userInfo.nickname }}</span>
+          <a-avatar style="background-color: #1890ff" :src="user?.avatar"> {{ user?.username }} </a-avatar>
+          <span class="mx-2 rounded text-xs px-2 py-1 bg-purple-200 text-purple-500">{{ user?.nickname }}</span>
         </div>
         <template #overlay>
           <a-menu>
@@ -31,33 +32,25 @@
     </div>
   </a-layout-header>
 </template>
-<script lang="ts">
+<script lang="ts" setup>
 import Breadcrumb from "./Breadcrumb.vue";
-import { computed, defineComponent } from "vue";
-import { appStore } from "@/stores/app";
-import { userStore } from "@/stores/user";
+import { computed } from "vue";
 import { useRouter } from "vue-router";
+import { useUserStore } from "@/stores/user";
+import { useAppStore } from "@/stores/app";
 
-export default defineComponent({
-  name: "Header",
-  components: { Breadcrumb },
-  setup() {
-    const store = appStore();
-    const user = userStore();
-    const router = useRouter();
-    const handleLogout = async () => {
-      await user.logout();
-      router.push(LOGIN_PATH);
-    };
-    return {
-      theme: computed(() => store.theme),
-      collapsed: computed(() => store.collapsed),
-      userInfo: computed(() => user.userInfo),
-      setCollapsed: store.setCollapsed,
-      handleLogout,
-    };
-  },
-});
+const router = useRouter();
+const userStore = useUserStore()
+const appStore = useAppStore()
+const { toggle } = appStore
+const theme = computed(() => appStore.theme)
+const collapsed = computed(() => appStore.collapsed)
+const user = computed(() => userStore.user)
+const handleLogout = async () => {
+  await userStore.exit();
+  router.push(LOGIN_PATH);
+}
+
 </script>
 
 <style lang="scss" scoped>

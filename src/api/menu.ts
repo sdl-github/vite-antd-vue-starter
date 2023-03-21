@@ -69,7 +69,7 @@ export const updateMenu = async (input: editMenuInput) => {
 
 
 
-export const getAllMenuList = async (onlyUser: boolean = false) => {
+export const queryMenuList = async (onlyUser: boolean = false) => {
     return query({
         queryMenuList: [{ onlyUser }, {
             id: true,

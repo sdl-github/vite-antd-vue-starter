@@ -1,3 +1,7 @@
+<route lang="yaml">
+    meta:
+        layout: DashboardLayout
+</route>
 <script setup lang="ts">
 import RoleModal from './components/RoleModal.vue';
 import PermissionSelect from './components/PermissionSelect.vue'

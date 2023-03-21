@@ -4,23 +4,14 @@
     <h1 v-show="!collapsed" class="text-white mx-2 transition-all">{{ title }}</h1>
   </div>
 </template>
-<script lang="ts">
-import { appStore } from "@/stores/app";
-import { computed, defineComponent } from "vue";
-import defaultLogo from '@/assets/logo.png'
+<script lang="ts" setup>
+import { computed } from "vue";
+import { useAppStore } from "@/stores/app";
 
-export default defineComponent({
-  name: "Logo",
-  setup() {
-    const store = appStore();
-    return {
-      title: computed(() => store.title),
-      logo: computed(() => store.logo),
-      collapsed: computed(() => store.collapsed),
-      defaultLogo,
-    };
-  },
-});
+const appStore = useAppStore()
+const collapsed = computed(() => appStore.collapsed)
+const title = computed(() => appStore.title)
+ 
 </script>
 
 <style lang="scss" scoped>

@@ -2,4 +2,4 @@
     <main>
       <RouterView />
     </main>
-  </template>
+</template>

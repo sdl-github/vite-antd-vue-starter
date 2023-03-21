@@ -1,7 +1,7 @@
 import { mutation, query } from "@/utils/graphql";
 
 // 账号密码登录
-export function loginAccount(username: string, password: string) {
+export function login(username: string, password: string) {
     return mutation({
         login: [{
             username,
@@ -13,7 +13,7 @@ export function loginAccount(username: string, password: string) {
 }
 
 // 获取个人信息
-export function queryUserInfo() {
+export function userInfo() {
     return query({
         userInfo: {
             id: true,

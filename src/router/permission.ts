@@ -1,5 +1,5 @@
 import router from "@/router/index";
-import { userStore } from "@/stores/user";
+import { useUserStore } from "@/stores/user";
 import { getToken } from "@/utils/auth";
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
@@ -11,9 +11,9 @@ router.beforeEach(async (to, from, next) => {
         if (to.path === LOGIN_PATH) {
             next({ path: '/' })
         }
-        const user = userStore()
-        if (!user.userInfo.username) {
-            await user.queryUserInfo()
+        const userStore = useUserStore()
+        if (!userStore.user?.id) {
+            await userStore.init()
         }
         next()
     } else {

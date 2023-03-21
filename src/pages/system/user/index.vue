@@ -1,3 +1,7 @@
+<route lang="yaml">
+  meta:
+      layout: DashboardLayout
+</route>
 <template>
   <div class="user-container">
     <TableSearchCard @handleSearch='handleSearch' />
