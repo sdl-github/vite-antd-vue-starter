@@ -11,10 +11,10 @@ import layouts from 'vite-plugin-vue-layouts'
 import components from 'unplugin-vue-components/vite'
 import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 // https://vitejs.dev/config/
-export default defineConfig((env) => {
-  const { mode } = env
-  loadEnv(mode, process.cwd())
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd())
   return {
+    base: env.VITE_BASE_PATH,
     server: {
       port: 4001,
     },
