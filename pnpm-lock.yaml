@@ -7,6 +7,7 @@ specifiers:
   '@iconify-json/ri': ^1.1.5
   '@iconify-json/twemoji': ^1.1.11
   '@types/js-cookie': ^3.0.3
+  '@types/lodash': ^4.14.191
   '@types/node': ^18.14.4
   '@types/nprogress': ^0.2.0
   '@unocss/preset-icons': ^0.50.6
@@ -20,6 +21,7 @@ specifiers:
   filepond: ^4.30.4
   filepond-plugin-image-preview: ^4.6.11
   js-cookie: ^3.0.1
+  lodash: ^4.17.21
   nprogress: ^0.2.0
   pinia: ^2.0.32
   sass: ^1.58.3
@@ -45,6 +47,7 @@ dependencies:
   filepond: 4.30.4
   filepond-plugin-image-preview: 4.6.11_filepond@4.30.4
   js-cookie: 3.0.1
+  lodash: 4.17.21
   nprogress: 0.2.0
   pinia: 2.0.32_hmuptsblhheur2tugfgucj7gc4
   vue: 3.2.47
@@ -58,6 +61,7 @@ devDependencies:
   '@iconify-json/ri': 1.1.5
   '@iconify-json/twemoji': 1.1.11
   '@types/js-cookie': 3.0.3
+  '@types/lodash': 4.14.191
   '@types/node': 18.14.4
   '@types/nprogress': 0.2.0
   '@unocss/preset-icons': 0.50.6
@@ -930,6 +934,10 @@ packages:
 
   /@types/json5/0.0.29:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
+    dev: true
+
+  /@types/lodash/4.14.191:
+    resolution: {integrity: sha512-BdZ5BCCvho3EIXw6wUCXHe7rS53AIDPLE+JzwgT+OsJk53oBfbSmZZ7CX4VaRoN78N+TJpFi9QPlfIVNmJYWxQ==}
     dev: true
 
   /@types/mdast/3.0.11:

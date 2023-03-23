@@ -33,15 +33,55 @@ export const getVal = (key: string) => {
   return JSON.parse(val)
 }
 
-export function listToTree(list: any[], id = 'id', pId = 'pId', rootId = '#') {
+export function listToTree<T>(list: T[], id: keyof T, pId: keyof T, rootId = '#') {
   list.forEach((node) => {
     // find current node parent
-    const pNdoe = list.find(row => row[id] === node[pId])
-    if (pNdoe) {
-      pNdoe.children = pNdoe.children || []
-      pNdoe.children.push(node)
+    const pNode = list.find(row => row[id] === node[pId]) as (T & { children?: T[] })
+    if (pNode) {
+      pNode.children = pNode.children || []
+      pNode.children.push(node)
     }
   })
   // remove child node
   return list.filter(node => node[pId] === rootId)
+}
+
+interface TreeNode<T> {
+  [key: string]: T | TreeNode<T>[]
+}
+
+interface PathNode<T> {
+  element: T
+  index: number
+}
+
+export function findTreePath<T>(
+  tree: TreeNode<T>[],
+  key: keyof T,
+  value: T[keyof T],
+): PathNode<T>[] | null {
+  const dfs = (
+    tree: TreeNode<T>[],
+    key: keyof T,
+    value: T[keyof T],
+    path: PathNode<T>[] = [],
+  ): PathNode<T>[] | null => {
+    for (let index = 0; index < tree.length; index++) {
+      const element = tree[index]
+      const tempPath = [...path]
+      tempPath.push({ element, index })
+      if (element[key] === value) {
+        return tempPath
+      }
+      if (Array.isArray(element.children)) {
+        const result = dfs(element.children, key, value, tempPath)
+        if (result) {
+          return result
+        }
+      }
+    }
+    return null
+  }
+
+  return dfs(tree, key, value)
 }
