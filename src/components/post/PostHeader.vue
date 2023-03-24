@@ -1,0 +1,22 @@
+<template>
+  <nav class="nav sticky top-0">
+    <div class="nav-wrapper">
+      <div class="nav-content-wrapper">
+        <div class="nav-content">
+          <a href="/" class="nav-title">标题</a>
+          <div class="nav-menu">
+            <div class="nav-item-wrapper">
+              <a href="/archive" class="nav-item-content">目录</a>
+            </div>
+            <div class="nav-item-wrapper">
+              <a href="/about" class="nav-item-content">关于</a>
+            </div>
+            <div class="nav-item-wrapper">
+              <a href="/rss.xml" class="nav-item-content" target="_blank">RSS</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+</template>
