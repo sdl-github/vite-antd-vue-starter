@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 import { AllTypesProps, ReturnTypes, Ops } from './const';
-export const HOST = "http://123.60.183.170:4000/graphql"
+export const HOST = "http://localhost:4000/graphql"
 
 
 export const HEADERS = {}
@@ -616,7 +616,7 @@ export const InternalArgsBuilt = ({
     }
     const checkType = ResolveFromPath(props, returns, ops)(p);
     if (checkType.startsWith('scalar.')) {
-       
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const [_, ...splittedScalar] = checkType.split('.');
       const scalarKey = splittedScalar.join('.');
       return (scalars?.[scalarKey]?.encode?.(a) as string) || JSON.stringify(a);
@@ -719,7 +719,7 @@ type IsInterfaced<SRC extends DeepAnify<DST>, DST, SCLR extends ScalarDefinition
 export type MapType<SRC, DST, SCLR extends ScalarDefinition> = SRC extends DeepAnify<DST>
   ? IsInterfaced<SRC, DST, SCLR>
   : never;
- 
+// eslint-disable-next-line @typescript-eslint/ban-types
 export type InputType<SRC, DST, SCLR extends ScalarDefinition = {}> = IsPayLoad<DST> extends { __alias: infer R }
   ? {
       [P in keyof R]: MapType<SRC, R[P], SCLR>[keyof MapType<SRC, R[P], SCLR>];
@@ -733,7 +733,7 @@ export type SubscriptionToGraphQL<Z, T, SCLR extends ScalarDefinition> = {
   open: () => void;
 };
 
- 
+// eslint-disable-next-line @typescript-eslint/ban-types
 export type FromSelector<SELECTOR, NAME extends keyof GraphQLTypes, SCLR extends ScalarDefinition = {}> = InputType<
   GraphQLTypes[NAME],
   SELECTOR,
@@ -812,7 +812,7 @@ export type ExtractVariables<Query> = Query extends Variable<infer VType, infer 
   : Query extends [infer Inputs, infer Outputs]
   ? ExtractVariables<Inputs> & ExtractVariables<Outputs>
   : Query extends string | number | boolean
-  ?  
+  ? // eslint-disable-next-line @typescript-eslint/ban-types
     {}
   : UnionToIntersection<{ [K in keyof Query]: WithOptionalNullables<ExtractVariables<Query[K]>> }[keyof Query]>;
 
@@ -862,6 +862,9 @@ queryUserPage?: [{	/** 用户id */
 	from?: string | undefined | null | Variable<any, string>,	/** 结束时间YYYY-DD-MM */
 	to?: string | undefined | null | Variable<any, string>,	/** 是否包含角色 */
 	includeRole?: boolean | undefined | null | Variable<any, string>,	pageNo?: number | undefined | null | Variable<any, string>,	pageSize?: number | undefined | null | Variable<any, string>},ValueTypes["UserPageResult"]],
+	/** 获取space */
+	querySpace?:ValueTypes["Space"],
+querySpaceMenu?: [{	spaceId: string | Variable<any, string>},ValueTypes["SpaceMenu"]],
 		__typename?: boolean | `@${string}`
 }>;
 	["LoginUser"]: AliasType<{
@@ -997,6 +1000,68 @@ queryUserPage?: [{	/** 用户id */
 	roles?:ValueTypes["Role"],
 		__typename?: boolean | `@${string}`
 }>;
+	["Space"]: AliasType<{
+	id?:boolean | `@${string}`,
+	/** 创建时间 */
+	createdAt?:boolean | `@${string}`,
+	/** 更新时间 */
+	updatedAt?:boolean | `@${string}`,
+	/** 标题 */
+	name?:boolean | `@${string}`,
+	/** 菜单 */
+	spaceMenus?:ValueTypes["SpaceMenu"],
+		__typename?: boolean | `@${string}`
+}>;
+	["SpaceMenu"]: AliasType<{
+	id?:boolean | `@${string}`,
+	/** 创建时间 */
+	createdAt?:boolean | `@${string}`,
+	/** 更新时间 */
+	updatedAt?:boolean | `@${string}`,
+	/** 标题 */
+	title?:boolean | `@${string}`,
+	/** 图标 */
+	icon?:boolean | `@${string}`,
+	/** 图标类型 */
+	iconType?:boolean | `@${string}`,
+	/** 上级ID */
+	pId?:boolean | `@${string}`,
+	/** 排序 */
+	order?:boolean | `@${string}`,
+	/** 文章 */
+	post?:ValueTypes["Post"],
+		__typename?: boolean | `@${string}`
+}>;
+	["Post"]: AliasType<{
+	id?:boolean | `@${string}`,
+	/** 创建时间 */
+	createdAt?:boolean | `@${string}`,
+	/** 更新时间 */
+	updatedAt?:boolean | `@${string}`,
+	/** 标题 */
+	title?:boolean | `@${string}`,
+	/** 当前版本 */
+	currentVersion?:boolean | `@${string}`,
+	/** 是否锁定 */
+	lock?:boolean | `@${string}`,
+	/** 解锁密码 */
+	lockPwd?:boolean | `@${string}`,
+	/** 版本 */
+	postVersions?:ValueTypes["PostVersion"],
+		__typename?: boolean | `@${string}`
+}>;
+	["PostVersion"]: AliasType<{
+	id?:boolean | `@${string}`,
+	/** 创建时间 */
+	createdAt?:boolean | `@${string}`,
+	/** 更新时间 */
+	updatedAt?:boolean | `@${string}`,
+	/** 内容 */
+	content?:boolean | `@${string}`,
+	/** 版本 */
+	version?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
 	["Mutation"]: AliasType<{
 login?: [{	password: string | Variable<any, string>,	username: string | Variable<any, string>},ValueTypes["LoginResult"]],
 	logout?:ValueTypes["BaseResponse"],
@@ -1011,6 +1076,11 @@ createUser?: [{	input: ValueTypes["CreateUserInput"] | Variable<any, string>},Va
 updateUser?: [{	input: ValueTypes["EditUserInput"] | Variable<any, string>},ValueTypes["BaseResponse"]],
 deleteUsers?: [{	userIds: Array<string> | Variable<any, string>},ValueTypes["BaseResponse"]],
 resetUserPassword?: [{	userId: string | Variable<any, string>},ValueTypes["BaseResponse"]],
+initSpace?: [{	name?: string | undefined | null | Variable<any, string>},ValueTypes["Space"]],
+createSpace?: [{	name: string | Variable<any, string>},ValueTypes["Space"]],
+createSpaceMenu?: [{	input: ValueTypes["CreateSpaceMenuInput"] | Variable<any, string>},ValueTypes["SpaceMenu"]],
+moveSpaceMenuToRecycleBin?: [{	menuId: string | Variable<any, string>},boolean | `@${string}`],
+delSpaceMenu?: [{	menuId: string | Variable<any, string>},boolean | `@${string}`],
 		__typename?: boolean | `@${string}`
 }>;
 	["LoginResult"]: AliasType<{
@@ -1134,6 +1204,20 @@ resetUserPassword?: [{	userId: string | Variable<any, string>},ValueTypes["BaseR
 	note?: string | undefined | null | Variable<any, string>,
 	/** 角色 */
 	roleIds?: Array<string> | undefined | null | Variable<any, string>
+};
+	["CreateSpaceMenuInput"]: {
+	/** id */
+	id: string | Variable<any, string>,
+	/** spaceId */
+	spaceId: string | Variable<any, string>,
+	/** 标题 */
+	title?: string | undefined | null | Variable<any, string>,
+	/** 图标 */
+	icon?: string | undefined | null | Variable<any, string>,
+	/** 图标类型 */
+	iconType?: string | undefined | null | Variable<any, string>,
+	/** id */
+	pId?: string | undefined | null | Variable<any, string>
 }
   }
 
@@ -1168,6 +1252,9 @@ queryUserPage?: [{	/** 用户id */
 	from?: string | undefined | null,	/** 结束时间YYYY-DD-MM */
 	to?: string | undefined | null,	/** 是否包含角色 */
 	includeRole?: boolean | undefined | null,	pageNo?: number | undefined | null,	pageSize?: number | undefined | null},ResolverInputTypes["UserPageResult"]],
+	/** 获取space */
+	querySpace?:ResolverInputTypes["Space"],
+querySpaceMenu?: [{	spaceId: string},ResolverInputTypes["SpaceMenu"]],
 		__typename?: boolean | `@${string}`
 }>;
 	["LoginUser"]: AliasType<{
@@ -1303,6 +1390,68 @@ queryUserPage?: [{	/** 用户id */
 	roles?:ResolverInputTypes["Role"],
 		__typename?: boolean | `@${string}`
 }>;
+	["Space"]: AliasType<{
+	id?:boolean | `@${string}`,
+	/** 创建时间 */
+	createdAt?:boolean | `@${string}`,
+	/** 更新时间 */
+	updatedAt?:boolean | `@${string}`,
+	/** 标题 */
+	name?:boolean | `@${string}`,
+	/** 菜单 */
+	spaceMenus?:ResolverInputTypes["SpaceMenu"],
+		__typename?: boolean | `@${string}`
+}>;
+	["SpaceMenu"]: AliasType<{
+	id?:boolean | `@${string}`,
+	/** 创建时间 */
+	createdAt?:boolean | `@${string}`,
+	/** 更新时间 */
+	updatedAt?:boolean | `@${string}`,
+	/** 标题 */
+	title?:boolean | `@${string}`,
+	/** 图标 */
+	icon?:boolean | `@${string}`,
+	/** 图标类型 */
+	iconType?:boolean | `@${string}`,
+	/** 上级ID */
+	pId?:boolean | `@${string}`,
+	/** 排序 */
+	order?:boolean | `@${string}`,
+	/** 文章 */
+	post?:ResolverInputTypes["Post"],
+		__typename?: boolean | `@${string}`
+}>;
+	["Post"]: AliasType<{
+	id?:boolean | `@${string}`,
+	/** 创建时间 */
+	createdAt?:boolean | `@${string}`,
+	/** 更新时间 */
+	updatedAt?:boolean | `@${string}`,
+	/** 标题 */
+	title?:boolean | `@${string}`,
+	/** 当前版本 */
+	currentVersion?:boolean | `@${string}`,
+	/** 是否锁定 */
+	lock?:boolean | `@${string}`,
+	/** 解锁密码 */
+	lockPwd?:boolean | `@${string}`,
+	/** 版本 */
+	postVersions?:ResolverInputTypes["PostVersion"],
+		__typename?: boolean | `@${string}`
+}>;
+	["PostVersion"]: AliasType<{
+	id?:boolean | `@${string}`,
+	/** 创建时间 */
+	createdAt?:boolean | `@${string}`,
+	/** 更新时间 */
+	updatedAt?:boolean | `@${string}`,
+	/** 内容 */
+	content?:boolean | `@${string}`,
+	/** 版本 */
+	version?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
 	["Mutation"]: AliasType<{
 login?: [{	password: string,	username: string},ResolverInputTypes["LoginResult"]],
 	logout?:ResolverInputTypes["BaseResponse"],
@@ -1317,6 +1466,11 @@ createUser?: [{	input: ResolverInputTypes["CreateUserInput"]},ResolverInputTypes
 updateUser?: [{	input: ResolverInputTypes["EditUserInput"]},ResolverInputTypes["BaseResponse"]],
 deleteUsers?: [{	userIds: Array<string>},ResolverInputTypes["BaseResponse"]],
 resetUserPassword?: [{	userId: string},ResolverInputTypes["BaseResponse"]],
+initSpace?: [{	name?: string | undefined | null},ResolverInputTypes["Space"]],
+createSpace?: [{	name: string},ResolverInputTypes["Space"]],
+createSpaceMenu?: [{	input: ResolverInputTypes["CreateSpaceMenuInput"]},ResolverInputTypes["SpaceMenu"]],
+moveSpaceMenuToRecycleBin?: [{	menuId: string},boolean | `@${string}`],
+delSpaceMenu?: [{	menuId: string},boolean | `@${string}`],
 		__typename?: boolean | `@${string}`
 }>;
 	["LoginResult"]: AliasType<{
@@ -1440,6 +1594,20 @@ resetUserPassword?: [{	userId: string},ResolverInputTypes["BaseResponse"]],
 	note?: string | undefined | null,
 	/** 角色 */
 	roleIds?: Array<string> | undefined | null
+};
+	["CreateSpaceMenuInput"]: {
+	/** id */
+	id: string,
+	/** spaceId */
+	spaceId: string,
+	/** 标题 */
+	title?: string | undefined | null,
+	/** 图标 */
+	icon?: string | undefined | null,
+	/** 图标类型 */
+	iconType?: string | undefined | null,
+	/** id */
+	pId?: string | undefined | null
 }
   }
 
@@ -1459,7 +1627,11 @@ export type ModelTypes = {
 	/** 角色列表查询 */
 	queryRolePage: ModelTypes["RolePageResult"],
 	/** 角色列表查询 */
-	queryUserPage: ModelTypes["UserPageResult"]
+	queryUserPage: ModelTypes["UserPageResult"],
+	/** 获取space */
+	querySpace: Array<ModelTypes["Space"]>,
+	/** 获取spaceMenu */
+	querySpaceMenu: Array<ModelTypes["SpaceMenu"]>
 };
 	["LoginUser"]: {
 		id: string,
@@ -1586,6 +1758,64 @@ export type ModelTypes = {
 	/** 角色 */
 	roles?: Array<ModelTypes["Role"] | undefined> | undefined
 };
+	["Space"]: {
+		id: string,
+	/** 创建时间 */
+	createdAt?: ModelTypes["DateTime"] | undefined,
+	/** 更新时间 */
+	updatedAt?: ModelTypes["DateTime"] | undefined,
+	/** 标题 */
+	name: string,
+	/** 菜单 */
+	spaceMenus?: Array<ModelTypes["SpaceMenu"] | undefined> | undefined
+};
+	["SpaceMenu"]: {
+		id: string,
+	/** 创建时间 */
+	createdAt?: ModelTypes["DateTime"] | undefined,
+	/** 更新时间 */
+	updatedAt?: ModelTypes["DateTime"] | undefined,
+	/** 标题 */
+	title: string,
+	/** 图标 */
+	icon?: string | undefined,
+	/** 图标类型 */
+	iconType?: string | undefined,
+	/** 上级ID */
+	pId?: string | undefined,
+	/** 排序 */
+	order: number,
+	/** 文章 */
+	post?: ModelTypes["Post"] | undefined
+};
+	["Post"]: {
+		id: string,
+	/** 创建时间 */
+	createdAt?: ModelTypes["DateTime"] | undefined,
+	/** 更新时间 */
+	updatedAt?: ModelTypes["DateTime"] | undefined,
+	/** 标题 */
+	title: string,
+	/** 当前版本 */
+	currentVersion: string,
+	/** 是否锁定 */
+	lock: boolean,
+	/** 解锁密码 */
+	lockPwd?: string | undefined,
+	/** 版本 */
+	postVersions?: Array<ModelTypes["PostVersion"] | undefined> | undefined
+};
+	["PostVersion"]: {
+		id: string,
+	/** 创建时间 */
+	createdAt?: ModelTypes["DateTime"] | undefined,
+	/** 更新时间 */
+	updatedAt?: ModelTypes["DateTime"] | undefined,
+	/** 内容 */
+	content: string,
+	/** 版本 */
+	version: string
+};
 	["Mutation"]: {
 		login: ModelTypes["LoginResult"],
 	logout: ModelTypes["BaseResponse"],
@@ -1610,7 +1840,17 @@ export type ModelTypes = {
 	/** 批量删除用户 */
 	deleteUsers: ModelTypes["BaseResponse"],
 	/** 重置用户密码 */
-	resetUserPassword: ModelTypes["BaseResponse"]
+	resetUserPassword: ModelTypes["BaseResponse"],
+	/** 初始化space */
+	initSpace: ModelTypes["Space"],
+	/** 创建space */
+	createSpace: ModelTypes["Space"],
+	/** 创建spaceMenu */
+	createSpaceMenu: ModelTypes["SpaceMenu"],
+	/** 移动spaceMenu到回收站 */
+	moveSpaceMenuToRecycleBin: boolean,
+	/** 删除spaceMenu */
+	delSpaceMenu: boolean
 };
 	["LoginResult"]: {
 		/** accessToken */
@@ -1726,6 +1966,20 @@ export type ModelTypes = {
 	note?: string | undefined,
 	/** 角色 */
 	roleIds?: Array<string> | undefined
+};
+	["CreateSpaceMenuInput"]: {
+	/** id */
+	id: string,
+	/** spaceId */
+	spaceId: string,
+	/** 标题 */
+	title?: string | undefined,
+	/** 图标 */
+	icon?: string | undefined,
+	/** 图标类型 */
+	iconType?: string | undefined,
+	/** id */
+	pId?: string | undefined
 }
     }
 
@@ -1746,7 +2000,11 @@ export type GraphQLTypes = {
 	/** 角色列表查询 */
 	queryRolePage: GraphQLTypes["RolePageResult"],
 	/** 角色列表查询 */
-	queryUserPage: GraphQLTypes["UserPageResult"]
+	queryUserPage: GraphQLTypes["UserPageResult"],
+	/** 获取space */
+	querySpace: Array<GraphQLTypes["Space"]>,
+	/** 获取spaceMenu */
+	querySpaceMenu: Array<GraphQLTypes["SpaceMenu"]>
 };
 	["LoginUser"]: {
 	__typename: "LoginUser",
@@ -1881,6 +2139,68 @@ export type GraphQLTypes = {
 	/** 角色 */
 	roles?: Array<GraphQLTypes["Role"] | undefined> | undefined
 };
+	["Space"]: {
+	__typename: "Space",
+	id: string,
+	/** 创建时间 */
+	createdAt?: GraphQLTypes["DateTime"] | undefined,
+	/** 更新时间 */
+	updatedAt?: GraphQLTypes["DateTime"] | undefined,
+	/** 标题 */
+	name: string,
+	/** 菜单 */
+	spaceMenus?: Array<GraphQLTypes["SpaceMenu"] | undefined> | undefined
+};
+	["SpaceMenu"]: {
+	__typename: "SpaceMenu",
+	id: string,
+	/** 创建时间 */
+	createdAt?: GraphQLTypes["DateTime"] | undefined,
+	/** 更新时间 */
+	updatedAt?: GraphQLTypes["DateTime"] | undefined,
+	/** 标题 */
+	title: string,
+	/** 图标 */
+	icon?: string | undefined,
+	/** 图标类型 */
+	iconType?: string | undefined,
+	/** 上级ID */
+	pId?: string | undefined,
+	/** 排序 */
+	order: number,
+	/** 文章 */
+	post?: GraphQLTypes["Post"] | undefined
+};
+	["Post"]: {
+	__typename: "Post",
+	id: string,
+	/** 创建时间 */
+	createdAt?: GraphQLTypes["DateTime"] | undefined,
+	/** 更新时间 */
+	updatedAt?: GraphQLTypes["DateTime"] | undefined,
+	/** 标题 */
+	title: string,
+	/** 当前版本 */
+	currentVersion: string,
+	/** 是否锁定 */
+	lock: boolean,
+	/** 解锁密码 */
+	lockPwd?: string | undefined,
+	/** 版本 */
+	postVersions?: Array<GraphQLTypes["PostVersion"] | undefined> | undefined
+};
+	["PostVersion"]: {
+	__typename: "PostVersion",
+	id: string,
+	/** 创建时间 */
+	createdAt?: GraphQLTypes["DateTime"] | undefined,
+	/** 更新时间 */
+	updatedAt?: GraphQLTypes["DateTime"] | undefined,
+	/** 内容 */
+	content: string,
+	/** 版本 */
+	version: string
+};
 	["Mutation"]: {
 	__typename: "Mutation",
 	login: GraphQLTypes["LoginResult"],
@@ -1906,7 +2226,17 @@ export type GraphQLTypes = {
 	/** 批量删除用户 */
 	deleteUsers: GraphQLTypes["BaseResponse"],
 	/** 重置用户密码 */
-	resetUserPassword: GraphQLTypes["BaseResponse"]
+	resetUserPassword: GraphQLTypes["BaseResponse"],
+	/** 初始化space */
+	initSpace: GraphQLTypes["Space"],
+	/** 创建space */
+	createSpace: GraphQLTypes["Space"],
+	/** 创建spaceMenu */
+	createSpaceMenu: GraphQLTypes["SpaceMenu"],
+	/** 移动spaceMenu到回收站 */
+	moveSpaceMenuToRecycleBin: boolean,
+	/** 删除spaceMenu */
+	delSpaceMenu: boolean
 };
 	["LoginResult"]: {
 	__typename: "LoginResult",
@@ -2029,6 +2359,20 @@ export type GraphQLTypes = {
 	note?: string | undefined,
 	/** 角色 */
 	roleIds?: Array<string> | undefined
+};
+	["CreateSpaceMenuInput"]: {
+		/** id */
+	id: string,
+	/** spaceId */
+	spaceId: string,
+	/** 标题 */
+	title?: string | undefined,
+	/** 图标 */
+	icon?: string | undefined,
+	/** 图标类型 */
+	iconType?: string | undefined,
+	/** id */
+	pId?: string | undefined
 }
     }
 /** 用户性别枚举 */
@@ -2048,4 +2392,5 @@ type ZEUS_VARIABLES = {
 	["EditRoleInput"]: ValueTypes["EditRoleInput"];
 	["CreateUserInput"]: ValueTypes["CreateUserInput"];
 	["EditUserInput"]: ValueTypes["EditUserInput"];
+	["CreateSpaceMenuInput"]: ValueTypes["CreateSpaceMenuInput"];
 }

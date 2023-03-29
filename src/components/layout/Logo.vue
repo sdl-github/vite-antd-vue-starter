@@ -9,7 +9,7 @@ const title = computed(() => appStore.title)
 
 <template>
   <div class="flex items-center justify-center h-[50px]">
-    <div class="text-[30px] i-twemoji-globe-showing-asia-australia" />
+    <div class="text-[30px]" />
     <div v-show="!collapsed" class="text-white ml-2 font-bold text-sm">
       {{ title }}
     </div>

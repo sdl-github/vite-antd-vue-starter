@@ -34,6 +34,9 @@ export const getVal = (key: string) => {
 }
 
 export function listToTree<T>(list: T[], id: keyof T, pId: keyof T, rootId = '#') {
+  if (!list || (Array.isArray(list) && !list.length)) {
+    return []
+  }
   list.forEach((node) => {
     // find current node parent
     const pNode = list.find(row => row[id] === node[pId]) as (T & { children?: T[] })
@@ -84,4 +87,12 @@ export function findTreePath<T>(
   }
 
   return dfs(tree, key, value)
+}
+
+export function guid() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = Math.random() * 16 | 0
+    const v = c === 'x' ? r : (r & 0x3 | 0x8)
+    return v.toString(16)
+  })
 }

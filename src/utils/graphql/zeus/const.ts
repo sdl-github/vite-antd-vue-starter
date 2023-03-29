@@ -22,6 +22,9 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		queryUserPage:{
 
+		},
+		querySpaceMenu:{
+
 		}
 	},
 	DateTime: `scalar.DateTime` as const,
@@ -63,6 +66,21 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		resetUserPassword:{
 
+		},
+		initSpace:{
+
+		},
+		createSpace:{
+
+		},
+		createSpaceMenu:{
+			input:"CreateSpaceMenuInput"
+		},
+		moveSpaceMenuToRecycleBin:{
+
+		},
+		delSpaceMenu:{
+
 		}
 	},
 	CreateMenuInput:{
@@ -82,6 +100,9 @@ export const AllTypesProps: Record<string,any> = {
 	},
 	EditUserInput:{
 		gender:"UserGenderEnum"
+	},
+	CreateSpaceMenuInput:{
+
 	}
 }
 
@@ -94,7 +115,9 @@ export const ReturnTypes: Record<string,any> = {
 		queryMenuList:"Menu",
 		queryMenuTree:"JSONObject",
 		queryRolePage:"RolePageResult",
-		queryUserPage:"UserPageResult"
+		queryUserPage:"UserPageResult",
+		querySpace:"Space",
+		querySpaceMenu:"SpaceMenu"
 	},
 	LoginUser:{
 		id:"ID",
@@ -170,6 +193,41 @@ export const ReturnTypes: Record<string,any> = {
 		note:"String",
 		roles:"Role"
 	},
+	Space:{
+		id:"ID",
+		createdAt:"DateTime",
+		updatedAt:"DateTime",
+		name:"String",
+		spaceMenus:"SpaceMenu"
+	},
+	SpaceMenu:{
+		id:"ID",
+		createdAt:"DateTime",
+		updatedAt:"DateTime",
+		title:"String",
+		icon:"String",
+		iconType:"String",
+		pId:"String",
+		order:"Float",
+		post:"Post"
+	},
+	Post:{
+		id:"ID",
+		createdAt:"DateTime",
+		updatedAt:"DateTime",
+		title:"String",
+		currentVersion:"String",
+		lock:"Boolean",
+		lockPwd:"String",
+		postVersions:"PostVersion"
+	},
+	PostVersion:{
+		id:"ID",
+		createdAt:"DateTime",
+		updatedAt:"DateTime",
+		content:"String",
+		version:"String"
+	},
 	Mutation:{
 		login:"LoginResult",
 		logout:"BaseResponse",
@@ -183,7 +241,12 @@ export const ReturnTypes: Record<string,any> = {
 		createUser:"BaseResponse",
 		updateUser:"BaseResponse",
 		deleteUsers:"BaseResponse",
-		resetUserPassword:"BaseResponse"
+		resetUserPassword:"BaseResponse",
+		initSpace:"Space",
+		createSpace:"Space",
+		createSpaceMenu:"SpaceMenu",
+		moveSpaceMenuToRecycleBin:"Boolean",
+		delSpaceMenu:"Boolean"
 	},
 	LoginResult:{
 		accessToken:"String"

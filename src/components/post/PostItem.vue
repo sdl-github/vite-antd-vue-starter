@@ -29,13 +29,13 @@ defineProps({
   <li
     role="listitem"
     class="tile-item nr-scroll-animation"
-    :class="[{ 'item-hero': level === 1, 'item-2up': level === 2, 'item-3up': level === 3 }]"
+    :class="[{ 'tile-hero': level === 1, 'tile-2up': level === 2, 'tile-3up': level === 3 }]"
   >
     <a
       href="{href}"
       aria-label="{label}"
-      class="tile large-loaded medium-loaded small-loaded tile-hero"
-      :class="[{ 'item-hero': level === 1, 'item-2up': level === 2, 'item-3up': level === 3 }]"
+      class="tile large-loaded medium-loaded small-loaded"
+      :class="[{ 'tile-hero': level === 1, 'tile-2up': level === 2, 'tile-3up': level === 3 }]"
     >
       <div class="tile__media" aria-hidden="true">
         <PostImage :src="cover" />
