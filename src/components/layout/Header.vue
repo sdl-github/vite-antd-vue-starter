@@ -63,7 +63,7 @@ const handleLogout = async () => {
   position: sticky;
   top: 0;
   box-shadow: 0 1px 4px rgb(0 21 41 / 8%);
-  z-index: 10;
+  z-index: 1;
   height: 50px;
   display: flex;
   align-items: center;

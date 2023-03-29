@@ -25,6 +25,9 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		querySpaceMenu:{
 
+		},
+		queryPost:{
+
 		}
 	},
 	DateTime: `scalar.DateTime` as const,
@@ -117,7 +120,8 @@ export const ReturnTypes: Record<string,any> = {
 		queryRolePage:"RolePageResult",
 		queryUserPage:"UserPageResult",
 		querySpace:"Space",
-		querySpaceMenu:"SpaceMenu"
+		querySpaceMenu:"SpaceMenu",
+		queryPost:"Post"
 	},
 	LoginUser:{
 		id:"ID",
@@ -216,10 +220,11 @@ export const ReturnTypes: Record<string,any> = {
 		createdAt:"DateTime",
 		updatedAt:"DateTime",
 		title:"String",
-		currentVersion:"String",
+		currentVersionId:"String",
 		lock:"Boolean",
 		lockPwd:"String",
-		postVersions:"PostVersion"
+		postVersions:"PostVersion",
+		currentContent:"String"
 	},
 	PostVersion:{
 		id:"ID",

@@ -865,6 +865,7 @@ queryUserPage?: [{	/** 用户id */
 	/** 获取space */
 	querySpace?:ValueTypes["Space"],
 querySpaceMenu?: [{	spaceId: string | Variable<any, string>},ValueTypes["SpaceMenu"]],
+queryPost?: [{	menuId: string | Variable<any, string>},ValueTypes["Post"]],
 		__typename?: boolean | `@${string}`
 }>;
 	["LoginUser"]: AliasType<{
@@ -1040,14 +1041,16 @@ querySpaceMenu?: [{	spaceId: string | Variable<any, string>},ValueTypes["SpaceMe
 	updatedAt?:boolean | `@${string}`,
 	/** 标题 */
 	title?:boolean | `@${string}`,
-	/** 当前版本 */
-	currentVersion?:boolean | `@${string}`,
+	/** 当前版本id */
+	currentVersionId?:boolean | `@${string}`,
 	/** 是否锁定 */
 	lock?:boolean | `@${string}`,
 	/** 解锁密码 */
 	lockPwd?:boolean | `@${string}`,
 	/** 版本 */
 	postVersions?:ValueTypes["PostVersion"],
+	/** 当前版本内容 */
+	currentContent?:boolean | `@${string}`,
 		__typename?: boolean | `@${string}`
 }>;
 	["PostVersion"]: AliasType<{
@@ -1255,6 +1258,7 @@ queryUserPage?: [{	/** 用户id */
 	/** 获取space */
 	querySpace?:ResolverInputTypes["Space"],
 querySpaceMenu?: [{	spaceId: string},ResolverInputTypes["SpaceMenu"]],
+queryPost?: [{	menuId: string},ResolverInputTypes["Post"]],
 		__typename?: boolean | `@${string}`
 }>;
 	["LoginUser"]: AliasType<{
@@ -1430,14 +1434,16 @@ querySpaceMenu?: [{	spaceId: string},ResolverInputTypes["SpaceMenu"]],
 	updatedAt?:boolean | `@${string}`,
 	/** 标题 */
 	title?:boolean | `@${string}`,
-	/** 当前版本 */
-	currentVersion?:boolean | `@${string}`,
+	/** 当前版本id */
+	currentVersionId?:boolean | `@${string}`,
 	/** 是否锁定 */
 	lock?:boolean | `@${string}`,
 	/** 解锁密码 */
 	lockPwd?:boolean | `@${string}`,
 	/** 版本 */
 	postVersions?:ResolverInputTypes["PostVersion"],
+	/** 当前版本内容 */
+	currentContent?:boolean | `@${string}`,
 		__typename?: boolean | `@${string}`
 }>;
 	["PostVersion"]: AliasType<{
@@ -1631,7 +1637,9 @@ export type ModelTypes = {
 	/** 获取space */
 	querySpace: Array<ModelTypes["Space"]>,
 	/** 获取spaceMenu */
-	querySpaceMenu: Array<ModelTypes["SpaceMenu"]>
+	querySpaceMenu: Array<ModelTypes["SpaceMenu"]>,
+	/** 获取spaceMenu */
+	queryPost?: ModelTypes["Post"] | undefined
 };
 	["LoginUser"]: {
 		id: string,
@@ -1796,14 +1804,16 @@ export type ModelTypes = {
 	updatedAt?: ModelTypes["DateTime"] | undefined,
 	/** 标题 */
 	title: string,
-	/** 当前版本 */
-	currentVersion: string,
+	/** 当前版本id */
+	currentVersionId: string,
 	/** 是否锁定 */
 	lock: boolean,
 	/** 解锁密码 */
 	lockPwd?: string | undefined,
 	/** 版本 */
-	postVersions?: Array<ModelTypes["PostVersion"] | undefined> | undefined
+	postVersions?: Array<ModelTypes["PostVersion"] | undefined> | undefined,
+	/** 当前版本内容 */
+	currentContent?: string | undefined
 };
 	["PostVersion"]: {
 		id: string,
@@ -1812,7 +1822,7 @@ export type ModelTypes = {
 	/** 更新时间 */
 	updatedAt?: ModelTypes["DateTime"] | undefined,
 	/** 内容 */
-	content: string,
+	content?: string | undefined,
 	/** 版本 */
 	version: string
 };
@@ -2004,7 +2014,9 @@ export type GraphQLTypes = {
 	/** 获取space */
 	querySpace: Array<GraphQLTypes["Space"]>,
 	/** 获取spaceMenu */
-	querySpaceMenu: Array<GraphQLTypes["SpaceMenu"]>
+	querySpaceMenu: Array<GraphQLTypes["SpaceMenu"]>,
+	/** 获取spaceMenu */
+	queryPost?: GraphQLTypes["Post"] | undefined
 };
 	["LoginUser"]: {
 	__typename: "LoginUser",
@@ -2180,14 +2192,16 @@ export type GraphQLTypes = {
 	updatedAt?: GraphQLTypes["DateTime"] | undefined,
 	/** 标题 */
 	title: string,
-	/** 当前版本 */
-	currentVersion: string,
+	/** 当前版本id */
+	currentVersionId: string,
 	/** 是否锁定 */
 	lock: boolean,
 	/** 解锁密码 */
 	lockPwd?: string | undefined,
 	/** 版本 */
-	postVersions?: Array<GraphQLTypes["PostVersion"] | undefined> | undefined
+	postVersions?: Array<GraphQLTypes["PostVersion"] | undefined> | undefined,
+	/** 当前版本内容 */
+	currentContent?: string | undefined
 };
 	["PostVersion"]: {
 	__typename: "PostVersion",
@@ -2197,7 +2211,7 @@ export type GraphQLTypes = {
 	/** 更新时间 */
 	updatedAt?: GraphQLTypes["DateTime"] | undefined,
 	/** 内容 */
-	content: string,
+	content?: string | undefined,
 	/** 版本 */
 	version: string
 };

@@ -20,6 +20,7 @@ declare global {
   const getCurrentScope: typeof import('vue')['getCurrentScope']
   const getToken: typeof import('./utils/auth')['getToken']
   const getVal: typeof import('./utils/tools')['getVal']
+  const guid: typeof import('./utils/tools')['guid']
   const h: typeof import('vue')['h']
   const handleClipboard: typeof import('./utils/tools')['handleClipboard']
   const inject: typeof import('vue')['inject']
@@ -70,6 +71,7 @@ declare global {
   const useRoute: typeof import('vue-router')['useRoute']
   const useRouter: typeof import('vue-router')['useRouter']
   const useSlots: typeof import('vue')['useSlots']
+  const useSpaceStore: typeof import('./stores/space')['useSpaceStore']
   const useUserStore: typeof import('./stores/user')['useUserStore']
   const watch: typeof import('vue')['watch']
   const watchEffect: typeof import('vue')['watchEffect']
@@ -101,6 +103,7 @@ declare module 'vue' {
     readonly getCurrentScope: UnwrapRef<typeof import('vue')['getCurrentScope']>
     readonly getToken: UnwrapRef<typeof import('./utils/auth')['getToken']>
     readonly getVal: UnwrapRef<typeof import('./utils/tools')['getVal']>
+    readonly guid: UnwrapRef<typeof import('./utils/tools')['guid']>
     readonly h: UnwrapRef<typeof import('vue')['h']>
     readonly handleClipboard: UnwrapRef<typeof import('./utils/tools')['handleClipboard']>
     readonly inject: UnwrapRef<typeof import('vue')['inject']>
@@ -151,6 +154,7 @@ declare module 'vue' {
     readonly useRoute: UnwrapRef<typeof import('vue-router')['useRoute']>
     readonly useRouter: UnwrapRef<typeof import('vue-router')['useRouter']>
     readonly useSlots: UnwrapRef<typeof import('vue')['useSlots']>
+    readonly useSpaceStore: UnwrapRef<typeof import('./stores/space')['useSpaceStore']>
     readonly useUserStore: UnwrapRef<typeof import('./stores/user')['useUserStore']>
     readonly watch: UnwrapRef<typeof import('vue')['watch']>
     readonly watchEffect: UnwrapRef<typeof import('vue')['watchEffect']>
