@@ -33,6 +33,7 @@ export default defineConfig(({ mode }) => {
         imports: [
           'vue',
           'vue-router',
+          '@vueuse/core',
         ],
         dts: 'src/auto-imports.d.ts',
         dirs: [

@@ -84,6 +84,9 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		delSpaceMenu:{
 
+		},
+		updatePostVersion:{
+
 		}
 	},
 	CreateMenuInput:{
@@ -251,7 +254,8 @@ export const ReturnTypes: Record<string,any> = {
 		createSpace:"Space",
 		createSpaceMenu:"SpaceMenu",
 		moveSpaceMenuToRecycleBin:"Boolean",
-		delSpaceMenu:"Boolean"
+		delSpaceMenu:"Boolean",
+		updatePostVersion:"PostVersion"
 	},
 	LoginResult:{
 		accessToken:"String"

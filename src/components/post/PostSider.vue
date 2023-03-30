@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { cloneDeep } from 'lodash'
 import { useSpaceStore } from '@/stores/space'
 const router = useRouter()
 const spaceStore = useSpaceStore()
@@ -10,18 +9,16 @@ const loading = computed(() => spaceStore.queryMenuLoading)
 const space = computed(() => spaceStore.space)
 const spaces = computed(() => spaceStore.spaces)
 const currentId = computed(() => spaceStore.currentId)
-const treeData = computed(() => {
-  const list = spaceStore.spaceMenus?.map((menu) => {
-    const { id: key } = menu
-    return { ...menu, key }
-  })
-  return listToTree(cloneDeep(list), 'id', 'pId', null)
+const treeData = computed(() => spaceStore.spaceMenus)
+const spaceLineMenus = computed(() => spaceStore.spaceLineMenus)
+const expandedKeys = ref<string[]>([])
+watchOnce(spaceLineMenus, () => {
+  console.log('// TODO expandedKeys has some bugs')
+  expandedKeys.value = spaceStore.spaceLineMenus?.map(menu => menu.id) || []
 })
 onMounted(() => {
   spaceStore.querySpace()
 })
-const expandedKeys = ref<string[]>([])
-
 function goPost(id: string) {
   router.push({
     path: '/post/edit',
@@ -40,17 +37,35 @@ function goPost(id: string) {
         <div>{{ space?.name }}</div>
         <div class="i-ri-add-circle-line cursor-pointer" @click="createNew()" />
       </div>
-      <a-tree v-model:expandedKeys="expandedKeys" :selected-keys="[currentId as string]" :tree-data="treeData">
+      <a-tree v-model:expandedKeys="expandedKeys" block-node :selected-keys="[currentId as string]" :tree-data="treeData">
         <template #title="{ title, key }">
-          <div class="group flex justify-between" @click="goPost(key)">
-            <div class="w-120px">
-              {{ title }}
+          <a-dropdown :trigger="['contextmenu', 'click']">
+            <div class="group flex justify-between" @click.prevent="goPost(key)">
+              <div class="">
+                {{ title }}
+              </div>
+              <div class="display-none px-2 items-center group-hover:flex">
+                <div class="i-ri-list-check ml-2">
+                  打开
+                </div>
+                <div class="i-ri-add-fill ml-2" @click="createNew(key)" />
+              </div>
             </div>
-            <div class="display-none px-2 items-center group-hover:flex">
-              <div class="i-ri-delete-bin-line ml-2" @click="moveToRecycleBin(key)" />
-              <div class="i-ri-add-fill ml-2" @click="createNew(key)" />
-            </div>
-          </div>
+            <template #overlay>
+              <a-menu>
+                <a-menu-item>
+                  <a>
+                    重命名
+                  </a>
+                </a-menu-item>
+                <a-menu-item>
+                  <a @click="moveToRecycleBin(key)">
+                    删除
+                  </a>
+                </a-menu-item>
+              </a-menu>
+            </template>
+          </a-dropdown>
         </template>
       </a-tree>
     </div>

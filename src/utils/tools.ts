@@ -33,7 +33,7 @@ export const getVal = (key: string) => {
   return JSON.parse(val)
 }
 
-export function listToTree<T>(list: T[], id: keyof T, pId: keyof T, rootId = '#') {
+export function listToTree<T>(list: T[], id: keyof T, pId: keyof T, rootId = null) {
   if (!list || (Array.isArray(list) && !list.length)) {
     return []
   }

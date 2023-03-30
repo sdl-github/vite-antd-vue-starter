@@ -62,6 +62,7 @@ declare module '@vue/runtime-core' {
     Logo: typeof import('./components/layout/Logo.vue')['default']
     MenuItem: typeof import('./components/layout/MenuItem.vue')['default']
     PostEditor: typeof import('./components/post/PostEditor.vue')['default']
+    PostEditorHeader: typeof import('./components/post/PostEditorHeader.vue')['default']
     PostFooter: typeof import('./components/post/PostFooter.vue')['default']
     PostHeader: typeof import('./components/post/PostHeader.vue')['default']
     PostImage: typeof import('./components/post/PostImage.vue')['default']

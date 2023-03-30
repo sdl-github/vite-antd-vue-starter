@@ -5,8 +5,8 @@
 <template>
   <a-layout>
     <PostSider />
-    <a-layout class="layout-main">
-      <Header />
+    <a-layout>
+      <PostEditorHeader />
       <PostEditor />
     </a-layout>
   </a-layout>

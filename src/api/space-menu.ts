@@ -10,6 +10,7 @@ export function querySpaceMenu(spaceId: string) {
         icon: true,
         iconType: true,
         pId: true,
+        order: true,
       },
     ],
   })

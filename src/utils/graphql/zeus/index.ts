@@ -1084,6 +1084,7 @@ createSpace?: [{	name: string | Variable<any, string>},ValueTypes["Space"]],
 createSpaceMenu?: [{	input: ValueTypes["CreateSpaceMenuInput"] | Variable<any, string>},ValueTypes["SpaceMenu"]],
 moveSpaceMenuToRecycleBin?: [{	menuId: string | Variable<any, string>},boolean | `@${string}`],
 delSpaceMenu?: [{	menuId: string | Variable<any, string>},boolean | `@${string}`],
+updatePostVersion?: [{	content: string | Variable<any, string>,	versionId: string | Variable<any, string>},ValueTypes["PostVersion"]],
 		__typename?: boolean | `@${string}`
 }>;
 	["LoginResult"]: AliasType<{
@@ -1477,6 +1478,7 @@ createSpace?: [{	name: string},ResolverInputTypes["Space"]],
 createSpaceMenu?: [{	input: ResolverInputTypes["CreateSpaceMenuInput"]},ResolverInputTypes["SpaceMenu"]],
 moveSpaceMenuToRecycleBin?: [{	menuId: string},boolean | `@${string}`],
 delSpaceMenu?: [{	menuId: string},boolean | `@${string}`],
+updatePostVersion?: [{	content: string,	versionId: string},ResolverInputTypes["PostVersion"]],
 		__typename?: boolean | `@${string}`
 }>;
 	["LoginResult"]: AliasType<{
@@ -1638,7 +1640,7 @@ export type ModelTypes = {
 	querySpace: Array<ModelTypes["Space"]>,
 	/** 获取spaceMenu */
 	querySpaceMenu: Array<ModelTypes["SpaceMenu"]>,
-	/** 获取spaceMenu */
+	/** 获取post */
 	queryPost?: ModelTypes["Post"] | undefined
 };
 	["LoginUser"]: {
@@ -1860,7 +1862,9 @@ export type ModelTypes = {
 	/** 移动spaceMenu到回收站 */
 	moveSpaceMenuToRecycleBin: boolean,
 	/** 删除spaceMenu */
-	delSpaceMenu: boolean
+	delSpaceMenu: boolean,
+	/** 更新post Version */
+	updatePostVersion: ModelTypes["PostVersion"]
 };
 	["LoginResult"]: {
 		/** accessToken */
@@ -2015,7 +2019,7 @@ export type GraphQLTypes = {
 	querySpace: Array<GraphQLTypes["Space"]>,
 	/** 获取spaceMenu */
 	querySpaceMenu: Array<GraphQLTypes["SpaceMenu"]>,
-	/** 获取spaceMenu */
+	/** 获取post */
 	queryPost?: GraphQLTypes["Post"] | undefined
 };
 	["LoginUser"]: {
@@ -2250,7 +2254,9 @@ export type GraphQLTypes = {
 	/** 移动spaceMenu到回收站 */
 	moveSpaceMenuToRecycleBin: boolean,
 	/** 删除spaceMenu */
-	delSpaceMenu: boolean
+	delSpaceMenu: boolean,
+	/** 更新post Version */
+	updatePostVersion: GraphQLTypes["PostVersion"]
 };
 	["LoginResult"]: {
 	__typename: "LoginResult",
