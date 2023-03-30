@@ -21,3 +21,14 @@
 ::-webkit-scrollbar-thumb {
     background: #D3D1CB;
 }
+
+.tippy-box {
+    background-color: white !important;
+    border-radius: 4px !important;
+    border-width: 1px !important;
+    box-shadow: 0 12px 20px rgba(0, 0, 0, .16)
+}
+
+.tippy-content {
+    padding: 0 !important;
+}

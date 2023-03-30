@@ -114,9 +114,12 @@ export const useSpaceStore = defineStore('space', () => {
     })
   }
 
-  function moveToRecycleBin(menuId: string) {
+  async function moveToRecycleBin(menuId: string) {
+    if (!menuId) {
+      return
+    }
     const loading = message.loading('加载中')
-    moveSpaceMenuToRecycleBin(menuId).then(() => {
+    return moveSpaceMenuToRecycleBin(menuId).then(() => {
       querySpaceMenu()
       message.success('移动到回收站成功')
     }).finally(() => {

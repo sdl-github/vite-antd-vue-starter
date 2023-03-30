@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import VueCropper from 'vue-cropper'
+import VueTippy from 'vue-tippy'
 import App from './App.vue'
 import router from './router'
 import registerFormateTimeDirective from '@/directives/formateDate'
@@ -17,7 +18,10 @@ const app = createApp(App)
 app.use(router)
 app.use(pinia)
 app.use(VueCropper)
-
+app.use(VueTippy, {
+  directive: 'tippy',
+  component: 'tippy',
+})
 registerFormateTimeDirective(app)
 
 app.mount('#app')
