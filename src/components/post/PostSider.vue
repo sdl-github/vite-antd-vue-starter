@@ -1,6 +1,5 @@
 <script lang="tsx" setup>
 import { useTippy } from 'vue-tippy'
-import { Input } from 'ant-design-vue'
 import { useSpaceStore } from '@/stores/space'
 
 const router = useRouter()
@@ -15,9 +14,12 @@ const currentId = computed(() => spaceStore.currentId)
 const treeData = computed(() => spaceStore.spaceMenus)
 const spaceLineMenus = computed(() => spaceStore.spaceLineMenus)
 const expandedKeys = ref<string[]>([])
+const renameTitleRef = ref()
 const currentMenuId = ref<string>('')
-const renameInputRef = ref()
-
+const isEditMenu = ref<boolean>(false)
+onClickOutside(renameTitleRef, (event) => {
+  isEditMenu.value = false
+})
 const menu = (
   <>
     <div class='w-200px c-black p-0.5 text-14px'>
@@ -33,23 +35,6 @@ const menu = (
   </>
 )
 
-const titleInput = (
-  <>
-    <div class='w-200px c-black p-0.5 text-14px p-2'>
-      <Input
-        id='rename-tippy-input'
-        ref={renameInputRef}
-        type='primary'
-        class='w-full rename-tippy-input'
-        onKeydown={(e) => {
-          if (e.key === 'Escape') {
-            closeEditTitleTippy()
-          }
-        }} />
-    </div>
-  </>
-)
-
 const { show, hide, setProps } = useTippy(() => document.body, {
   content: menu,
   placement: 'right-start',
@@ -59,15 +44,6 @@ const { show, hide, setProps } = useTippy(() => document.body, {
   offset: [-10, 20],
 })
 
-const titleTippy = useTippy(() => document.body, {
-  content: titleInput,
-  placement: 'right-start',
-  trigger: 'manual',
-  arrow: false,
-  interactive: true,
-  offset: [-25, -20],
-})
-
 async function handleMove() {
   await moveToRecycleBin(currentMenuId.value)
   hide()
@@ -75,21 +51,6 @@ async function handleMove() {
 
 function handleEditTitle(event: MouseEvent) {
   hide()
-  titleTippy.setProps({
-    getReferenceClientRect: () => ({
-      width: 0,
-      height: 0,
-      top: event.clientY,
-      bottom: event.clientY,
-      left: event.clientX,
-      right: event.clientX,
-    }),
-  })
-  titleTippy.show()
-}
-
-function closeEditTitleTippy() {
-  titleTippy.hide()
 }
 
 watchOnce(spaceLineMenus, () => {
@@ -123,6 +84,10 @@ function contextmenu(event: MouseEvent, key: string) {
   })
   show()
 }
+function dblclick(key: string) {
+  isEditMenu.value = true
+  currentMenuId.value = key
+}
 </script>
 
 <template>
@@ -135,20 +100,32 @@ function contextmenu(event: MouseEvent, key: string) {
         <div>{{ space?.name }}</div>
         <div class="i-ri-add-circle-line cursor-pointer" @click="createNew()" />
       </div>
-      <a-tree v-model:expandedKeys="expandedKeys" block-node :selected-keys="[currentId as string]" :tree-data="treeData">
+      <a-tree
+        v-model:expandedKeys="expandedKeys"
+        block-node
+        :selected-keys="[currentId as string]"
+        :tree-data="treeData"
+      >
         <template #title="{ title, key }">
           <div
-            class="group flex justify-between" @contextmenu="($event) => contextmenu($event, key)"
+            class="group flex justify-between"
+            @dblclick="dblclick(key)"
+            @contextmenu="($event) => contextmenu($event, key)"
             @click.prevent="goPost(key)"
           >
             <div class="">
-              {{ title }}
+              <div v-if="isEditMenu && currentMenuId === key">
+                <a-input ref="renameTitleRef" :value="title" />
+              </div>
+              <div v-else>
+                {{ title }}
+              </div>
             </div>
-            <div class="display-none px-2 items-center group-hover:flex">
-              <div class="i-ri-list-check ml-2" @click="($event) => contextmenu($event, key)">
+            <div v-if="!isEditMenu" class="display-none px-2 items-center group-hover:flex">
+              <div class="i-ri-list-check ml-2" @click.stop="($event) => contextmenu($event, key)">
                 打开
               </div>
-              <div class="i-ri-add-fill ml-2" @click="createNew(key)" />
+              <div class="i-ri-add-fill ml-2" @click.stop="createNew(key)" />
             </div>
           </div>
         </template>
