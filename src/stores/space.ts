@@ -18,29 +18,29 @@ export const useSpaceStore = defineStore('space', () => {
   const route = useRoute()
   const spaces = ref<Space[]>([])
   const space = ref<Space>()
-  const spaceMenus = ref<SpaceMenu[]>()
-  const spaceLineMenus = ref<SpaceMenu[]>()
+  const spaceListMenus = ref<SpaceMenu[]>()
   const post = ref<Post>()
   const currentId = computed<string>(() => {
     return route.query.id as string
   })
-
-  watchThrottled(currentId, (id) => {
-    queryPost(id)
-    findMenuLine()
-  }, {
-    immediate: true,
+  const spaceMenus = computed(() => {
+    return listToTree(cloneDeep(unref(spaceListMenus)), 'id', 'pId', null)
   })
-
-  function findMenuLine() {
+  const spaceLineMenus = computed(() => {
     const tree = cloneDeep(unref(spaceMenus))
     const id = unref(currentId)
     if (!tree || (tree && !tree.length) || !id) {
       return
     }
     const paths = findTreePath(tree, 'id', id)
-    spaceLineMenus.value = paths?.map(path => path.element)
-  }
+    return paths?.map(path => path.element)
+  })
+
+  watchThrottled(currentId, (id) => {
+    queryPost(id)
+  }, {
+    immediate: true,
+  })
 
   function queryPost(menuId: string) {
     if (!menuId) {
@@ -80,11 +80,10 @@ export const useSpaceStore = defineStore('space', () => {
           const { id: key } = menu
           return { ...menu, key }
         })
-        spaceMenus.value = listToTree(cloneDeep(list), 'id', 'pId', null)
+        spaceListMenus.value = list
       }
     }).finally(() => {
       queryMenuLoading.value = false
-      findMenuLine()
     })
   }
 
@@ -127,6 +126,26 @@ export const useSpaceStore = defineStore('space', () => {
     })
   }
 
+  const debouncedFn = useDebounceFn((id: string, title: string) => {
+    spaceMenuApi.updateSpaceMenuTitle(id, title)
+  }, 1000)
+
+  function updateSpaceMenuTitle(id: string, title = '未命名页面') {
+    updateSpaceMenu(id, { title })
+    debouncedFn(id, title)
+  }
+
+  function updateSpaceMenu(id: string, data: { title?: string; icon?: string; currentContent?: string }) {
+    spaceListMenus.value?.some((menu, index) => {
+      if (menu.id === id) {
+        menu = { ...menu, ...data }
+        spaceListMenus.value && (spaceListMenus.value[index] = { ...spaceListMenus.value[index], ...data })
+        return true
+      }
+      return false
+    })
+  }
+
   return {
     currentId,
     space,
@@ -141,5 +160,6 @@ export const useSpaceStore = defineStore('space', () => {
     queryPost,
     createNew,
     moveToRecycleBin,
+    updateSpaceMenuTitle,
   }
 })

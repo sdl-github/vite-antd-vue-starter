@@ -1084,6 +1084,7 @@ createSpace?: [{	name: string | Variable<any, string>},ValueTypes["Space"]],
 createSpaceMenu?: [{	input: ValueTypes["CreateSpaceMenuInput"] | Variable<any, string>},ValueTypes["SpaceMenu"]],
 moveSpaceMenuToRecycleBin?: [{	menuId: string | Variable<any, string>},boolean | `@${string}`],
 delSpaceMenu?: [{	menuId: string | Variable<any, string>},boolean | `@${string}`],
+updateSpaceMenuTitle?: [{	title: string | Variable<any, string>,	menuId: string | Variable<any, string>},ValueTypes["SpaceMenu"]],
 updatePostVersion?: [{	content: string | Variable<any, string>,	versionId: string | Variable<any, string>},ValueTypes["PostVersion"]],
 		__typename?: boolean | `@${string}`
 }>;
@@ -1478,6 +1479,7 @@ createSpace?: [{	name: string},ResolverInputTypes["Space"]],
 createSpaceMenu?: [{	input: ResolverInputTypes["CreateSpaceMenuInput"]},ResolverInputTypes["SpaceMenu"]],
 moveSpaceMenuToRecycleBin?: [{	menuId: string},boolean | `@${string}`],
 delSpaceMenu?: [{	menuId: string},boolean | `@${string}`],
+updateSpaceMenuTitle?: [{	title: string,	menuId: string},ResolverInputTypes["SpaceMenu"]],
 updatePostVersion?: [{	content: string,	versionId: string},ResolverInputTypes["PostVersion"]],
 		__typename?: boolean | `@${string}`
 }>;
@@ -1863,6 +1865,8 @@ export type ModelTypes = {
 	moveSpaceMenuToRecycleBin: boolean,
 	/** 删除spaceMenu */
 	delSpaceMenu: boolean,
+	/** 修改spaceMenu标题 */
+	updateSpaceMenuTitle: ModelTypes["SpaceMenu"],
 	/** 更新post Version */
 	updatePostVersion: ModelTypes["PostVersion"]
 };
@@ -2255,6 +2259,8 @@ export type GraphQLTypes = {
 	moveSpaceMenuToRecycleBin: boolean,
 	/** 删除spaceMenu */
 	delSpaceMenu: boolean,
+	/** 修改spaceMenu标题 */
+	updateSpaceMenuTitle: GraphQLTypes["SpaceMenu"],
 	/** 更新post Version */
 	updatePostVersion: GraphQLTypes["PostVersion"]
 };

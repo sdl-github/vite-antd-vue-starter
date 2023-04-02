@@ -32,4 +32,10 @@ export function moveSpaceMenuToRecycleBin(menuId: string) {
   })
 }
 
-export default { querySpaceMenu, createSpaceMenu, moveSpaceMenuToRecycleBin }
+export function updateSpaceMenuTitle(menuId: string, title: string) {
+  return mutation({
+    updateSpaceMenuTitle: [{ menuId, title }, { id: true }],
+  })
+}
+
+export default { querySpaceMenu, createSpaceMenu, moveSpaceMenuToRecycleBin, updateSpaceMenuTitle }
