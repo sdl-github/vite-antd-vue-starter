@@ -22,10 +22,10 @@ const handleLogin = () => {
       loading.value = true
       const { username, password } = v
       const flag = await userStore.loginByAccount(username, password)
+      loading.value = false
       if (!flag) {
         return
       }
-      loading.value = false
       await router.push('/')
       notification.success({
         message: '登录成功',
@@ -33,6 +33,7 @@ const handleLogin = () => {
       })
     })
     .catch((e: any) => {
+      loading.value = false
     })
 }
 </script>
