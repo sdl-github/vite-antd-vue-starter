@@ -77,8 +77,8 @@ export const useSpaceStore = defineStore('space', () => {
     spaceMenuApi.querySpaceMenu(space.value!.id).then((res) => {
       if (res.querySpaceMenu && res.querySpaceMenu.length) {
         const list = res.querySpaceMenu?.map((menu) => {
-          const { id: key } = menu
-          return { ...menu, key }
+          const { id, icon, ...others } = menu
+          return { ...others, id, key: id, menuIcon: icon }
         })
         spaceListMenus.value = list
       }
@@ -98,7 +98,7 @@ export const useSpaceStore = defineStore('space', () => {
       spaceId: space.value!.id,
       pId,
       title: '新文章',
-      icon: '',
+      icon: ':new:',
       iconType: '',
     }
     spaceMenuApi.createSpaceMenu(menu).then(() => {
@@ -135,7 +135,12 @@ export const useSpaceStore = defineStore('space', () => {
     debouncedFn(id, title)
   }
 
-  function updateSpaceMenu(id: string, data: { title?: string; icon?: string; currentContent?: string }) {
+  function updateSpaceMenuIcon(id: string, menuIcon: string) {
+    updateSpaceMenu(id, { menuIcon })
+    spaceMenuApi.updateSpaceMenu({ id, icon: menuIcon })
+  }
+
+  function updateSpaceMenu(id: string, data: { title?: string; menuIcon?: string; currentContent?: string }) {
     spaceListMenus.value?.some((menu, index) => {
       if (menu.id === id) {
         menu = { ...menu, ...data }
@@ -161,5 +166,6 @@ export const useSpaceStore = defineStore('space', () => {
     createNew,
     moveToRecycleBin,
     updateSpaceMenuTitle,
+    updateSpaceMenuIcon,
   }
 })

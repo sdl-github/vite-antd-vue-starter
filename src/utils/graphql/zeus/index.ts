@@ -1085,6 +1085,7 @@ createSpaceMenu?: [{	input: ValueTypes["CreateSpaceMenuInput"] | Variable<any, s
 moveSpaceMenuToRecycleBin?: [{	menuId: string | Variable<any, string>},boolean | `@${string}`],
 delSpaceMenu?: [{	menuId: string | Variable<any, string>},boolean | `@${string}`],
 updateSpaceMenuTitle?: [{	title: string | Variable<any, string>,	menuId: string | Variable<any, string>},ValueTypes["SpaceMenu"]],
+updateSpaceMenu?: [{	input: ValueTypes["UpdateSpaceMenuInput"] | Variable<any, string>},ValueTypes["SpaceMenu"]],
 updatePostVersion?: [{	content: string | Variable<any, string>,	versionId: string | Variable<any, string>},ValueTypes["PostVersion"]],
 		__typename?: boolean | `@${string}`
 }>;
@@ -1215,6 +1216,20 @@ updatePostVersion?: [{	content: string | Variable<any, string>,	versionId: strin
 	id: string | Variable<any, string>,
 	/** spaceId */
 	spaceId: string | Variable<any, string>,
+	/** 标题 */
+	title?: string | undefined | null | Variable<any, string>,
+	/** 图标 */
+	icon?: string | undefined | null | Variable<any, string>,
+	/** 图标类型 */
+	iconType?: string | undefined | null | Variable<any, string>,
+	/** id */
+	pId?: string | undefined | null | Variable<any, string>
+};
+	["UpdateSpaceMenuInput"]: {
+	/** id */
+	id: string | Variable<any, string>,
+	/** spaceId */
+	spaceId?: string | undefined | null | Variable<any, string>,
 	/** 标题 */
 	title?: string | undefined | null | Variable<any, string>,
 	/** 图标 */
@@ -1480,6 +1495,7 @@ createSpaceMenu?: [{	input: ResolverInputTypes["CreateSpaceMenuInput"]},Resolver
 moveSpaceMenuToRecycleBin?: [{	menuId: string},boolean | `@${string}`],
 delSpaceMenu?: [{	menuId: string},boolean | `@${string}`],
 updateSpaceMenuTitle?: [{	title: string,	menuId: string},ResolverInputTypes["SpaceMenu"]],
+updateSpaceMenu?: [{	input: ResolverInputTypes["UpdateSpaceMenuInput"]},ResolverInputTypes["SpaceMenu"]],
 updatePostVersion?: [{	content: string,	versionId: string},ResolverInputTypes["PostVersion"]],
 		__typename?: boolean | `@${string}`
 }>;
@@ -1610,6 +1626,20 @@ updatePostVersion?: [{	content: string,	versionId: string},ResolverInputTypes["P
 	id: string,
 	/** spaceId */
 	spaceId: string,
+	/** 标题 */
+	title?: string | undefined | null,
+	/** 图标 */
+	icon?: string | undefined | null,
+	/** 图标类型 */
+	iconType?: string | undefined | null,
+	/** id */
+	pId?: string | undefined | null
+};
+	["UpdateSpaceMenuInput"]: {
+	/** id */
+	id: string,
+	/** spaceId */
+	spaceId?: string | undefined | null,
 	/** 标题 */
 	title?: string | undefined | null,
 	/** 图标 */
@@ -1867,6 +1897,8 @@ export type ModelTypes = {
 	delSpaceMenu: boolean,
 	/** 修改spaceMenu标题 */
 	updateSpaceMenuTitle: ModelTypes["SpaceMenu"],
+	/** 修改spaceMenu */
+	updateSpaceMenu: ModelTypes["SpaceMenu"],
 	/** 更新post Version */
 	updatePostVersion: ModelTypes["PostVersion"]
 };
@@ -1990,6 +2022,20 @@ export type ModelTypes = {
 	id: string,
 	/** spaceId */
 	spaceId: string,
+	/** 标题 */
+	title?: string | undefined,
+	/** 图标 */
+	icon?: string | undefined,
+	/** 图标类型 */
+	iconType?: string | undefined,
+	/** id */
+	pId?: string | undefined
+};
+	["UpdateSpaceMenuInput"]: {
+	/** id */
+	id: string,
+	/** spaceId */
+	spaceId?: string | undefined,
 	/** 标题 */
 	title?: string | undefined,
 	/** 图标 */
@@ -2261,6 +2307,8 @@ export type GraphQLTypes = {
 	delSpaceMenu: boolean,
 	/** 修改spaceMenu标题 */
 	updateSpaceMenuTitle: GraphQLTypes["SpaceMenu"],
+	/** 修改spaceMenu */
+	updateSpaceMenu: GraphQLTypes["SpaceMenu"],
 	/** 更新post Version */
 	updatePostVersion: GraphQLTypes["PostVersion"]
 };
@@ -2399,6 +2447,20 @@ export type GraphQLTypes = {
 	iconType?: string | undefined,
 	/** id */
 	pId?: string | undefined
+};
+	["UpdateSpaceMenuInput"]: {
+		/** id */
+	id: string,
+	/** spaceId */
+	spaceId?: string | undefined,
+	/** 标题 */
+	title?: string | undefined,
+	/** 图标 */
+	icon?: string | undefined,
+	/** 图标类型 */
+	iconType?: string | undefined,
+	/** id */
+	pId?: string | undefined
 }
     }
 /** 用户性别枚举 */
@@ -2419,4 +2481,5 @@ type ZEUS_VARIABLES = {
 	["CreateUserInput"]: ValueTypes["CreateUserInput"];
 	["EditUserInput"]: ValueTypes["EditUserInput"];
 	["CreateSpaceMenuInput"]: ValueTypes["CreateSpaceMenuInput"];
+	["UpdateSpaceMenuInput"]: ValueTypes["UpdateSpaceMenuInput"];
 }

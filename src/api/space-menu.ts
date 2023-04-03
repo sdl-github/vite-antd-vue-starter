@@ -38,4 +38,20 @@ export function updateSpaceMenuTitle(menuId: string, title: string) {
   })
 }
 
-export default { querySpaceMenu, createSpaceMenu, moveSpaceMenuToRecycleBin, updateSpaceMenuTitle }
+export function updateSpaceMenu(input: ValueTypes['UpdateSpaceMenuInput']) {
+  return mutation({
+    updateSpaceMenu: [
+      { input }, {
+        id: true,
+      },
+    ],
+  })
+}
+
+export default {
+  querySpaceMenu,
+  createSpaceMenu,
+  moveSpaceMenuToRecycleBin,
+  updateSpaceMenuTitle,
+  updateSpaceMenu,
+}

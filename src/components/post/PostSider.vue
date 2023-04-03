@@ -1,11 +1,13 @@
 <script lang="tsx" setup>
 import { useTippy } from 'vue-tippy'
+import data from '@emoji-mart/data'
+import { Picker, init } from 'emoji-mart'
 import { useSpaceStore } from '@/stores/space'
 
 const router = useRouter()
 const spaceStore = useSpaceStore()
 const appStore = useAppStore()
-const { createNew, moveToRecycleBin, updateSpaceMenuTitle } = spaceStore
+const { createNew, moveToRecycleBin, updateSpaceMenuTitle, updateSpaceMenuIcon } = spaceStore
 const collapsed = computed(() => appStore.collapsed)
 const loading = computed(() => spaceStore.queryMenuLoading)
 const space = computed(() => spaceStore.space)
@@ -17,6 +19,10 @@ const expandedKeys = ref<string[]>([])
 const renameTitleRef = ref()
 const currentMenuId = ref<string>('')
 const isEditMenu = ref<boolean>(false)
+
+onMounted(() => {
+  init({ data })
+})
 
 onClickOutside(renameTitleRef, (event) => {
   isEditMenu.value = false
@@ -45,7 +51,14 @@ const { show, hide, setProps } = useTippy(() => document.body, {
   interactive: true,
   offset: [-10, 20],
 })
-
+const emojiTippy = useTippy(() => document.body, {
+  content: <div id="emoji-picker"></div>,
+  trigger: 'manual',
+  placement: 'auto-end',
+  arrow: false,
+  interactive: true,
+  offset: [10, -10],
+})
 async function handleMove() {
   await moveToRecycleBin(currentMenuId.value)
   hide()
@@ -105,6 +118,33 @@ function handleKeyDown(e: any, key: string) {
     isEditMenu.value = false
   }
 }
+
+function onEmojiSelect(e: any) {
+  updateSpaceMenuIcon(currentMenuId.value, e.shortcodes)
+  emojiTippy.hide()
+}
+
+function handleOpenEmojiPicker(event: MouseEvent, item: any) {
+  currentMenuId.value = item.id
+  emojiTippy.setProps({
+    getReferenceClientRect: () => ({
+      width: 0,
+      height: 0,
+      top: event.clientY,
+      bottom: event.clientY,
+      left: event.clientX,
+      right: event.clientX,
+    }),
+  })
+  emojiTippy.show()
+  nextTick(() => {
+    const dom = document.querySelector('#emoji-picker')
+    if (!dom?.hasChildNodes()) {
+      const pickerOptions = { onEmojiSelect, data }
+      dom?.appendChild(new Picker(pickerOptions) as unknown as Node)
+    }
+  })
+}
 </script>
 
 <template>
@@ -121,9 +161,13 @@ function handleKeyDown(e: any, key: string) {
         <a-tree
           v-model:expandedKeys="expandedKeys"
           block-node
+          show-icon
           :selected-keys="[currentId as string]"
           :tree-data="treeData"
         >
+          <template #icon="item">
+            <MenuIcon :icon="item.menuIcon" :type="item.iconType" @click="handleOpenEmojiPicker($event, item)" />
+          </template>
           <template #title="{ title, key }">
             <div
               class="group flex justify-between"
@@ -162,7 +206,6 @@ function handleKeyDown(e: any, key: string) {
 .ant-tree {
     background: transparent
 }
-
 .ant-tree-switcher {
     width: 24px!important;
     display: flex;
@@ -196,7 +239,6 @@ function handleKeyDown(e: any, key: string) {
     padding-right: 10px !important;
     overflow: hidden;
 }
-
 .ant-tree-treenode-selected {
     background-color: #ebebeb;
 }
@@ -209,8 +251,7 @@ function handleKeyDown(e: any, key: string) {
 }
 .ant-tree .ant-tree-node-content-wrapper.ant-tree-node-selected {
     background-color: transparent;
-    font-weight: 600;
-
+    font-weight: 550;
     .ant-tree-switcher-noop {
         background-color: #ebebeb;
     }
@@ -218,40 +259,5 @@ function handleKeyDown(e: any, key: string) {
 </style>
 
 <style lang="scss" scoped>
-// $menu-height: 38px;
-// $menu-hover-color: #f5f5f5;
-// $menu-selected-color: rgba(0, 0, 0, .06);
 
-// :deep(.ant-tree) {
-//   background: transparent
-// }
-// :deep(.ant-tree-treenode) {
-//   transition: all 0.3s;
-//   border-radius: 5px;
-//   margin: 0 10px;
-//   padding: 0;
-// }
-
-// :deep(.ant-tree-treenode:hover) {
-//   background: $menu-hover-color;
-// }
-
-// :deep(.ant-tree-switcher) {
-//   line-height: $menu-height;
-// }
-
-// :deep(.ant-tree .ant-tree-node-content-wrapper) {
-//   min-height: $menu-height;
-//   line-height: $menu-height;
-//   display: flex;
-//   align-items: center;
-// }
-
-// :deep(.ant-tree-treenode-selected) {
-//   background: $menu-selected-color;
-// }
-
-// :deep(.ant-tree-node-selected) {
-//   background-color: transparent !important;
-// }
 </style>

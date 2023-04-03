@@ -1,8 +1,18 @@
 <script setup lang="ts">
+import './theme/smart-blue.css'
 import 'bytemd/dist/index.css'
+import gemoji from '@bytemd/plugin-gemoji'
+import breaks from '@bytemd/plugin-breaks'
+import frontmatter from '@bytemd/plugin-frontmatter'
+import gfm from '@bytemd/plugin-gfm'
 import { Editor } from '@bytemd/vue-next'
 import { updatePostVersion } from '@/api/post'
-
+const plugins = [
+  gemoji(),
+  breaks(),
+  frontmatter(),
+  gfm(),
+]
 const spaceStore = useSpaceStore()
 const versionId = computed(() => spaceStore.post?.currentVersionId as string)
 
@@ -30,7 +40,7 @@ function handleChange(value: string) {
       <div v-if="loading" class="p-2">
         <a-skeleton active />
       </div>
-      <Editor v-else :value="content" class="h-full" @change="handleChange" />
+      <Editor v-else :plugins="plugins" :value="content" class="h-full" @change="handleChange" />
     </a-card>
   </div>
 </template>

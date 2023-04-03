@@ -88,6 +88,9 @@ export const AllTypesProps: Record<string,any> = {
 		updateSpaceMenuTitle:{
 
 		},
+		updateSpaceMenu:{
+			input:"UpdateSpaceMenuInput"
+		},
 		updatePostVersion:{
 
 		}
@@ -111,6 +114,9 @@ export const AllTypesProps: Record<string,any> = {
 		gender:"UserGenderEnum"
 	},
 	CreateSpaceMenuInput:{
+
+	},
+	UpdateSpaceMenuInput:{
 
 	}
 }
@@ -259,6 +265,7 @@ export const ReturnTypes: Record<string,any> = {
 		moveSpaceMenuToRecycleBin:"Boolean",
 		delSpaceMenu:"Boolean",
 		updateSpaceMenuTitle:"SpaceMenu",
+		updateSpaceMenu:"SpaceMenu",
 		updatePostVersion:"PostVersion"
 	},
 	LoginResult:{
