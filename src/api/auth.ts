@@ -1,4 +1,5 @@
 import { mutation, query } from '@/utils/graphql'
+import request from '@/utils/graphql/request'
 
 // 账号密码登录
 export function login(username: string, password: string) {
@@ -84,5 +85,13 @@ export function forceLogout(token: string) {
         msg: true,
       },
     ],
+  })
+}
+
+type OAuthType = 'github'
+export function queryOauthUrl(type: OAuthType) {
+  return request({
+    url: `/oauth/${type}`,
+    method: 'get',
   })
 }

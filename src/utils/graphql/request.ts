@@ -3,9 +3,8 @@ import axios from 'axios'
 import { getToken, removeToken } from '../auth'
 
 export const baseURL = import.meta.env.VITE_BASE_URL
-export const apiBaseURL = `${baseURL}/graphql`
 const request = axios.create({
-  baseURL: apiBaseURL,
+  baseURL,
   timeout: 50000,
 })
 

@@ -2,12 +2,14 @@
 import type { FormInstance } from 'ant-design-vue'
 import { notification } from 'ant-design-vue'
 import { useUserStore } from '@/stores/user'
+import { queryOauthUrl } from '@/api/auth'
 
 const rules = {
   username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
   password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
 }
 const loading = ref(false)
+const oauthLoading = ref(false)
 const formRef = ref<FormInstance>()
 const passwordRef = ref()
 const form = reactive({
@@ -16,7 +18,7 @@ const form = reactive({
 })
 const router = useRouter()
 const userStore = useUserStore()
-const handleLogin = () => {
+function handleLogin() {
   formRef.value?.validate()
     .then(async (v: any) => {
       loading.value = true
@@ -36,12 +38,19 @@ const handleLogin = () => {
       loading.value = false
     })
 }
+
+async function handleOauthLogin() {
+  oauthLoading.value = true
+  const url = await queryOauthUrl('github')
+  window.location.href = url
+  // oauthLoading.value = false
+}
 </script>
 
 <template>
   <div class="login-warp flex z-10 h-[100vh] fixed w-full overflow-hidden bg-cover">
     <div class="flex-1 flex items-center justify-center p-[20px]">
-      <div class="w-[400px] bg-white p-10 rounded">
+      <div class="w-[300px] bg-white p-10 rounded">
         <div class="h-[50px] text-xl text-bold">
           登录
         </div>
@@ -56,8 +65,14 @@ const handleLogin = () => {
             />
           </a-form-item>
           <a-form-item>
-            <a-button type="primary" class="login-btn" :loading="loading" @click.stop="handleLogin">
+            <a-button type="primary" class="w-full" :loading="loading" @click.stop="handleLogin">
               登录
+            </a-button>
+            <a-button class="w-full mt-2 flex items-center justify-center" :loading="oauthLoading" @click.stop="handleOauthLogin">
+              <div class="i-ri-github-fill text-20px" />
+              <div class="ml-2">
+                Github 登录
+              </div>
             </a-button>
           </a-form-item>
         </a-form>
@@ -68,14 +83,11 @@ const handleLogin = () => {
 
 <style lang="scss" scoped>
 .login-warp  {
-  background: linear-gradient(to bottom, #4392f1, #8f16b7);
+  background: url('https://dogefs.s3.ladydaily.com/~/source/unsplash/photo-1673124817681-c236cd92ba67?ixid=MnwyNjY4NDZ8MHwxfHRvcGljfHxxUFlzRHp2Sk9ZY3x8fHx8Mnx8MTY4MDM5MTI0MQ&ixlib=rb-4.0.3&w=2560&h=1440&fmt=webp');
+  min-height: 100vh;
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.login-btn {
-  width: 100%;
 }
 </style>

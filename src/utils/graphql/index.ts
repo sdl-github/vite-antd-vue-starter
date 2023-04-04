@@ -3,6 +3,7 @@ import request from './request'
 
 const thunder = Thunder(async (query) => {
   return request({
+    url: '/graphql',
     method: 'POST',
     data: { query },
   })
