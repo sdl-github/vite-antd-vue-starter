@@ -1,8 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 @import './reset.scss';
-// @import './post.scss';
 
 * {
     font-family: Microsoft YaHei UI, Microsoft YaHei, PingFang SC, Helvetica Neue, Helvetica, Nimbus Sans L, Arial, Liberation Sans, Hiragino Sans GB, Wenquanyi Micro Hei, WenQuanYi Zen Hei, ST Heiti, WenQuanYi Zen Hei Sharp, sans-serif !important
@@ -22,13 +18,3 @@
     background: #D3D1CB;
 }
 
-.tippy-box {
-    background-color: white !important;
-    border-radius: 4px !important;
-    border-width: 1px !important;
-    box-shadow: 0 12px 20px rgba(0, 0, 0, .16)
-}
-
-.tippy-content {
-    padding: 0 !important;
-}

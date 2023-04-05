@@ -1,8 +1,8 @@
 <script lang='ts' setup>
 import { computed, reactive, watchEffect } from 'vue'
 import { useRoute } from 'vue-router'
-import Logo from '@/components/layout/Logo.vue'
-import MenuItem from '@/components/layout/MenuItem.vue'
+import Logo from '@/components/layout/dashboard/Logo.vue'
+import MenuItem from '@/components/layout/dashboard/MenuItem.vue'
 import { useAppStore } from '@/stores/app'
 import { useMenu } from '@/composables/menu'
 

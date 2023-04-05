@@ -45,7 +45,8 @@ const menu = (
 
 const { show, hide, setProps } = useTippy(() => document.body, {
   content: menu,
-  placement: 'right-start',
+  theme: 'white',
+  appendTo: 'parent',
   trigger: 'manual',
   arrow: false,
   interactive: true,
@@ -203,6 +204,16 @@ function handleOpenEmojiPicker(event: MouseEvent, item: any) {
 </template>
 
 <style lang="scss">
+.tippy-box[data-theme~='white'] {
+      background-color: white !important;
+      border-radius: 4px !important;
+      border-width: 1px !important;
+      box-shadow: 0 12px 20px rgba(0, 0, 0, .16);
+  .tippy-content {
+      padding: 0 !important;
+  }
+}
+
 .ant-tree {
     background: transparent
 }
