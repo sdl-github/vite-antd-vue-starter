@@ -13,9 +13,5 @@
 </template>
 
 <style scoped lang="scss">
-.layout {
-  width: 100%;
-  layout-main {
-  }
-}
+
 </style>

@@ -54,6 +54,7 @@ const { show, hide, setProps } = useTippy(() => document.body, {
 })
 const emojiTippy = useTippy(() => document.body, {
   content: <div id="emoji-picker"></div>,
+  theme: 'white',
   trigger: 'manual',
   placement: 'auto-end',
   arrow: false,
@@ -146,6 +147,9 @@ function handleOpenEmojiPicker(event: MouseEvent, item: any) {
     }
   })
 }
+function goHome() {
+  router.push('/post')
+}
 </script>
 
 <template>
@@ -154,6 +158,9 @@ function handleOpenEmojiPicker(event: MouseEvent, item: any) {
       <a-skeleton active />
     </div>
     <div v-else class="px-2">
+      <a-button class="w-full mt-2" type="primary" @click="goHome">
+        首页
+      </a-button>
       <div class="h-60px flex items-center justify-between">
         <div>{{ space?.name }}</div>
         <div class="i-ri-add-circle-line cursor-pointer" @click="createNew()" />

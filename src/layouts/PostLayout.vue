@@ -3,9 +3,15 @@
 </script>
 
 <template>
-  <PostHeader />
-  <main>
-    <RouterView />
-  </main>
-  <PostFooter />
+    <a-layout>
+        <PostHeader/>
+        <a-layout>
+            <RouterView/>
+        </a-layout>
+        <PostFooter/>
+    </a-layout>
 </template>
+
+<style lang="scss">
+
+</style>

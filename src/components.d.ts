@@ -30,5 +30,6 @@ declare module '@vue/runtime-core' {
     RouterView: typeof import('vue-router')['RouterView']
     SideMenu: typeof import('./components/layout/dashboard/SideMenu.vue')['default']
     Skeleton: typeof import('./components/Skeleton.vue')['default']
+    TinymceEditor: typeof import('./components/tinymce-editor/index.vue')['default']
   }
 }

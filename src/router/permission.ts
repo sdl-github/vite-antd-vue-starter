@@ -4,7 +4,7 @@ import { useUserStore } from '@/stores/user'
 import { getToken } from '@/utils/auth'
 import 'nprogress/nprogress.css'
 
-const whiteList = ['/login', '/oauth', '/bind', '/register']
+const whiteList = ['/login', '/oauth', '/bind', '/post']
 router.beforeEach(async (to, from, next) => {
   NProgress.start()
   if (getToken()) {
