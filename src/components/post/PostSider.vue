@@ -2,6 +2,7 @@
 import { useTippy } from 'vue-tippy'
 import data from '@emoji-mart/data'
 import { Picker, init } from 'emoji-mart'
+import i18n from '@emoji-mart/data/i18n/zh.json'
 import { useSpaceStore } from '@/stores/space'
 
 const router = useRouter()
@@ -142,7 +143,7 @@ function handleOpenEmojiPicker(event: MouseEvent, item: any) {
   nextTick(() => {
     const dom = document.querySelector('#emoji-picker')
     if (!dom?.hasChildNodes()) {
-      const pickerOptions = { onEmojiSelect, data }
+      const pickerOptions = { onEmojiSelect, data, i18n }
       dom?.appendChild(new Picker(pickerOptions) as unknown as Node)
     }
   })
@@ -158,8 +159,11 @@ function goHome() {
       <a-skeleton active />
     </div>
     <div v-else class="px-2">
-      <a-button class="w-full mt-2" type="primary" @click="goHome">
-        首页
+      <a-button class="w-full mt-2 flex items-center justify-center" type="primary" @click="goHome">
+        <div class="i-ri-home-smile-2-line" />
+        <div class="ml-2">
+          首页
+        </div>
       </a-button>
       <div class="h-60px flex items-center justify-between">
         <div>{{ space?.name }}</div>

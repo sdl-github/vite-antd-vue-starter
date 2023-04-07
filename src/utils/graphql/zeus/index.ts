@@ -866,6 +866,8 @@ queryUserPage?: [{	/** 用户id */
 	querySpace?:ValueTypes["Space"],
 querySpaceMenu?: [{	spaceId: string | Variable<any, string>},ValueTypes["SpaceMenu"]],
 queryPost?: [{	menuId: string | Variable<any, string>},ValueTypes["Post"]],
+queryTagPage?: [{	pageNo?: number | undefined | null | Variable<any, string>,	pageSize?: number | undefined | null | Variable<any, string>},ValueTypes["TagPageResult"]],
+queryTagList?: [{	name?: string | undefined | null | Variable<any, string>},ValueTypes["Tag"]],
 		__typename?: boolean | `@${string}`
 }>;
 	["LoginUser"]: AliasType<{
@@ -1047,6 +1049,8 @@ queryPost?: [{	menuId: string | Variable<any, string>},ValueTypes["Post"]],
 	lock?:boolean | `@${string}`,
 	/** 解锁密码 */
 	lockPwd?:boolean | `@${string}`,
+	/** 是否发布 */
+	published?:boolean | `@${string}`,
 	/** 版本 */
 	postVersions?:ValueTypes["PostVersion"],
 	/** 当前版本内容 */
@@ -1063,6 +1067,26 @@ queryPost?: [{	menuId: string | Variable<any, string>},ValueTypes["Post"]],
 	content?:boolean | `@${string}`,
 	/** 版本 */
 	version?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
+	["TagPageResult"]: AliasType<{
+	data?:ValueTypes["Tag"],
+	totalCount?:boolean | `@${string}`,
+	hasNextPage?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
+	["Tag"]: AliasType<{
+	id?:boolean | `@${string}`,
+	/** 创建时间 */
+	createdAt?:boolean | `@${string}`,
+	/** 更新时间 */
+	updatedAt?:boolean | `@${string}`,
+	/** 标题 */
+	name?:boolean | `@${string}`,
+	/** 图标 */
+	icon?:boolean | `@${string}`,
+	/** 排序 */
+	order?:boolean | `@${string}`,
 		__typename?: boolean | `@${string}`
 }>;
 	["Mutation"]: AliasType<{
@@ -1087,6 +1111,9 @@ delSpaceMenu?: [{	menuId: string | Variable<any, string>},boolean | `@${string}`
 updateSpaceMenuTitle?: [{	title: string | Variable<any, string>,	menuId: string | Variable<any, string>},ValueTypes["SpaceMenu"]],
 updateSpaceMenu?: [{	input: ValueTypes["UpdateSpaceMenuInput"] | Variable<any, string>},ValueTypes["SpaceMenu"]],
 updatePostVersion?: [{	content: string | Variable<any, string>,	versionId: string | Variable<any, string>},ValueTypes["PostVersion"]],
+publishPost?: [{	input: ValueTypes["PublishPostInput"] | Variable<any, string>},ValueTypes["Post"]],
+createTag?: [{	input: ValueTypes["CreateTagInput"] | Variable<any, string>},ValueTypes["Tag"]],
+updateTag?: [{	input: ValueTypes["UpdateTagInput"] | Variable<any, string>},ValueTypes["Tag"]],
 		__typename?: boolean | `@${string}`
 }>;
 	["LoginResult"]: AliasType<{
@@ -1238,6 +1265,28 @@ updatePostVersion?: [{	content: string | Variable<any, string>,	versionId: strin
 	iconType?: string | undefined | null | Variable<any, string>,
 	/** id */
 	pId?: string | undefined | null | Variable<any, string>
+};
+	["PublishPostInput"]: {
+	/** id */
+	id: string | Variable<any, string>,
+	/** description */
+	description?: string | undefined | null | Variable<any, string>,
+	/** id */
+	tagIds?: Array<string | undefined | null> | undefined | null | Variable<any, string>
+};
+	["CreateTagInput"]: {
+	/** name */
+	name: string | Variable<any, string>,
+	/** 图标 */
+	icon?: string | undefined | null | Variable<any, string>
+};
+	["UpdateTagInput"]: {
+	/** name */
+	id: string | Variable<any, string>,
+	/** name */
+	name?: string | undefined | null | Variable<any, string>,
+	/** 图标 */
+	icon?: string | undefined | null | Variable<any, string>
 }
   }
 
@@ -1276,6 +1325,8 @@ queryUserPage?: [{	/** 用户id */
 	querySpace?:ResolverInputTypes["Space"],
 querySpaceMenu?: [{	spaceId: string},ResolverInputTypes["SpaceMenu"]],
 queryPost?: [{	menuId: string},ResolverInputTypes["Post"]],
+queryTagPage?: [{	pageNo?: number | undefined | null,	pageSize?: number | undefined | null},ResolverInputTypes["TagPageResult"]],
+queryTagList?: [{	name?: string | undefined | null},ResolverInputTypes["Tag"]],
 		__typename?: boolean | `@${string}`
 }>;
 	["LoginUser"]: AliasType<{
@@ -1457,6 +1508,8 @@ queryPost?: [{	menuId: string},ResolverInputTypes["Post"]],
 	lock?:boolean | `@${string}`,
 	/** 解锁密码 */
 	lockPwd?:boolean | `@${string}`,
+	/** 是否发布 */
+	published?:boolean | `@${string}`,
 	/** 版本 */
 	postVersions?:ResolverInputTypes["PostVersion"],
 	/** 当前版本内容 */
@@ -1473,6 +1526,26 @@ queryPost?: [{	menuId: string},ResolverInputTypes["Post"]],
 	content?:boolean | `@${string}`,
 	/** 版本 */
 	version?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
+	["TagPageResult"]: AliasType<{
+	data?:ResolverInputTypes["Tag"],
+	totalCount?:boolean | `@${string}`,
+	hasNextPage?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
+	["Tag"]: AliasType<{
+	id?:boolean | `@${string}`,
+	/** 创建时间 */
+	createdAt?:boolean | `@${string}`,
+	/** 更新时间 */
+	updatedAt?:boolean | `@${string}`,
+	/** 标题 */
+	name?:boolean | `@${string}`,
+	/** 图标 */
+	icon?:boolean | `@${string}`,
+	/** 排序 */
+	order?:boolean | `@${string}`,
 		__typename?: boolean | `@${string}`
 }>;
 	["Mutation"]: AliasType<{
@@ -1497,6 +1570,9 @@ delSpaceMenu?: [{	menuId: string},boolean | `@${string}`],
 updateSpaceMenuTitle?: [{	title: string,	menuId: string},ResolverInputTypes["SpaceMenu"]],
 updateSpaceMenu?: [{	input: ResolverInputTypes["UpdateSpaceMenuInput"]},ResolverInputTypes["SpaceMenu"]],
 updatePostVersion?: [{	content: string,	versionId: string},ResolverInputTypes["PostVersion"]],
+publishPost?: [{	input: ResolverInputTypes["PublishPostInput"]},ResolverInputTypes["Post"]],
+createTag?: [{	input: ResolverInputTypes["CreateTagInput"]},ResolverInputTypes["Tag"]],
+updateTag?: [{	input: ResolverInputTypes["UpdateTagInput"]},ResolverInputTypes["Tag"]],
 		__typename?: boolean | `@${string}`
 }>;
 	["LoginResult"]: AliasType<{
@@ -1648,6 +1724,28 @@ updatePostVersion?: [{	content: string,	versionId: string},ResolverInputTypes["P
 	iconType?: string | undefined | null,
 	/** id */
 	pId?: string | undefined | null
+};
+	["PublishPostInput"]: {
+	/** id */
+	id: string,
+	/** description */
+	description?: string | undefined | null,
+	/** id */
+	tagIds?: Array<string | undefined | null> | undefined | null
+};
+	["CreateTagInput"]: {
+	/** name */
+	name: string,
+	/** 图标 */
+	icon?: string | undefined | null
+};
+	["UpdateTagInput"]: {
+	/** name */
+	id: string,
+	/** name */
+	name?: string | undefined | null,
+	/** 图标 */
+	icon?: string | undefined | null
 }
   }
 
@@ -1673,7 +1771,11 @@ export type ModelTypes = {
 	/** 获取spaceMenu */
 	querySpaceMenu: Array<ModelTypes["SpaceMenu"]>,
 	/** 获取post */
-	queryPost?: ModelTypes["Post"] | undefined
+	queryPost?: ModelTypes["Post"] | undefined,
+	/** 获取tag page */
+	queryTagPage?: ModelTypes["TagPageResult"] | undefined,
+	/** 获取tag list */
+	queryTagList?: Array<ModelTypes["Tag"] | undefined> | undefined
 };
 	["LoginUser"]: {
 		id: string,
@@ -1844,6 +1946,8 @@ export type ModelTypes = {
 	lock: boolean,
 	/** 解锁密码 */
 	lockPwd?: string | undefined,
+	/** 是否发布 */
+	published: string,
 	/** 版本 */
 	postVersions?: Array<ModelTypes["PostVersion"] | undefined> | undefined,
 	/** 当前版本内容 */
@@ -1859,6 +1963,24 @@ export type ModelTypes = {
 	content?: string | undefined,
 	/** 版本 */
 	version: string
+};
+	["TagPageResult"]: {
+		data?: Array<ModelTypes["Tag"] | undefined> | undefined,
+	totalCount: number,
+	hasNextPage: boolean
+};
+	["Tag"]: {
+		id: string,
+	/** 创建时间 */
+	createdAt?: ModelTypes["DateTime"] | undefined,
+	/** 更新时间 */
+	updatedAt?: ModelTypes["DateTime"] | undefined,
+	/** 标题 */
+	name: string,
+	/** 图标 */
+	icon?: string | undefined,
+	/** 排序 */
+	order: number
 };
 	["Mutation"]: {
 		login: ModelTypes["LoginResult"],
@@ -1900,7 +2022,13 @@ export type ModelTypes = {
 	/** 修改spaceMenu */
 	updateSpaceMenu: ModelTypes["SpaceMenu"],
 	/** 更新post Version */
-	updatePostVersion: ModelTypes["PostVersion"]
+	updatePostVersion: ModelTypes["PostVersion"],
+	/** 发布post */
+	publishPost: ModelTypes["Post"],
+	/** 创建tag */
+	createTag: ModelTypes["Tag"],
+	/** 修改tag */
+	updateTag: ModelTypes["Tag"]
 };
 	["LoginResult"]: {
 		/** accessToken */
@@ -2044,6 +2172,28 @@ export type ModelTypes = {
 	iconType?: string | undefined,
 	/** id */
 	pId?: string | undefined
+};
+	["PublishPostInput"]: {
+	/** id */
+	id: string,
+	/** description */
+	description?: string | undefined,
+	/** id */
+	tagIds?: Array<string | undefined> | undefined
+};
+	["CreateTagInput"]: {
+	/** name */
+	name: string,
+	/** 图标 */
+	icon?: string | undefined
+};
+	["UpdateTagInput"]: {
+	/** name */
+	id: string,
+	/** name */
+	name?: string | undefined,
+	/** 图标 */
+	icon?: string | undefined
 }
     }
 
@@ -2070,7 +2220,11 @@ export type GraphQLTypes = {
 	/** 获取spaceMenu */
 	querySpaceMenu: Array<GraphQLTypes["SpaceMenu"]>,
 	/** 获取post */
-	queryPost?: GraphQLTypes["Post"] | undefined
+	queryPost?: GraphQLTypes["Post"] | undefined,
+	/** 获取tag page */
+	queryTagPage?: GraphQLTypes["TagPageResult"] | undefined,
+	/** 获取tag list */
+	queryTagList?: Array<GraphQLTypes["Tag"] | undefined> | undefined
 };
 	["LoginUser"]: {
 	__typename: "LoginUser",
@@ -2252,6 +2406,8 @@ export type GraphQLTypes = {
 	lock: boolean,
 	/** 解锁密码 */
 	lockPwd?: string | undefined,
+	/** 是否发布 */
+	published: string,
 	/** 版本 */
 	postVersions?: Array<GraphQLTypes["PostVersion"] | undefined> | undefined,
 	/** 当前版本内容 */
@@ -2268,6 +2424,26 @@ export type GraphQLTypes = {
 	content?: string | undefined,
 	/** 版本 */
 	version: string
+};
+	["TagPageResult"]: {
+	__typename: "TagPageResult",
+	data?: Array<GraphQLTypes["Tag"] | undefined> | undefined,
+	totalCount: number,
+	hasNextPage: boolean
+};
+	["Tag"]: {
+	__typename: "Tag",
+	id: string,
+	/** 创建时间 */
+	createdAt?: GraphQLTypes["DateTime"] | undefined,
+	/** 更新时间 */
+	updatedAt?: GraphQLTypes["DateTime"] | undefined,
+	/** 标题 */
+	name: string,
+	/** 图标 */
+	icon?: string | undefined,
+	/** 排序 */
+	order: number
 };
 	["Mutation"]: {
 	__typename: "Mutation",
@@ -2310,7 +2486,13 @@ export type GraphQLTypes = {
 	/** 修改spaceMenu */
 	updateSpaceMenu: GraphQLTypes["SpaceMenu"],
 	/** 更新post Version */
-	updatePostVersion: GraphQLTypes["PostVersion"]
+	updatePostVersion: GraphQLTypes["PostVersion"],
+	/** 发布post */
+	publishPost: GraphQLTypes["Post"],
+	/** 创建tag */
+	createTag: GraphQLTypes["Tag"],
+	/** 修改tag */
+	updateTag: GraphQLTypes["Tag"]
 };
 	["LoginResult"]: {
 	__typename: "LoginResult",
@@ -2461,6 +2643,28 @@ export type GraphQLTypes = {
 	iconType?: string | undefined,
 	/** id */
 	pId?: string | undefined
+};
+	["PublishPostInput"]: {
+		/** id */
+	id: string,
+	/** description */
+	description?: string | undefined,
+	/** id */
+	tagIds?: Array<string | undefined> | undefined
+};
+	["CreateTagInput"]: {
+		/** name */
+	name: string,
+	/** 图标 */
+	icon?: string | undefined
+};
+	["UpdateTagInput"]: {
+		/** name */
+	id: string,
+	/** name */
+	name?: string | undefined,
+	/** 图标 */
+	icon?: string | undefined
 }
     }
 /** 用户性别枚举 */
@@ -2482,4 +2686,7 @@ type ZEUS_VARIABLES = {
 	["EditUserInput"]: ValueTypes["EditUserInput"];
 	["CreateSpaceMenuInput"]: ValueTypes["CreateSpaceMenuInput"];
 	["UpdateSpaceMenuInput"]: ValueTypes["UpdateSpaceMenuInput"];
+	["PublishPostInput"]: ValueTypes["PublishPostInput"];
+	["CreateTagInput"]: ValueTypes["CreateTagInput"];
+	["UpdateTagInput"]: ValueTypes["UpdateTagInput"];
 }

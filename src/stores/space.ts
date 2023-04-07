@@ -42,6 +42,10 @@ export const useSpaceStore = defineStore('space', () => {
     immediate: true,
   })
 
+  function refreshPost() {
+    queryPost(currentId.value)
+  }
+
   function queryPost(menuId: string) {
     if (!menuId) {
       return
@@ -163,6 +167,7 @@ export const useSpaceStore = defineStore('space', () => {
     querySpace,
     querySpaceMenu,
     queryPost,
+    refreshPost,
     createNew,
     moveToRecycleBin,
     updateSpaceMenuTitle,

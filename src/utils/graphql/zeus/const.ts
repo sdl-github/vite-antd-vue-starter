@@ -28,6 +28,12 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		queryPost:{
 
+		},
+		queryTagPage:{
+
+		},
+		queryTagList:{
+
 		}
 	},
 	DateTime: `scalar.DateTime` as const,
@@ -93,6 +99,15 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		updatePostVersion:{
 
+		},
+		publishPost:{
+			input:"PublishPostInput"
+		},
+		createTag:{
+			input:"CreateTagInput"
+		},
+		updateTag:{
+			input:"UpdateTagInput"
 		}
 	},
 	CreateMenuInput:{
@@ -118,6 +133,15 @@ export const AllTypesProps: Record<string,any> = {
 	},
 	UpdateSpaceMenuInput:{
 
+	},
+	PublishPostInput:{
+
+	},
+	CreateTagInput:{
+
+	},
+	UpdateTagInput:{
+
 	}
 }
 
@@ -133,7 +157,9 @@ export const ReturnTypes: Record<string,any> = {
 		queryUserPage:"UserPageResult",
 		querySpace:"Space",
 		querySpaceMenu:"SpaceMenu",
-		queryPost:"Post"
+		queryPost:"Post",
+		queryTagPage:"TagPageResult",
+		queryTagList:"Tag"
 	},
 	LoginUser:{
 		id:"ID",
@@ -235,6 +261,7 @@ export const ReturnTypes: Record<string,any> = {
 		currentVersionId:"String",
 		lock:"Boolean",
 		lockPwd:"String",
+		published:"String",
 		postVersions:"PostVersion",
 		currentContent:"String"
 	},
@@ -244,6 +271,19 @@ export const ReturnTypes: Record<string,any> = {
 		updatedAt:"DateTime",
 		content:"String",
 		version:"String"
+	},
+	TagPageResult:{
+		data:"Tag",
+		totalCount:"Float",
+		hasNextPage:"Boolean"
+	},
+	Tag:{
+		id:"ID",
+		createdAt:"DateTime",
+		updatedAt:"DateTime",
+		name:"String",
+		icon:"String",
+		order:"Float"
 	},
 	Mutation:{
 		login:"LoginResult",
@@ -266,7 +306,10 @@ export const ReturnTypes: Record<string,any> = {
 		delSpaceMenu:"Boolean",
 		updateSpaceMenuTitle:"SpaceMenu",
 		updateSpaceMenu:"SpaceMenu",
-		updatePostVersion:"PostVersion"
+		updatePostVersion:"PostVersion",
+		publishPost:"Post",
+		createTag:"Tag",
+		updateTag:"Tag"
 	},
 	LoginResult:{
 		accessToken:"String"

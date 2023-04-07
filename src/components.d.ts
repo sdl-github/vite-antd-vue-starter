@@ -11,8 +11,6 @@ declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     Breadcrumb: typeof import('./components/layout/dashboard/Breadcrumb.vue')['default']
     Content: typeof import('./components/layout/dashboard/Content.vue')['default']
-    EmojiPicker: typeof import('./components/EmojiPicker/index.vue')['default']
-    FilePond: typeof import('./components/FilePond/index.vue')['default']
     FilePone: typeof import('./components/file-pone/index.vue')['default']
     Header: typeof import('./components/layout/dashboard/Header.vue')['default']
     HelloWorld: typeof import('./components/HelloWorld.vue')['default']
@@ -26,6 +24,8 @@ declare module '@vue/runtime-core' {
     PostImage: typeof import('./components/post/PostImage.vue')['default']
     PostItem: typeof import('./components/post/PostItem.vue')['default']
     PostSider: typeof import('./components/post/PostSider.vue')['default']
+    PublishDrawer: typeof import('./components/post/PublishDrawer.vue')['default']
+    PublishModal: typeof import('./components/post/PublishDrawer.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SideMenu: typeof import('./components/layout/dashboard/SideMenu.vue')['default']

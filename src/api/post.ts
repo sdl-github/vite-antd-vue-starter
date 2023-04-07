@@ -1,4 +1,5 @@
 import { mutation, query } from '@/utils/graphql'
+import type { ValueTypes } from '@/utils/graphql/zeus'
 
 export function queryPostByMenuId(menuId: string) {
   return query({
@@ -8,6 +9,7 @@ export function queryPostByMenuId(menuId: string) {
         id: true,
         title: true,
         lock: true,
+        published: true,
         currentVersionId: true,
         currentContent: true,
         createdAt: true,
@@ -21,6 +23,16 @@ export function updatePostVersion(versionId: string, content: string) {
     updatePostVersion: [
       { versionId, content },
       { id: true },
+    ],
+  })
+}
+
+export function publishPost(input: ValueTypes['PublishPostInput']) {
+  return mutation({
+    publishPost: [
+      { input }, {
+        id: true,
+      },
     ],
   })
 }

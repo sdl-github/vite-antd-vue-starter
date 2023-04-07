@@ -40,12 +40,12 @@ function handleChange(value: string) {
       <div v-if="loading" class="p-2">
         <a-skeleton active />
       </div>
-        <template v-else>
-            <Editor v-if="versionId" :plugins="plugins" :value="content" class="h-full" @change="handleChange" />
-            <div v-else class="flex justify-center pt-[20vh] h-full h-[100vh]">
-                <div class=""></div>
-            </div>
-        </template>
+      <template v-else>
+        <Editor v-if="versionId" :plugins="plugins" :value="content" class="h-full" @change="handleChange" />
+        <div v-else class="flex justify-center pt-[20vh] h-full h-[100vh]">
+          <div class="" />
+        </div>
+      </template>
     </a-card>
   </div>
 </template>
