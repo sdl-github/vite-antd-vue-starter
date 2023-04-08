@@ -26,6 +26,9 @@ export const AllTypesProps: Record<string,any> = {
 		querySpaceMenu:{
 
 		},
+		queryPostPage:{
+
+		},
 		queryPost:{
 
 		},
@@ -157,6 +160,7 @@ export const ReturnTypes: Record<string,any> = {
 		queryUserPage:"UserPageResult",
 		querySpace:"Space",
 		querySpaceMenu:"SpaceMenu",
+		queryPostPage:"PostPageResult",
 		queryPost:"Post",
 		queryTagPage:"TagPageResult",
 		queryTagList:"Tag"
@@ -259,11 +263,14 @@ export const ReturnTypes: Record<string,any> = {
 		updatedAt:"DateTime",
 		title:"String",
 		currentVersionId:"String",
+		description:"String",
 		lock:"Boolean",
-		lockPwd:"String",
-		published:"String",
+		lockPwd:"Boolean",
+		published:"Boolean",
 		postVersions:"PostVersion",
-		currentContent:"String"
+		currentContent:"String",
+		tags:"Tag",
+		user:"User"
 	},
 	PostVersion:{
 		id:"ID",
@@ -272,11 +279,6 @@ export const ReturnTypes: Record<string,any> = {
 		content:"String",
 		version:"String"
 	},
-	TagPageResult:{
-		data:"Tag",
-		totalCount:"Float",
-		hasNextPage:"Boolean"
-	},
 	Tag:{
 		id:"ID",
 		createdAt:"DateTime",
@@ -284,6 +286,16 @@ export const ReturnTypes: Record<string,any> = {
 		name:"String",
 		icon:"String",
 		order:"Float"
+	},
+	PostPageResult:{
+		data:"Post",
+		totalCount:"Float",
+		hasNextPage:"Boolean"
+	},
+	TagPageResult:{
+		data:"Tag",
+		totalCount:"Float",
+		hasNextPage:"Boolean"
 	},
 	Mutation:{
 		login:"LoginResult",

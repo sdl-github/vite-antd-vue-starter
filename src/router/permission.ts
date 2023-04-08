@@ -4,7 +4,7 @@ import { useUserStore } from '@/stores/user'
 import { getToken } from '@/utils/auth'
 import 'nprogress/nprogress.css'
 
-const whiteList = ['/login', '/oauth', '/bind', '/post']
+const whiteList = ['/login', '/oauth', '/bind', '/post', 'post-id']
 router.beforeEach(async (to, from, next) => {
   NProgress.start()
   if (getToken()) {
@@ -19,7 +19,7 @@ router.beforeEach(async (to, from, next) => {
   }
   else {
     // 没有token
-    if (whiteList.includes(to.path)) {
+    if (whiteList.includes(to.path) || whiteList.includes(to.name as string)) {
       // 在免登录白名单，直接进入
       next()
     }

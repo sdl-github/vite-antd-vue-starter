@@ -22,16 +22,20 @@ function goEditor() {
 function goLogin() {
   router.push('/login')
 }
+
+function goHome() {
+  router.push('/post')
+}
 </script>
 
 <template>
   <div class="layout-header">
     <div class="min-w-768px max-w-1440px m-auto flex items-center justify-between">
-      <div class="text-xl font-bold gradient-text">
+      <div @click="goHome" class="text-xl font-bold gradient-text cursor-pointer">
         嗷呜
       </div>
       <div class="cursor-pointer flex items-center">
-        <template v-if="user">
+        <template v-if="user?.id">
           <a-dropdown>
             <div>
               <a-avatar style="background-color: #1890ff" :src="user?.avatar">

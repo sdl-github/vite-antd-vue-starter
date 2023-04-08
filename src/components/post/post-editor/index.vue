@@ -6,12 +6,15 @@ import breaks from '@bytemd/plugin-breaks'
 import frontmatter from '@bytemd/plugin-frontmatter'
 import gfm from '@bytemd/plugin-gfm'
 import { Editor } from '@bytemd/vue-next'
+import copyCode from './plugins/copy-code/index'
 import { updatePostVersion } from '@/api/post'
+
 const plugins = [
   gemoji(),
   breaks(),
   frontmatter(),
   gfm(),
+  copyCode(),
 ]
 const spaceStore = useSpaceStore()
 const versionId = computed(() => spaceStore.post?.currentVersionId as string)

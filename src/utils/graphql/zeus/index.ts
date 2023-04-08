@@ -865,7 +865,8 @@ queryUserPage?: [{	/** 用户id */
 	/** 获取space */
 	querySpace?:ValueTypes["Space"],
 querySpaceMenu?: [{	spaceId: string | Variable<any, string>},ValueTypes["SpaceMenu"]],
-queryPost?: [{	menuId: string | Variable<any, string>},ValueTypes["Post"]],
+queryPostPage?: [{	pageNo?: number | undefined | null | Variable<any, string>,	pageSize?: number | undefined | null | Variable<any, string>},ValueTypes["PostPageResult"]],
+queryPost?: [{	menuId?: string | undefined | null | Variable<any, string>,	postId?: string | undefined | null | Variable<any, string>},ValueTypes["Post"]],
 queryTagPage?: [{	pageNo?: number | undefined | null | Variable<any, string>,	pageSize?: number | undefined | null | Variable<any, string>},ValueTypes["TagPageResult"]],
 queryTagList?: [{	name?: string | undefined | null | Variable<any, string>},ValueTypes["Tag"]],
 		__typename?: boolean | `@${string}`
@@ -1045,6 +1046,8 @@ queryTagList?: [{	name?: string | undefined | null | Variable<any, string>},Valu
 	title?:boolean | `@${string}`,
 	/** 当前版本id */
 	currentVersionId?:boolean | `@${string}`,
+	/** 描述 */
+	description?:boolean | `@${string}`,
 	/** 是否锁定 */
 	lock?:boolean | `@${string}`,
 	/** 解锁密码 */
@@ -1055,6 +1058,10 @@ queryTagList?: [{	name?: string | undefined | null | Variable<any, string>},Valu
 	postVersions?:ValueTypes["PostVersion"],
 	/** 当前版本内容 */
 	currentContent?:boolean | `@${string}`,
+	/** tags */
+	tags?:ValueTypes["Tag"],
+	/** 创建人 */
+	user?:ValueTypes["User"],
 		__typename?: boolean | `@${string}`
 }>;
 	["PostVersion"]: AliasType<{
@@ -1069,12 +1076,6 @@ queryTagList?: [{	name?: string | undefined | null | Variable<any, string>},Valu
 	version?:boolean | `@${string}`,
 		__typename?: boolean | `@${string}`
 }>;
-	["TagPageResult"]: AliasType<{
-	data?:ValueTypes["Tag"],
-	totalCount?:boolean | `@${string}`,
-	hasNextPage?:boolean | `@${string}`,
-		__typename?: boolean | `@${string}`
-}>;
 	["Tag"]: AliasType<{
 	id?:boolean | `@${string}`,
 	/** 创建时间 */
@@ -1087,6 +1088,18 @@ queryTagList?: [{	name?: string | undefined | null | Variable<any, string>},Valu
 	icon?:boolean | `@${string}`,
 	/** 排序 */
 	order?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
+	["PostPageResult"]: AliasType<{
+	data?:ValueTypes["Post"],
+	totalCount?:boolean | `@${string}`,
+	hasNextPage?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
+	["TagPageResult"]: AliasType<{
+	data?:ValueTypes["Tag"],
+	totalCount?:boolean | `@${string}`,
+	hasNextPage?:boolean | `@${string}`,
 		__typename?: boolean | `@${string}`
 }>;
 	["Mutation"]: AliasType<{
@@ -1324,7 +1337,8 @@ queryUserPage?: [{	/** 用户id */
 	/** 获取space */
 	querySpace?:ResolverInputTypes["Space"],
 querySpaceMenu?: [{	spaceId: string},ResolverInputTypes["SpaceMenu"]],
-queryPost?: [{	menuId: string},ResolverInputTypes["Post"]],
+queryPostPage?: [{	pageNo?: number | undefined | null,	pageSize?: number | undefined | null},ResolverInputTypes["PostPageResult"]],
+queryPost?: [{	menuId?: string | undefined | null,	postId?: string | undefined | null},ResolverInputTypes["Post"]],
 queryTagPage?: [{	pageNo?: number | undefined | null,	pageSize?: number | undefined | null},ResolverInputTypes["TagPageResult"]],
 queryTagList?: [{	name?: string | undefined | null},ResolverInputTypes["Tag"]],
 		__typename?: boolean | `@${string}`
@@ -1504,6 +1518,8 @@ queryTagList?: [{	name?: string | undefined | null},ResolverInputTypes["Tag"]],
 	title?:boolean | `@${string}`,
 	/** 当前版本id */
 	currentVersionId?:boolean | `@${string}`,
+	/** 描述 */
+	description?:boolean | `@${string}`,
 	/** 是否锁定 */
 	lock?:boolean | `@${string}`,
 	/** 解锁密码 */
@@ -1514,6 +1530,10 @@ queryTagList?: [{	name?: string | undefined | null},ResolverInputTypes["Tag"]],
 	postVersions?:ResolverInputTypes["PostVersion"],
 	/** 当前版本内容 */
 	currentContent?:boolean | `@${string}`,
+	/** tags */
+	tags?:ResolverInputTypes["Tag"],
+	/** 创建人 */
+	user?:ResolverInputTypes["User"],
 		__typename?: boolean | `@${string}`
 }>;
 	["PostVersion"]: AliasType<{
@@ -1528,12 +1548,6 @@ queryTagList?: [{	name?: string | undefined | null},ResolverInputTypes["Tag"]],
 	version?:boolean | `@${string}`,
 		__typename?: boolean | `@${string}`
 }>;
-	["TagPageResult"]: AliasType<{
-	data?:ResolverInputTypes["Tag"],
-	totalCount?:boolean | `@${string}`,
-	hasNextPage?:boolean | `@${string}`,
-		__typename?: boolean | `@${string}`
-}>;
 	["Tag"]: AliasType<{
 	id?:boolean | `@${string}`,
 	/** 创建时间 */
@@ -1546,6 +1560,18 @@ queryTagList?: [{	name?: string | undefined | null},ResolverInputTypes["Tag"]],
 	icon?:boolean | `@${string}`,
 	/** 排序 */
 	order?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
+	["PostPageResult"]: AliasType<{
+	data?:ResolverInputTypes["Post"],
+	totalCount?:boolean | `@${string}`,
+	hasNextPage?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
+	["TagPageResult"]: AliasType<{
+	data?:ResolverInputTypes["Tag"],
+	totalCount?:boolean | `@${string}`,
+	hasNextPage?:boolean | `@${string}`,
 		__typename?: boolean | `@${string}`
 }>;
 	["Mutation"]: AliasType<{
@@ -1770,6 +1796,8 @@ export type ModelTypes = {
 	querySpace: Array<ModelTypes["Space"]>,
 	/** 获取spaceMenu */
 	querySpaceMenu: Array<ModelTypes["SpaceMenu"]>,
+	/** 获取post page */
+	queryPostPage?: ModelTypes["PostPageResult"] | undefined,
 	/** 获取post */
 	queryPost?: ModelTypes["Post"] | undefined,
 	/** 获取tag page */
@@ -1942,16 +1970,22 @@ export type ModelTypes = {
 	title: string,
 	/** 当前版本id */
 	currentVersionId: string,
+	/** 描述 */
+	description?: string | undefined,
 	/** 是否锁定 */
 	lock: boolean,
 	/** 解锁密码 */
-	lockPwd?: string | undefined,
+	lockPwd?: boolean | undefined,
 	/** 是否发布 */
-	published: string,
+	published: boolean,
 	/** 版本 */
 	postVersions?: Array<ModelTypes["PostVersion"] | undefined> | undefined,
 	/** 当前版本内容 */
-	currentContent?: string | undefined
+	currentContent?: string | undefined,
+	/** tags */
+	tags?: Array<ModelTypes["Tag"] | undefined> | undefined,
+	/** 创建人 */
+	user: ModelTypes["User"]
 };
 	["PostVersion"]: {
 		id: string,
@@ -1963,11 +1997,6 @@ export type ModelTypes = {
 	content?: string | undefined,
 	/** 版本 */
 	version: string
-};
-	["TagPageResult"]: {
-		data?: Array<ModelTypes["Tag"] | undefined> | undefined,
-	totalCount: number,
-	hasNextPage: boolean
 };
 	["Tag"]: {
 		id: string,
@@ -1981,6 +2010,16 @@ export type ModelTypes = {
 	icon?: string | undefined,
 	/** 排序 */
 	order: number
+};
+	["PostPageResult"]: {
+		data?: Array<ModelTypes["Post"] | undefined> | undefined,
+	totalCount: number,
+	hasNextPage: boolean
+};
+	["TagPageResult"]: {
+		data?: Array<ModelTypes["Tag"] | undefined> | undefined,
+	totalCount: number,
+	hasNextPage: boolean
 };
 	["Mutation"]: {
 		login: ModelTypes["LoginResult"],
@@ -2219,6 +2258,8 @@ export type GraphQLTypes = {
 	querySpace: Array<GraphQLTypes["Space"]>,
 	/** 获取spaceMenu */
 	querySpaceMenu: Array<GraphQLTypes["SpaceMenu"]>,
+	/** 获取post page */
+	queryPostPage?: GraphQLTypes["PostPageResult"] | undefined,
 	/** 获取post */
 	queryPost?: GraphQLTypes["Post"] | undefined,
 	/** 获取tag page */
@@ -2402,16 +2443,22 @@ export type GraphQLTypes = {
 	title: string,
 	/** 当前版本id */
 	currentVersionId: string,
+	/** 描述 */
+	description?: string | undefined,
 	/** 是否锁定 */
 	lock: boolean,
 	/** 解锁密码 */
-	lockPwd?: string | undefined,
+	lockPwd?: boolean | undefined,
 	/** 是否发布 */
-	published: string,
+	published: boolean,
 	/** 版本 */
 	postVersions?: Array<GraphQLTypes["PostVersion"] | undefined> | undefined,
 	/** 当前版本内容 */
-	currentContent?: string | undefined
+	currentContent?: string | undefined,
+	/** tags */
+	tags?: Array<GraphQLTypes["Tag"] | undefined> | undefined,
+	/** 创建人 */
+	user: GraphQLTypes["User"]
 };
 	["PostVersion"]: {
 	__typename: "PostVersion",
@@ -2424,12 +2471,6 @@ export type GraphQLTypes = {
 	content?: string | undefined,
 	/** 版本 */
 	version: string
-};
-	["TagPageResult"]: {
-	__typename: "TagPageResult",
-	data?: Array<GraphQLTypes["Tag"] | undefined> | undefined,
-	totalCount: number,
-	hasNextPage: boolean
 };
 	["Tag"]: {
 	__typename: "Tag",
@@ -2444,6 +2485,18 @@ export type GraphQLTypes = {
 	icon?: string | undefined,
 	/** 排序 */
 	order: number
+};
+	["PostPageResult"]: {
+	__typename: "PostPageResult",
+	data?: Array<GraphQLTypes["Post"] | undefined> | undefined,
+	totalCount: number,
+	hasNextPage: boolean
+};
+	["TagPageResult"]: {
+	__typename: "TagPageResult",
+	data?: Array<GraphQLTypes["Tag"] | undefined> | undefined,
+	totalCount: number,
+	hasNextPage: boolean
 };
 	["Mutation"]: {
 	__typename: "Mutation",

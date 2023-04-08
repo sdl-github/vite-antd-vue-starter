@@ -7,6 +7,10 @@ defineProps({
     type: Boolean,
     default: true,
   },
+  post: {
+    type: Object,
+    default: () => {},
+  },
 })
 const emits = defineEmits(['update:open'])
 const spaceStore = useSpaceStore()
@@ -25,10 +29,17 @@ onMounted(() => {
     }
   })
 })
+
+watchEffect(() => {
+  console.log(post.value);
+  form.value.description = post.value?.description || ''
+  form.value.tagIds = post.value?.tags?.map(tag => tag?.id) || []
+})
+
 function generateForm() {
   return {
-    description: undefined,
-    tagIds: undefined,
+    description: '',
+    tagIds: [],
   }
 }
 function close() {

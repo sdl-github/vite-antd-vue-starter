@@ -5,8 +5,7 @@ import type { ModelTypes } from '@/utils/graphql/zeus'
 import spaceApi from '@/api/space'
 import spaceMenuApi, { moveSpaceMenuToRecycleBin } from '@/api/space-menu'
 import { guid } from '@/utils/tools'
-import { queryPostByMenuId } from '@/api/post'
-
+import { queryPost as queryPostById } from '@/api/post'
 type Space = ModelTypes['Space']
 type SpaceMenu = ModelTypes['SpaceMenu']
 type Post = ModelTypes['Post']
@@ -51,7 +50,7 @@ export const useSpaceStore = defineStore('space', () => {
       return
     }
     queryPostLoading.value = true
-    queryPostByMenuId(menuId).then((res) => {
+    queryPostById({ menuId }).then((res) => {
       post.value = res.queryPost
     }).finally(() => {
       queryPostLoading.value = false

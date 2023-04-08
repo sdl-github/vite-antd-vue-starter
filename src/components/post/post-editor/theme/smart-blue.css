@@ -134,6 +134,7 @@
   /* 代码 */
   .markdown-body pre {
     overflow: auto;
+    margin-bottom: 10px;
   }
   
   .markdown-body pre,

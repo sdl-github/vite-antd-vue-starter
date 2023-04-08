@@ -36,6 +36,7 @@ specifiers:
   nprogress: ^0.2.0
   pinia: ^2.0.33
   sass: ^1.60.0
+  swrv: ^1.0.3
   tinymce: ^6.4.1
   typescript: ^5.0.3
   unocss: ^0.50.6
@@ -73,6 +74,7 @@ dependencies:
   lodash: 4.17.21
   nprogress: 0.2.0
   pinia: 2.0.33_dtiidk7kpxlb6f6tlcun7ghfqm
+  swrv: 1.0.3_vue@3.2.47
   tinymce: 6.4.1
   vue: 3.2.47
   vue-cropper: 1.0.5
@@ -4990,6 +4992,14 @@ packages:
   /svg-tags/1.0.0:
     resolution: {integrity: sha512-ovssysQTa+luh7A5Weu3Rta6FJlFBBbInjOh722LIt6klpU2/HtdUbszju/G4devcvk8PGt7FCLv5wftu3THUA==}
     dev: true
+
+  /swrv/1.0.3_vue@3.2.47:
+    resolution: {integrity: sha512-sl+eLEE+aPPjhP1E8gQ75q3RPRyw5Gd/kROnrTFo3+LkCeLskv7F+uAl5W97wgJkzitobL6FLsRPVm0DgIgN8A==}
+    peerDependencies:
+      vue: '>=3.2.26 < 4'
+    dependencies:
+      vue: 3.2.47
+    dev: false
 
   /text-table/0.2.0:
     resolution: {integrity: sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==}
