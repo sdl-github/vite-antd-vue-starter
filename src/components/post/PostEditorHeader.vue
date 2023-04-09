@@ -23,30 +23,31 @@ function handlePreview() {
         </a-breadcrumb-item>
       </a-breadcrumb>
     </div>
+    <template v-if="spaceStore.currentId">
+      <template v-if="published">
+        <div class="flex">
+          <a-button class="ml-4 flex items-center" @click="open = true">
+            <div class="i-ri-settings-3-line" />
+            <div class="ml-2">
+              文章设置
+            </div>
+          </a-button>
+          <a-button class="ml-4 flex items-center" type="primary" @click="handlePreview">
+            <div class="i-ri-send-plane-fill" />
+            <div class="ml-2">
+              查看页面
+            </div>
+          </a-button>
+        </div>
+      </template>
 
-    <template v-if="published">
-      <div class="flex">
-        <a-button class="ml-4 flex items-center" @click="open = true">
-          <div class="i-ri-settings-3-line" />
-          <div class="ml-2">
-            设置
-          </div>
-        </a-button>
-        <a-button class="ml-4 flex items-center" type="primary" @click="handlePreview">
-          <div class="i-ri-send-plane-fill" />
-          <div class="ml-2">
-            查看页面
-          </div>
-        </a-button>
-      </div>
+      <a-button v-else class="ml-4 flex items-center" @click="open = true">
+        <div class="i-ri-settings-3-line" />
+        <div class="ml-2">
+          发布
+        </div>
+      </a-button>
     </template>
-
-    <a-button v-else class="ml-4 flex items-center" @click="open = true">
-      <div class="i-ri-settings-3-line" />
-      <div class="ml-2">
-        {{ published && '设置' || '发布' }}
-      </div>
-    </a-button>
   </div>
   <PublishDrawer v-model:open="open" />
 </template>

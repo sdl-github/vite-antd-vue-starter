@@ -7,7 +7,7 @@
     <PostSider />
     <a-layout>
       <PostEditorHeader />
-      <PostEditor />
+      <MdEditor />
     </a-layout>
   </a-layout>
 </template>

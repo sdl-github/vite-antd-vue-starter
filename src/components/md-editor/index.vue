@@ -6,7 +6,7 @@ import breaks from '@bytemd/plugin-breaks'
 import frontmatter from '@bytemd/plugin-frontmatter'
 import gfm from '@bytemd/plugin-gfm'
 import { Editor } from '@bytemd/vue-next'
-import copyCode from './plugins/copy-code/index'
+import copyCode from './plugins/copy-code'
 import { updatePostVersion } from '@/api/post'
 
 const plugins = [
@@ -44,7 +44,7 @@ function handleChange(value: string) {
         <a-skeleton active />
       </div>
       <template v-else>
-        <Editor v-if="versionId" :plugins="plugins" :value="content" class="h-full" @change="handleChange" />
+        <Editor v-if="spaceStore.currentId" :plugins="plugins" :value="content" class="h-full" @change="handleChange" />
         <div v-else class="flex justify-center pt-[20vh] h-full h-[100vh]">
           <div class="" />
         </div>

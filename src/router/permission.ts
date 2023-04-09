@@ -4,7 +4,7 @@ import { useUserStore } from '@/stores/user'
 import { getToken } from '@/utils/auth'
 import 'nprogress/nprogress.css'
 
-const whiteList = ['/login', '/oauth', '/bind', '/post', 'post-id']
+const whiteList = ['/', '/login', '/oauth', '/bind', '/post', 'post-id']
 router.beforeEach(async (to, from, next) => {
   NProgress.start()
   if (getToken()) {
@@ -31,6 +31,6 @@ router.beforeEach(async (to, from, next) => {
 })
 
 router.afterEach((to) => {
-  document.title = to.meta.title as string || 'Super Admin'
+  document.title = to.meta.title as string || '嗷呜'
   NProgress.done()
 })

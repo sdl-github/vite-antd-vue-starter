@@ -15,6 +15,7 @@ declare module '@vue/runtime-core' {
     Header: typeof import('./components/layout/dashboard/Header.vue')['default']
     HelloWorld: typeof import('./components/HelloWorld.vue')['default']
     Logo: typeof import('./components/layout/dashboard/Logo.vue')['default']
+    MdEditor: typeof import('./components/md-editor/index.vue')['default']
     MenuIcon: typeof import('./components/menu-icon/index.vue')['default']
     MenuItem: typeof import('./components/layout/dashboard/MenuItem.vue')['default']
     PostEditor: typeof import('./components/post/post-editor/index.vue')['default']

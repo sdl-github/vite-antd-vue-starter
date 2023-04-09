@@ -12,8 +12,8 @@ import gfm from '@bytemd/plugin-gfm'
 import { queryPost } from '@/api/post'
 
 import type { ModelTypes } from '@/utils/graphql/zeus'
-import '@/components/post/post-editor/theme/smart-blue.css'
-import copyCode from '@/components/post/post-editor/plugins/copy-code/index'
+import '@/components/md-editor/theme/smart-blue.css'
+import copyCode from '@/components/md-editor/plugins/copy-code/index'
 type Post = ModelTypes['Post']
 
 const plugins = [
@@ -30,6 +30,7 @@ watchEffect(async () => {
   if (id.value) {
     const res = await queryPost({ postId: id.value as string })
     post.value = res.queryPost as Post
+    document.title = res.queryPost.title
   }
 })
 </script>
