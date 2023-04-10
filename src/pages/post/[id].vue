@@ -9,10 +9,13 @@ import { queryPost } from '@/api/post'
 import type { ModelTypes } from '@/utils/graphql/zeus'
 import '@/components/md-editor/theme/smart-blue.css'
 type Post = ModelTypes['Post']
-
+const router = useRouter()
+const useStore = useUserStore()
 const route = useRoute()
 const id = computed(() => route.params.id)
 const post = ref<Post>()
+const isAuthor = computed(() => useStore.user?.id === post.value?.user.id)
+
 watchEffect(async () => {
   if (id.value) {
     const res = await queryPost({ postId: id.value as string })
@@ -20,6 +23,16 @@ watchEffect(async () => {
     document.title = res.queryPost.title
   }
 })
+
+function handleEdit() {
+  const query = {
+    id: post.value?.menu.id,
+  }
+  router.push({
+    path: '/post/edit',
+    query,
+  })
+}
 </script>
 
 <template>
@@ -42,8 +55,13 @@ watchEffect(async () => {
             <div class="color-[#515767] font-bold">
               {{ post.user.nickname || post.user.username }}
             </div>
-            <div v-time class="color-[#8a919f]">
-              {{ post.createdAt }}
+            <div class="flex items-center">
+              <div v-time class="color-[#8a919f]">
+                {{ post.createdAt }}
+              </div>
+              <div v-if="isAuthor" class="ml-2 color-#4096ff cursor-pointer" @click="handleEdit">
+                编辑
+              </div>
             </div>
           </div>
         </div>

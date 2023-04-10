@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { Editor } from '@bytemd/vue-next'
 import { plugins } from './plugins/index'
-import { updatePostVersion } from '@/api/post'
 import 'bytemd/dist/index.css'
 import './theme/smart-blue.css'
 const spaceStore = useSpaceStore()
@@ -16,8 +15,8 @@ watchEffect(() => {
 
 const updateServer = useDebounceFn(async () => {
   console.log('post to server')
-  versionId.value && await updatePostVersion(versionId.value, content.value)
-}, 5000)
+  versionId.value && await spaceStore.updatePostVersion(versionId.value, content.value)
+}, 1000)
 
 function handleChange(value: string) {
   content.value = value

@@ -56,6 +56,10 @@ export function queryPost(input: { menuId?: string; postId?: string }) {
           id: true,
           name: true,
         },
+        menu: {
+          id: true,
+        },
+        updatedAt: true,
       },
     ],
   })
@@ -65,7 +69,7 @@ export function updatePostVersion(versionId: string, content: string) {
   return mutation({
     updatePostVersion: [
       { versionId, content },
-      { id: true },
+      { id: true, updatedAt: true },
     ],
   })
 }
@@ -74,6 +78,16 @@ export function publishPost(input: ValueTypes['PublishPostInput']) {
   return mutation({
     publishPost: [
       { input }, {
+        id: true,
+      },
+    ],
+  })
+}
+
+export function unPublishPost(postId: string) {
+  return mutation({
+    unPublishPost: [
+      { postId }, {
         id: true,
       },
     ],

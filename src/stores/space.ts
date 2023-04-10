@@ -5,7 +5,7 @@ import type { ModelTypes } from '@/utils/graphql/zeus'
 import spaceApi from '@/api/space'
 import spaceMenuApi, { moveSpaceMenuToRecycleBin } from '@/api/space-menu'
 import { guid } from '@/utils/tools'
-import { queryPost as queryPostById } from '@/api/post'
+import { queryPost as queryPostById, updatePostVersion as updatePostVersionApi } from '@/api/post'
 type Space = ModelTypes['Space']
 type SpaceMenu = ModelTypes['SpaceMenu']
 type Post = ModelTypes['Post']
@@ -13,6 +13,7 @@ type Post = ModelTypes['Post']
 export const useSpaceStore = defineStore('space', () => {
   const queryMenuLoading = ref(false)
   const queryPostLoading = ref(false)
+  const updatePostLoading = ref(false)
   const router = useRouter()
   const route = useRoute()
   const spaces = ref<Space[]>([])
@@ -154,6 +155,15 @@ export const useSpaceStore = defineStore('space', () => {
     })
   }
 
+  function updatePostVersion(versionId: string, content: string) {
+    updatePostLoading.value = true
+    updatePostVersionApi(versionId, content).then((res) => {
+      post.value && (post.value.updatedAt = res.updatePostVersion.updatedAt)
+    }).finally(() => {
+      updatePostLoading.value = false
+    })
+  }
+
   return {
     currentId,
     space,
@@ -162,6 +172,7 @@ export const useSpaceStore = defineStore('space', () => {
     spaceLineMenus,
     queryMenuLoading,
     queryPostLoading,
+    updatePostLoading,
     post,
     querySpace,
     querySpaceMenu,
@@ -171,5 +182,6 @@ export const useSpaceStore = defineStore('space', () => {
     moveToRecycleBin,
     updateSpaceMenuTitle,
     updateSpaceMenuIcon,
+    updatePostVersion,
   }
 })

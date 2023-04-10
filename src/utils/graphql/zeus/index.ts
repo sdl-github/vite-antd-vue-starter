@@ -1062,6 +1062,8 @@ queryTagList?: [{	name?: string | undefined | null | Variable<any, string>},Valu
 	tags?:ValueTypes["Tag"],
 	/** 创建人 */
 	user?:ValueTypes["User"],
+	/** spaceMenu */
+	menu?:ValueTypes["SpaceMenu"],
 		__typename?: boolean | `@${string}`
 }>;
 	["PostVersion"]: AliasType<{
@@ -1125,6 +1127,7 @@ updateSpaceMenuTitle?: [{	title: string | Variable<any, string>,	menuId: string 
 updateSpaceMenu?: [{	input: ValueTypes["UpdateSpaceMenuInput"] | Variable<any, string>},ValueTypes["SpaceMenu"]],
 updatePostVersion?: [{	content: string | Variable<any, string>,	versionId: string | Variable<any, string>},ValueTypes["PostVersion"]],
 publishPost?: [{	input: ValueTypes["PublishPostInput"] | Variable<any, string>},ValueTypes["Post"]],
+unPublishPost?: [{	postId: string | Variable<any, string>},ValueTypes["Post"]],
 createTag?: [{	input: ValueTypes["CreateTagInput"] | Variable<any, string>},ValueTypes["Tag"]],
 updateTag?: [{	input: ValueTypes["UpdateTagInput"] | Variable<any, string>},ValueTypes["Tag"]],
 		__typename?: boolean | `@${string}`
@@ -1534,6 +1537,8 @@ queryTagList?: [{	name?: string | undefined | null},ResolverInputTypes["Tag"]],
 	tags?:ResolverInputTypes["Tag"],
 	/** 创建人 */
 	user?:ResolverInputTypes["User"],
+	/** spaceMenu */
+	menu?:ResolverInputTypes["SpaceMenu"],
 		__typename?: boolean | `@${string}`
 }>;
 	["PostVersion"]: AliasType<{
@@ -1597,6 +1602,7 @@ updateSpaceMenuTitle?: [{	title: string,	menuId: string},ResolverInputTypes["Spa
 updateSpaceMenu?: [{	input: ResolverInputTypes["UpdateSpaceMenuInput"]},ResolverInputTypes["SpaceMenu"]],
 updatePostVersion?: [{	content: string,	versionId: string},ResolverInputTypes["PostVersion"]],
 publishPost?: [{	input: ResolverInputTypes["PublishPostInput"]},ResolverInputTypes["Post"]],
+unPublishPost?: [{	postId: string},ResolverInputTypes["Post"]],
 createTag?: [{	input: ResolverInputTypes["CreateTagInput"]},ResolverInputTypes["Tag"]],
 updateTag?: [{	input: ResolverInputTypes["UpdateTagInput"]},ResolverInputTypes["Tag"]],
 		__typename?: boolean | `@${string}`
@@ -1985,7 +1991,9 @@ export type ModelTypes = {
 	/** tags */
 	tags?: Array<ModelTypes["Tag"] | undefined> | undefined,
 	/** 创建人 */
-	user: ModelTypes["User"]
+	user: ModelTypes["User"],
+	/** spaceMenu */
+	menu: ModelTypes["SpaceMenu"]
 };
 	["PostVersion"]: {
 		id: string,
@@ -2064,6 +2072,8 @@ export type ModelTypes = {
 	updatePostVersion: ModelTypes["PostVersion"],
 	/** 发布post */
 	publishPost: ModelTypes["Post"],
+	/** 取消发布post */
+	unPublishPost: ModelTypes["Post"],
 	/** 创建tag */
 	createTag: ModelTypes["Tag"],
 	/** 修改tag */
@@ -2458,7 +2468,9 @@ export type GraphQLTypes = {
 	/** tags */
 	tags?: Array<GraphQLTypes["Tag"] | undefined> | undefined,
 	/** 创建人 */
-	user: GraphQLTypes["User"]
+	user: GraphQLTypes["User"],
+	/** spaceMenu */
+	menu: GraphQLTypes["SpaceMenu"]
 };
 	["PostVersion"]: {
 	__typename: "PostVersion",
@@ -2542,6 +2554,8 @@ export type GraphQLTypes = {
 	updatePostVersion: GraphQLTypes["PostVersion"],
 	/** 发布post */
 	publishPost: GraphQLTypes["Post"],
+	/** 取消发布post */
+	unPublishPost: GraphQLTypes["Post"],
 	/** 创建tag */
 	createTag: GraphQLTypes["Tag"],
 	/** 修改tag */

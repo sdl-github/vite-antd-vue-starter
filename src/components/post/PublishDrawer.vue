@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { message } from 'ant-design-vue'
-import { publishPost } from '@/api/post'
+import { publishPost, unPublishPost } from '@/api/post'
 import { queryTagList } from '@/api/tag'
 defineProps({
   open: {
@@ -18,6 +18,7 @@ const post = computed(() => spaceStore.post)
 const form = ref(generateForm())
 const options = ref()
 const saveLoading = ref()
+const unLoading = ref(false)
 
 onMounted(() => {
   queryTagList().then((res) => {
@@ -31,7 +32,7 @@ onMounted(() => {
 })
 
 watchEffect(() => {
-  console.log(post.value);
+  console.log(post.value)
   form.value.description = post.value?.description || ''
   form.value.tagIds = post.value?.tags?.map(tag => tag?.id) || []
 })
@@ -47,7 +48,7 @@ function close() {
 }
 
 function save() {
-  const { id } = unref(post)
+  const id = unref(post)?.id as string
   const { description, tagIds } = unref(form)
   const data = {
     id, description, tagIds,
@@ -60,6 +61,16 @@ function save() {
     saveLoading.value = false
   })
 }
+
+function cancelPublish() {
+  unLoading.value = true
+  unPublishPost(post.value?.id as string).then(() => {
+    spaceStore.refreshPost()
+    message.success('操作成功')
+  }).finally(() => {
+    unLoading.value = false
+  })
+}
 </script>
 
 <template>
@@ -70,6 +81,16 @@ function save() {
     :open="open"
     @close="close"
   >
+    <template v-if="post?.published" #extra>
+      <a-space>
+        <a-button :loading="unLoading" class="flex items-center" @click="cancelPublish">
+          <div class="i-ri-eye-close-line" />
+          <div class="ml-1">
+            取消发布
+          </div>
+        </a-button>
+      </a-space>
+    </template>
     <a-form layout="vertical">
       <a-form-item
         label="摘要"
@@ -84,7 +105,7 @@ function save() {
       >
         <a-select
           v-model:value="form.tagIds"
-          mode="tags"
+          mode="multiple"
           style="width: 100%"
           placeholder="选择标签"
           :options="options"

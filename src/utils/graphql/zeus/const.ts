@@ -106,6 +106,9 @@ export const AllTypesProps: Record<string,any> = {
 		publishPost:{
 			input:"PublishPostInput"
 		},
+		unPublishPost:{
+
+		},
 		createTag:{
 			input:"CreateTagInput"
 		},
@@ -270,7 +273,8 @@ export const ReturnTypes: Record<string,any> = {
 		postVersions:"PostVersion",
 		currentContent:"String",
 		tags:"Tag",
-		user:"User"
+		user:"User",
+		menu:"SpaceMenu"
 	},
 	PostVersion:{
 		id:"ID",
@@ -320,6 +324,7 @@ export const ReturnTypes: Record<string,any> = {
 		updateSpaceMenu:"SpaceMenu",
 		updatePostVersion:"PostVersion",
 		publishPost:"Post",
+		unPublishPost:"Post",
 		createTag:"Tag",
 		updateTag:"Tag"
 	},

@@ -25,6 +25,7 @@ declare module '@vue/runtime-core' {
     PostHeader: typeof import('./components/layout/post/PostHeader.vue')['default']
     PostImage: typeof import('./components/post/PostImage.vue')['default']
     PostItem: typeof import('./components/post/PostItem.vue')['default']
+    PostSelectTag: typeof import('./components/post/PostSelectTag.vue')['default']
     PostSider: typeof import('./components/post/PostSider.vue')['default']
     PublishDrawer: typeof import('./components/post/PublishDrawer.vue')['default']
     PublishModal: typeof import('./components/post/PublishDrawer.vue')['default']
