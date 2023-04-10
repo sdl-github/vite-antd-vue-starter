@@ -16,6 +16,7 @@ declare module '@vue/runtime-core' {
     HelloWorld: typeof import('./components/HelloWorld.vue')['default']
     Logo: typeof import('./components/layout/dashboard/Logo.vue')['default']
     MdEditor: typeof import('./components/md-editor/index.vue')['default']
+    MDViewer: typeof import('./components/md-editor/MDViewer.vue')['default']
     MenuIcon: typeof import('./components/menu-icon/index.vue')['default']
     MenuItem: typeof import('./components/layout/dashboard/MenuItem.vue')['default']
     PostEditor: typeof import('./components/post/post-editor/index.vue')['default']
@@ -32,5 +33,6 @@ declare module '@vue/runtime-core' {
     SideMenu: typeof import('./components/layout/dashboard/SideMenu.vue')['default']
     Skeleton: typeof import('./components/Skeleton.vue')['default']
     TinymceEditor: typeof import('./components/tinymce-editor/index.vue')['default']
+    Viewer: typeof import('./components/md-editor/MDViewer.vue')['default']
   }
 }

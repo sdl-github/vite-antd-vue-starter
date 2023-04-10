@@ -4,25 +4,12 @@ meta:
 </route>
 
 <script setup lang="ts">
-import { Viewer } from '@bytemd/vue-next'
-import gemoji from '@bytemd/plugin-gemoji'
-import breaks from '@bytemd/plugin-breaks'
-import frontmatter from '@bytemd/plugin-frontmatter'
-import gfm from '@bytemd/plugin-gfm'
 import { queryPost } from '@/api/post'
 
 import type { ModelTypes } from '@/utils/graphql/zeus'
 import '@/components/md-editor/theme/smart-blue.css'
-import copyCode from '@/components/md-editor/plugins/copy-code/index'
 type Post = ModelTypes['Post']
 
-const plugins = [
-  gemoji(),
-  breaks(),
-  frontmatter(),
-  gfm(),
-  copyCode(),
-]
 const route = useRoute()
 const id = computed(() => route.params.id)
 const post = ref<Post>()
@@ -60,7 +47,7 @@ watchEffect(async () => {
             </div>
           </div>
         </div>
-        <Viewer :plugins="plugins" :value="post.currentContent" />
+        <MDViewer :value="post.currentContent" />
       </div>
     </template>
   </div>
