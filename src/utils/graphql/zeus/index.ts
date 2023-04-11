@@ -1050,6 +1050,10 @@ queryTagList?: [{	name?: string | undefined | null | Variable<any, string>},Valu
 	description?:boolean | `@${string}`,
 	/** 是否锁定 */
 	lock?:boolean | `@${string}`,
+	/** 喜欢 */
+	star?:boolean | `@${string}`,
+	/** 浏览 */
+	see?:boolean | `@${string}`,
 	/** 解锁密码 */
 	lockPwd?:boolean | `@${string}`,
 	/** 是否发布 */
@@ -1064,6 +1068,8 @@ queryTagList?: [{	name?: string | undefined | null | Variable<any, string>},Valu
 	user?:ValueTypes["User"],
 	/** spaceMenu */
 	menu?:ValueTypes["SpaceMenu"],
+	/** 当前点赞用户 */
+	postUserStars?:ValueTypes["PostUserStar"],
 		__typename?: boolean | `@${string}`
 }>;
 	["PostVersion"]: AliasType<{
@@ -1090,6 +1096,18 @@ queryTagList?: [{	name?: string | undefined | null | Variable<any, string>},Valu
 	icon?:boolean | `@${string}`,
 	/** 排序 */
 	order?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
+	["PostUserStar"]: AliasType<{
+	id?:boolean | `@${string}`,
+	/** 创建时间 */
+	createdAt?:boolean | `@${string}`,
+	/** 更新时间 */
+	updatedAt?:boolean | `@${string}`,
+	/** userId */
+	userId?:boolean | `@${string}`,
+	/** postId */
+	postId?:boolean | `@${string}`,
 		__typename?: boolean | `@${string}`
 }>;
 	["PostPageResult"]: AliasType<{
@@ -1128,6 +1146,8 @@ updateSpaceMenu?: [{	input: ValueTypes["UpdateSpaceMenuInput"] | Variable<any, s
 updatePostVersion?: [{	content: string | Variable<any, string>,	versionId: string | Variable<any, string>},ValueTypes["PostVersion"]],
 publishPost?: [{	input: ValueTypes["PublishPostInput"] | Variable<any, string>},ValueTypes["Post"]],
 unPublishPost?: [{	postId: string | Variable<any, string>},ValueTypes["Post"]],
+starPost?: [{	postId: string | Variable<any, string>},boolean | `@${string}`],
+unStarPost?: [{	postId: string | Variable<any, string>},boolean | `@${string}`],
 createTag?: [{	input: ValueTypes["CreateTagInput"] | Variable<any, string>},ValueTypes["Tag"]],
 updateTag?: [{	input: ValueTypes["UpdateTagInput"] | Variable<any, string>},ValueTypes["Tag"]],
 		__typename?: boolean | `@${string}`
@@ -1525,6 +1545,10 @@ queryTagList?: [{	name?: string | undefined | null},ResolverInputTypes["Tag"]],
 	description?:boolean | `@${string}`,
 	/** 是否锁定 */
 	lock?:boolean | `@${string}`,
+	/** 喜欢 */
+	star?:boolean | `@${string}`,
+	/** 浏览 */
+	see?:boolean | `@${string}`,
 	/** 解锁密码 */
 	lockPwd?:boolean | `@${string}`,
 	/** 是否发布 */
@@ -1539,6 +1563,8 @@ queryTagList?: [{	name?: string | undefined | null},ResolverInputTypes["Tag"]],
 	user?:ResolverInputTypes["User"],
 	/** spaceMenu */
 	menu?:ResolverInputTypes["SpaceMenu"],
+	/** 当前点赞用户 */
+	postUserStars?:ResolverInputTypes["PostUserStar"],
 		__typename?: boolean | `@${string}`
 }>;
 	["PostVersion"]: AliasType<{
@@ -1565,6 +1591,18 @@ queryTagList?: [{	name?: string | undefined | null},ResolverInputTypes["Tag"]],
 	icon?:boolean | `@${string}`,
 	/** 排序 */
 	order?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
+	["PostUserStar"]: AliasType<{
+	id?:boolean | `@${string}`,
+	/** 创建时间 */
+	createdAt?:boolean | `@${string}`,
+	/** 更新时间 */
+	updatedAt?:boolean | `@${string}`,
+	/** userId */
+	userId?:boolean | `@${string}`,
+	/** postId */
+	postId?:boolean | `@${string}`,
 		__typename?: boolean | `@${string}`
 }>;
 	["PostPageResult"]: AliasType<{
@@ -1603,6 +1641,8 @@ updateSpaceMenu?: [{	input: ResolverInputTypes["UpdateSpaceMenuInput"]},Resolver
 updatePostVersion?: [{	content: string,	versionId: string},ResolverInputTypes["PostVersion"]],
 publishPost?: [{	input: ResolverInputTypes["PublishPostInput"]},ResolverInputTypes["Post"]],
 unPublishPost?: [{	postId: string},ResolverInputTypes["Post"]],
+starPost?: [{	postId: string},boolean | `@${string}`],
+unStarPost?: [{	postId: string},boolean | `@${string}`],
 createTag?: [{	input: ResolverInputTypes["CreateTagInput"]},ResolverInputTypes["Tag"]],
 updateTag?: [{	input: ResolverInputTypes["UpdateTagInput"]},ResolverInputTypes["Tag"]],
 		__typename?: boolean | `@${string}`
@@ -1980,6 +2020,10 @@ export type ModelTypes = {
 	description?: string | undefined,
 	/** 是否锁定 */
 	lock: boolean,
+	/** 喜欢 */
+	star: number,
+	/** 浏览 */
+	see: number,
 	/** 解锁密码 */
 	lockPwd?: boolean | undefined,
 	/** 是否发布 */
@@ -1993,7 +2037,9 @@ export type ModelTypes = {
 	/** 创建人 */
 	user: ModelTypes["User"],
 	/** spaceMenu */
-	menu: ModelTypes["SpaceMenu"]
+	menu: ModelTypes["SpaceMenu"],
+	/** 当前点赞用户 */
+	postUserStars?: Array<ModelTypes["PostUserStar"] | undefined> | undefined
 };
 	["PostVersion"]: {
 		id: string,
@@ -2018,6 +2064,17 @@ export type ModelTypes = {
 	icon?: string | undefined,
 	/** 排序 */
 	order: number
+};
+	["PostUserStar"]: {
+		id: string,
+	/** 创建时间 */
+	createdAt?: ModelTypes["DateTime"] | undefined,
+	/** 更新时间 */
+	updatedAt?: ModelTypes["DateTime"] | undefined,
+	/** userId */
+	userId: string,
+	/** postId */
+	postId: string
 };
 	["PostPageResult"]: {
 		data?: Array<ModelTypes["Post"] | undefined> | undefined,
@@ -2074,6 +2131,10 @@ export type ModelTypes = {
 	publishPost: ModelTypes["Post"],
 	/** 取消发布post */
 	unPublishPost: ModelTypes["Post"],
+	/** 点赞post */
+	starPost: boolean,
+	/** 点赞post */
+	unStarPost: boolean,
 	/** 创建tag */
 	createTag: ModelTypes["Tag"],
 	/** 修改tag */
@@ -2457,6 +2518,10 @@ export type GraphQLTypes = {
 	description?: string | undefined,
 	/** 是否锁定 */
 	lock: boolean,
+	/** 喜欢 */
+	star: number,
+	/** 浏览 */
+	see: number,
 	/** 解锁密码 */
 	lockPwd?: boolean | undefined,
 	/** 是否发布 */
@@ -2470,7 +2535,9 @@ export type GraphQLTypes = {
 	/** 创建人 */
 	user: GraphQLTypes["User"],
 	/** spaceMenu */
-	menu: GraphQLTypes["SpaceMenu"]
+	menu: GraphQLTypes["SpaceMenu"],
+	/** 当前点赞用户 */
+	postUserStars?: Array<GraphQLTypes["PostUserStar"] | undefined> | undefined
 };
 	["PostVersion"]: {
 	__typename: "PostVersion",
@@ -2497,6 +2564,18 @@ export type GraphQLTypes = {
 	icon?: string | undefined,
 	/** 排序 */
 	order: number
+};
+	["PostUserStar"]: {
+	__typename: "PostUserStar",
+	id: string,
+	/** 创建时间 */
+	createdAt?: GraphQLTypes["DateTime"] | undefined,
+	/** 更新时间 */
+	updatedAt?: GraphQLTypes["DateTime"] | undefined,
+	/** userId */
+	userId: string,
+	/** postId */
+	postId: string
 };
 	["PostPageResult"]: {
 	__typename: "PostPageResult",
@@ -2556,6 +2635,10 @@ export type GraphQLTypes = {
 	publishPost: GraphQLTypes["Post"],
 	/** 取消发布post */
 	unPublishPost: GraphQLTypes["Post"],
+	/** 点赞post */
+	starPost: boolean,
+	/** 点赞post */
+	unStarPost: boolean,
 	/** 创建tag */
 	createTag: GraphQLTypes["Tag"],
 	/** 修改tag */

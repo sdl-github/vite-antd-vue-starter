@@ -15,6 +15,8 @@ export function queryPostPage(input?: PostQueryInput) {
         id: true,
         title: true,
         description: true,
+        star: true,
+        see: true,
         user: {
           id: true,
           username: true,
@@ -24,6 +26,9 @@ export function queryPostPage(input?: PostQueryInput) {
         tags: {
           id: true,
           name: true,
+        },
+        postUserStars: {
+          userId: true,
         },
         createdAt: true,
       },
@@ -91,5 +96,17 @@ export function unPublishPost(postId: string) {
         id: true,
       },
     ],
+  })
+}
+
+export function starPost(postId: string) {
+  return mutation({
+    starPost: [{ postId }, true],
+  })
+}
+
+export function unStarPost(postId: string) {
+  return mutation({
+    unStarPost: [{ postId }, true],
   })
 }

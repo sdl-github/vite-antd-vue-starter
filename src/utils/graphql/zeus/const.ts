@@ -109,6 +109,12 @@ export const AllTypesProps: Record<string,any> = {
 		unPublishPost:{
 
 		},
+		starPost:{
+
+		},
+		unStarPost:{
+
+		},
 		createTag:{
 			input:"CreateTagInput"
 		},
@@ -268,13 +274,16 @@ export const ReturnTypes: Record<string,any> = {
 		currentVersionId:"String",
 		description:"String",
 		lock:"Boolean",
+		star:"Float",
+		see:"Float",
 		lockPwd:"Boolean",
 		published:"Boolean",
 		postVersions:"PostVersion",
 		currentContent:"String",
 		tags:"Tag",
 		user:"User",
-		menu:"SpaceMenu"
+		menu:"SpaceMenu",
+		postUserStars:"PostUserStar"
 	},
 	PostVersion:{
 		id:"ID",
@@ -290,6 +299,13 @@ export const ReturnTypes: Record<string,any> = {
 		name:"String",
 		icon:"String",
 		order:"Float"
+	},
+	PostUserStar:{
+		id:"ID",
+		createdAt:"DateTime",
+		updatedAt:"DateTime",
+		userId:"String",
+		postId:"String"
 	},
 	PostPageResult:{
 		data:"Post",
@@ -325,6 +341,8 @@ export const ReturnTypes: Record<string,any> = {
 		updatePostVersion:"PostVersion",
 		publishPost:"Post",
 		unPublishPost:"Post",
+		starPost:"Boolean",
+		unStarPost:"Boolean",
 		createTag:"Tag",
 		updateTag:"Tag"
 	},

@@ -25,11 +25,11 @@ defineProps({
     </div>
     <div class="flex mt-4 items-center text-[12px]">
       <div class="color-[rgba(0,0,0,.45)] flex items-center cursor-pointer">
-        <!-- <div class="i-ri-heart-line text-[14px]" /> -->
-        <div class="i-ri-heart-fill text-[14px] color-red" />
-        <div class="ml-1">
-          10
-        </div>
+        <PostStar
+          :post-id="post.id"
+          :star="post.star"
+          :post-user-stars="post.postUserStars"
+        />
       </div>
       <div class="ml-2">
         <a-tag v-for="tag in post.tags" :key="tag.id" color="pink">
