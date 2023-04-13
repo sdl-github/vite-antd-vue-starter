@@ -21,7 +21,7 @@ const isLike = ref(false)
 
 watchEffect(() => {
   stars.value = props.star
-  isLike.value = props.postUserStars.map(item => item.userId).includes(userStore.user?.id)
+  isLike.value = props?.postUserStars?.map(item => item.userId).includes(userStore.user?.id)
 })
 
 async function handleUnStar() {
