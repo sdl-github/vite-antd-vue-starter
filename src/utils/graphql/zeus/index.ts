@@ -882,6 +882,10 @@ queryTagList?: [{	name?: string | undefined | null | Variable<any, string>},Valu
 	createdAt?:boolean | `@${string}`,
 	/** 更新时间 */
 	updatedAt?:boolean | `@${string}`,
+	/** 创建人 */
+	createdBy?:boolean | `@${string}`,
+	/** 修改人 */
+	updatedBy?:boolean | `@${string}`,
 	/** 用户名 */
 	username?:boolean | `@${string}`,
 	/** 头像 */
@@ -914,6 +918,10 @@ queryTagList?: [{	name?: string | undefined | null | Variable<any, string>},Valu
 	createdAt?:boolean | `@${string}`,
 	/** 更新时间 */
 	updatedAt?:boolean | `@${string}`,
+	/** 创建人 */
+	createdBy?:boolean | `@${string}`,
+	/** 修改人 */
+	updatedBy?:boolean | `@${string}`,
 	/** 角色名 */
 	name?:boolean | `@${string}`,
 	/** 角色level */
@@ -932,6 +940,10 @@ queryTagList?: [{	name?: string | undefined | null | Variable<any, string>},Valu
 	createdAt?:boolean | `@${string}`,
 	/** 更新时间 */
 	updatedAt?:boolean | `@${string}`,
+	/** 创建人 */
+	createdBy?:boolean | `@${string}`,
+	/** 修改人 */
+	updatedBy?:boolean | `@${string}`,
 	/** 菜单名 */
 	name?:boolean | `@${string}`,
 	/** 标题 */
@@ -991,6 +1003,10 @@ queryTagList?: [{	name?: string | undefined | null | Variable<any, string>},Valu
 	createdAt?:boolean | `@${string}`,
 	/** 更新时间 */
 	updatedAt?:boolean | `@${string}`,
+	/** 创建人 */
+	createdBy?:boolean | `@${string}`,
+	/** 修改人 */
+	updatedBy?:boolean | `@${string}`,
 	/** 用户名 */
 	username?:boolean | `@${string}`,
 	/** 头像 */
@@ -1021,6 +1037,10 @@ queryTagList?: [{	name?: string | undefined | null | Variable<any, string>},Valu
 	createdAt?:boolean | `@${string}`,
 	/** 更新时间 */
 	updatedAt?:boolean | `@${string}`,
+	/** 创建人 */
+	createdBy?:boolean | `@${string}`,
+	/** 修改人 */
+	updatedBy?:boolean | `@${string}`,
 	/** 文件名 */
 	fileName?:boolean | `@${string}`,
 	/** 原始文件名 */
@@ -1049,6 +1069,10 @@ queryTagList?: [{	name?: string | undefined | null | Variable<any, string>},Valu
 	createdAt?:boolean | `@${string}`,
 	/** 更新时间 */
 	updatedAt?:boolean | `@${string}`,
+	/** 创建人 */
+	createdBy?:boolean | `@${string}`,
+	/** 修改人 */
+	updatedBy?:boolean | `@${string}`,
 	/** 标题 */
 	name?:boolean | `@${string}`,
 	/** 菜单 */
@@ -1061,6 +1085,10 @@ queryTagList?: [{	name?: string | undefined | null | Variable<any, string>},Valu
 	createdAt?:boolean | `@${string}`,
 	/** 更新时间 */
 	updatedAt?:boolean | `@${string}`,
+	/** 创建人 */
+	createdBy?:boolean | `@${string}`,
+	/** 修改人 */
+	updatedBy?:boolean | `@${string}`,
 	/** 标题 */
 	title?:boolean | `@${string}`,
 	/** 图标 */
@@ -1081,6 +1109,10 @@ queryTagList?: [{	name?: string | undefined | null | Variable<any, string>},Valu
 	createdAt?:boolean | `@${string}`,
 	/** 更新时间 */
 	updatedAt?:boolean | `@${string}`,
+	/** 创建人 */
+	createdBy?:boolean | `@${string}`,
+	/** 修改人 */
+	updatedBy?:boolean | `@${string}`,
 	/** 标题 */
 	title?:boolean | `@${string}`,
 	/** 当前版本id */
@@ -1117,6 +1149,10 @@ queryTagList?: [{	name?: string | undefined | null | Variable<any, string>},Valu
 	createdAt?:boolean | `@${string}`,
 	/** 更新时间 */
 	updatedAt?:boolean | `@${string}`,
+	/** 创建人 */
+	createdBy?:boolean | `@${string}`,
+	/** 修改人 */
+	updatedBy?:boolean | `@${string}`,
 	/** 内容 */
 	content?:boolean | `@${string}`,
 	/** 版本 */
@@ -1129,6 +1165,10 @@ queryTagList?: [{	name?: string | undefined | null | Variable<any, string>},Valu
 	createdAt?:boolean | `@${string}`,
 	/** 更新时间 */
 	updatedAt?:boolean | `@${string}`,
+	/** 创建人 */
+	createdBy?:boolean | `@${string}`,
+	/** 修改人 */
+	updatedBy?:boolean | `@${string}`,
 	/** 标题 */
 	name?:boolean | `@${string}`,
 	/** 图标 */
@@ -1143,6 +1183,10 @@ queryTagList?: [{	name?: string | undefined | null | Variable<any, string>},Valu
 	createdAt?:boolean | `@${string}`,
 	/** 更新时间 */
 	updatedAt?:boolean | `@${string}`,
+	/** 创建人 */
+	createdBy?:boolean | `@${string}`,
+	/** 修改人 */
+	updatedBy?:boolean | `@${string}`,
 	/** userId */
 	userId?:boolean | `@${string}`,
 	/** postId */
@@ -1417,6 +1461,10 @@ queryTagList?: [{	name?: string | undefined | null},ResolverInputTypes["Tag"]],
 	createdAt?:boolean | `@${string}`,
 	/** 更新时间 */
 	updatedAt?:boolean | `@${string}`,
+	/** 创建人 */
+	createdBy?:boolean | `@${string}`,
+	/** 修改人 */
+	updatedBy?:boolean | `@${string}`,
 	/** 用户名 */
 	username?:boolean | `@${string}`,
 	/** 头像 */
@@ -1449,6 +1497,10 @@ queryTagList?: [{	name?: string | undefined | null},ResolverInputTypes["Tag"]],
 	createdAt?:boolean | `@${string}`,
 	/** 更新时间 */
 	updatedAt?:boolean | `@${string}`,
+	/** 创建人 */
+	createdBy?:boolean | `@${string}`,
+	/** 修改人 */
+	updatedBy?:boolean | `@${string}`,
 	/** 角色名 */
 	name?:boolean | `@${string}`,
 	/** 角色level */
@@ -1467,6 +1519,10 @@ queryTagList?: [{	name?: string | undefined | null},ResolverInputTypes["Tag"]],
 	createdAt?:boolean | `@${string}`,
 	/** 更新时间 */
 	updatedAt?:boolean | `@${string}`,
+	/** 创建人 */
+	createdBy?:boolean | `@${string}`,
+	/** 修改人 */
+	updatedBy?:boolean | `@${string}`,
 	/** 菜单名 */
 	name?:boolean | `@${string}`,
 	/** 标题 */
@@ -1526,6 +1582,10 @@ queryTagList?: [{	name?: string | undefined | null},ResolverInputTypes["Tag"]],
 	createdAt?:boolean | `@${string}`,
 	/** 更新时间 */
 	updatedAt?:boolean | `@${string}`,
+	/** 创建人 */
+	createdBy?:boolean | `@${string}`,
+	/** 修改人 */
+	updatedBy?:boolean | `@${string}`,
 	/** 用户名 */
 	username?:boolean | `@${string}`,
 	/** 头像 */
@@ -1556,6 +1616,10 @@ queryTagList?: [{	name?: string | undefined | null},ResolverInputTypes["Tag"]],
 	createdAt?:boolean | `@${string}`,
 	/** 更新时间 */
 	updatedAt?:boolean | `@${string}`,
+	/** 创建人 */
+	createdBy?:boolean | `@${string}`,
+	/** 修改人 */
+	updatedBy?:boolean | `@${string}`,
 	/** 文件名 */
 	fileName?:boolean | `@${string}`,
 	/** 原始文件名 */
@@ -1584,6 +1648,10 @@ queryTagList?: [{	name?: string | undefined | null},ResolverInputTypes["Tag"]],
 	createdAt?:boolean | `@${string}`,
 	/** 更新时间 */
 	updatedAt?:boolean | `@${string}`,
+	/** 创建人 */
+	createdBy?:boolean | `@${string}`,
+	/** 修改人 */
+	updatedBy?:boolean | `@${string}`,
 	/** 标题 */
 	name?:boolean | `@${string}`,
 	/** 菜单 */
@@ -1596,6 +1664,10 @@ queryTagList?: [{	name?: string | undefined | null},ResolverInputTypes["Tag"]],
 	createdAt?:boolean | `@${string}`,
 	/** 更新时间 */
 	updatedAt?:boolean | `@${string}`,
+	/** 创建人 */
+	createdBy?:boolean | `@${string}`,
+	/** 修改人 */
+	updatedBy?:boolean | `@${string}`,
 	/** 标题 */
 	title?:boolean | `@${string}`,
 	/** 图标 */
@@ -1616,6 +1688,10 @@ queryTagList?: [{	name?: string | undefined | null},ResolverInputTypes["Tag"]],
 	createdAt?:boolean | `@${string}`,
 	/** 更新时间 */
 	updatedAt?:boolean | `@${string}`,
+	/** 创建人 */
+	createdBy?:boolean | `@${string}`,
+	/** 修改人 */
+	updatedBy?:boolean | `@${string}`,
 	/** 标题 */
 	title?:boolean | `@${string}`,
 	/** 当前版本id */
@@ -1652,6 +1728,10 @@ queryTagList?: [{	name?: string | undefined | null},ResolverInputTypes["Tag"]],
 	createdAt?:boolean | `@${string}`,
 	/** 更新时间 */
 	updatedAt?:boolean | `@${string}`,
+	/** 创建人 */
+	createdBy?:boolean | `@${string}`,
+	/** 修改人 */
+	updatedBy?:boolean | `@${string}`,
 	/** 内容 */
 	content?:boolean | `@${string}`,
 	/** 版本 */
@@ -1664,6 +1744,10 @@ queryTagList?: [{	name?: string | undefined | null},ResolverInputTypes["Tag"]],
 	createdAt?:boolean | `@${string}`,
 	/** 更新时间 */
 	updatedAt?:boolean | `@${string}`,
+	/** 创建人 */
+	createdBy?:boolean | `@${string}`,
+	/** 修改人 */
+	updatedBy?:boolean | `@${string}`,
 	/** 标题 */
 	name?:boolean | `@${string}`,
 	/** 图标 */
@@ -1678,6 +1762,10 @@ queryTagList?: [{	name?: string | undefined | null},ResolverInputTypes["Tag"]],
 	createdAt?:boolean | `@${string}`,
 	/** 更新时间 */
 	updatedAt?:boolean | `@${string}`,
+	/** 创建人 */
+	createdBy?:boolean | `@${string}`,
+	/** 修改人 */
+	updatedBy?:boolean | `@${string}`,
 	/** userId */
 	userId?:boolean | `@${string}`,
 	/** postId */
@@ -1939,6 +2027,10 @@ export type ModelTypes = {
 	createdAt?: ModelTypes["DateTime"] | undefined,
 	/** 更新时间 */
 	updatedAt?: ModelTypes["DateTime"] | undefined,
+	/** 创建人 */
+	createdBy?: string | undefined,
+	/** 修改人 */
+	updatedBy?: string | undefined,
 	/** 用户名 */
 	username: string,
 	/** 头像 */
@@ -1969,6 +2061,10 @@ export type ModelTypes = {
 	createdAt?: ModelTypes["DateTime"] | undefined,
 	/** 更新时间 */
 	updatedAt?: ModelTypes["DateTime"] | undefined,
+	/** 创建人 */
+	createdBy?: string | undefined,
+	/** 修改人 */
+	updatedBy?: string | undefined,
 	/** 角色名 */
 	name: string,
 	/** 角色level */
@@ -1986,6 +2082,10 @@ export type ModelTypes = {
 	createdAt?: ModelTypes["DateTime"] | undefined,
 	/** 更新时间 */
 	updatedAt?: ModelTypes["DateTime"] | undefined,
+	/** 创建人 */
+	createdBy?: string | undefined,
+	/** 修改人 */
+	updatedBy?: string | undefined,
 	/** 菜单名 */
 	name: string,
 	/** 标题 */
@@ -2041,6 +2141,10 @@ export type ModelTypes = {
 	createdAt?: ModelTypes["DateTime"] | undefined,
 	/** 更新时间 */
 	updatedAt?: ModelTypes["DateTime"] | undefined,
+	/** 创建人 */
+	createdBy?: string | undefined,
+	/** 修改人 */
+	updatedBy?: string | undefined,
 	/** 用户名 */
 	username: string,
 	/** 头像 */
@@ -2069,6 +2173,10 @@ export type ModelTypes = {
 	createdAt?: ModelTypes["DateTime"] | undefined,
 	/** 更新时间 */
 	updatedAt?: ModelTypes["DateTime"] | undefined,
+	/** 创建人 */
+	createdBy?: string | undefined,
+	/** 修改人 */
+	updatedBy?: string | undefined,
 	/** 文件名 */
 	fileName?: string | undefined,
 	/** 原始文件名 */
@@ -2096,6 +2204,10 @@ export type ModelTypes = {
 	createdAt?: ModelTypes["DateTime"] | undefined,
 	/** 更新时间 */
 	updatedAt?: ModelTypes["DateTime"] | undefined,
+	/** 创建人 */
+	createdBy?: string | undefined,
+	/** 修改人 */
+	updatedBy?: string | undefined,
 	/** 标题 */
 	name: string,
 	/** 菜单 */
@@ -2107,6 +2219,10 @@ export type ModelTypes = {
 	createdAt?: ModelTypes["DateTime"] | undefined,
 	/** 更新时间 */
 	updatedAt?: ModelTypes["DateTime"] | undefined,
+	/** 创建人 */
+	createdBy?: string | undefined,
+	/** 修改人 */
+	updatedBy?: string | undefined,
 	/** 标题 */
 	title: string,
 	/** 图标 */
@@ -2126,6 +2242,10 @@ export type ModelTypes = {
 	createdAt?: ModelTypes["DateTime"] | undefined,
 	/** 更新时间 */
 	updatedAt?: ModelTypes["DateTime"] | undefined,
+	/** 创建人 */
+	createdBy?: string | undefined,
+	/** 修改人 */
+	updatedBy?: string | undefined,
 	/** 标题 */
 	title: string,
 	/** 当前版本id */
@@ -2161,6 +2281,10 @@ export type ModelTypes = {
 	createdAt?: ModelTypes["DateTime"] | undefined,
 	/** 更新时间 */
 	updatedAt?: ModelTypes["DateTime"] | undefined,
+	/** 创建人 */
+	createdBy?: string | undefined,
+	/** 修改人 */
+	updatedBy?: string | undefined,
 	/** 内容 */
 	content?: string | undefined,
 	/** 版本 */
@@ -2172,6 +2296,10 @@ export type ModelTypes = {
 	createdAt?: ModelTypes["DateTime"] | undefined,
 	/** 更新时间 */
 	updatedAt?: ModelTypes["DateTime"] | undefined,
+	/** 创建人 */
+	createdBy?: string | undefined,
+	/** 修改人 */
+	updatedBy?: string | undefined,
 	/** 标题 */
 	name: string,
 	/** 图标 */
@@ -2185,6 +2313,10 @@ export type ModelTypes = {
 	createdAt?: ModelTypes["DateTime"] | undefined,
 	/** 更新时间 */
 	updatedAt?: ModelTypes["DateTime"] | undefined,
+	/** 创建人 */
+	createdBy?: string | undefined,
+	/** 修改人 */
+	updatedBy?: string | undefined,
 	/** userId */
 	userId: string,
 	/** postId */
@@ -2463,6 +2595,10 @@ export type GraphQLTypes = {
 	createdAt?: GraphQLTypes["DateTime"] | undefined,
 	/** 更新时间 */
 	updatedAt?: GraphQLTypes["DateTime"] | undefined,
+	/** 创建人 */
+	createdBy?: string | undefined,
+	/** 修改人 */
+	updatedBy?: string | undefined,
 	/** 用户名 */
 	username: string,
 	/** 头像 */
@@ -2495,6 +2631,10 @@ export type GraphQLTypes = {
 	createdAt?: GraphQLTypes["DateTime"] | undefined,
 	/** 更新时间 */
 	updatedAt?: GraphQLTypes["DateTime"] | undefined,
+	/** 创建人 */
+	createdBy?: string | undefined,
+	/** 修改人 */
+	updatedBy?: string | undefined,
 	/** 角色名 */
 	name: string,
 	/** 角色level */
@@ -2513,6 +2653,10 @@ export type GraphQLTypes = {
 	createdAt?: GraphQLTypes["DateTime"] | undefined,
 	/** 更新时间 */
 	updatedAt?: GraphQLTypes["DateTime"] | undefined,
+	/** 创建人 */
+	createdBy?: string | undefined,
+	/** 修改人 */
+	updatedBy?: string | undefined,
 	/** 菜单名 */
 	name: string,
 	/** 标题 */
@@ -2572,6 +2716,10 @@ export type GraphQLTypes = {
 	createdAt?: GraphQLTypes["DateTime"] | undefined,
 	/** 更新时间 */
 	updatedAt?: GraphQLTypes["DateTime"] | undefined,
+	/** 创建人 */
+	createdBy?: string | undefined,
+	/** 修改人 */
+	updatedBy?: string | undefined,
 	/** 用户名 */
 	username: string,
 	/** 头像 */
@@ -2602,6 +2750,10 @@ export type GraphQLTypes = {
 	createdAt?: GraphQLTypes["DateTime"] | undefined,
 	/** 更新时间 */
 	updatedAt?: GraphQLTypes["DateTime"] | undefined,
+	/** 创建人 */
+	createdBy?: string | undefined,
+	/** 修改人 */
+	updatedBy?: string | undefined,
 	/** 文件名 */
 	fileName?: string | undefined,
 	/** 原始文件名 */
@@ -2630,6 +2782,10 @@ export type GraphQLTypes = {
 	createdAt?: GraphQLTypes["DateTime"] | undefined,
 	/** 更新时间 */
 	updatedAt?: GraphQLTypes["DateTime"] | undefined,
+	/** 创建人 */
+	createdBy?: string | undefined,
+	/** 修改人 */
+	updatedBy?: string | undefined,
 	/** 标题 */
 	name: string,
 	/** 菜单 */
@@ -2642,6 +2798,10 @@ export type GraphQLTypes = {
 	createdAt?: GraphQLTypes["DateTime"] | undefined,
 	/** 更新时间 */
 	updatedAt?: GraphQLTypes["DateTime"] | undefined,
+	/** 创建人 */
+	createdBy?: string | undefined,
+	/** 修改人 */
+	updatedBy?: string | undefined,
 	/** 标题 */
 	title: string,
 	/** 图标 */
@@ -2662,6 +2822,10 @@ export type GraphQLTypes = {
 	createdAt?: GraphQLTypes["DateTime"] | undefined,
 	/** 更新时间 */
 	updatedAt?: GraphQLTypes["DateTime"] | undefined,
+	/** 创建人 */
+	createdBy?: string | undefined,
+	/** 修改人 */
+	updatedBy?: string | undefined,
 	/** 标题 */
 	title: string,
 	/** 当前版本id */
@@ -2698,6 +2862,10 @@ export type GraphQLTypes = {
 	createdAt?: GraphQLTypes["DateTime"] | undefined,
 	/** 更新时间 */
 	updatedAt?: GraphQLTypes["DateTime"] | undefined,
+	/** 创建人 */
+	createdBy?: string | undefined,
+	/** 修改人 */
+	updatedBy?: string | undefined,
 	/** 内容 */
 	content?: string | undefined,
 	/** 版本 */
@@ -2710,6 +2878,10 @@ export type GraphQLTypes = {
 	createdAt?: GraphQLTypes["DateTime"] | undefined,
 	/** 更新时间 */
 	updatedAt?: GraphQLTypes["DateTime"] | undefined,
+	/** 创建人 */
+	createdBy?: string | undefined,
+	/** 修改人 */
+	updatedBy?: string | undefined,
 	/** 标题 */
 	name: string,
 	/** 图标 */
@@ -2724,6 +2896,10 @@ export type GraphQLTypes = {
 	createdAt?: GraphQLTypes["DateTime"] | undefined,
 	/** 更新时间 */
 	updatedAt?: GraphQLTypes["DateTime"] | undefined,
+	/** 创建人 */
+	createdBy?: string | undefined,
+	/** 修改人 */
+	updatedBy?: string | undefined,
 	/** userId */
 	userId: string,
 	/** postId */

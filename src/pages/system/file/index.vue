@@ -71,6 +71,12 @@ const columns: TableColumnType<IFile>[] = [
     dataIndex: 'createdAt',
   },
   {
+    title: '创建人',
+    align: 'center',
+    width: 180,
+    dataIndex: 'createdBy',
+  },
+  {
     title: '操作',
     width: 180,
     fixed: 'right',

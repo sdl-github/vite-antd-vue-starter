@@ -36,6 +36,8 @@ export function queryFilePage(args: FileQueryArg) {
         category: true,
         hash: true,
         createdAt: true,
+        createdBy: true,
+        updatedBy: true,
       },
       totalCount: true,
       hasNextPage: true,
