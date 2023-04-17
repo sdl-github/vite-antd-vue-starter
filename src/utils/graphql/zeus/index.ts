@@ -862,6 +862,11 @@ queryUserPage?: [{	/** 用户id */
 	from?: string | undefined | null | Variable<any, string>,	/** 结束时间YYYY-DD-MM */
 	to?: string | undefined | null | Variable<any, string>,	/** 是否包含角色 */
 	includeRole?: boolean | undefined | null | Variable<any, string>,	pageNo?: number | undefined | null | Variable<any, string>,	pageSize?: number | undefined | null | Variable<any, string>},ValueTypes["UserPageResult"]],
+queryFilePage?: [{	/** 文件名 */
+	fileName?: string | undefined | null | Variable<any, string>,	/** 原始文件名 */
+	originalName?: string | undefined | null | Variable<any, string>,	/** 开始时间YYYY-DD-MM */
+	from?: string | undefined | null | Variable<any, string>,	/** 结束时间YYYY-DD-MM */
+	to?: string | undefined | null | Variable<any, string>,	pageNo?: number | undefined | null | Variable<any, string>,	pageSize?: number | undefined | null | Variable<any, string>},ValueTypes["FilePageResult"]],
 	/** 获取space */
 	querySpace?:ValueTypes["Space"],
 querySpaceMenu?: [{	spaceId: string | Variable<any, string>},ValueTypes["SpaceMenu"]],
@@ -1004,6 +1009,40 @@ queryTagList?: [{	name?: string | undefined | null | Variable<any, string>},Valu
 	roles?:ValueTypes["Role"],
 		__typename?: boolean | `@${string}`
 }>;
+	["FilePageResult"]: AliasType<{
+	data?:ValueTypes["File"],
+	totalCount?:boolean | `@${string}`,
+	hasNextPage?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
+	["File"]: AliasType<{
+	id?:boolean | `@${string}`,
+	/** 创建时间 */
+	createdAt?:boolean | `@${string}`,
+	/** 更新时间 */
+	updatedAt?:boolean | `@${string}`,
+	/** 文件名 */
+	fileName?:boolean | `@${string}`,
+	/** 原始文件名 */
+	originalName?:boolean | `@${string}`,
+	/** hash */
+	hash?:boolean | `@${string}`,
+	/** mimeType */
+	mimeType?:boolean | `@${string}`,
+	/** encoding */
+	encoding?:boolean | `@${string}`,
+	/** 文件大小 */
+	size?:boolean | `@${string}`,
+	/** 文件地址 */
+	url?:boolean | `@${string}`,
+	/** bucket */
+	bucket?:boolean | `@${string}`,
+	/** provider */
+	provider?:boolean | `@${string}`,
+	/** category */
+	category?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
 	["Space"]: AliasType<{
 	id?:boolean | `@${string}`,
 	/** 创建时间 */
@@ -1136,6 +1175,7 @@ createUser?: [{	input: ValueTypes["CreateUserInput"] | Variable<any, string>},Va
 updateUser?: [{	input: ValueTypes["EditUserInput"] | Variable<any, string>},ValueTypes["BaseResponse"]],
 deleteUsers?: [{	userIds: Array<string> | Variable<any, string>},ValueTypes["BaseResponse"]],
 resetUserPassword?: [{	userId: string | Variable<any, string>},ValueTypes["BaseResponse"]],
+delFile?: [{	id: string | Variable<any, string>},boolean | `@${string}`],
 initSpace?: [{	name?: string | undefined | null | Variable<any, string>},ValueTypes["Space"]],
 createSpace?: [{	name: string | Variable<any, string>},ValueTypes["Space"]],
 createSpaceMenu?: [{	input: ValueTypes["CreateSpaceMenuInput"] | Variable<any, string>},ValueTypes["SpaceMenu"]],
@@ -1357,6 +1397,11 @@ queryUserPage?: [{	/** 用户id */
 	from?: string | undefined | null,	/** 结束时间YYYY-DD-MM */
 	to?: string | undefined | null,	/** 是否包含角色 */
 	includeRole?: boolean | undefined | null,	pageNo?: number | undefined | null,	pageSize?: number | undefined | null},ResolverInputTypes["UserPageResult"]],
+queryFilePage?: [{	/** 文件名 */
+	fileName?: string | undefined | null,	/** 原始文件名 */
+	originalName?: string | undefined | null,	/** 开始时间YYYY-DD-MM */
+	from?: string | undefined | null,	/** 结束时间YYYY-DD-MM */
+	to?: string | undefined | null,	pageNo?: number | undefined | null,	pageSize?: number | undefined | null},ResolverInputTypes["FilePageResult"]],
 	/** 获取space */
 	querySpace?:ResolverInputTypes["Space"],
 querySpaceMenu?: [{	spaceId: string},ResolverInputTypes["SpaceMenu"]],
@@ -1499,6 +1544,40 @@ queryTagList?: [{	name?: string | undefined | null},ResolverInputTypes["Tag"]],
 	roles?:ResolverInputTypes["Role"],
 		__typename?: boolean | `@${string}`
 }>;
+	["FilePageResult"]: AliasType<{
+	data?:ResolverInputTypes["File"],
+	totalCount?:boolean | `@${string}`,
+	hasNextPage?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
+	["File"]: AliasType<{
+	id?:boolean | `@${string}`,
+	/** 创建时间 */
+	createdAt?:boolean | `@${string}`,
+	/** 更新时间 */
+	updatedAt?:boolean | `@${string}`,
+	/** 文件名 */
+	fileName?:boolean | `@${string}`,
+	/** 原始文件名 */
+	originalName?:boolean | `@${string}`,
+	/** hash */
+	hash?:boolean | `@${string}`,
+	/** mimeType */
+	mimeType?:boolean | `@${string}`,
+	/** encoding */
+	encoding?:boolean | `@${string}`,
+	/** 文件大小 */
+	size?:boolean | `@${string}`,
+	/** 文件地址 */
+	url?:boolean | `@${string}`,
+	/** bucket */
+	bucket?:boolean | `@${string}`,
+	/** provider */
+	provider?:boolean | `@${string}`,
+	/** category */
+	category?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
 	["Space"]: AliasType<{
 	id?:boolean | `@${string}`,
 	/** 创建时间 */
@@ -1631,6 +1710,7 @@ createUser?: [{	input: ResolverInputTypes["CreateUserInput"]},ResolverInputTypes
 updateUser?: [{	input: ResolverInputTypes["EditUserInput"]},ResolverInputTypes["BaseResponse"]],
 deleteUsers?: [{	userIds: Array<string>},ResolverInputTypes["BaseResponse"]],
 resetUserPassword?: [{	userId: string},ResolverInputTypes["BaseResponse"]],
+delFile?: [{	id: string},boolean | `@${string}`],
 initSpace?: [{	name?: string | undefined | null},ResolverInputTypes["Space"]],
 createSpace?: [{	name: string},ResolverInputTypes["Space"]],
 createSpaceMenu?: [{	input: ResolverInputTypes["CreateSpaceMenuInput"]},ResolverInputTypes["SpaceMenu"]],
@@ -1838,6 +1918,8 @@ export type ModelTypes = {
 	queryRolePage: ModelTypes["RolePageResult"],
 	/** 角色列表查询 */
 	queryUserPage: ModelTypes["UserPageResult"],
+	/** 文件列表查询 */
+	queryFilePage: ModelTypes["FilePageResult"],
 	/** 获取space */
 	querySpace: Array<ModelTypes["Space"]>,
 	/** 获取spaceMenu */
@@ -1976,6 +2058,38 @@ export type ModelTypes = {
 	/** 角色 */
 	roles?: Array<ModelTypes["Role"] | undefined> | undefined
 };
+	["FilePageResult"]: {
+		data?: Array<ModelTypes["File"] | undefined> | undefined,
+	totalCount: number,
+	hasNextPage: boolean
+};
+	["File"]: {
+		id: string,
+	/** 创建时间 */
+	createdAt?: ModelTypes["DateTime"] | undefined,
+	/** 更新时间 */
+	updatedAt?: ModelTypes["DateTime"] | undefined,
+	/** 文件名 */
+	fileName?: string | undefined,
+	/** 原始文件名 */
+	originalName: string,
+	/** hash */
+	hash: string,
+	/** mimeType */
+	mimeType?: string | undefined,
+	/** encoding */
+	encoding?: string | undefined,
+	/** 文件大小 */
+	size: number,
+	/** 文件地址 */
+	url?: string | undefined,
+	/** bucket */
+	bucket?: string | undefined,
+	/** provider */
+	provider?: string | undefined,
+	/** category */
+	category?: string | undefined
+};
 	["Space"]: {
 		id: string,
 	/** 创建时间 */
@@ -2111,6 +2225,8 @@ export type ModelTypes = {
 	deleteUsers: ModelTypes["BaseResponse"],
 	/** 重置用户密码 */
 	resetUserPassword: ModelTypes["BaseResponse"],
+	/** 删除文件 */
+	delFile: boolean,
 	/** 初始化space */
 	initSpace: ModelTypes["Space"],
 	/** 创建space */
@@ -2325,6 +2441,8 @@ export type GraphQLTypes = {
 	queryRolePage: GraphQLTypes["RolePageResult"],
 	/** 角色列表查询 */
 	queryUserPage: GraphQLTypes["UserPageResult"],
+	/** 文件列表查询 */
+	queryFilePage: GraphQLTypes["FilePageResult"],
 	/** 获取space */
 	querySpace: Array<GraphQLTypes["Space"]>,
 	/** 获取spaceMenu */
@@ -2471,6 +2589,40 @@ export type GraphQLTypes = {
 	/** 角色 */
 	roles?: Array<GraphQLTypes["Role"] | undefined> | undefined
 };
+	["FilePageResult"]: {
+	__typename: "FilePageResult",
+	data?: Array<GraphQLTypes["File"] | undefined> | undefined,
+	totalCount: number,
+	hasNextPage: boolean
+};
+	["File"]: {
+	__typename: "File",
+	id: string,
+	/** 创建时间 */
+	createdAt?: GraphQLTypes["DateTime"] | undefined,
+	/** 更新时间 */
+	updatedAt?: GraphQLTypes["DateTime"] | undefined,
+	/** 文件名 */
+	fileName?: string | undefined,
+	/** 原始文件名 */
+	originalName: string,
+	/** hash */
+	hash: string,
+	/** mimeType */
+	mimeType?: string | undefined,
+	/** encoding */
+	encoding?: string | undefined,
+	/** 文件大小 */
+	size: number,
+	/** 文件地址 */
+	url?: string | undefined,
+	/** bucket */
+	bucket?: string | undefined,
+	/** provider */
+	provider?: string | undefined,
+	/** category */
+	category?: string | undefined
+};
 	["Space"]: {
 	__typename: "Space",
 	id: string,
@@ -2615,6 +2767,8 @@ export type GraphQLTypes = {
 	deleteUsers: GraphQLTypes["BaseResponse"],
 	/** 重置用户密码 */
 	resetUserPassword: GraphQLTypes["BaseResponse"],
+	/** 删除文件 */
+	delFile: boolean,
 	/** 初始化space */
 	initSpace: GraphQLTypes["Space"],
 	/** 创建space */

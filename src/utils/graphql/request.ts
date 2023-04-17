@@ -22,7 +22,7 @@ request.interceptors.request.use((config) => {
 request.interceptors.response.use((response) => {
   const { data } = response
   handleError(data)
-  return data.data
+  return data
 }, (err) => {
   const { response: { data } } = err
   handleError(data)

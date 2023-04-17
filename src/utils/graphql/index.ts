@@ -2,10 +2,14 @@ import { Thunder } from './zeus'
 import request from './request'
 
 const thunder = Thunder(async (query) => {
-  return request({
-    url: '/graphql',
-    method: 'POST',
-    data: { query },
+  return new Promise((resolve) => {
+    request({
+      url: '/graphql',
+      method: 'POST',
+      data: { query },
+    }).then((res) => {
+      resolve(res.data)
+    })
   })
 })
 

@@ -1,6 +1,6 @@
 <route lang="yaml">
 meta:
-layout: DashboardLayout
+  layout: DashboardLayout
 </route>
 
 <script setup lang="tsx">

@@ -91,7 +91,7 @@ export function forceLogout(token: string) {
 type OAuthType = 'github'
 export function queryOauthUrl(type: OAuthType) {
   return request({
-    url: `/oauth/${type}`,
+    url: `/api/oauth/${type}`,
     method: 'get',
   })
 }

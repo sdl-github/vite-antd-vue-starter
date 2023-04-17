@@ -23,6 +23,9 @@ export const AllTypesProps: Record<string,any> = {
 		queryUserPage:{
 
 		},
+		queryFilePage:{
+
+		},
 		querySpaceMenu:{
 
 		},
@@ -77,6 +80,9 @@ export const AllTypesProps: Record<string,any> = {
 
 		},
 		resetUserPassword:{
+
+		},
+		delFile:{
 
 		},
 		initSpace:{
@@ -167,6 +173,7 @@ export const ReturnTypes: Record<string,any> = {
 		queryMenuTree:"JSONObject",
 		queryRolePage:"RolePageResult",
 		queryUserPage:"UserPageResult",
+		queryFilePage:"FilePageResult",
 		querySpace:"Space",
 		querySpaceMenu:"SpaceMenu",
 		queryPostPage:"PostPageResult",
@@ -247,6 +254,26 @@ export const ReturnTypes: Record<string,any> = {
 		phone:"String",
 		note:"String",
 		roles:"Role"
+	},
+	FilePageResult:{
+		data:"File",
+		totalCount:"Float",
+		hasNextPage:"Boolean"
+	},
+	File:{
+		id:"ID",
+		createdAt:"DateTime",
+		updatedAt:"DateTime",
+		fileName:"String",
+		originalName:"String",
+		hash:"String",
+		mimeType:"String",
+		encoding:"String",
+		size:"Float",
+		url:"String",
+		bucket:"String",
+		provider:"String",
+		category:"String"
 	},
 	Space:{
 		id:"ID",
@@ -331,6 +358,7 @@ export const ReturnTypes: Record<string,any> = {
 		updateUser:"BaseResponse",
 		deleteUsers:"BaseResponse",
 		resetUserPassword:"BaseResponse",
+		delFile:"Boolean",
 		initSpace:"Space",
 		createSpace:"Space",
 		createSpaceMenu:"SpaceMenu",

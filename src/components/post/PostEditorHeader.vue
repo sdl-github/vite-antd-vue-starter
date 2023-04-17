@@ -40,7 +40,12 @@ function formatDate(date: string) {
         <div class="flex items-center color-#8a919f text-12px">
           <LoadingOutlined v-if="saveLoading" class="mr-2 color-#4096ff" />
           <div class="mr-2">
-            {{ saveLoading && '保存中' || '已保存' }}
+            <template v-if="saveLoading">
+              保存中
+            </template>
+            <template v-else>
+              <span class="color-#4096ff">已保存</span>
+            </template>
           </div>
           <div class="">
             {{ formatDate(post?.updatedAt) }}
