@@ -41,8 +41,8 @@ function handleLogin() {
 
 async function handleOauthLogin() {
   oauthLoading.value = true
-  const url = await queryOauthUrl('github')
-  window.location.href = url
+  const res = await queryOauthUrl('github')
+  window.location.href = res.data
   // oauthLoading.value = false
 }
 </script>
