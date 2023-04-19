@@ -31,6 +31,6 @@ router.beforeEach(async (to, from, next) => {
 })
 
 router.afterEach((to) => {
-  document.title = to.meta.title as string || '嗷呜'
+  document.title = to.meta.title as string || '记事本'
   NProgress.done()
 })

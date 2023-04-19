@@ -1,20 +1,25 @@
 <script lang="ts" setup>
+import { format } from 'timeago.js'
+
 defineProps({
   post: {
     type: Object,
     default: () => {},
   },
 })
+function formatTimeAgo(data: string) {
+  return format(data, 'zh_CN')
+}
 </script>
 
 <template>
-  <div class="bg-#fff rounded p-5 mb-2 w-720px">
+  <div class="bg-#fff rounded p-5 mb-2 w-820px">
     <div class="flex items-center text-[12px]">
       <div class="color-[#515767] cursor-pointer ml-1">
         {{ post.user.nickname || post.user.username }}
       </div>
-      <div v-time class="color-[#8a919f] ml-2">
-        {{ post.createdAt }}
+      <div class="color-[#8a919f] ml-2">
+        {{ formatTimeAgo(post.createdAt) }}
       </div>
     </div>
     <div class="mt-3 text-[16px] font-bold leading-6 cursor-pointer">

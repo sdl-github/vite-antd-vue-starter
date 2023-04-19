@@ -1,7 +1,7 @@
 <route lang="yaml">
 meta:
   layout: PostLayout
-  title: 嗷呜首页
+  title: 首页
 </route>
 
 <script setup lang="ts">

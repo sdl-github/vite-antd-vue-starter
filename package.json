@@ -36,6 +36,7 @@
     "lodash": "^4.17.21",
     "nprogress": "^0.2.0",
     "pinia": "^2.0.33",
+    "timeago.js": "^4.0.2",
     "tinymce": "^6.4.1",
     "vue": "^3.2.47",
     "vue-cropper": "^1.0.5",

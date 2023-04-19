@@ -38,12 +38,12 @@ function handleEdit() {
 <template>
   <div class="flex justify-center pt-5">
     <template v-if="!post">
-      <div class="bg-#fff rounded p-5 w-720px my-2 min-h-100vh">
+      <div class="bg-#fff rounded p-5 w-820px my-2 min-h-100vh">
         <a-skeleton active />
       </div>
     </template>
     <template v-else>
-      <div class="bg-#fff rounded p-5 w-720px my-2 min-h-100vh">
+      <div class="bg-#fff rounded p-5 w-820px my-2 min-h-100vh">
         <h1 class="color-#252933 text-1.5rem text-[600px] mb-2">
           {{ post.title }}
         </h1>
