@@ -1,7 +1,7 @@
 import type { BytemdPlugin } from 'bytemd'
 import './index.css'
 
-export default function CopyCodePlugin(): BytemdPlugin {
+export default function codeBlock(): BytemdPlugin {
   return {
     viewerEffect({ markdownBody }) {
       const els = markdownBody.querySelectorAll('pre')
@@ -24,7 +24,7 @@ export default function CopyCodePlugin(): BytemdPlugin {
         copy.addEventListener('click', () => {
           copy.innerHTML = 'ok'
           copy.style.background = '#1677ff'
-          const code = el.textContent
+          const code = codeDom?.textContent
           const copyEl = document.createElement('textarea')
           copyEl.value = code || ''
           document.body.appendChild(copyEl)

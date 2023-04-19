@@ -1,9 +1,10 @@
 import { mutation, query } from '@/utils/graphql'
 import request from '@/utils/graphql/request'
 
-export function uploadSinlgeFile(file: File) {
+export function uploadSinlgeFile(file: File, category = 'post') {
   const data = new FormData()
   data.append('file', file)
+  data.append('category', category)
   return request({
     url: '/api/file/upload',
     method: 'post',

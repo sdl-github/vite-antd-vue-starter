@@ -6,13 +6,13 @@ import gemoji from '@bytemd/plugin-gemoji'
 import breaks from '@bytemd/plugin-breaks'
 import frontmatter from '@bytemd/plugin-frontmatter'
 import gfm from '@bytemd/plugin-gfm'
-import copyCode from './copy-code'
+import codeBlock from './code-block'
 
 export const plugins = [
   gemoji(),
   breaks(),
   frontmatter(),
   gfm(),
-  copyCode(),
+  codeBlock(),
   highlight(),
 ]

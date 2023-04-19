@@ -41,6 +41,7 @@ specifiers:
   timeago.js: ^4.0.2
   tinymce: ^6.4.1
   typescript: ^5.0.3
+  unist-util-visit: ^4.1.2
   unocss: ^0.50.6
   unplugin-auto-import: ^0.15.2
   unplugin-vue-components: ^0.24.1
@@ -80,6 +81,7 @@ dependencies:
   pinia: 2.0.33_dtiidk7kpxlb6f6tlcun7ghfqm
   timeago.js: 4.0.2
   tinymce: 6.4.1
+  unist-util-visit: 4.1.2
   vue: 3.2.47
   vue-cropper: 1.0.5
   vue-filepond: 7.0.3_filepond@4.30.4+vue@3.2.47

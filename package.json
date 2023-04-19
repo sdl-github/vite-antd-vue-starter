@@ -38,6 +38,7 @@
     "pinia": "^2.0.33",
     "timeago.js": "^4.0.2",
     "tinymce": "^6.4.1",
+    "unist-util-visit": "^4.1.2",
     "vue": "^3.2.47",
     "vue-cropper": "^1.0.5",
     "vue-filepond": "^7.0.3",

@@ -1,8 +1,12 @@
 <script setup lang="ts">
+import { message } from 'ant-design-vue'
 import { Editor } from '@bytemd/vue-next'
+import zhHans from 'bytemd/locales/zh_Hans.json'
 import { plugins } from './plugins/index'
 import 'bytemd/dist/index.css'
 import './theme/smart-blue.css'
+import { uploadSinlgeFile } from '@/api/file'
+
 const spaceStore = useSpaceStore()
 const versionId = computed(() => spaceStore.post?.currentVersionId as string)
 
@@ -22,6 +26,28 @@ function handleChange(value: string) {
   content.value = value
   updateServer()
 }
+
+async function uploadImages(files: File[]) {
+  const list = []
+  for (const file of files) {
+    const close = message.loading('上传中')
+    try {
+      const res = await uploadSinlgeFile(file)
+      if (!res.url) {
+        throw new Error('未知错误')
+      }
+      close()
+      message.success(`${file.name}上传成功`)
+      list.push({ url: encodeURI(res.url) })
+    }
+    catch (e) {
+      close()
+      console.log(e)
+      message.error(`${file.name}上传出错，请重试`)
+    }
+  }
+  return list
+}
 </script>
 
 <template>
@@ -31,7 +57,15 @@ function handleChange(value: string) {
         <a-skeleton active />
       </div>
       <template v-else>
-        <Editor v-if="spaceStore.currentId" :locale="zhHans" :plugins="plugins" :value="content" class="h-full" @change="handleChange" />
+        <Editor
+          v-if="spaceStore.currentId"
+          class="h-full"
+          :locale="zhHans"
+          :plugins="plugins"
+          :value="content"
+          :upload-images="uploadImages"
+          @change="handleChange"
+        />
         <div v-else class="flex justify-center pt-[20vh] h-full h-[100vh]">
           <div class="" />
         </div>
