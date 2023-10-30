@@ -80,13 +80,4 @@ export default defineConfig({
     // https://github.com/webfansplz/vite-plugin-vue-devtools
     VueDevTools(),
   ],
-
-  // https://github.com/vitest-dev/vitest
-  test: {
-    include: ['test/**/*.test.ts'],
-    environment: 'jsdom',
-    deps: {
-      inline: ['@vue', '@vueuse', 'vue-demi'],
-    },
-  },
 })
