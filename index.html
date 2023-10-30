@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="apple-touch-icon" href="/pwa-192x192.png">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#00aba9">
+  <meta name="msapplication-TileColor" content="#00aba9">
+  <script>
+    (function () {
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+      const setting = localStorage.getItem('vueuse-color-scheme') || 'auto'
+      if (setting === 'dark' || (prefersDark && setting !== 'light'))
+        document.documentElement.classList.toggle('dark', true)
+    })()
+  </script>
+  <style>
+    .global-loader {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 999;
+      width: 100%;
+      height: 100%;
+      background-color: #fff;
+      opacity: 1;
+      transition: opacity .5s ease-in-out;
+    }
+
+    .global-loader-fade-out {
+      opacity: 0;
+    }
+
+    .global-loader-hidden {
+      display: none;
+    }
+
+    .global-loader h1 {
+      font-family: "Helvetica Neue", Helvetica, sans-serif;
+      font-weight: normal;
+      font-size: 24px;
+      letter-spacing: .04rem;
+      white-space: pre;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-image:
+        repeating-linear-gradient(
+          to right,
+          #f44336,
+          #9c27b0,
+          #3f51b5,
+          #03a9f4,
+          #009688,
+          #8bc34a,
+          #ffeb3b,
+          #ff9800
+        );
+      background-size: 750% auto;
+      background-position: 0 100%;
+      animation: gradient 20s infinite;
+      animation-fill-mode: forwards;
+      animation-timing-function: linear;
+    }
+
+    @keyframes gradient {
+      0% {
+        background-position: 0 0;
+      }
+
+      100% {
+        background-position: -750% 0;
+      }
+    }
+  </style>
+</head>
+<body class="font-sans">
+  <div id="app">
+    <div id="globalLoader" class="global-loader">
+      <h1>LOADING</h1>
+    </div>
+  </div>
+  <script type="module" src="/src/main.ts"></script>
+  <noscript>This website requires JavaScript to function properly. Please enable JavaScript to continue.</noscript>
+</body>
+</html>
