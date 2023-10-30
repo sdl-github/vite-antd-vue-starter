@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import { providerOption } from '../data'
 import { FileProviderEnum } from '@/utils/graphql/zeus'
-import FilePone from '@/components/file-pone/index.vue'
+
+// import FilePone from '@/components/file-pone/index.vue'
 
 interface Props {
   open: boolean
@@ -36,7 +37,7 @@ function handleOk() {
 </script>
 
 <template>
-  <a-modal
+  <AModal
     :open="open"
     :destroy-on-close="true"
     title="文件上传"
@@ -46,7 +47,7 @@ function handleOk() {
     @ok="handleOk"
     @cancel="handleOk"
   >
-    <a-form
+    <AForm
       ref="formRef"
       class="mt-5"
       :model="model"
@@ -54,18 +55,17 @@ function handleOk() {
       :wrapper-col="{ span: 16 }"
       autocomplete="off"
     >
-      <a-row :gutter="[16, 8]">
-        <a-col :span="24">
-          <a-form-item label="存储提供服务方" name="provider" :rules="rules.provider">
-            <a-radio-group v-model:value="model.provider" button-style="solid">
-              <a-radio-button v-for="option in providerOption" :key="option.value" :value="option.value">
+      <ARow :gutter="[16, 8]">
+        <ACol :span="24">
+          <AFormItem label="存储提供服务方" name="provider" :rules="rules.provider">
+            <ARadioGroup v-model:value="model.provider" button-style="solid">
+              <ARadioButton v-for="option in providerOption" :key="option.value" :value="option.value">
                 {{ option.label }}
-              </a-radio-button>
-            </a-radio-group>
-          </a-form-item>
-          <FilePone :data="model" />
-        </a-col>
-      </a-row>
-    </a-form>
-  </a-modal>
+              </ARadioButton>
+            </ARadioGroup>
+          </AFormItem>
+        </ACol>
+      </ARow>
+    </AForm>
+  </AModal>
 </template>

@@ -51,7 +51,6 @@ declare module 'vue' {
     AUpload: typeof import('ant-design-vue/es')['Upload']
     ImageCropperModal: typeof import('./components/ImageCropperModal.vue')['default']
     MenuItem: typeof import('./components/MenuItem.vue')['default']
-    README: typeof import('./components/README.md')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     TheCounter: typeof import('./components/TheCounter.vue')['default']
