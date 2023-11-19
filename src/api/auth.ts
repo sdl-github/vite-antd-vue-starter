@@ -43,7 +43,7 @@ export function userInfo() {
 
 export function getLoginRecords() {
   return request({
-    url: '/auth/sessionRecords',
+    url: '/auth/queryLoginSessionList',
   }) as Promise<ModelTypes['LoginSessionResult'][]>
 }
 
