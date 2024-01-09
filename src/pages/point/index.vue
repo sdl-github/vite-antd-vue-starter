@@ -1,25 +1,24 @@
 <route lang="yaml">
-meta:
-  layout: dashboard
-</route>
+  meta:
+    layout: dashboard
+  </route>
 
 <script setup lang="ts">
 import type { TableColumnType } from 'ant-design-vue'
 import { Table, message } from 'ant-design-vue'
 import type { SorterResult } from 'ant-design-vue/es/table/interface'
 import { onMounted, reactive, toRefs } from 'vue'
-import type { SearchParam, User } from './data'
-import { GenderEnum, columns } from './data'
-import UserModal from './components/UserModal.vue'
 
-import { deleteUser, queryUserPage } from '~/api/user'
+import { columns } from './data'
+import type { Point, SearchParam } from './data'
+import { deletePoint, queryPointPage } from '~/api/point'
 import { DEFAULT_PAGE_NO, DEFAULT_PAGE_SIZE } from '@/constants'
 
 interface State {
   loading: boolean
   modalVisible: boolean
-  data: User[]
-  currentItem: User | null
+  data: Point[]
+  currentItem: Point | null
   search: SearchParam
   total: number
 }
@@ -42,12 +41,10 @@ function generateSearch() {
   const search: SearchParam = {
     pageNo: DEFAULT_PAGE_NO,
     pageSize: DEFAULT_PAGE_SIZE,
-    userName: '',
+    type: undefined,
+    createdAtFrom: '',
+    createdAtTo: '',
     nickName: '',
-    phone: '',
-    email: '',
-    roleIds: [],
-    sort: '',
   }
   return search
 }
@@ -56,15 +53,14 @@ function generateSearch() {
 async function initData() {
   state.loading = true
   const { search } = state
-  const res = await queryUserPage(search)
-  const { content, totalElements } = res.queryUserPage!
-  state.data = content as User[]
+  const { content, totalElements } = await queryPointPage(search)
+  state.data = content as Point[]
   state.total = totalElements as number
   state.loading = false
 }
 
 // 打开编辑
-function handleOpenEdit(record: User) {
+function handleOpenEdit(record: Point) {
   state.currentItem = record
   state.modalVisible = true
 }
@@ -77,7 +73,7 @@ function handleOpenCreate() {
 async function handleDelete(id: string) {
   const loading = message.loading('加载中', 0)
   try {
-    await deleteUser(id)
+    await deletePoint(id)
     loading()
     initData()
     message.success('成功')
@@ -123,18 +119,28 @@ function handleTableChange(pagination: any, filters: any, sorter: SorterResult) 
 </script>
 
 <template>
-  <div class="user-container">
-    <UserModal
-      v-model:open="state.modalVisible"
-      :current-item="state.currentItem"
-      @ok="initData"
-    />
+  <div class="point-container">
+    <UserModal v-model:open="state.modalVisible" :current-item="state.currentItem" @ok="initData" />
     <ACard>
       <div class="flex">
-        <AInput v-model:value="search.userName" placeholder="用户名" class="w-200px" />
-        <AInput v-model:value="search.nickName" placeholder="姓名" class="ml-4 w-200px" />
-        <AInput v-model:value="search.phone" placeholder="手机" class="ml-4 w-200px" />
-        <AInput v-model:value="search.email" placeholder="邮箱" class="ml-4 w-200px" />
+        <AInput v-model:value="search.nickName" placeholder="用户姓名" class="w-200px" />
+        <ASelect v-model:value="search.type" class="ml-2 w-200px" placeholder="请选择">
+          <ASelectOption :value="1">
+            轨迹回放
+          </ASelectOption>
+          <ASelectOption :value="2">
+            实时数据定位点
+          </ASelectOption>
+        </ASelect>
+        <ADatePicker
+          v-model:value="search.createdAtFrom" placeholder="开始时间" :show-time="{ format: 'HH:mm' }"
+          format="YYYY-MM-DD HH:mm:ss" value-format="YYYY-MM-DD HH:mm:ss" class="ml-2"
+        />
+        <ADatePicker
+          v-model:value="search.createdAtTo" placeholder="结束时间" :show-time="{ format: 'HH:mm' }"
+          format="YYYY-MM-DD HH:mm:ss" value-format="YYYY-MM-DD HH:mm:ss" class="ml-2"
+        />
+
         <div class="ml-2 flex items-center">
           <AButton :loading="state.loading" class="flex items-center justify-center" type="primary" @click="handleSearch">
             <template #icon>
@@ -166,22 +172,23 @@ function handleTableChange(pagination: any, filters: any, sorter: SorterResult) 
       </div>
     </div>
     <Table
-      :pagination="false"
-      :scroll="{ x: 1500 }"
-      :columns="columns"
-      :row-key="(record: any) => record.id"
-      :data-source="state.data" :loading="state.loading"
-      @change="handleTableChange"
+      :pagination="false" :scroll="{ x: 1500 }" :columns="columns" :row-key="(record: any) => record.id"
+      :data-source="state.data" :loading="state.loading" @change="handleTableChange"
     >
-      <template #bodyCell="{ column, record }: { column: TableColumnType<User>, record: User }">
-        <template v-if="column.dataIndex === 'avatar'">
+      <template #bodyCell="{ column, record }: { column: TableColumnType<Point>, record: Point }">
+        <template v-if="column.dataIndex === 'user'">
           <span>
-            <AAvatar :src="record.avatar">{{ record.userName }}</AAvatar>
+            {{ record.user?.nickName }}
           </span>
         </template>
-        <template v-if="column.dataIndex === 'gender' && record.gender">
+        <template v-if="column.dataIndex === 'type'">
           <span>
-            {{ GenderEnum[record.gender] }}
+            {{ record.type === 1 ? '轨迹回放' : '实时数据定位点' }}
+          </span>
+        </template>
+        <template v-if="column.dataIndex === 'file'">
+          <span>
+            {{ record.file?.url }}
           </span>
         </template>
         <template v-if="column.dataIndex === 'createdAt'">
@@ -189,20 +196,11 @@ function handleTableChange(pagination: any, filters: any, sorter: SorterResult) 
             {{ formatDate(record.createdAt) }}
           </span>
         </template>
-        <template v-if="column.dataIndex === 'roles'">
-          <span v-if="record.roles!.length > 0 ">
-            <ATag v-for="role in record.roles" :key=" role?.id " style="margin: 5px" color="blue">{{ role?.name
-            }}</ATag>
-          </span>
-        </template>
         <template v-if="column.key === 'operation'">
           <span>
-            <a @click="handleOpenEdit(record) ">编辑</a>
+            <a @click="handleOpenEdit(record)">编辑</a>
             <ADivider type="vertical" />
-            <APopconfirm
-              :title="`确定要删除${record.userName}?`" ok-text="确定" cancel-text="取消"
-              @confirm="handleDelete(record.id!)"
-            >
+            <APopconfirm :title="`确定要删除${record.id}?`" ok-text="确定" cancel-text="取消" @confirm="handleDelete(record.id!)">
               <a>删除</a>
             </APopconfirm>
           </span>
@@ -211,11 +209,8 @@ function handleTableChange(pagination: any, filters: any, sorter: SorterResult) 
     </Table>
     <div class="pagination-card">
       <APagination
-        v-model:pageSize="search.pageSize"
-        :current="search.pageNo" show-size-changer
-        :total=" state.total"
-        :show-total=" () => `共 ${state.total} 条`"
-        @change="handleShowSizeChange "
+        v-model:pageSize="search.pageSize" :current="search.pageNo" show-size-changer :total="state.total"
+        :show-total="() => `共 ${state.total} 条`" @change="handleShowSizeChange"
       />
     </div>
   </div>
@@ -227,8 +222,9 @@ function handleTableChange(pagination: any, filters: any, sorter: SorterResult) 
   background: #fff;
 }
 
-.user-container {
+.point-container {
   width: 100%;
+  padding: 10px;
 
   .table-header {
     height: 64px;

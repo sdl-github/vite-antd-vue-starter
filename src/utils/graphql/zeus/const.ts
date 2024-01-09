@@ -1,6 +1,9 @@
 /* eslint-disable */
 
 export const AllTypesProps: Record<string,any> = {
+	CreatePointInputInput:{
+
+	},
 	Direction: "enum" as const,
 	FileProviderEnum: "enum" as const,
 	FileQueryPageParamInput:{
@@ -29,14 +32,35 @@ export const AllTypesProps: Record<string,any> = {
 		deleteMenu:{
 
 		},
-		updateMenu:{
-			input:"MenuUpdateInputInput"
-		},
 		createMenu:{
 			input:"MenuCreateInputInput"
 		},
 		updateRole:{
 			input:"RoleUpdateInputInput"
+		},
+		updateUser:{
+			input:"UserUpdateInputInput"
+		},
+		deletePoint:{
+
+		},
+		createRole:{
+			input:"RoleCreateInputInput"
+		},
+		revoke:{
+
+		},
+		createPoint:{
+			input:"CreatePointInputInput"
+		},
+		deleteRole:{
+
+		},
+		updateMenu:{
+			input:"MenuUpdateInputInput"
+		},
+		deleteUser:{
+
 		},
 		registerUser:{
 			input:"UserRegisterInputInput"
@@ -44,48 +68,45 @@ export const AllTypesProps: Record<string,any> = {
 		loginByAccount:{
 			input:"LoginInputInput"
 		},
-		deleteUser:{
-
-		},
-		updateUser:{
-			input:"UserUpdateInputInput"
-		},
-		createRole:{
-			input:"RoleCreateInputInput"
-		},
 		createUser:{
 			input:"UserCreateInputInput"
 		},
-		deleteFileById:{
-
+		updatePoint:{
+			input:"UpdatePointInputInput"
 		},
-		deleteRole:{
+		deleteFileById:{
 
 		}
 	},
 	NullHandling: "enum" as const,
 	Query:{
-		queryMenuList:{
-			param:"MenuQueryParamInput"
-		},
 		queryRole:{
 
+		},
+		queryMenuList:{
+			param:"MenuQueryParamInput"
 		},
 		queryUserPage:{
 			param:"UserQueryParamInput"
 		},
+		queryPointPage:{
+			param:"QueryPointPageParamInput"
+		},
 		queryFilePage:{
 			param:"FileQueryPageParamInput"
-		},
-		queryMenuTree:{
-			param:"MenuQueryPageParamInput"
 		},
 		queryUser:{
 
 		},
+		queryMenuTree:{
+			param:"MenuQueryPageParamInput"
+		},
 		queryRolePage:{
 			param:"RoleQueryParamInput"
 		}
+	},
+	QueryPointPageParamInput:{
+
 	},
 	RoleCreateInputInput:{
 
@@ -94,6 +115,9 @@ export const AllTypesProps: Record<string,any> = {
 
 	},
 	RoleUpdateInputInput:{
+
+	},
+	UpdatePointInputInput:{
 
 	},
 	UserCreateInputInput:{
@@ -114,6 +138,7 @@ export const ReturnTypes: Record<string,any> = {
 	BaseEntity:{
 		"...on File": "File",
 		"...on Menu": "Menu",
+		"...on Point": "Point",
 		"...on Role": "Role",
 		"...on User": "User",
 		createdAt:"LocalDateTime",
@@ -142,11 +167,9 @@ export const ReturnTypes: Record<string,any> = {
 	LoginSessionResult:{
 		createdAt:"LocalDateTime",
 		current:"Boolean",
-		device:"String",
 		expired:"Boolean",
 		id:"String",
-		ip:"String",
-		os:"String"
+		ip:"String"
 	},
 	Long: `scalar.Long` as const,
 	Menu:{
@@ -172,18 +195,22 @@ export const ReturnTypes: Record<string,any> = {
 	},
 	Mutation:{
 		deleteMenu:"Boolean",
-		updateMenu:"Menu",
-		logout:"Boolean",
 		createMenu:"Menu",
 		updateRole:"Role",
+		updateUser:"User",
+		deletePoint:"Boolean",
+		createRole:"Role",
+		revoke:"Boolean",
+		createPoint:"Point",
+		deleteRole:"Boolean",
+		updateMenu:"Menu",
+		logout:"Boolean",
+		deleteUser:"Boolean",
 		registerUser:"Boolean",
 		loginByAccount:"String",
-		deleteUser:"Boolean",
-		updateUser:"User",
-		createRole:"Role",
 		createUser:"User",
-		deleteFileById:"Boolean",
-		deleteRole:"Boolean"
+		updatePoint:"Point",
+		deleteFileById:"Boolean"
 	},
 	Order:{
 		direction:"Direction",
@@ -193,6 +220,25 @@ export const ReturnTypes: Record<string,any> = {
 	},
 	Page_File:{
 		content:"File",
+		first:"Boolean",
+		hasContent:"Boolean",
+		hasNext:"Boolean",
+		hasPrevious:"Boolean",
+		last:"Boolean",
+		nextOrLastPageable:"Pagination",
+		nextPageable:"Pagination",
+		number:"Int",
+		numberOfElements:"Int",
+		pageable:"Pagination",
+		previousOrFirstPageable:"Pagination",
+		previousPageable:"Pagination",
+		size:"Int",
+		sort:"Sorting",
+		totalElements:"Long",
+		totalPages:"Int"
+	},
+	Page_Point:{
+		content:"Point",
 		first:"Boolean",
 		hasContent:"Boolean",
 		hasNext:"Boolean",
@@ -253,17 +299,34 @@ export const ReturnTypes: Record<string,any> = {
 		pageSize:"Int",
 		sort:"Sort"
 	},
+	Point:{
+		createdAt:"LocalDateTime",
+		createdBy:"String",
+		file:"File",
+		fileId:"String",
+		id:"String",
+		level:"Int",
+		type:"Int",
+		updatedAt:"LocalDateTime",
+		updatedBy:"String",
+		user:"User",
+		userId:"String",
+		x:"Int",
+		y:"Int",
+		z:"Int"
+	},
 	Query:{
 		queryLoginSessionList:"LoginSessionResult",
 		app:"String",
 		userInfo:"UserInfoResult",
-		queryMenuList:"Menu",
 		queryRole:"Role",
+		queryMenuList:"Menu",
 		queryAllRoleList:"Role",
 		queryUserPage:"Page_User",
+		queryPointPage:"Page_Point",
 		queryFilePage:"Page_File",
-		queryMenuTree:"Menu",
 		queryUser:"User",
+		queryMenuTree:"Menu",
 		queryRolePage:"Page_Role"
 	},
 	Role:{

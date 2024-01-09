@@ -40,6 +40,7 @@ declare global {
   const effectScope: typeof import('vue')['effectScope']
   const extendRef: typeof import('@vueuse/core')['extendRef']
   const findTreePath: typeof import('./utils/tools')['findTreePath']
+  const formatDate: typeof import('./utils/tools')['formatDate']
   const getCurrentInstance: typeof import('vue')['getCurrentInstance']
   const getCurrentScope: typeof import('vue')['getCurrentScope']
   const getToken: typeof import('./utils/auth')['getToken']
@@ -352,6 +353,7 @@ declare module 'vue' {
     readonly effectScope: UnwrapRef<typeof import('vue')['effectScope']>
     readonly extendRef: UnwrapRef<typeof import('@vueuse/core')['extendRef']>
     readonly findTreePath: UnwrapRef<typeof import('./utils/tools')['findTreePath']>
+    readonly formatDate: UnwrapRef<typeof import('./utils/tools')['formatDate']>
     readonly getCurrentInstance: UnwrapRef<typeof import('vue')['getCurrentInstance']>
     readonly getCurrentScope: UnwrapRef<typeof import('vue')['getCurrentScope']>
     readonly getToken: UnwrapRef<typeof import('./utils/auth')['getToken']>
@@ -657,6 +659,7 @@ declare module '@vue/runtime-core' {
     readonly effectScope: UnwrapRef<typeof import('vue')['effectScope']>
     readonly extendRef: UnwrapRef<typeof import('@vueuse/core')['extendRef']>
     readonly findTreePath: UnwrapRef<typeof import('./utils/tools')['findTreePath']>
+    readonly formatDate: UnwrapRef<typeof import('./utils/tools')['formatDate']>
     readonly getCurrentInstance: UnwrapRef<typeof import('vue')['getCurrentInstance']>
     readonly getCurrentScope: UnwrapRef<typeof import('vue')['getCurrentScope']>
     readonly getToken: UnwrapRef<typeof import('./utils/auth')['getToken']>

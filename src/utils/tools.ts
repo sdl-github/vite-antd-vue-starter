@@ -1,7 +1,12 @@
 import { message } from 'ant-design-vue'
 import Clipboard from 'clipboard'
+import dayjs from 'dayjs'
 
 const LOCAL_PREFIX = 'LOCAL_PREFIX'
+
+export function formatDate(date: Date | string) {
+  return dayjs(date).format('YYYY-MM-DD HH:mm:ss')
+}
 
 export function deepClone<T>(obj: T): T {
   if (obj === null || typeof obj !== 'object')

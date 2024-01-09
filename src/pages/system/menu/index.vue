@@ -181,7 +181,7 @@ async function handleChangeVisible(record: Menu) {
         </template>
         <template v-if="column.dataIndex === 'createdAt'">
           <span>
-            {{ record.createdAt }}
+            {{ formatDate(record.createdAt) }}
           </span>
         </template>
         <template v-if="column.key === 'operation'">

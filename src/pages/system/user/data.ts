@@ -29,7 +29,7 @@ export const columns: TableColumnType<User>[] = [
     dataIndex: 'avatar',
   },
   {
-    title: '昵称',
+    title: '姓名',
     align: 'center',
     dataIndex: 'nickName',
     key: 'nickName',

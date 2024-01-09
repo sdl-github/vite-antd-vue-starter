@@ -16,11 +16,6 @@ import RoleModal from './components/RoleModal.vue'
 import PermissionSelect from './components/PermissionSelect.vue'
 import { deleteRole, queryRolePage, updateRole } from '@/api/role'
 
-  <route lang="yaml">
-    meta:
-    layout: dashboard
-  </route>
-
 interface State {
   loading: boolean
   modalVisible: boolean
@@ -95,6 +90,9 @@ export default defineComponent({
         align: 'center',
         dataIndex: 'createdAt',
         sorter: true,
+        customRender: ({ record }) => (
+          <span>{formatDate(record.createdAt)}</span>
+        ),
       },
       {
         title: '操作',

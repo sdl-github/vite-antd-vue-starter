@@ -100,7 +100,7 @@ async function handleUploadAvatar({ blob }: { blob: Blob }) {
             <AInput :value="user?.userName" disabled />
           </AFormItem>
           <AFormItem
-            label="昵称"
+            label="姓名"
             name="nickname"
             :rules="[{ required: true, message: '请输入' }]"
           >

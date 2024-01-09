@@ -147,8 +147,8 @@ function handleCancel() {
           </AFormItem>
         </ACol>
         <ACol :span="12">
-          <AFormItem label="昵称" name="nickname">
-            <AInput v-model:value="model.nickName" :placeholder="requireMessage('昵称')" />
+          <AFormItem label="姓名" name="nickname">
+            <AInput v-model:value="model.nickName" :placeholder="requireMessage('姓名')" />
           </AFormItem>
         </ACol>
         <ACol :span="12">
