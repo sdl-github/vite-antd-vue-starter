@@ -1,20 +1,18 @@
-<route lang="yaml">
-  meta:
-    layout: dashboard
-</route>
-
 <script setup lang="tsx">
-const fengmap = window.fengmap as any
+const emits = defineEmits(['loaded'])
+const fengmap = window.fengmap
 let map: any
 
 onMounted(() => {
-
+  initMap()
 })
 
 onBeforeUnmount(() => {
-
+  map = null
+  window.map = null
+  window.floorInfo = null
 })
-
+// 初始化地图
 function initMap() {
   const options = {
     container: document.getElementById('fengmap'),
@@ -23,12 +21,16 @@ function initMap() {
     mapID: '1744325781608030210',
     themeID: '1581910231660457986',
     level: 2,
-    mapZoom: 19.5,
+    mapZoom: 20.6,
+    visibleLevels: [1, 2],
   }
   map = new fengmap.FMMap(options)
-
+  // 地图加载完成事件
   map.on('loaded', () => {
-    console.log('loaded')
+    window.map = map
+    emits('loaded')
+    // 获取地图楼层信息
+    window.floorInfo = map.getFloorInfos()
     const textMarker = new fengmap.FMTextMarker({
       text: '采空区',
       x: 12613436.921387225,
@@ -38,27 +40,6 @@ function initMap() {
     const floor = map.getFloor(1)
     textMarker.addTo(floor)
 
-    // 指北针控件
-    const scrollCompassCtlOpt = {
-      position: fengmap.FMControlPosition.RIGHT_TOP,
-      offset: {
-        x: -20,
-        y: 80,
-      },
-
-    }
-    const compass = new fengmap.FMCompass(scrollCompassCtlOpt)
-    compass.addTo(map)
-
-    compass.on('click', () => {
-      map.setRotation({
-        rotation: 0,
-        animate: true,
-        duration: 0.3,
-        finish() { console.log('setRotation') },
-      })
-    })
-
     // 缩放控件
     const scrollZoomCtlOpt = {
       position: fengmap.FMControlPosition.RIGHT_TOP,
@@ -66,8 +47,8 @@ function initMap() {
         x: -20,
         y: 510,
       },
-
     }
+
     const toolbar = new fengmap.FMZoomBar(scrollZoomCtlOpt)
     toolbar.addTo(map)
 
@@ -96,7 +77,6 @@ function initMap() {
         x: 20,
         y: -20,
       },
-
     }
     const scaleBar = new fengmap.FMScaleBar(scrollScaleBarCtlOpt)
     scaleBar.addTo(map)
@@ -105,11 +85,9 @@ function initMap() {
 </script>
 
 <template>
-  <div class="h-80vh w-full">
-    <div id="fengmap" class="fengmap">
-      map
-    </div>
+  <div class="h-91vh w-90vw">
+    <div id="fengmap" class="fengmap" />
   </div>
 </template>
 
-<style lang="scss"></style>
+  <style lang="scss"></style>

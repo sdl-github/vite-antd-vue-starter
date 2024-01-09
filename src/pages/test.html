@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>轨迹回放</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <script src="https://developer.fengmap.com/fmAPI/demos/libs/js/fengmap.map.min.js"></script>
+    <script src="https://developer.fengmap.com/fmAPI/demos/libs/js/fengmap.plugin.location.min.js"></script>
+    <script src="https://developer.fengmap.com/fmAPI/demos/libs/layui/layui.js"></script>
+    <script src="https://developer.fengmap.com/fmAPI/demos/libs/js/data.js"></script>
+    <link rel="stylesheet" href="https://developer.fengmap.com/fmAPI/demos/libs/layui/css/layui.css">
+    <link rel="stylesheet" href="https://developer.fengmap.com/fmAPI/demos/libs/css/font/iconfont.css">
+    <link rel="stylesheet" href="https://developer.fengmap.com/fmAPI/demos/libs/css/index.css">
+    <link rel="stylesheet" href="https://developer.fengmap.com/fmAPI/demos/libs/css/layui.css">
+    <link rel="stylesheet" href="https://developer.fengmap.com/fmAPI/demos/Application/tracksPlayer/css/index.css">
+</head>
+
+<body>
+    <div class="toolBarDiv"></div>
+    <div id="fengmap"></div>
+    <!-- 轨迹回放控件 -->
+    <div class="layui-panel panel" id="panel">
+        <div class="title">
+            <div class="blue"></div>轨迹回放
+        </div>
+        <form class="layui-form">
+            <div class="layui-form-item">
+                <!-- 播放进度条 -->
+                <div id="slide" class="demo-slider"></div>
+            </div>
+            <div class="layui-form-item flexItem">
+                <!-- 播放按钮 -->
+                <div class="left">
+                    <i id="playBtn" class="icon iconfont icon-yunhang" onclick="onHandlePlayBtn()"></i>
+                    <i class="icon iconfont icon-jieshubofang" onclick="onHandleBtn('stop')"></i>
+                </div>
+                <!-- 倍速选择 -->
+                <div class="right">
+                    <span id="speed_0.5" onclick="onHandleBtn('speed', 0.5)">x0.5</span>
+                    <span id="speed_1" class="active" onclick="onHandleBtn('speed', 1)">x1</span>
+                    <span id="speed_1.2" onclick="onHandleBtn('speed', 1.2)">x1.2</span>
+                    <span id="speed_1.5" onclick="onHandleBtn('speed', 1.5)">x1.5</span>
+                    <span id="speed_2" onclick="onHandleBtn('speed', 2)">x2</span>
+                    <span id="speed_3" onclick="onHandleBtn('speed', 3)">x3</span>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+<script>
+    var map;
+    var tracksPlayer;       // 轨迹回放类
+    var speed = 100;        // 默认速度，播放速度： speedMultiple * speed
+    var speedMultiple = 1;  // 倍速
+    var sliderIns;          // 滑块实例
+    var startValue = new Date(trackData[0].time).valueOf();                 // 滑块开始值
+    var endValue = new Date(trackData[trackData.length - 1].time).valueOf();// 滑块结束值
+    var isPause = false;    // 是否在暂停状态
+    var isComplete = false; // 是否播放完成，播放完成后需要先调用start方法，再执行play
+    var coordMarkers = [];  // 起终点图标
+    var options = {
+        container: document.getElementById('fengmap'),
+        appName: '蜂鸟研发SDK_2_0',
+        key: '57c7f309aca507497d028a9c00207cf8',
+        mapID: '1514920297309614082',
+        themeID: '1580453922356207618',
+        level: 5,
+        mapZoom: 19,
+        visibleLevels: [4, 5],
+        floorSpace: 80
+    }
+    map = new fengmap.FMMap(options);
+    map.on('loaded', function () {
+        console.log('地图加载完成');
+        // 渲染轨迹回放数据
+        addTracks();
+    })
+
+    /* 渲染轨迹回放数据 */
+    function addTracks() {
+        // 自行添加起终点marker
+        addStartAndEndMarker();
+        // 初始化轨迹播放插件
+        tracksPlayer = new fengmap.FMTracksPlayer(map);
+        // 设置路径轨迹数据
+        tracksPlayer.setTracks(trackData);
+        // 设置线的样式
+        tracksPlayer.setTrackStyle({
+            width: 6,
+            radius: 1,
+            type: fengmap.FMLineType.ARROW,
+            animate: true,
+            height: 0
+        })
+        // 设置定位点图标1 - LOCATION_MARKER
+        var locationMarker = {
+            type: fengmap.FMType.LOCATION_MARKER,
+            options: {
+                url: 'https://developer.fengmap.com/fmAPI/images/bluedot.png',
+                height: 0.2,
+                x: trackData[0].x,
+                y: trackData[0].y,
+                level: trackData[0].level,
+                size: 24,
+            }
+        };
+        // 设置定位点图标2 - IMAGE_MARKER
+        var imageMarker = {
+            type: fengmap.FMType.IMAGE_MARKER,
+            options: {
+                url: 'https://developer.fengmap.com/fmAPI/images/blueImageMarker.png',
+                height: 0.1,
+                size: 48
+            }
+        }
+        // 设置定位点图标3 - DYNAMIC_MODEL_MARKER
+        var dynamicModel = {
+            type: fengmap.FMType.DYNAMIC_MODEL_MARKER,
+            options: {
+                url: 'https://developer.fengmap.com/fmAPI/images/duck.glb',
+                height: 0.3,
+                size: 480,
+                scale: 5,
+                heading: 10,
+            }
+        }
+        // 设置定位点图标4 - DOM_MARKER
+        var domMarker = {
+            type: fengmap.FMType.DOM_MARKER,
+            options: {
+                content: '<div class="domContainer"><img src="https://developer.fengmap.com/fmAPI/images/red.png"></div>',
+                height: 0.2,
+                domWidth: 100,
+                domHeight: 100
+            }
+        }
+
+        // 设置定位点图标 - 可选以上4种类型
+        tracksPlayer.setMarkerStyle(locationMarker.type, locationMarker.options);
+        // 将轨迹线和定位点渲染到地图上
+        tracksPlayer.render();
+        // 设置轨迹回放速度
+        tracksPlayer.setSpeed(speed);
+        // 播放中的回调函数
+        tracksPlayer.on('playing', function (params) {
+            var progress = params.progress;     // 当前播放进度时间戳
+            var level = params.level;           // 所在楼层
+            console.log('playing', progress);
+            // 设置进度条
+            var curValue = progress - startValue;
+            sliderIns.setValue(curValue);
+        })
+        // 轨迹播放完成回调函数
+        tracksPlayer.on('complete', function () {
+            console.log('轨迹播放完成');
+            isComplete = true;
+            // 更改播放按钮状态
+            var dom = document.getElementById('playBtn');
+            dom.classList.remove('icon-zanting');
+            dom.classList.add('icon-yunhang');
+            isPause = false;
+        })
+    }
+
+    /* 播放按钮交互 */
+    function onHandlePlayBtn() {
+        var dom = document.getElementById('playBtn');
+        if (dom.classList.contains('icon-yunhang')) {
+            // 开始、继续播放
+            onHandleBtn('play');
+            dom.classList.remove('icon-yunhang');
+            dom.classList.add('icon-zanting');
+            isPause = false;
+        } else {
+            // 暂停播放
+            onHandleBtn('pause');
+            dom.classList.remove('icon-zanting');
+            dom.classList.add('icon-yunhang');
+            isPause = true;
+        }
+    }
+
+    /* 按钮操作 */
+    function onHandleBtn(type, value) {
+        switch (type) {
+            case 'play':
+                if (isComplete) {
+                    // 轨迹播放到开始
+                    tracksPlayer.start();
+                    tracksPlayer.play();
+                    isComplete = false;
+                } else {
+                    // 播放
+                    tracksPlayer.play();
+                }
+                break;
+            case 'pause':
+                // 暂停
+                tracksPlayer.pause();
+                break;
+            case 'stop':
+                // 轨迹播放到最后
+                tracksPlayer.stop();
+                // 设置进度条
+                sliderIns.setValue(endValue);
+                break;
+            case 'speed':
+                // 设置播放速度
+                var _speed = value * speed;
+                tracksPlayer.setSpeed(_speed);
+                // 更新按钮选中状态
+                updateBtnUI(value);
+                break;
+            case 'progress':
+                // 设置轨迹的进度
+                tracksPlayer.setProgress(value);
+                break;
+            default:
+                break;
+        }
+    }
+
+    /* 添加起终点marker */
+    function addStartAndEndMarker() {
+        var coords = [
+            { x: trackData[0].x, y: trackData[0].y, level: trackData[0].level, url: 'https://developer.fengmap.com/fmAPI/images/start.png' },
+            { x: trackData[trackData.length - 1].x, y: trackData[trackData.length - 1].y, level: trackData[trackData.length - 1].level, url: 'https://developer.fengmap.com/fmAPI/images/end.png' },
+        ];
+        for (var i = 0; i < coords.length; i++) {
+            var coord = coords[i];
+            var im = new fengmap.FMImageMarker({
+                x: coord.x,
+                y: coord.y,
+                url: coord.url,
+                size: 32,
+                height: 0.2,
+                anchor: fengmap.FMMarkerAnchor.BOTTOM,
+                depth: false,
+                collision: true
+            });
+            var floor = map.getFloor(coord.level);
+            im.addTo(floor);
+            coordMarkers.push(im);
+        };
+    }
+
+    /* 更新倍速按钮选中状态 */
+    function updateBtnUI(value) {
+        // 更改上一次选中状态
+        var preDom = document.getElementById(`speed_${speedMultiple}`);
+        preDom.classList.remove('active');
+        // 选中当前倍速
+        var curDom = document.getElementById(`speed_${value}`);
+        curDom.classList.add('active');
+        speedMultiple = value;
+    }
+
+    /* layui相关设置 */
+    layui.use(['layer', 'slider', 'form'], function () {
+        var layer = layui.layer;
+        var form = layui.form;
+        var slider = layui.slider;
+        // 默认滑块
+        sliderIns = slider.render({
+            elem: '#slide',
+            value: startValue,           // 默认值
+            min: startValue,             // 滑块最小值-开始轨迹时间戳
+            max: endValue,               // 滑块最大值-结束轨迹时间戳
+            setTips: function (value) {  //自定义提示文本
+                return new Date(value).Format('yyyy-MM-dd HH:mm:ss');
+            },
+            change: function (value) {
+                // 动态获取滑块数值
+                console.log('slider change', value);
+                if (isPause) {
+                    // 暂停状态
+                    onHandleBtn('progress', value);
+                }
+            }
+        });
+    });
+</script>
+
+</html>

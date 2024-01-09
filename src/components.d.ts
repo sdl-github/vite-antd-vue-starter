@@ -49,6 +49,7 @@ declare module 'vue' {
     ATree: typeof import('ant-design-vue/es')['Tree']
     ATreeSelect: typeof import('ant-design-vue/es')['TreeSelect']
     AUpload: typeof import('ant-design-vue/es')['Upload']
+    FengMap: typeof import('./components/FengMap.vue')['default']
     ImageCropperModal: typeof import('./components/ImageCropperModal.vue')['default']
     MenuItem: typeof import('./components/MenuItem.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

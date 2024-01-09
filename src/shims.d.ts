@@ -1,5 +1,8 @@
 declare interface Window {
   // extend the window
+  fengmap: any
+  map: any
+  floorInfo: any
 }
 
 // with unplugin-vue-markdown, markdown files can be treated as Vue components

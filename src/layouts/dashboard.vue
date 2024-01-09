@@ -34,7 +34,7 @@ async function handleLogout() {
       </AMenu>
     </ALayoutSider>
     <ALayout>
-      <div class="sticky z-999 top-0 h-[48px] flex items-center justify-between border-b bg-white px-4">
+      <div class="sticky top-0 z-999 h-[48px] flex items-center justify-between border-b bg-white px-4">
         <div class="flex items-center">
           <div
             class="cursor-pointer" :class="collapsed ? 'i-ri-menu-unfold-fill' : 'i-ri-menu-fold-fill'"
@@ -71,7 +71,7 @@ async function handleLogout() {
         </div>
       </div>
       <ALayoutContent>
-        <main class="min-h-[calc(100vh-48px)] p-4">
+        <main class="min-h-[calc(100vh-48px)]">
           <RouterView />
         </main>
       </ALayoutContent>
