@@ -66,15 +66,6 @@ async function initData() {
   state.loading = false
 }
 
-// 打开创建
-function handleOpenCreate() {
-  if (!search.value.userId || !search.value.type) {
-    message.info('请选择用户和类型')
-    return
-  }
-  state.modalVisible = true
-}
-
 // 删除请求
 async function handleDelete(id: string) {
   const loading = message.loading('加载中', 0)
@@ -177,9 +168,6 @@ const beforeUpload: UploadProps['beforeUpload'] = (file) => {
       </div>
     </ACard>
     <div class="table-header">
-      <AButton type="primary" @click="handleOpenCreate">
-        新建模拟定位点
-      </AButton>
       <div class="table-action">
         <ATooltip placement="top">
           <template #title>
@@ -274,11 +262,11 @@ const beforeUpload: UploadProps['beforeUpload'] = (file) => {
                     </div>
                   </div>
                   <div>
-                    媒体信息 {{ record.file?.mimeType }}
+                    媒体信息
                     <div v-if="record.file?.mimeType === 'image/jpeg'">
                       <AImage
                         :width="200"
-                        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+                        :src="record.file.url"
                       />
                     </div>
                     <div v-if="record.file?.mimeType === 'video/mp4'">
@@ -317,12 +305,14 @@ const beforeUpload: UploadProps['beforeUpload'] = (file) => {
 .search-card {
   margin-bottom: 16px;
   background: #fff;
+
 }
 
 .point-container {
   width: 100%;
+  height: 100%;
   padding: 10px;
-
+  overflow: hidden;
   .table-header {
     height: 64px;
     padding: 16px 0;

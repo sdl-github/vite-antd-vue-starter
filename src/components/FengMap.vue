@@ -8,10 +8,13 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
+  if (map)
+    map.dispose()
   map = null
   window.map = null
   window.floorInfo = null
 })
+
 // 初始化地图
 function initMap() {
   const options = {

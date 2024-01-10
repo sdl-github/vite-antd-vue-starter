@@ -6,7 +6,8 @@ const userStore = useUserStore()
 const user = computed(() => userStore.user)
 const userSettingModalRef = ref()
 const router = useRouter()
-const title = 'Super Admin'
+const title = '矿山人员感知系统'
+
 const { menus, selectedKeys, openKeys } = useMenu()
 const theme = ref<MenuTheme>('dark')
 

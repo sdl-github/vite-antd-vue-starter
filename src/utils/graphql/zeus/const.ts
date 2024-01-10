@@ -44,11 +44,11 @@ export const AllTypesProps: Record<string,any> = {
 		revoke:{
 
 		},
-		updateUser:{
-			input:"UserUpdateInputInput"
-		},
 		createRole:{
 			input:"RoleCreateInputInput"
+		},
+		updateUser:{
+			input:"UserUpdateInputInput"
 		},
 		createPoint:{
 			input:"CreatePointInputInput"
@@ -71,20 +71,20 @@ export const AllTypesProps: Record<string,any> = {
 		createUser:{
 			input:"UserCreateInputInput"
 		},
-		deleteFileById:{
-
-		},
 		updatePoint:{
 			input:"UpdatePointInputInput"
+		},
+		deleteFileById:{
+
 		}
 	},
 	NullHandling: "enum" as const,
 	Query:{
-		queryRole:{
-
-		},
 		queryMenuList:{
 			param:"MenuQueryParamInput"
+		},
+		queryRole:{
+
 		},
 		queryUserPage:{
 			param:"UserQueryParamInput"
@@ -95,11 +95,11 @@ export const AllTypesProps: Record<string,any> = {
 		queryFilePage:{
 			param:"FileQueryPageParamInput"
 		},
-		queryUser:{
-
-		},
 		queryMenuTree:{
 			param:"MenuQueryPageParamInput"
+		},
+		queryUser:{
+
 		},
 		queryRolePage:{
 			param:"RoleQueryParamInput"
@@ -199,8 +199,8 @@ export const ReturnTypes: Record<string,any> = {
 		updateRole:"Role",
 		deletePoint:"Boolean",
 		revoke:"Boolean",
-		updateUser:"User",
 		createRole:"Role",
+		updateUser:"User",
 		createPoint:"Point",
 		deleteRole:"Boolean",
 		updateMenu:"Menu",
@@ -209,8 +209,8 @@ export const ReturnTypes: Record<string,any> = {
 		loginByAccount:"String",
 		deleteUser:"Boolean",
 		createUser:"User",
-		deleteFileById:"Boolean",
-		updatePoint:"Point"
+		updatePoint:"Point",
+		deleteFileById:"Boolean"
 	},
 	Order:{
 		direction:"Direction",
@@ -316,18 +316,18 @@ export const ReturnTypes: Record<string,any> = {
 		z:"Int"
 	},
 	Query:{
-		queryLoginSessionList:"LoginSessionResult",
 		app:"String",
+		queryLoginSessionList:"LoginSessionResult",
 		userInfo:"UserInfoResult",
-		queryRole:"Role",
 		queryMenuList:"Menu",
+		queryRole:"Role",
 		queryAllRoleList:"Role",
 		queryUserPage:"Page_User",
 		queryAllUserList:"User",
 		queryPointPage:"Page_Point",
 		queryFilePage:"Page_File",
-		queryUser:"User",
 		queryMenuTree:"Menu",
+		queryUser:"User",
 		queryRolePage:"Page_Role"
 	},
 	Role:{

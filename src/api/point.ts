@@ -9,6 +9,13 @@ export function queryPointPage(params: ModelTypes['QueryPointPageParamInput']): 
     params,
   })
 }
+export function createPoint(data: ModelTypes['CreatePointInputInput']) {
+  return request({
+    url: '/point/create',
+    method: 'post',
+    data,
+  })
+}
 
 export function deletePoint(id: string) {
   return request({
