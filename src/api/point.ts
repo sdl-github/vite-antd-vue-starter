@@ -17,3 +17,11 @@ export function deletePoint(id: string) {
     params: { id },
   })
 }
+
+export function updatePoint(data: ModelTypes['UpdatePointInputInput']) {
+  return request({
+    url: '/point/update',
+    method: 'put',
+    data,
+  })
+}

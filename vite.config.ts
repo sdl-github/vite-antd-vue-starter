@@ -13,6 +13,9 @@ import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 import VueJsx from '@vitejs/plugin-vue-jsx'
 
 export default defineConfig({
+  server: {
+    preTransformRequests: false,
+  },
   resolve: {
     alias: {
       '~/': `${path.resolve(__dirname, 'src')}/`,

@@ -1,12 +1,13 @@
 import { mutation, query } from '@/utils/graphql'
-import type { ModelTypes } from '@/utils/graphql/zeus'
+import { FileProviderEnum, type ModelTypes } from '@/utils/graphql/zeus'
 
 export function queryFilePage(param?: ModelTypes['FileQueryPageParamInput']) {
   return query({
     queryFilePage: [
       {
         param,
-      }, {
+      },
+      {
         content: {
           id: true,
           fileName: true,
@@ -32,5 +33,16 @@ export function queryFilePage(param?: ModelTypes['FileQueryPageParamInput']) {
 export function deleteFileById(id: string) {
   return mutation({
     deleteFileById: [{ id }, true],
+  })
+}
+
+export function upload(file: File): Promise<ModelTypes['File']> {
+  const data = new FormData()
+  data.append('file', file)
+  data.append('provider', FileProviderEnum.LOCAL)
+  return request({
+    url: '/file/upload',
+    method: 'post',
+    data,
   })
 }

@@ -4,6 +4,7 @@ import App from './App.vue'
 import router from './router'
 import '@unocss/reset/tailwind-compat.css'
 import './styles/main.css'
+import './styles/reset.scss'
 import 'uno.css'
 import './router/permission'
 

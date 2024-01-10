@@ -63,8 +63,8 @@ export const columns: TableColumnType<Point>[] = [
   },
   {
     title: '操作',
-    width: 180,
     fixed: 'right',
+    width: 300,
     key: 'operation',
     align: 'center',
   },

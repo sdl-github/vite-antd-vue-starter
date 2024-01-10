@@ -4,15 +4,18 @@
   </route>
 
 <script setup lang="ts">
-import type { TableColumnType } from 'ant-design-vue'
-import { Table, message } from 'ant-design-vue'
-import type { SorterResult } from 'ant-design-vue/es/table/interface'
+import type { TableColumnType, UploadProps } from 'ant-design-vue'
+import { Table, Upload, message } from 'ant-design-vue'
 import { onMounted, reactive, toRefs } from 'vue'
 
+import type { UploadRequestOption } from 'ant-design-vue/es/vc-upload/interface'
 import { columns } from './data'
 import type { Point, SearchParam } from './data'
-import { deletePoint, queryPointPage } from '~/api/point'
+import { deletePoint, queryPointPage, updatePoint } from '~/api/point'
 import { DEFAULT_PAGE_NO, DEFAULT_PAGE_SIZE } from '@/constants'
+import { upload } from '~/api/file'
+import { queryAllUserList } from '~/api/user'
+import type { ModelTypes } from '~/utils/graphql/zeus'
 
 interface State {
   loading: boolean
@@ -30,11 +33,14 @@ const state: State = reactive({
   search: generateSearch(),
   total: 0,
 })
-
+const userOptions = ref<ModelTypes['User'][]>([])
 const { search } = toRefs(state)
 
 onMounted(() => {
   initData()
+  queryAllUserList().then((res) => {
+    userOptions.value = res
+  })
 })
 
 function generateSearch() {
@@ -45,6 +51,7 @@ function generateSearch() {
     createdAtFrom: '',
     createdAtTo: '',
     nickName: '',
+    userId: undefined,
   }
   return search
 }
@@ -59,13 +66,12 @@ async function initData() {
   state.loading = false
 }
 
-// 打开编辑
-function handleOpenEdit(record: Point) {
-  state.currentItem = record
-  state.modalVisible = true
-}
 // 打开创建
 function handleOpenCreate() {
+  if (!search.value.userId || !search.value.type) {
+    message.info('请选择用户和类型')
+    return
+  }
   state.modalVisible = true
 }
 
@@ -101,30 +107,45 @@ function handleShowSizeChange(current: number, pageSize: number) {
   initData()
 }
 
-function handleTableChange(pagination: any, filters: any, sorter: SorterResult) {
-  const sortType = {
-    ascend: 'asc',
-    descend: 'desc',
-  }
-  const { order, field } = sorter
-  if (!order) {
-    search.value.sort = ''
+const currentId = ref('')
+
+async function customRequest({ file }: UploadRequestOption) {
+  const loading = message.loading('加载中', 0)
+  try {
+    const res = await upload(file as File)
+    await updatePoint({ id: currentId.value, fileId: res.id })
+    loading()
     initData()
-    return
+    message.success('成功')
   }
-  const sort = sortType[order!]
-  search.value.sort = `${field} ${sort}`
-  initData()
+  catch (e) {
+    loading()
+  }
+}
+
+const beforeUpload: UploadProps['beforeUpload'] = (file) => {
+  const jsJpgOrMp4 = file.type === 'image/jpeg' || file.type === 'video/mp4'
+  if (!jsJpgOrMp4)
+    message.error(`${file.name} 不是jpg/mp4文件`)
+  return jsJpgOrMp4 || Upload.LIST_IGNORE
 }
 </script>
 
 <template>
   <div class="point-container">
-    <UserModal v-model:open="state.modalVisible" :current-item="state.currentItem" @ok="initData" />
     <ACard>
       <div class="flex">
-        <AInput v-model:value="search.nickName" placeholder="用户姓名" class="w-200px" />
-        <ASelect v-model:value="search.type" class="ml-2 w-200px" placeholder="请选择">
+        <ASelect
+          v-model:value="search.userId"
+          class="w-200px"
+          placeholder="请选择用户"
+        >
+          <ASelectOption v-for="user in userOptions" :key="user.id" :value="user.id">
+            {{ user.nickName || user.userName }}
+          </ASelectOption>
+        </ASelect>
+        <!-- <AInput v-model:value="search.nickName" placeholder="用户姓名" class="w-200px" /> -->
+        <ASelect v-model:value="search.type" class="ml-2 w-200px" placeholder="请选择类型">
           <ASelectOption :value="1">
             轨迹回放
           </ASelectOption>
@@ -140,7 +161,6 @@ function handleTableChange(pagination: any, filters: any, sorter: SorterResult) 
           v-model:value="search.createdAtTo" placeholder="结束时间" :show-time="{ format: 'HH:mm' }"
           format="YYYY-MM-DD HH:mm:ss" value-format="YYYY-MM-DD HH:mm:ss" class="ml-2"
         />
-
         <div class="ml-2 flex items-center">
           <AButton :loading="state.loading" class="flex items-center justify-center" type="primary" @click="handleSearch">
             <template #icon>
@@ -158,7 +178,7 @@ function handleTableChange(pagination: any, filters: any, sorter: SorterResult) 
     </ACard>
     <div class="table-header">
       <AButton type="primary" @click="handleOpenCreate">
-        新建
+        新建模拟定位点
       </AButton>
       <div class="table-action">
         <ATooltip placement="top">
@@ -173,7 +193,7 @@ function handleTableChange(pagination: any, filters: any, sorter: SorterResult) 
     </div>
     <Table
       :pagination="false" :scroll="{ x: 1500 }" :columns="columns" :row-key="(record: any) => record.id"
-      :data-source="state.data" :loading="state.loading" @change="handleTableChange"
+      :data-source="state.data" :loading="state.loading"
     >
       <template #bodyCell="{ column, record }: { column: TableColumnType<Point>, record: Point }">
         <template v-if="column.dataIndex === 'user'">
@@ -198,10 +218,87 @@ function handleTableChange(pagination: any, filters: any, sorter: SorterResult) 
         </template>
         <template v-if="column.key === 'operation'">
           <span>
-            <a @click="handleOpenEdit(record)">编辑</a>
+            <AUpload
+              name="file"
+              action="/"
+              :max-count="1"
+              :show-upload-list="false"
+              :custom-request="customRequest"
+              :before-upload="beforeUpload"
+            >
+              <AButton
+                @click="() => {
+                  currentId = record.id!
+                }"
+              >
+                <UploadOutlined />
+                上传文件
+              </AButton>
+            </AUpload>
+            <ADivider type="vertical" />
+            <APopover placement="top" trigger="click">
+              <template #content>
+                <div>
+                  <div>
+                    <div class="flex">
+                      <div>用户名:</div>
+                      <div class="ml-2">{{ record.user?.userName }}</div>
+                    </div>
+                    <div class="flex">
+                      <div>姓名:</div>
+                      <div class="ml-2">{{ record.user?.nickName }}</div>
+                    </div>
+                    <div class="flex">
+                      <div>手机号码:</div>
+                      <div class="ml-2">{{ record.user?.phone || "-" }}</div>
+                    </div>
+                    <div class="flex">
+                      <div>x:</div>
+                      <div class="ml-2">{{ record.x || "-" }}</div>
+                    </div>
+                    <div class="flex">
+                      <div>y:</div>
+                      <div class="ml-2">{{ record.y || "-" }}</div>
+                    </div>
+                    <div class="flex">
+                      <div>z:</div>
+                      <div class="ml-2">{{ record.z && (record.z - 600) || "-" }}</div>
+                    </div>
+                    <div class="flex">
+                      <div>呼救信息:</div>
+                      <div class="ml-2">{{ '一切正常' }}</div>
+                    </div>
+                    <div class="flex">
+                      <div>监控时间:</div>
+                      <div class="ml-2">{{ formatDate(record.createdAt) }}</div>
+                    </div>
+                  </div>
+                  <div>
+                    媒体信息 {{ record.file?.mimeType }}
+                    <div v-if="record.file?.mimeType === 'image/jpeg'">
+                      <AImage
+                        :width="200"
+                        src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+                      />
+                    </div>
+                    <div v-if="record.file?.mimeType === 'video/mp4'">
+                      <video controls width="200">
+                        <source :src="record.file?.url" type="video/mp4">
+                      </video>
+                    </div>
+                  </div>
+                </div>
+              </template>
+              <template #title>
+                <span>{{ record.user?.nickName }}</span>
+              </template>
+              <AButton>
+                预览点信息
+              </AButton>
+            </APopover>
             <ADivider type="vertical" />
             <APopconfirm :title="`确定要删除${record.id}?`" ok-text="确定" cancel-text="取消" @confirm="handleDelete(record.id!)">
-              <a>删除</a>
+              <a class="text-red">删除</a>
             </APopconfirm>
           </span>
         </template>

@@ -38,17 +38,17 @@ export const AllTypesProps: Record<string,any> = {
 		updateRole:{
 			input:"RoleUpdateInputInput"
 		},
-		updateUser:{
-			input:"UserUpdateInputInput"
-		},
 		deletePoint:{
 
 		},
-		createRole:{
-			input:"RoleCreateInputInput"
-		},
 		revoke:{
 
+		},
+		updateUser:{
+			input:"UserUpdateInputInput"
+		},
+		createRole:{
+			input:"RoleCreateInputInput"
 		},
 		createPoint:{
 			input:"CreatePointInputInput"
@@ -59,23 +59,23 @@ export const AllTypesProps: Record<string,any> = {
 		updateMenu:{
 			input:"MenuUpdateInputInput"
 		},
-		deleteUser:{
-
-		},
 		registerUser:{
 			input:"UserRegisterInputInput"
 		},
 		loginByAccount:{
 			input:"LoginInputInput"
 		},
+		deleteUser:{
+
+		},
 		createUser:{
 			input:"UserCreateInputInput"
 		},
-		updatePoint:{
-			input:"UpdatePointInputInput"
-		},
 		deleteFileById:{
 
+		},
+		updatePoint:{
+			input:"UpdatePointInputInput"
 		}
 	},
 	NullHandling: "enum" as const,
@@ -197,20 +197,20 @@ export const ReturnTypes: Record<string,any> = {
 		deleteMenu:"Boolean",
 		createMenu:"Menu",
 		updateRole:"Role",
-		updateUser:"User",
 		deletePoint:"Boolean",
-		createRole:"Role",
 		revoke:"Boolean",
+		updateUser:"User",
+		createRole:"Role",
 		createPoint:"Point",
 		deleteRole:"Boolean",
 		updateMenu:"Menu",
 		logout:"Boolean",
-		deleteUser:"Boolean",
 		registerUser:"Boolean",
 		loginByAccount:"String",
+		deleteUser:"Boolean",
 		createUser:"User",
-		updatePoint:"Point",
-		deleteFileById:"Boolean"
+		deleteFileById:"Boolean",
+		updatePoint:"Point"
 	},
 	Order:{
 		direction:"Direction",
@@ -323,6 +323,7 @@ export const ReturnTypes: Record<string,any> = {
 		queryMenuList:"Menu",
 		queryAllRoleList:"Role",
 		queryUserPage:"Page_User",
+		queryAllUserList:"User",
 		queryPointPage:"Page_Point",
 		queryFilePage:"Page_File",
 		queryUser:"User",
