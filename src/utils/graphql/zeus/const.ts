@@ -7,6 +7,9 @@ export const AllTypesProps: Record<string,any> = {
 		y:"BigDecimal",
 		z:"BigDecimal"
 	},
+	CreateWarnEventInputInput:{
+		warnTime:"LocalDateTime"
+	},
 	Direction: "enum" as const,
 	FileProviderEnum: "enum" as const,
 	FileQueryPageParamInput:{
@@ -44,14 +47,17 @@ export const AllTypesProps: Record<string,any> = {
 		revoke:{
 
 		},
+		createRole:{
+			input:"RoleCreateInputInput"
+		},
+		deleteWarnEvent:{
+
+		},
 		updateUser:{
 			input:"UserUpdateInputInput"
 		},
 		deletePoint:{
 
-		},
-		createRole:{
-			input:"RoleCreateInputInput"
 		},
 		createPoint:{
 			input:"CreatePointInputInput"
@@ -59,11 +65,17 @@ export const AllTypesProps: Record<string,any> = {
 		deleteRole:{
 
 		},
+		updateWarnEvent:{
+			input:"UpdateWarnEventInputInput"
+		},
 		updateMenu:{
 			input:"MenuUpdateInputInput"
 		},
 		updateUserProfile:{
 			input:"UpdateUserProfileInputInput"
+		},
+		createWarnEvent:{
+			input:"CreateWarnEventInputInput"
 		},
 		registerUser:{
 			input:"UserRegisterInputInput"
@@ -77,11 +89,11 @@ export const AllTypesProps: Record<string,any> = {
 		createUser:{
 			input:"UserCreateInputInput"
 		},
-		updatePoint:{
-			input:"UpdatePointInputInput"
-		},
 		deleteFileById:{
 
+		},
+		updatePoint:{
+			input:"UpdatePointInputInput"
 		}
 	},
 	NullHandling: "enum" as const,
@@ -89,29 +101,35 @@ export const AllTypesProps: Record<string,any> = {
 		queryMenuList:{
 			param:"MenuQueryParamInput"
 		},
-		queryRole:{
-
-		},
 		queryUserPage:{
 			param:"UserQueryParamInput"
 		},
 		queryPointPage:{
 			param:"QueryPointPageParamInput"
 		},
-		queryFilePage:{
-			param:"FileQueryPageParamInput"
-		},
-		queryUser:{
-
-		},
 		queryMenuTree:{
 			param:"MenuQueryPageParamInput"
 		},
 		queryRolePage:{
 			param:"RoleQueryParamInput"
+		},
+		queryWarnEventPage:{
+			param:"QueryWarnEventParamInput"
+		},
+		queryRole:{
+
+		},
+		queryFilePage:{
+			param:"FileQueryPageParamInput"
+		},
+		queryUser:{
+
 		}
 	},
 	QueryPointPageParamInput:{
+
+	},
+	QueryWarnEventParamInput:{
 
 	},
 	RoleCreateInputInput:{
@@ -128,6 +146,9 @@ export const AllTypesProps: Record<string,any> = {
 	},
 	UpdateUserProfileInputInput:{
 
+	},
+	UpdateWarnEventInputInput:{
+		warnTime:"LocalDateTime"
 	},
 	UserCreateInputInput:{
 		gender:"GenderEnum"
@@ -150,6 +171,7 @@ export const ReturnTypes: Record<string,any> = {
 		"...on Point": "Point",
 		"...on Role": "Role",
 		"...on User": "User",
+		"...on WarnEvent": "WarnEvent",
 		createdAt:"LocalDateTime",
 		createdBy:"String",
 		id:"String",
@@ -208,20 +230,23 @@ export const ReturnTypes: Record<string,any> = {
 		createMenu:"Menu",
 		updateRole:"Role",
 		revoke:"Boolean",
+		createRole:"Role",
+		deleteWarnEvent:"Boolean",
 		updateUser:"User",
 		deletePoint:"Boolean",
-		createRole:"Role",
 		createPoint:"Point",
 		deleteRole:"Boolean",
+		updateWarnEvent:"WarnEvent",
 		updateMenu:"Menu",
 		logout:"Boolean",
 		updateUserProfile:"Boolean",
+		createWarnEvent:"WarnEvent",
 		registerUser:"Boolean",
 		loginByAccount:"String",
 		deleteUser:"Boolean",
 		createUser:"User",
-		updatePoint:"Point",
-		deleteFileById:"Boolean"
+		deleteFileById:"Boolean",
+		updatePoint:"Point"
 	},
 	Order:{
 		direction:"Direction",
@@ -305,6 +330,25 @@ export const ReturnTypes: Record<string,any> = {
 		totalElements:"Long",
 		totalPages:"Int"
 	},
+	Page_WarnEvent:{
+		content:"WarnEvent",
+		first:"Boolean",
+		hasContent:"Boolean",
+		hasNext:"Boolean",
+		hasPrevious:"Boolean",
+		last:"Boolean",
+		nextOrLastPageable:"Pagination",
+		nextPageable:"Pagination",
+		number:"Int",
+		numberOfElements:"Int",
+		pageable:"Pagination",
+		previousOrFirstPageable:"Pagination",
+		previousPageable:"Pagination",
+		size:"Int",
+		sort:"Sorting",
+		totalElements:"Long",
+		totalPages:"Int"
+	},
 	Pagination:{
 		pageNumber:"Int",
 		pageSize:"Int",
@@ -327,19 +371,20 @@ export const ReturnTypes: Record<string,any> = {
 		z:"BigDecimal"
 	},
 	Query:{
-		queryLoginSessionList:"LoginSessionResult",
 		app:"String",
 		userInfo:"UserInfoResult",
 		queryMenuList:"Menu",
+		queryUserPage:"Page_User",
+		queryPointPage:"Page_Point",
+		queryMenuTree:"Menu",
+		queryRolePage:"Page_Role",
+		queryLoginSessionList:"LoginSessionResult",
+		queryWarnEventPage:"Page_WarnEvent",
 		queryRole:"Role",
 		queryAllRoleList:"Role",
-		queryUserPage:"Page_User",
 		queryAllUserList:"User",
-		queryPointPage:"Page_Point",
 		queryFilePage:"Page_File",
-		queryUser:"User",
-		queryMenuTree:"Menu",
-		queryRolePage:"Page_Role"
+		queryUser:"User"
 	},
 	Role:{
 		createdAt:"LocalDateTime",
@@ -387,6 +432,20 @@ export const ReturnTypes: Record<string,any> = {
 		roles:"Role",
 		superAdmin:"Boolean",
 		userName:"String"
+	},
+	WarnEvent:{
+		code:"String",
+		createdAt:"LocalDateTime",
+		createdBy:"String",
+		fileUrl:"String",
+		id:"String",
+		level:"String",
+		location:"String",
+		name:"String",
+		title:"String",
+		updatedAt:"LocalDateTime",
+		updatedBy:"String",
+		warnTime:"LocalDateTime"
 	}
 }
 

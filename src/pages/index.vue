@@ -10,9 +10,11 @@ import type { Point } from './point/data'
 import { queryPointPage } from '~/api/point'
 
 const fengmap = window.fengmap
-let markers: any[] = []
+const markers = ref<any[]>([])
+const userIds = ref<string[]>([])
 const list = ref<Point[]>([])
 const point = ref<Point>({})
+const loading = ref(true)
 
 const { setProps, show, destroy } = useTippy(() => document.body, {
   placement: 'right-start',
@@ -86,28 +88,33 @@ const { setProps, show, destroy } = useTippy(() => document.body, {
 })
 
 onMounted(() => {
-
 })
 
 onBeforeUnmount(() => {
-  markers.forEach((it) => {
+  markers.value.forEach((it) => {
     it.remove()
   })
-  markers = []
+  markers.value = []
 })
 
 function loaded() {
   queryPointPage({ pageNo: 1, pageSize: 999, type: 2 }).then((res) => {
+    loading.value = false
     list.value = res.content
     res.content.forEach((point) => {
+      if (point.user) {
+        if (!userIds.value.includes(point.user.id!))
+          userIds.value.push(point.user.id!)
+      }
+
       const marker = addLocationMarker(point)
-      markers.push(marker)
+      markers.value.push(marker)
     })
     setTimeout(() => {
       nextTick(() => {
         const doms = document.querySelectorAll('.dom-point')
         doms.forEach((dom) => {
-          dom.addEventListener('click', (event) => {
+          dom.addEventListener('click', (event: any) => {
             const id = dom.id
             const p = list.value.find(it => it.id === id)
             if (!p)
@@ -154,12 +161,21 @@ function addLocationMarker(ops: Point) {
 
 <template>
   <div class="relative h-full w-full">
-    <div class="absolute left-0 right-0 top-0 z-99 rounded">
-      <div class="mx-6 mt-4 rounded bg-white p-4">
-        some
+    <ASpin :spinning="loading" tip="加载中...">
+      <div class="absolute left-0 right-0 top-0 z-99 rounded">
+        <div class="mx-6 mt-4 rounded bg-white p-4">
+          <ARow>
+            <ACol :span="6">
+              <AStatistic title="当前在线用户" :value="userIds.length" style="margin-right: 50px" />
+            </ACol>
+            <ACol :span="6">
+              <AStatistic title="定位点数" :value="markers.length" style="margin-right: 50px" />
+            </ACol>
+          </ARow>
+        </div>
       </div>
-    </div>
-    <FengMap @loaded="loaded" />
+      <FengMap @loaded="loaded" />
+    </ASpin>
   </div>
 </template>
 

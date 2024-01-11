@@ -16,7 +16,7 @@ let coordMarkers: any[] = []
 let tracksPlayer: any = null // 轨迹回放类
 const speed = 0.5 // 默认速度
 
-const loading = ref(false)
+const loading = ref(true)
 const search = reactive<SearchParam>({
   pageNo: DEFAULT_PAGE_NO,
   pageSize: 999,
@@ -140,43 +140,45 @@ function addStartAndEndMarker() {
   };
 }
 function loaded() {
-
+  loading.value = false
 }
 </script>
 
 <template>
   <div class="relative h-full w-full">
-    <div class="absolute left-0 right-0 top-0 z-99 rounded">
-      <div class="mx-6 mt-4 rounded bg-white p-4">
-        <ASelect
-          v-model:value="search.userId"
-          class="w-200px"
-          placeholder="请选择用户"
-        >
-          <ASelectOption v-for="user in userOptions" :key="user.id" :value="user.id">
-            {{ user.nickName || user.userName }}
-          </ASelectOption>
-        </ASelect>
-        <ADatePicker
-          v-model:value="search.createdAtFrom" placeholder="开始时间" :show-time="{ format: 'HH:mm' }"
-          format="YYYY-MM-DD HH:mm:ss" value-format="YYYY-MM-DD HH:mm:ss" class="ml-2"
-        />
-        <ADatePicker
-          v-model:value="search.createdAtTo" placeholder="结束时间" :show-time="{ format: 'HH:mm' }"
-          format="YYYY-MM-DD HH:mm:ss" value-format="YYYY-MM-DD HH:mm:ss" class="ml-2"
-        />
-        <AButton :loading="loading" type="primary" class="ml-2" @click="handleSearch">
-          搜索
-        </AButton>
-        <AButton type="primary" class="ml-2" @click="handleReset">
-          重置
-        </AButton>
+    <ASpin :spinning="loading" tip="加载中...">
+      <div class="absolute left-0 right-0 top-0 z-99 rounded">
+        <div class="mx-6 mt-4 rounded bg-white p-4">
+          <ASelect
+            v-model:value="search.userId"
+            class="w-200px"
+            placeholder="请选择用户"
+          >
+            <ASelectOption v-for="user in userOptions" :key="user.id" :value="user.id">
+              {{ user.nickName || user.userName }}
+            </ASelectOption>
+          </ASelect>
+          <ADatePicker
+            v-model:value="search.createdAtFrom" placeholder="开始时间" :show-time="{ format: 'HH:mm' }"
+            format="YYYY-MM-DD HH:mm:ss" value-format="YYYY-MM-DD HH:mm:ss" class="ml-2"
+          />
+          <ADatePicker
+            v-model:value="search.createdAtTo" placeholder="结束时间" :show-time="{ format: 'HH:mm' }"
+            format="YYYY-MM-DD HH:mm:ss" value-format="YYYY-MM-DD HH:mm:ss" class="ml-2"
+          />
+          <AButton :loading="loading" type="primary" class="ml-2" @click="handleSearch">
+            搜索
+          </AButton>
+          <AButton type="primary" class="ml-2" @click="handleReset">
+            重置
+          </AButton>
 
-        <AButton v-if="trackData.length" type="primary" class="ml-2" @click="handlePlay">
-          播放
-        </AButton>
+          <AButton v-if="trackData.length" type="primary" class="ml-2" @click="handlePlay">
+            播放
+          </AButton>
+        </div>
       </div>
-    </div>
-    <FengMap @loaded="loaded" />
+      <FengMap @loaded="loaded" />
+    </ASpin>
   </div>
 </template>

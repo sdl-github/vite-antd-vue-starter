@@ -57,6 +57,7 @@ function loaded() {
 }
 
 function handleReset() {
+  trackData.value = []
   markers.forEach((it) => {
     it.remove()
   })

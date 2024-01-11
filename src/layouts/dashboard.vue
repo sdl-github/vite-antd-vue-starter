@@ -6,7 +6,6 @@ const userStore = useUserStore()
 const user = computed(() => userStore.user)
 const userSettingModalRef = ref()
 const router = useRouter()
-const title = '矿山人员感知系统'
 
 const { menus, selectedKeys, openKeys } = useMenu()
 const theme = ref<MenuTheme>('dark')
@@ -72,7 +71,7 @@ async function handleLogout() {
         </div>
       </div>
       <ALayoutContent>
-        <main class="min-h-[calc(100vh-48px)]">
+        <main class="h-[calc(100vh-48px)] overflow-auto">
           <RouterView />
         </main>
       </ALayoutContent>

@@ -862,6 +862,7 @@ export type ValueTypes = {
 		['...on Point']?: Omit<ValueTypes["Point"],keyof ValueTypes["BaseEntity"]>;
 		['...on Role']?: Omit<ValueTypes["Role"],keyof ValueTypes["BaseEntity"]>;
 		['...on User']?: Omit<ValueTypes["User"],keyof ValueTypes["BaseEntity"]>;
+		['...on WarnEvent']?: Omit<ValueTypes["WarnEvent"],keyof ValueTypes["BaseEntity"]>;
 		__typename?: boolean | `@${string}`
 }>;
 	/** An arbitrary precision signed decimal */
@@ -874,6 +875,15 @@ export type ValueTypes = {
 	x?: ValueTypes["BigDecimal"] | undefined | null | Variable<any, string>,
 	y?: ValueTypes["BigDecimal"] | undefined | null | Variable<any, string>,
 	z?: ValueTypes["BigDecimal"] | undefined | null | Variable<any, string>
+};
+	["CreateWarnEventInputInput"]: {
+	code?: string | undefined | null | Variable<any, string>,
+	fileUrl?: string | undefined | null | Variable<any, string>,
+	level?: string | undefined | null | Variable<any, string>,
+	location?: string | undefined | null | Variable<any, string>,
+	name?: string | undefined | null | Variable<any, string>,
+	title?: string | undefined | null | Variable<any, string>,
+	warnTime?: ValueTypes["LocalDateTime"] | undefined | null | Variable<any, string>
 };
 	["Direction"]:Direction;
 	["File"]: AliasType<{
@@ -1003,20 +1013,23 @@ deleteMenu?: [{	menuId?: string | undefined | null | Variable<any, string>},bool
 createMenu?: [{	input: ValueTypes["MenuCreateInputInput"] | Variable<any, string>},ValueTypes["Menu"]],
 updateRole?: [{	input: ValueTypes["RoleUpdateInputInput"] | Variable<any, string>},ValueTypes["Role"]],
 revoke?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
+createRole?: [{	input: ValueTypes["RoleCreateInputInput"] | Variable<any, string>},ValueTypes["Role"]],
+deleteWarnEvent?: [{	id: string | Variable<any, string>},boolean | `@${string}`],
 updateUser?: [{	input: ValueTypes["UserUpdateInputInput"] | Variable<any, string>},ValueTypes["User"]],
 deletePoint?: [{	id: string | Variable<any, string>},boolean | `@${string}`],
-createRole?: [{	input: ValueTypes["RoleCreateInputInput"] | Variable<any, string>},ValueTypes["Role"]],
 createPoint?: [{	input: ValueTypes["CreatePointInputInput"] | Variable<any, string>},ValueTypes["Point"]],
 deleteRole?: [{	roleId?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
+updateWarnEvent?: [{	input: ValueTypes["UpdateWarnEventInputInput"] | Variable<any, string>},ValueTypes["WarnEvent"]],
 updateMenu?: [{	input: ValueTypes["MenuUpdateInputInput"] | Variable<any, string>},ValueTypes["Menu"]],
 	logout?:boolean | `@${string}`,
 updateUserProfile?: [{	input?: ValueTypes["UpdateUserProfileInputInput"] | undefined | null | Variable<any, string>},boolean | `@${string}`],
+createWarnEvent?: [{	input: ValueTypes["CreateWarnEventInputInput"] | Variable<any, string>},ValueTypes["WarnEvent"]],
 registerUser?: [{	input?: ValueTypes["UserRegisterInputInput"] | undefined | null | Variable<any, string>},boolean | `@${string}`],
 loginByAccount?: [{	input?: ValueTypes["LoginInputInput"] | undefined | null | Variable<any, string>},boolean | `@${string}`],
 deleteUser?: [{	userId: string | Variable<any, string>},boolean | `@${string}`],
 createUser?: [{	input: ValueTypes["UserCreateInputInput"] | Variable<any, string>},ValueTypes["User"]],
-updatePoint?: [{	input: ValueTypes["UpdatePointInputInput"] | Variable<any, string>},ValueTypes["Point"]],
 deleteFileById?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
+updatePoint?: [{	input: ValueTypes["UpdatePointInputInput"] | Variable<any, string>},ValueTypes["Point"]],
 		__typename?: boolean | `@${string}`
 }>;
 	["NullHandling"]:NullHandling;
@@ -1107,6 +1120,26 @@ deleteFileById?: [{	id?: string | undefined | null | Variable<any, string>},bool
 	totalPages?:boolean | `@${string}`,
 		__typename?: boolean | `@${string}`
 }>;
+	["Page_WarnEvent"]: AliasType<{
+	content?:ValueTypes["WarnEvent"],
+	first?:boolean | `@${string}`,
+	hasContent?:boolean | `@${string}`,
+	hasNext?:boolean | `@${string}`,
+	hasPrevious?:boolean | `@${string}`,
+	last?:boolean | `@${string}`,
+	nextOrLastPageable?:ValueTypes["Pagination"],
+	nextPageable?:ValueTypes["Pagination"],
+	number?:boolean | `@${string}`,
+	numberOfElements?:boolean | `@${string}`,
+	pageable?:ValueTypes["Pagination"],
+	previousOrFirstPageable?:ValueTypes["Pagination"],
+	previousPageable?:ValueTypes["Pagination"],
+	size?:boolean | `@${string}`,
+	sort?:ValueTypes["Sorting"],
+	totalElements?:boolean | `@${string}`,
+	totalPages?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
 	["Pagination"]: AliasType<{
 	pageNumber?:boolean | `@${string}`,
 	pageSize?:boolean | `@${string}`,
@@ -1137,19 +1170,20 @@ deleteFileById?: [{	id?: string | undefined | null | Variable<any, string>},bool
 }>;
 	/** Query root */
 ["Query"]: AliasType<{
-	queryLoginSessionList?:ValueTypes["LoginSessionResult"],
 	app?:boolean | `@${string}`,
 	userInfo?:ValueTypes["UserInfoResult"],
 queryMenuList?: [{	param?: ValueTypes["MenuQueryParamInput"] | undefined | null | Variable<any, string>},ValueTypes["Menu"]],
-queryRole?: [{	roleId?: string | undefined | null | Variable<any, string>},ValueTypes["Role"]],
-	queryAllRoleList?:ValueTypes["Role"],
 queryUserPage?: [{	param: ValueTypes["UserQueryParamInput"] | Variable<any, string>},ValueTypes["Page_User"]],
-	queryAllUserList?:ValueTypes["User"],
 queryPointPage?: [{	param: ValueTypes["QueryPointPageParamInput"] | Variable<any, string>},ValueTypes["Page_Point"]],
-queryFilePage?: [{	param?: ValueTypes["FileQueryPageParamInput"] | undefined | null | Variable<any, string>},ValueTypes["Page_File"]],
-queryUser?: [{	userId?: string | undefined | null | Variable<any, string>},ValueTypes["User"]],
 queryMenuTree?: [{	param?: ValueTypes["MenuQueryPageParamInput"] | undefined | null | Variable<any, string>},ValueTypes["Menu"]],
 queryRolePage?: [{	param?: ValueTypes["RoleQueryParamInput"] | undefined | null | Variable<any, string>},ValueTypes["Page_Role"]],
+	queryLoginSessionList?:ValueTypes["LoginSessionResult"],
+queryWarnEventPage?: [{	param: ValueTypes["QueryWarnEventParamInput"] | Variable<any, string>},ValueTypes["Page_WarnEvent"]],
+queryRole?: [{	roleId?: string | undefined | null | Variable<any, string>},ValueTypes["Role"]],
+	queryAllRoleList?:ValueTypes["Role"],
+	queryAllUserList?:ValueTypes["User"],
+queryFilePage?: [{	param?: ValueTypes["FileQueryPageParamInput"] | undefined | null | Variable<any, string>},ValueTypes["Page_File"]],
+queryUser?: [{	userId?: string | undefined | null | Variable<any, string>},ValueTypes["User"]],
 		__typename?: boolean | `@${string}`
 }>;
 	["QueryPointPageParamInput"]: {
@@ -1161,6 +1195,15 @@ queryRolePage?: [{	param?: ValueTypes["RoleQueryParamInput"] | undefined | null 
 	sort?: string | undefined | null | Variable<any, string>,
 	type?: number | undefined | null | Variable<any, string>,
 	userId?: string | undefined | null | Variable<any, string>
+};
+	["QueryWarnEventParamInput"]: {
+	createdAtFrom?: string | undefined | null | Variable<any, string>,
+	createdAtTo?: string | undefined | null | Variable<any, string>,
+	level?: string | undefined | null | Variable<any, string>,
+	pageNo?: number | undefined | null | Variable<any, string>,
+	pageSize?: number | undefined | null | Variable<any, string>,
+	sort?: string | undefined | null | Variable<any, string>,
+	title?: string | undefined | null | Variable<any, string>
 };
 	["Role"]: AliasType<{
 	/** 创建时间 */
@@ -1219,6 +1262,16 @@ queryRolePage?: [{	param?: ValueTypes["RoleQueryParamInput"] | undefined | null 
 	nickName?: string | undefined | null | Variable<any, string>,
 	oldPassword?: string | undefined | null | Variable<any, string>,
 	password?: string | undefined | null | Variable<any, string>
+};
+	["UpdateWarnEventInputInput"]: {
+	code?: string | undefined | null | Variable<any, string>,
+	fileUrl?: string | undefined | null | Variable<any, string>,
+	id?: string | undefined | null | Variable<any, string>,
+	level?: string | undefined | null | Variable<any, string>,
+	location?: string | undefined | null | Variable<any, string>,
+	name?: string | undefined | null | Variable<any, string>,
+	title?: string | undefined | null | Variable<any, string>,
+	warnTime?: ValueTypes["LocalDateTime"] | undefined | null | Variable<any, string>
 };
 	["User"]: AliasType<{
 	avatar?:boolean | `@${string}`,
@@ -1292,7 +1345,27 @@ queryRolePage?: [{	param?: ValueTypes["RoleQueryParamInput"] | undefined | null 
 	nickName?: string | undefined | null | Variable<any, string>,
 	phone?: string | undefined | null | Variable<any, string>,
 	roleIds?: Array<string | undefined | null> | undefined | null | Variable<any, string>
-}
+};
+	["WarnEvent"]: AliasType<{
+	code?:boolean | `@${string}`,
+	/** 创建时间 */
+	createdAt?:boolean | `@${string}`,
+	/** 创建人 */
+	createdBy?:boolean | `@${string}`,
+	fileUrl?:boolean | `@${string}`,
+	/** id */
+	id?:boolean | `@${string}`,
+	level?:boolean | `@${string}`,
+	location?:boolean | `@${string}`,
+	name?:boolean | `@${string}`,
+	title?:boolean | `@${string}`,
+	/** 更新时间 */
+	updatedAt?:boolean | `@${string}`,
+	/** 更新人 */
+	updatedBy?:boolean | `@${string}`,
+	warnTime?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>
   }
 
 export type ResolverInputTypes = {
@@ -1312,6 +1385,7 @@ export type ResolverInputTypes = {
 		['...on Point']?: Omit<ResolverInputTypes["Point"],keyof ResolverInputTypes["BaseEntity"]>;
 		['...on Role']?: Omit<ResolverInputTypes["Role"],keyof ResolverInputTypes["BaseEntity"]>;
 		['...on User']?: Omit<ResolverInputTypes["User"],keyof ResolverInputTypes["BaseEntity"]>;
+		['...on WarnEvent']?: Omit<ResolverInputTypes["WarnEvent"],keyof ResolverInputTypes["BaseEntity"]>;
 		__typename?: boolean | `@${string}`
 }>;
 	/** An arbitrary precision signed decimal */
@@ -1324,6 +1398,15 @@ export type ResolverInputTypes = {
 	x?: ResolverInputTypes["BigDecimal"] | undefined | null,
 	y?: ResolverInputTypes["BigDecimal"] | undefined | null,
 	z?: ResolverInputTypes["BigDecimal"] | undefined | null
+};
+	["CreateWarnEventInputInput"]: {
+	code?: string | undefined | null,
+	fileUrl?: string | undefined | null,
+	level?: string | undefined | null,
+	location?: string | undefined | null,
+	name?: string | undefined | null,
+	title?: string | undefined | null,
+	warnTime?: ResolverInputTypes["LocalDateTime"] | undefined | null
 };
 	["Direction"]:Direction;
 	["File"]: AliasType<{
@@ -1453,20 +1536,23 @@ deleteMenu?: [{	menuId?: string | undefined | null},boolean | `@${string}`],
 createMenu?: [{	input: ResolverInputTypes["MenuCreateInputInput"]},ResolverInputTypes["Menu"]],
 updateRole?: [{	input: ResolverInputTypes["RoleUpdateInputInput"]},ResolverInputTypes["Role"]],
 revoke?: [{	id?: string | undefined | null},boolean | `@${string}`],
+createRole?: [{	input: ResolverInputTypes["RoleCreateInputInput"]},ResolverInputTypes["Role"]],
+deleteWarnEvent?: [{	id: string},boolean | `@${string}`],
 updateUser?: [{	input: ResolverInputTypes["UserUpdateInputInput"]},ResolverInputTypes["User"]],
 deletePoint?: [{	id: string},boolean | `@${string}`],
-createRole?: [{	input: ResolverInputTypes["RoleCreateInputInput"]},ResolverInputTypes["Role"]],
 createPoint?: [{	input: ResolverInputTypes["CreatePointInputInput"]},ResolverInputTypes["Point"]],
 deleteRole?: [{	roleId?: string | undefined | null},boolean | `@${string}`],
+updateWarnEvent?: [{	input: ResolverInputTypes["UpdateWarnEventInputInput"]},ResolverInputTypes["WarnEvent"]],
 updateMenu?: [{	input: ResolverInputTypes["MenuUpdateInputInput"]},ResolverInputTypes["Menu"]],
 	logout?:boolean | `@${string}`,
 updateUserProfile?: [{	input?: ResolverInputTypes["UpdateUserProfileInputInput"] | undefined | null},boolean | `@${string}`],
+createWarnEvent?: [{	input: ResolverInputTypes["CreateWarnEventInputInput"]},ResolverInputTypes["WarnEvent"]],
 registerUser?: [{	input?: ResolverInputTypes["UserRegisterInputInput"] | undefined | null},boolean | `@${string}`],
 loginByAccount?: [{	input?: ResolverInputTypes["LoginInputInput"] | undefined | null},boolean | `@${string}`],
 deleteUser?: [{	userId: string},boolean | `@${string}`],
 createUser?: [{	input: ResolverInputTypes["UserCreateInputInput"]},ResolverInputTypes["User"]],
-updatePoint?: [{	input: ResolverInputTypes["UpdatePointInputInput"]},ResolverInputTypes["Point"]],
 deleteFileById?: [{	id?: string | undefined | null},boolean | `@${string}`],
+updatePoint?: [{	input: ResolverInputTypes["UpdatePointInputInput"]},ResolverInputTypes["Point"]],
 		__typename?: boolean | `@${string}`
 }>;
 	["NullHandling"]:NullHandling;
@@ -1557,6 +1643,26 @@ deleteFileById?: [{	id?: string | undefined | null},boolean | `@${string}`],
 	totalPages?:boolean | `@${string}`,
 		__typename?: boolean | `@${string}`
 }>;
+	["Page_WarnEvent"]: AliasType<{
+	content?:ResolverInputTypes["WarnEvent"],
+	first?:boolean | `@${string}`,
+	hasContent?:boolean | `@${string}`,
+	hasNext?:boolean | `@${string}`,
+	hasPrevious?:boolean | `@${string}`,
+	last?:boolean | `@${string}`,
+	nextOrLastPageable?:ResolverInputTypes["Pagination"],
+	nextPageable?:ResolverInputTypes["Pagination"],
+	number?:boolean | `@${string}`,
+	numberOfElements?:boolean | `@${string}`,
+	pageable?:ResolverInputTypes["Pagination"],
+	previousOrFirstPageable?:ResolverInputTypes["Pagination"],
+	previousPageable?:ResolverInputTypes["Pagination"],
+	size?:boolean | `@${string}`,
+	sort?:ResolverInputTypes["Sorting"],
+	totalElements?:boolean | `@${string}`,
+	totalPages?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
 	["Pagination"]: AliasType<{
 	pageNumber?:boolean | `@${string}`,
 	pageSize?:boolean | `@${string}`,
@@ -1587,19 +1693,20 @@ deleteFileById?: [{	id?: string | undefined | null},boolean | `@${string}`],
 }>;
 	/** Query root */
 ["Query"]: AliasType<{
-	queryLoginSessionList?:ResolverInputTypes["LoginSessionResult"],
 	app?:boolean | `@${string}`,
 	userInfo?:ResolverInputTypes["UserInfoResult"],
 queryMenuList?: [{	param?: ResolverInputTypes["MenuQueryParamInput"] | undefined | null},ResolverInputTypes["Menu"]],
-queryRole?: [{	roleId?: string | undefined | null},ResolverInputTypes["Role"]],
-	queryAllRoleList?:ResolverInputTypes["Role"],
 queryUserPage?: [{	param: ResolverInputTypes["UserQueryParamInput"]},ResolverInputTypes["Page_User"]],
-	queryAllUserList?:ResolverInputTypes["User"],
 queryPointPage?: [{	param: ResolverInputTypes["QueryPointPageParamInput"]},ResolverInputTypes["Page_Point"]],
-queryFilePage?: [{	param?: ResolverInputTypes["FileQueryPageParamInput"] | undefined | null},ResolverInputTypes["Page_File"]],
-queryUser?: [{	userId?: string | undefined | null},ResolverInputTypes["User"]],
 queryMenuTree?: [{	param?: ResolverInputTypes["MenuQueryPageParamInput"] | undefined | null},ResolverInputTypes["Menu"]],
 queryRolePage?: [{	param?: ResolverInputTypes["RoleQueryParamInput"] | undefined | null},ResolverInputTypes["Page_Role"]],
+	queryLoginSessionList?:ResolverInputTypes["LoginSessionResult"],
+queryWarnEventPage?: [{	param: ResolverInputTypes["QueryWarnEventParamInput"]},ResolverInputTypes["Page_WarnEvent"]],
+queryRole?: [{	roleId?: string | undefined | null},ResolverInputTypes["Role"]],
+	queryAllRoleList?:ResolverInputTypes["Role"],
+	queryAllUserList?:ResolverInputTypes["User"],
+queryFilePage?: [{	param?: ResolverInputTypes["FileQueryPageParamInput"] | undefined | null},ResolverInputTypes["Page_File"]],
+queryUser?: [{	userId?: string | undefined | null},ResolverInputTypes["User"]],
 		__typename?: boolean | `@${string}`
 }>;
 	["QueryPointPageParamInput"]: {
@@ -1611,6 +1718,15 @@ queryRolePage?: [{	param?: ResolverInputTypes["RoleQueryParamInput"] | undefined
 	sort?: string | undefined | null,
 	type?: number | undefined | null,
 	userId?: string | undefined | null
+};
+	["QueryWarnEventParamInput"]: {
+	createdAtFrom?: string | undefined | null,
+	createdAtTo?: string | undefined | null,
+	level?: string | undefined | null,
+	pageNo?: number | undefined | null,
+	pageSize?: number | undefined | null,
+	sort?: string | undefined | null,
+	title?: string | undefined | null
 };
 	["Role"]: AliasType<{
 	/** 创建时间 */
@@ -1669,6 +1785,16 @@ queryRolePage?: [{	param?: ResolverInputTypes["RoleQueryParamInput"] | undefined
 	nickName?: string | undefined | null,
 	oldPassword?: string | undefined | null,
 	password?: string | undefined | null
+};
+	["UpdateWarnEventInputInput"]: {
+	code?: string | undefined | null,
+	fileUrl?: string | undefined | null,
+	id?: string | undefined | null,
+	level?: string | undefined | null,
+	location?: string | undefined | null,
+	name?: string | undefined | null,
+	title?: string | undefined | null,
+	warnTime?: ResolverInputTypes["LocalDateTime"] | undefined | null
 };
 	["User"]: AliasType<{
 	avatar?:boolean | `@${string}`,
@@ -1743,6 +1869,26 @@ queryRolePage?: [{	param?: ResolverInputTypes["RoleQueryParamInput"] | undefined
 	phone?: string | undefined | null,
 	roleIds?: Array<string | undefined | null> | undefined | null
 };
+	["WarnEvent"]: AliasType<{
+	code?:boolean | `@${string}`,
+	/** 创建时间 */
+	createdAt?:boolean | `@${string}`,
+	/** 创建人 */
+	createdBy?:boolean | `@${string}`,
+	fileUrl?:boolean | `@${string}`,
+	/** id */
+	id?:boolean | `@${string}`,
+	level?:boolean | `@${string}`,
+	location?:boolean | `@${string}`,
+	name?:boolean | `@${string}`,
+	title?:boolean | `@${string}`,
+	/** 更新时间 */
+	updatedAt?:boolean | `@${string}`,
+	/** 更新人 */
+	updatedBy?:boolean | `@${string}`,
+	warnTime?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
 	["schema"]: AliasType<{
 	query?:ResolverInputTypes["Query"],
 	mutation?:ResolverInputTypes["Mutation"],
@@ -1751,7 +1897,7 @@ queryRolePage?: [{	param?: ResolverInputTypes["RoleQueryParamInput"] | undefined
   }
 
 export type ModelTypes = {
-    ["BaseEntity"]: ModelTypes["File"] | ModelTypes["Menu"] | ModelTypes["Point"] | ModelTypes["Role"] | ModelTypes["User"];
+    ["BaseEntity"]: ModelTypes["File"] | ModelTypes["Menu"] | ModelTypes["Point"] | ModelTypes["Role"] | ModelTypes["User"] | ModelTypes["WarnEvent"];
 	/** An arbitrary precision signed decimal */
 ["BigDecimal"]:any;
 	["CreatePointInputInput"]: {
@@ -1762,6 +1908,15 @@ export type ModelTypes = {
 	x?: ModelTypes["BigDecimal"] | undefined,
 	y?: ModelTypes["BigDecimal"] | undefined,
 	z?: ModelTypes["BigDecimal"] | undefined
+};
+	["CreateWarnEventInputInput"]: {
+	code?: string | undefined,
+	fileUrl?: string | undefined,
+	level?: string | undefined,
+	location?: string | undefined,
+	name?: string | undefined,
+	title?: string | undefined,
+	warnTime?: ModelTypes["LocalDateTime"] | undefined
 };
 	["Direction"]:Direction;
 	["File"]: {
@@ -1888,20 +2043,23 @@ export type ModelTypes = {
 	createMenu?: ModelTypes["Menu"] | undefined,
 	updateRole?: ModelTypes["Role"] | undefined,
 	revoke: boolean,
+	createRole?: ModelTypes["Role"] | undefined,
+	deleteWarnEvent: boolean,
 	updateUser?: ModelTypes["User"] | undefined,
 	deletePoint: boolean,
-	createRole?: ModelTypes["Role"] | undefined,
 	createPoint?: ModelTypes["Point"] | undefined,
 	deleteRole: boolean,
+	updateWarnEvent?: ModelTypes["WarnEvent"] | undefined,
 	updateMenu?: ModelTypes["Menu"] | undefined,
 	logout: boolean,
 	updateUserProfile?: boolean | undefined,
+	createWarnEvent?: ModelTypes["WarnEvent"] | undefined,
 	registerUser?: boolean | undefined,
 	loginByAccount?: string | undefined,
 	deleteUser: boolean,
 	createUser?: ModelTypes["User"] | undefined,
-	updatePoint?: ModelTypes["Point"] | undefined,
-	deleteFileById: boolean
+	deleteFileById: boolean,
+	updatePoint?: ModelTypes["Point"] | undefined
 };
 	["NullHandling"]:NullHandling;
 	["Order"]: {
@@ -1986,6 +2144,25 @@ export type ModelTypes = {
 	totalElements: ModelTypes["Long"],
 	totalPages: number
 };
+	["Page_WarnEvent"]: {
+		content?: Array<ModelTypes["WarnEvent"] | undefined> | undefined,
+	first: boolean,
+	hasContent: boolean,
+	hasNext: boolean,
+	hasPrevious: boolean,
+	last: boolean,
+	nextOrLastPageable?: ModelTypes["Pagination"] | undefined,
+	nextPageable?: ModelTypes["Pagination"] | undefined,
+	number: number,
+	numberOfElements: number,
+	pageable?: ModelTypes["Pagination"] | undefined,
+	previousOrFirstPageable?: ModelTypes["Pagination"] | undefined,
+	previousPageable?: ModelTypes["Pagination"] | undefined,
+	size: number,
+	sort?: ModelTypes["Sorting"] | undefined,
+	totalElements: ModelTypes["Long"],
+	totalPages: number
+};
 	["Pagination"]: {
 		pageNumber: number,
 	pageSize?: number | undefined,
@@ -2014,19 +2191,20 @@ export type ModelTypes = {
 };
 	/** Query root */
 ["Query"]: {
-		queryLoginSessionList?: Array<ModelTypes["LoginSessionResult"] | undefined> | undefined,
-	app?: string | undefined,
+		app?: string | undefined,
 	userInfo?: ModelTypes["UserInfoResult"] | undefined,
 	queryMenuList?: Array<ModelTypes["Menu"] | undefined> | undefined,
+	queryUserPage?: ModelTypes["Page_User"] | undefined,
+	queryPointPage?: ModelTypes["Page_Point"] | undefined,
+	queryMenuTree?: Array<ModelTypes["Menu"] | undefined> | undefined,
+	queryRolePage?: ModelTypes["Page_Role"] | undefined,
+	queryLoginSessionList?: Array<ModelTypes["LoginSessionResult"] | undefined> | undefined,
+	queryWarnEventPage?: ModelTypes["Page_WarnEvent"] | undefined,
 	queryRole?: ModelTypes["Role"] | undefined,
 	queryAllRoleList?: Array<ModelTypes["Role"] | undefined> | undefined,
-	queryUserPage?: ModelTypes["Page_User"] | undefined,
 	queryAllUserList?: Array<ModelTypes["User"] | undefined> | undefined,
-	queryPointPage?: ModelTypes["Page_Point"] | undefined,
 	queryFilePage?: ModelTypes["Page_File"] | undefined,
-	queryUser?: ModelTypes["User"] | undefined,
-	queryMenuTree?: Array<ModelTypes["Menu"] | undefined> | undefined,
-	queryRolePage?: ModelTypes["Page_Role"] | undefined
+	queryUser?: ModelTypes["User"] | undefined
 };
 	["QueryPointPageParamInput"]: {
 	createdAtFrom?: string | undefined,
@@ -2037,6 +2215,15 @@ export type ModelTypes = {
 	sort?: string | undefined,
 	type?: number | undefined,
 	userId?: string | undefined
+};
+	["QueryWarnEventParamInput"]: {
+	createdAtFrom?: string | undefined,
+	createdAtTo?: string | undefined,
+	level?: string | undefined,
+	pageNo?: number | undefined,
+	pageSize?: number | undefined,
+	sort?: string | undefined,
+	title?: string | undefined
 };
 	["Role"]: {
 		/** 创建时间 */
@@ -2092,6 +2279,16 @@ export type ModelTypes = {
 	nickName?: string | undefined,
 	oldPassword?: string | undefined,
 	password?: string | undefined
+};
+	["UpdateWarnEventInputInput"]: {
+	code?: string | undefined,
+	fileUrl?: string | undefined,
+	id?: string | undefined,
+	level?: string | undefined,
+	location?: string | undefined,
+	name?: string | undefined,
+	title?: string | undefined,
+	warnTime?: ModelTypes["LocalDateTime"] | undefined
 };
 	["User"]: {
 		avatar?: string | undefined,
@@ -2164,6 +2361,25 @@ export type ModelTypes = {
 	phone?: string | undefined,
 	roleIds?: Array<string | undefined> | undefined
 };
+	["WarnEvent"]: {
+		code?: string | undefined,
+	/** 创建时间 */
+	createdAt?: ModelTypes["LocalDateTime"] | undefined,
+	/** 创建人 */
+	createdBy?: string | undefined,
+	fileUrl?: string | undefined,
+	/** id */
+	id?: string | undefined,
+	level?: string | undefined,
+	location?: string | undefined,
+	name?: string | undefined,
+	title?: string | undefined,
+	/** 更新时间 */
+	updatedAt?: ModelTypes["LocalDateTime"] | undefined,
+	/** 更新人 */
+	updatedBy?: string | undefined,
+	warnTime?: ModelTypes["LocalDateTime"] | undefined
+};
 	["schema"]: {
 	query?: ModelTypes["Query"] | undefined,
 	mutation?: ModelTypes["Mutation"] | undefined
@@ -2172,7 +2388,7 @@ export type ModelTypes = {
 
 export type GraphQLTypes = {
     ["BaseEntity"]: {
-	__typename:"File" | "Menu" | "Point" | "Role" | "User",
+	__typename:"File" | "Menu" | "Point" | "Role" | "User" | "WarnEvent",
 	/** 创建时间 */
 	createdAt?: GraphQLTypes["LocalDateTime"] | undefined,
 	/** 创建人 */
@@ -2188,6 +2404,7 @@ export type GraphQLTypes = {
 	['...on Point']: '__union' & GraphQLTypes["Point"];
 	['...on Role']: '__union' & GraphQLTypes["Role"];
 	['...on User']: '__union' & GraphQLTypes["User"];
+	['...on WarnEvent']: '__union' & GraphQLTypes["WarnEvent"];
 };
 	/** An arbitrary precision signed decimal */
 ["BigDecimal"]: "scalar" & { name: "BigDecimal" };
@@ -2199,6 +2416,15 @@ export type GraphQLTypes = {
 	x?: GraphQLTypes["BigDecimal"] | undefined,
 	y?: GraphQLTypes["BigDecimal"] | undefined,
 	z?: GraphQLTypes["BigDecimal"] | undefined
+};
+	["CreateWarnEventInputInput"]: {
+		code?: string | undefined,
+	fileUrl?: string | undefined,
+	level?: string | undefined,
+	location?: string | undefined,
+	name?: string | undefined,
+	title?: string | undefined,
+	warnTime?: GraphQLTypes["LocalDateTime"] | undefined
 };
 	["Direction"]: Direction;
 	["File"]: {
@@ -2329,20 +2555,23 @@ export type GraphQLTypes = {
 	createMenu?: GraphQLTypes["Menu"] | undefined,
 	updateRole?: GraphQLTypes["Role"] | undefined,
 	revoke: boolean,
+	createRole?: GraphQLTypes["Role"] | undefined,
+	deleteWarnEvent: boolean,
 	updateUser?: GraphQLTypes["User"] | undefined,
 	deletePoint: boolean,
-	createRole?: GraphQLTypes["Role"] | undefined,
 	createPoint?: GraphQLTypes["Point"] | undefined,
 	deleteRole: boolean,
+	updateWarnEvent?: GraphQLTypes["WarnEvent"] | undefined,
 	updateMenu?: GraphQLTypes["Menu"] | undefined,
 	logout: boolean,
 	updateUserProfile?: boolean | undefined,
+	createWarnEvent?: GraphQLTypes["WarnEvent"] | undefined,
 	registerUser?: boolean | undefined,
 	loginByAccount?: string | undefined,
 	deleteUser: boolean,
 	createUser?: GraphQLTypes["User"] | undefined,
-	updatePoint?: GraphQLTypes["Point"] | undefined,
-	deleteFileById: boolean
+	deleteFileById: boolean,
+	updatePoint?: GraphQLTypes["Point"] | undefined
 };
 	["NullHandling"]: NullHandling;
 	["Order"]: {
@@ -2432,6 +2661,26 @@ export type GraphQLTypes = {
 	totalElements: GraphQLTypes["Long"],
 	totalPages: number
 };
+	["Page_WarnEvent"]: {
+	__typename: "Page_WarnEvent",
+	content?: Array<GraphQLTypes["WarnEvent"] | undefined> | undefined,
+	first: boolean,
+	hasContent: boolean,
+	hasNext: boolean,
+	hasPrevious: boolean,
+	last: boolean,
+	nextOrLastPageable?: GraphQLTypes["Pagination"] | undefined,
+	nextPageable?: GraphQLTypes["Pagination"] | undefined,
+	number: number,
+	numberOfElements: number,
+	pageable?: GraphQLTypes["Pagination"] | undefined,
+	previousOrFirstPageable?: GraphQLTypes["Pagination"] | undefined,
+	previousPageable?: GraphQLTypes["Pagination"] | undefined,
+	size: number,
+	sort?: GraphQLTypes["Sorting"] | undefined,
+	totalElements: GraphQLTypes["Long"],
+	totalPages: number
+};
 	["Pagination"]: {
 	__typename: "Pagination",
 	pageNumber: number,
@@ -2463,19 +2712,20 @@ export type GraphQLTypes = {
 	/** Query root */
 ["Query"]: {
 	__typename: "Query",
-	queryLoginSessionList?: Array<GraphQLTypes["LoginSessionResult"] | undefined> | undefined,
 	app?: string | undefined,
 	userInfo?: GraphQLTypes["UserInfoResult"] | undefined,
 	queryMenuList?: Array<GraphQLTypes["Menu"] | undefined> | undefined,
+	queryUserPage?: GraphQLTypes["Page_User"] | undefined,
+	queryPointPage?: GraphQLTypes["Page_Point"] | undefined,
+	queryMenuTree?: Array<GraphQLTypes["Menu"] | undefined> | undefined,
+	queryRolePage?: GraphQLTypes["Page_Role"] | undefined,
+	queryLoginSessionList?: Array<GraphQLTypes["LoginSessionResult"] | undefined> | undefined,
+	queryWarnEventPage?: GraphQLTypes["Page_WarnEvent"] | undefined,
 	queryRole?: GraphQLTypes["Role"] | undefined,
 	queryAllRoleList?: Array<GraphQLTypes["Role"] | undefined> | undefined,
-	queryUserPage?: GraphQLTypes["Page_User"] | undefined,
 	queryAllUserList?: Array<GraphQLTypes["User"] | undefined> | undefined,
-	queryPointPage?: GraphQLTypes["Page_Point"] | undefined,
 	queryFilePage?: GraphQLTypes["Page_File"] | undefined,
-	queryUser?: GraphQLTypes["User"] | undefined,
-	queryMenuTree?: Array<GraphQLTypes["Menu"] | undefined> | undefined,
-	queryRolePage?: GraphQLTypes["Page_Role"] | undefined
+	queryUser?: GraphQLTypes["User"] | undefined
 };
 	["QueryPointPageParamInput"]: {
 		createdAtFrom?: string | undefined,
@@ -2486,6 +2736,15 @@ export type GraphQLTypes = {
 	sort?: string | undefined,
 	type?: number | undefined,
 	userId?: string | undefined
+};
+	["QueryWarnEventParamInput"]: {
+		createdAtFrom?: string | undefined,
+	createdAtTo?: string | undefined,
+	level?: string | undefined,
+	pageNo?: number | undefined,
+	pageSize?: number | undefined,
+	sort?: string | undefined,
+	title?: string | undefined
 };
 	["Role"]: {
 	__typename: "Role",
@@ -2544,6 +2803,16 @@ export type GraphQLTypes = {
 	nickName?: string | undefined,
 	oldPassword?: string | undefined,
 	password?: string | undefined
+};
+	["UpdateWarnEventInputInput"]: {
+		code?: string | undefined,
+	fileUrl?: string | undefined,
+	id?: string | undefined,
+	level?: string | undefined,
+	location?: string | undefined,
+	name?: string | undefined,
+	title?: string | undefined,
+	warnTime?: GraphQLTypes["LocalDateTime"] | undefined
 };
 	["User"]: {
 	__typename: "User",
@@ -2617,6 +2886,26 @@ export type GraphQLTypes = {
 	nickName?: string | undefined,
 	phone?: string | undefined,
 	roleIds?: Array<string | undefined> | undefined
+};
+	["WarnEvent"]: {
+	__typename: "WarnEvent",
+	code?: string | undefined,
+	/** 创建时间 */
+	createdAt?: GraphQLTypes["LocalDateTime"] | undefined,
+	/** 创建人 */
+	createdBy?: string | undefined,
+	fileUrl?: string | undefined,
+	/** id */
+	id?: string | undefined,
+	level?: string | undefined,
+	location?: string | undefined,
+	name?: string | undefined,
+	title?: string | undefined,
+	/** 更新时间 */
+	updatedAt?: GraphQLTypes["LocalDateTime"] | undefined,
+	/** 更新人 */
+	updatedBy?: string | undefined,
+	warnTime?: GraphQLTypes["LocalDateTime"] | undefined
 }
     }
 export const enum Direction {
@@ -2647,6 +2936,7 @@ export const enum NullHandling {
 type ZEUS_VARIABLES = {
 	["BigDecimal"]: ValueTypes["BigDecimal"];
 	["CreatePointInputInput"]: ValueTypes["CreatePointInputInput"];
+	["CreateWarnEventInputInput"]: ValueTypes["CreateWarnEventInputInput"];
 	["Direction"]: ValueTypes["Direction"];
 	["FileProviderEnum"]: ValueTypes["FileProviderEnum"];
 	["FileQueryPageParamInput"]: ValueTypes["FileQueryPageParamInput"];
@@ -2661,11 +2951,13 @@ type ZEUS_VARIABLES = {
 	["MenuUpdateInputInput"]: ValueTypes["MenuUpdateInputInput"];
 	["NullHandling"]: ValueTypes["NullHandling"];
 	["QueryPointPageParamInput"]: ValueTypes["QueryPointPageParamInput"];
+	["QueryWarnEventParamInput"]: ValueTypes["QueryWarnEventParamInput"];
 	["RoleCreateInputInput"]: ValueTypes["RoleCreateInputInput"];
 	["RoleQueryParamInput"]: ValueTypes["RoleQueryParamInput"];
 	["RoleUpdateInputInput"]: ValueTypes["RoleUpdateInputInput"];
 	["UpdatePointInputInput"]: ValueTypes["UpdatePointInputInput"];
 	["UpdateUserProfileInputInput"]: ValueTypes["UpdateUserProfileInputInput"];
+	["UpdateWarnEventInputInput"]: ValueTypes["UpdateWarnEventInputInput"];
 	["UserCreateInputInput"]: ValueTypes["UserCreateInputInput"];
 	["UserQueryParamInput"]: ValueTypes["UserQueryParamInput"];
 	["UserRegisterInputInput"]: ValueTypes["UserRegisterInputInput"];

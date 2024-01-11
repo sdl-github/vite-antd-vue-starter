@@ -40,7 +40,7 @@ function handleLogin() {
     <div class="flex flex-1 items-center justify-center">
       <div class="w-[400px] rounded bg-white p-10">
         <div class="text-bold h-[50px] text-xl">
-          登录
+          {{ title }} 登录
         </div>
         <AForm ref="formRef" :model="form">
           <AFormItem name="account">

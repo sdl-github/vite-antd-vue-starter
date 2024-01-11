@@ -10,9 +10,6 @@ export function useMenu() {
   const selectedKeys = ref<string[]>([])
   const openKeys = ref<string[]>([])
 
-  const { path } = route
-  const paths = path.split('/').map(p => `/${p}`)
-  openKeys.value = paths
   watchEffect(() => {
     const { path } = route
     selectedKeys.value = [path]

@@ -48,9 +48,8 @@ const state = reactive({
 const { model } = toRefs(state)
 
 watch(() => props.open, (val) => {
-  if (val) {
+  if (val)
     state.model = { ...generateModel(), ...props.currentItem }
-  }
 })
 
 function requireMessage(key: string) {
@@ -63,10 +62,25 @@ function handleOk() {
       const data = Object.assign({}, unref(model))
       const { id, title, name, type = MenuTypeEnum.MENU, icon, parentId, path, sort, visible } = data
       const createInput: MenuCreateInput = {
-        title, name, icon, type, parentId, path, sort, visible,
+        title,
+        name,
+        icon,
+        type,
+        parentId,
+        path,
+        sort,
+        visible,
       }
       const updateInput: MenuUpdateInput = {
-        id, title, name, type, icon, parentId, path, sort, visible,
+        id,
+        title,
+        name,
+        type,
+        icon,
+        parentId,
+        path,
+        sort,
+        visible,
       }
       const api = data.id ? updateMenu : createMenu
       const input = (data.id ? updateInput : createInput) as ModelType
@@ -92,67 +106,67 @@ function handleCancel() {
 </script>
 
 <template>
-  <a-modal
+  <AModal
     :open="open" :destroy-on-close="true" :title="currentItem?.id ? '编辑' : ' 创建'" :confirm-loading="confirmLoading"
     :width="600" ok-text="确定" cancel-text="取消" @ok="handleOk" @cancel="handleCancel"
   >
-    <a-form
+    <AForm
       ref="formRef" class="mt-5" :model="model" :label-col="{ span: 6 }" :wrapper-col="{ span: 16 }"
       autocomplete="off"
     >
-      <a-row :gutter="[16, 8]">
-        <a-col :span="12">
-          <a-form-item label="类型" name="type">
-            <a-radio-group v-model:value="model.type" button-style="solid">
-              <a-radio-button :value="MenuTypeEnum.MENU">
+      <ARow :gutter="[16, 8]">
+        <ACol :span="12">
+          <AFormItem label="类型" name="type">
+            <ARadioGroup v-model:value="model.type" button-style="solid">
+              <ARadioButton :value="MenuTypeEnum.MENU">
                 菜单
-              </a-radio-button>
-              <a-radio-button :value="MenuTypeEnum.PERMISSION">
+              </ARadioButton>
+              <ARadioButton :value="MenuTypeEnum.PERMISSION">
                 权限
-              </a-radio-button>
-            </a-radio-group>
-          </a-form-item>
-        </a-col>
-        <a-col :span="12">
-          <a-form-item label="标题" name="title" :rules="rules.required">
-            <a-input v-model:value="model.title" :placeholder="requireMessage('标题')" />
-          </a-form-item>
-        </a-col>
-        <a-col :span="12">
-          <a-form-item label="标识" name="name" :rules="rules.required">
-            <a-input v-model:value="model.name" :placeholder="requireMessage('标识')" />
-          </a-form-item>
-        </a-col>
-        <a-col :span="12">
-          <a-form-item label="上级目录" name="parentId">
+              </ARadioButton>
+            </ARadioGroup>
+          </AFormItem>
+        </ACol>
+        <ACol :span="12">
+          <AFormItem label="标题" name="title" :rules="rules.required">
+            <AInput v-model:value="model.title" :placeholder="requireMessage('标题')" />
+          </AFormItem>
+        </ACol>
+        <ACol :span="12">
+          <AFormItem label="标识" name="name" :rules="rules.required">
+            <AInput v-model:value="model.name" :placeholder="requireMessage('标识')" />
+          </AFormItem>
+        </ACol>
+        <ACol :span="12">
+          <AFormItem label="上级目录" name="parentId">
             <MenuSelect v-model:value="model.parentId" />
-          </a-form-item>
-        </a-col>
+          </AFormItem>
+        </ACol>
         <template v-if="model.type === MenuTypeEnum.MENU">
-          <a-col :span="12">
-            <a-form-item label="图标" name="icon">
-              <a-input v-model:value="model.icon" :placeholder="requireMessage('图标')" />
-            </a-form-item>
-          </a-col>
-          <a-col :span="12">
-            <a-form-item label="路由" name="path">
-              <a-input v-model:value="model.path" :placeholder="requireMessage('路由')" />
-            </a-form-item>
-          </a-col>
-          <a-col :span="12">
-            <a-form-item label="排序" name="order">
-              <a-input-number v-model:value="model.sort" class="w-full" :placeholder="requireMessage('排序')" />
-            </a-form-item>
-          </a-col>
-          <a-col :span="12">
-            <a-form-item label="是否可见" name="visible">
-              <a-checkbox v-model:checked="model.visible" class="w-full" />
-            </a-form-item>
-          </a-col>
+          <ACol :span="12">
+            <AFormItem label="图标" name="icon">
+              <AInput v-model:value="model.icon" :placeholder="requireMessage('图标')" />
+            </AFormItem>
+          </ACol>
+          <ACol :span="12">
+            <AFormItem label="路由" name="path">
+              <AInput v-model:value="model.path" :placeholder="requireMessage('路由')" />
+            </AFormItem>
+          </ACol>
+          <ACol :span="12">
+            <AFormItem label="排序" name="order">
+              <AInputNumber v-model:value="model.sort" class="w-full" :placeholder="requireMessage('排序')" />
+            </AFormItem>
+          </ACol>
+          <ACol :span="12">
+            <AFormItem label="是否可见" name="visible">
+              <ACheckbox v-model:checked="model.visible" class="w-full" />
+            </AFormItem>
+          </ACol>
         </template>
-      </a-row>
-    </a-form>
-  </a-modal>
+      </ARow>
+    </AForm>
+  </AModal>
 </template>
 
 <style lang="scss" scoped></style>
