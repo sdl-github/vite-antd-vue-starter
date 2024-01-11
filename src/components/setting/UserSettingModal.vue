@@ -117,9 +117,7 @@ defineExpose({
               </div>
               <div class="i-carbon-arrow-right display-none group-hover:display-flex mr-6 text-12px" />
             </div>
-            <div class="mt-4 font-bold">
-              已连接的账户
-            </div>
+
             <ADivider class="my-2" />
           </template>
           <UserInfoSetting v-if="showKey === ShowKey.userInfoSetting" @back="back" />

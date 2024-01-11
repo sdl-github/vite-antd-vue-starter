@@ -66,20 +66,20 @@ export default defineComponent({
 </script>
 
 <template>
-  <a-modal
+  <AModal
     title="裁切图片" ok-text="确定" cancel-text="取消" :closable="false" :open="open" :mask="false" width="400px"
     @ok="handleOk" @cancel="setOpen(false)"
   >
     <div class="h-[400px] flex items-center justify-center">
       <template v-if="loading">
-        <a-skeleton active />
+        <ASkeleton active />
       </template>
       <Cropper
         ref="cropper" :default-size="defaultSize" :src="src"
         :stencil-props="{ aspectRatio: 1 }"
       />
     </div>
-  </a-modal>
+  </AModal>
 </template>
 
 <style lang="scss">

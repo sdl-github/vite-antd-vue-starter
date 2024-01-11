@@ -23,10 +23,21 @@ request.interceptors.response.use((response) => {
   handleServiceError(data)
   return data
 }, (err) => {
-  const { response: { data } } = err
-  handleServiceError(data)
+  const { response } = err
+  handleHttpError(response)
   return Promise.reject(err)
 })
+
+function handleHttpError(response: any) {
+  const { status, data: { code, message } } = response
+  if (status !== 200) {
+    const msg = message
+    notification.info({
+      message: '提示',
+      description: msg || '网络错误，请稍候再试',
+    })
+  }
+}
 
 function handleServiceError(data: any) {
   if (data.errors) {

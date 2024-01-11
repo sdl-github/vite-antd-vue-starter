@@ -2,16 +2,18 @@
 import type { UploadRequestOption } from 'ant-design-vue/es/vc-upload/interface'
 import { message } from 'ant-design-vue'
 import AvatarCropperModal, { useModal } from '@/components/ImageCropperModal.vue'
+import { upload } from '~/api/file'
+import { updateUser } from '~/api/user'
+import { updateUserProfile } from '~/api/auth'
 
 const emits = defineEmits(['back'])
 
 const userStore = useUserStore()
 const user = computed(() => userStore.user)
 const avatarModal = useModal()
-const loading = ref(false)
+const actionLoading = ref(false)
 const formState = reactive({
   nickname: '',
-  note: '',
 })
 
 watchEffect(() => {
@@ -19,17 +21,19 @@ watchEffect(() => {
 })
 
 async function onFinish() {
-  // const loading = message.loading('加载中', 0)
-  loading.value = true
+  const loading = message.loading('加载中', 0)
+  actionLoading.value = true
   try {
-    // await updateUserProfile(formState)
-    loading.value = false
+    await updateUserProfile({ nickName: formState.nickname })
+    actionLoading.value = false
     userStore.init()
+    loading()
     message.success('成功')
     return true
   }
   catch (e) {
-    loading.value = false
+    loading()
+    actionLoading.value = false
     return false
   }
 }
@@ -42,8 +46,8 @@ function handleOpenAvatarCropper({ file }: UploadRequestOption) {
 async function handleUploadAvatar({ blob }: { blob: Blob }) {
   const loading = message.loading('加载中', 0)
   try {
-    // const avatar = await uploadFileToS3(blob)
-    // await updateUserProfile({ avatar })
+    const res = await upload(blob, 'avatar')
+    await updateUserProfile({ avatar: res.url })
     userStore.init()
     loading()
     message.success('成功')
@@ -107,14 +111,8 @@ async function handleUploadAvatar({ blob }: { blob: Blob }) {
             <AInput v-model:value="formState.nickname" />
           </AFormItem>
 
-          <AFormItem
-            label="自我介绍"
-            name="note"
-          >
-            <ATextarea v-model:value="formState.note" />
-          </AFormItem>
           <AFormItem>
-            <AButton :loading="loading" type="primary" html-type="submit">
+            <AButton :loading="actionLoading" type="primary" html-type="submit">
               保存
             </AButton>
           </AFormItem>

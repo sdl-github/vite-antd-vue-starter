@@ -22,6 +22,7 @@ export function userInfo() {
       nickName: true,
       avatar: true,
       superAdmin: true,
+      passwordEnable: true,
       menus: {
         id: true,
         parentId: true,
@@ -52,5 +53,13 @@ export function revoke(id: string) {
     url: '/auth/revoke',
     method: 'POST',
     params: { id },
+  })
+}
+
+export function updateUserProfile(data: ModelTypes['UpdateUserProfileInputInput']) {
+  return request({
+    url: '/auth/updateUserProfile',
+    method: 'POST',
+    data,
   })
 }

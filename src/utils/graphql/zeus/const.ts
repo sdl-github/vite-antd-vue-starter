@@ -1,8 +1,11 @@
 /* eslint-disable */
 
 export const AllTypesProps: Record<string,any> = {
+	BigDecimal: `scalar.BigDecimal` as const,
 	CreatePointInputInput:{
-
+		x:"BigDecimal",
+		y:"BigDecimal",
+		z:"BigDecimal"
 	},
 	Direction: "enum" as const,
 	FileProviderEnum: "enum" as const,
@@ -38,17 +41,17 @@ export const AllTypesProps: Record<string,any> = {
 		updateRole:{
 			input:"RoleUpdateInputInput"
 		},
-		deletePoint:{
+		revoke:{
 
 		},
-		revoke:{
+		updateUser:{
+			input:"UserUpdateInputInput"
+		},
+		deletePoint:{
 
 		},
 		createRole:{
 			input:"RoleCreateInputInput"
-		},
-		updateUser:{
-			input:"UserUpdateInputInput"
 		},
 		createPoint:{
 			input:"CreatePointInputInput"
@@ -58,6 +61,9 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		updateMenu:{
 			input:"MenuUpdateInputInput"
+		},
+		updateUserProfile:{
+			input:"UpdateUserProfileInputInput"
 		},
 		registerUser:{
 			input:"UserRegisterInputInput"
@@ -95,11 +101,11 @@ export const AllTypesProps: Record<string,any> = {
 		queryFilePage:{
 			param:"FileQueryPageParamInput"
 		},
-		queryMenuTree:{
-			param:"MenuQueryPageParamInput"
-		},
 		queryUser:{
 
+		},
+		queryMenuTree:{
+			param:"MenuQueryPageParamInput"
 		},
 		queryRolePage:{
 			param:"RoleQueryParamInput"
@@ -118,6 +124,9 @@ export const AllTypesProps: Record<string,any> = {
 
 	},
 	UpdatePointInputInput:{
+
+	},
+	UpdateUserProfileInputInput:{
 
 	},
 	UserCreateInputInput:{
@@ -147,6 +156,7 @@ export const ReturnTypes: Record<string,any> = {
 		updatedAt:"LocalDateTime",
 		updatedBy:"String"
 	},
+	BigDecimal: `scalar.BigDecimal` as const,
 	File:{
 		bucket:"String",
 		category:"String",
@@ -197,14 +207,15 @@ export const ReturnTypes: Record<string,any> = {
 		deleteMenu:"Boolean",
 		createMenu:"Menu",
 		updateRole:"Role",
-		deletePoint:"Boolean",
 		revoke:"Boolean",
-		createRole:"Role",
 		updateUser:"User",
+		deletePoint:"Boolean",
+		createRole:"Role",
 		createPoint:"Point",
 		deleteRole:"Boolean",
 		updateMenu:"Menu",
 		logout:"Boolean",
+		updateUserProfile:"Boolean",
 		registerUser:"Boolean",
 		loginByAccount:"String",
 		deleteUser:"Boolean",
@@ -311,13 +322,13 @@ export const ReturnTypes: Record<string,any> = {
 		updatedBy:"String",
 		user:"User",
 		userId:"String",
-		x:"Int",
-		y:"Int",
-		z:"Int"
+		x:"BigDecimal",
+		y:"BigDecimal",
+		z:"BigDecimal"
 	},
 	Query:{
-		app:"String",
 		queryLoginSessionList:"LoginSessionResult",
+		app:"String",
 		userInfo:"UserInfoResult",
 		queryMenuList:"Menu",
 		queryRole:"Role",
@@ -326,8 +337,8 @@ export const ReturnTypes: Record<string,any> = {
 		queryAllUserList:"User",
 		queryPointPage:"Page_Point",
 		queryFilePage:"Page_File",
-		queryMenuTree:"Menu",
 		queryUser:"User",
+		queryMenuTree:"Menu",
 		queryRolePage:"Page_Role"
 	},
 	Role:{
@@ -370,6 +381,7 @@ export const ReturnTypes: Record<string,any> = {
 		id:"String",
 		menus:"Menu",
 		nickName:"String",
+		passwordEnable:"Boolean",
 		permissions:"String",
 		phone:"String",
 		roles:"Role",
