@@ -64,6 +64,11 @@ function handleLogin() {
               登录
             </AButton>
           </AFormItem>
+          <div class="cursor-pointer">
+            没有账号  <RouterLink to="/register" class="text-blue-500">
+              注册
+            </RouterLink>
+          </div>
         </AForm>
       </div>
     </div>

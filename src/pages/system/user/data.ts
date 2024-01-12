@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 import type { TableColumnType } from 'ant-design-vue'
 
 import type { ModelTypes, ValueTypes } from '@/utils/graphql/zeus'
@@ -34,6 +35,12 @@ export const columns: TableColumnType<User>[] = [
     dataIndex: 'nickName',
     key: 'nickName',
     sorter: true,
+  },
+  {
+    title: '状态',
+    align: 'center',
+    dataIndex: 'note',
+    key: 'note',
   },
   {
     title: '性别',

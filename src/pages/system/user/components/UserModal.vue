@@ -30,6 +30,7 @@ function generateModel(): ModelType {
     email: '',
     gender: GenderEnum.UNKNOWN,
     roleIds: [],
+    note: '',
   }
 }
 
@@ -71,7 +72,7 @@ function handleOk() {
   formRef.value?.validate().then(async (v) => {
     if (v) {
       const data = Object.assign({}, unref(model))
-      const { id, userName, gender, nickName, password, phone, email, roleIds } = data
+      const { id, userName, gender, nickName, password, phone, email, roleIds, note } = data
       const createInput: UserCreateInput = {
         userName,
         nickName,
@@ -80,6 +81,7 @@ function handleOk() {
         phone,
         email,
         roleIds,
+        note,
       }
       const updateInput: UserUpdateInput = {
         id,
@@ -88,16 +90,17 @@ function handleOk() {
         phone,
         email,
         roleIds,
+        note,
       }
       const api = data.id ? updateUser : createUser
       const input = (data.id ? updateInput : createInput) as ModelType
       confirmLoading.value = true
-      api(input).then((res) => {
+      api(input).then(() => {
         confirmLoading.value = false
         message.success('操作成功')
         emits('ok')
         handleCancel()
-      }).catch((e) => {
+      }).catch(() => {
         confirmLoading.value = false
       })
     }
@@ -159,6 +162,11 @@ function handleCancel() {
         <ACol :span="12">
           <AFormItem label="手机号码" name="phone" :rules="rules.phone">
             <AInput v-model:value="model.phone" :placeholder="requireMessage('手机号码')" />
+          </AFormItem>
+        </ACol>
+        <ACol :span="12">
+          <AFormItem label="状态" name="note">
+            <AInput v-model:value="model.note" :placeholder="requireMessage('状态')" />
           </AFormItem>
         </ACol>
         <ACol :span="12">

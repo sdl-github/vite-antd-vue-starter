@@ -44,19 +44,19 @@ export const AllTypesProps: Record<string,any> = {
 		updateRole:{
 			input:"RoleUpdateInputInput"
 		},
-		revoke:{
+		deleteWarnEvent:{
 
 		},
 		createRole:{
 			input:"RoleCreateInputInput"
 		},
-		deleteWarnEvent:{
-
-		},
 		updateUser:{
 			input:"UserUpdateInputInput"
 		},
 		deletePoint:{
+
+		},
+		revoke:{
 
 		},
 		createPoint:{
@@ -71,11 +71,14 @@ export const AllTypesProps: Record<string,any> = {
 		updateMenu:{
 			input:"MenuUpdateInputInput"
 		},
+		createWarnEvent:{
+			input:"CreateWarnEventInputInput"
+		},
 		updateUserProfile:{
 			input:"UpdateUserProfileInputInput"
 		},
-		createWarnEvent:{
-			input:"CreateWarnEventInputInput"
+		deleteUser:{
+
 		},
 		registerUser:{
 			input:"UserRegisterInputInput"
@@ -83,17 +86,14 @@ export const AllTypesProps: Record<string,any> = {
 		loginByAccount:{
 			input:"LoginInputInput"
 		},
-		deleteUser:{
-
-		},
 		createUser:{
 			input:"UserCreateInputInput"
 		},
-		deleteFileById:{
-
-		},
 		updatePoint:{
 			input:"UpdatePointInputInput"
+		},
+		deleteFileById:{
+
 		}
 	},
 	NullHandling: "enum" as const,
@@ -229,24 +229,24 @@ export const ReturnTypes: Record<string,any> = {
 		deleteMenu:"Boolean",
 		createMenu:"Menu",
 		updateRole:"Role",
-		revoke:"Boolean",
-		createRole:"Role",
 		deleteWarnEvent:"Boolean",
+		createRole:"Role",
 		updateUser:"User",
 		deletePoint:"Boolean",
+		revoke:"Boolean",
 		createPoint:"Point",
 		deleteRole:"Boolean",
 		updateWarnEvent:"WarnEvent",
 		updateMenu:"Menu",
 		logout:"Boolean",
-		updateUserProfile:"Boolean",
 		createWarnEvent:"WarnEvent",
+		updateUserProfile:"Boolean",
+		deleteUser:"Boolean",
 		registerUser:"Boolean",
 		loginByAccount:"String",
-		deleteUser:"Boolean",
 		createUser:"User",
-		deleteFileById:"Boolean",
-		updatePoint:"Point"
+		updatePoint:"Point",
+		deleteFileById:"Boolean"
 	},
 	Order:{
 		direction:"Direction",
@@ -413,6 +413,7 @@ export const ReturnTypes: Record<string,any> = {
 		gender:"GenderEnum",
 		id:"String",
 		nickName:"String",
+		note:"String",
 		phone:"String",
 		roles:"Role",
 		updatedAt:"LocalDateTime",

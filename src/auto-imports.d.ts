@@ -53,6 +53,7 @@ declare global {
   const injectLocal: typeof import('@vueuse/core')['injectLocal']
   const isDark: typeof import('./composables/dark')['isDark']
   const isDefined: typeof import('@vueuse/core')['isDefined']
+  const isExternal: typeof import('./utils/validate')['isExternal']
   const isProxy: typeof import('vue')['isProxy']
   const isReactive: typeof import('vue')['isReactive']
   const isReadonly: typeof import('vue')['isReadonly']
@@ -293,6 +294,10 @@ declare global {
   const useWindowFocus: typeof import('@vueuse/core')['useWindowFocus']
   const useWindowScroll: typeof import('@vueuse/core')['useWindowScroll']
   const useWindowSize: typeof import('@vueuse/core')['useWindowSize']
+  const validateEmail: typeof import('./utils/validate')['validateEmail']
+  const validatePhone: typeof import('./utils/validate')['validatePhone']
+  const validateRealName: typeof import('./utils/validate')['validateRealName']
+  const validateUsername: typeof import('./utils/validate')['validateUsername']
   const watch: typeof import('vue')['watch']
   const watchArray: typeof import('@vueuse/core')['watchArray']
   const watchAtMost: typeof import('@vueuse/core')['watchAtMost']
@@ -367,6 +372,7 @@ declare module 'vue' {
     readonly injectLocal: UnwrapRef<typeof import('@vueuse/core')['injectLocal']>
     readonly isDark: UnwrapRef<typeof import('./composables/dark')['isDark']>
     readonly isDefined: UnwrapRef<typeof import('@vueuse/core')['isDefined']>
+    readonly isExternal: UnwrapRef<typeof import('./utils/validate')['isExternal']>
     readonly isProxy: UnwrapRef<typeof import('vue')['isProxy']>
     readonly isReactive: UnwrapRef<typeof import('vue')['isReactive']>
     readonly isReadonly: UnwrapRef<typeof import('vue')['isReadonly']>
@@ -606,6 +612,10 @@ declare module 'vue' {
     readonly useWindowFocus: UnwrapRef<typeof import('@vueuse/core')['useWindowFocus']>
     readonly useWindowScroll: UnwrapRef<typeof import('@vueuse/core')['useWindowScroll']>
     readonly useWindowSize: UnwrapRef<typeof import('@vueuse/core')['useWindowSize']>
+    readonly validateEmail: UnwrapRef<typeof import('./utils/validate')['validateEmail']>
+    readonly validatePhone: UnwrapRef<typeof import('./utils/validate')['validatePhone']>
+    readonly validateRealName: UnwrapRef<typeof import('./utils/validate')['validateRealName']>
+    readonly validateUsername: UnwrapRef<typeof import('./utils/validate')['validateUsername']>
     readonly watch: UnwrapRef<typeof import('vue')['watch']>
     readonly watchArray: UnwrapRef<typeof import('@vueuse/core')['watchArray']>
     readonly watchAtMost: UnwrapRef<typeof import('@vueuse/core')['watchAtMost']>
@@ -674,6 +684,7 @@ declare module '@vue/runtime-core' {
     readonly injectLocal: UnwrapRef<typeof import('@vueuse/core')['injectLocal']>
     readonly isDark: UnwrapRef<typeof import('./composables/dark')['isDark']>
     readonly isDefined: UnwrapRef<typeof import('@vueuse/core')['isDefined']>
+    readonly isExternal: UnwrapRef<typeof import('./utils/validate')['isExternal']>
     readonly isProxy: UnwrapRef<typeof import('vue')['isProxy']>
     readonly isReactive: UnwrapRef<typeof import('vue')['isReactive']>
     readonly isReadonly: UnwrapRef<typeof import('vue')['isReadonly']>
@@ -913,6 +924,10 @@ declare module '@vue/runtime-core' {
     readonly useWindowFocus: UnwrapRef<typeof import('@vueuse/core')['useWindowFocus']>
     readonly useWindowScroll: UnwrapRef<typeof import('@vueuse/core')['useWindowScroll']>
     readonly useWindowSize: UnwrapRef<typeof import('@vueuse/core')['useWindowSize']>
+    readonly validateEmail: UnwrapRef<typeof import('./utils/validate')['validateEmail']>
+    readonly validatePhone: UnwrapRef<typeof import('./utils/validate')['validatePhone']>
+    readonly validateRealName: UnwrapRef<typeof import('./utils/validate')['validateRealName']>
+    readonly validateUsername: UnwrapRef<typeof import('./utils/validate')['validateUsername']>
     readonly watch: UnwrapRef<typeof import('vue')['watch']>
     readonly watchArray: UnwrapRef<typeof import('@vueuse/core')['watchArray']>
     readonly watchAtMost: UnwrapRef<typeof import('@vueuse/core')['watchAtMost']>

@@ -34,14 +34,14 @@ function initMap() {
     emits('loaded')
     // 获取地图楼层信息
     window.floorInfo = map.getFloorInfos()
-    const textMarker = new fengmap.FMTextMarker({
-      text: '采空区',
-      x: 12613436.921387225,
-      y: 2642627.4136026776,
-    })
+    // const textMarker = new fengmap.FMTextMarker({
+    //   text: '采空区',
+    //   x: 12613436.921387225,
+    //   y: 2642627.4136026776,
+    // })
 
-    const floor = map.getFloor(1)
-    textMarker.addTo(floor)
+    // const floor = map.getFloor(1)
+    // textMarker.addTo(floor)
 
     // 缩放控件
     const scrollZoomCtlOpt = {

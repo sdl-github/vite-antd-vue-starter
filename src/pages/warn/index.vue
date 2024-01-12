@@ -131,7 +131,7 @@ function handleOpenCreate() {
       </div>
     </ACard>
     <div class="table-header">
-      <AButton type="primary" @click="handleOpenCreate">
+      <AButton v-if="checkPermission(['NEW_WARN_BTN'])" type="primary" @click="handleOpenCreate">
         新建
       </AButton>
       <div class="table-action">
@@ -185,7 +185,7 @@ function handleOpenCreate() {
               </AButton>
             </APopover>
             <ADivider type="vertical" />
-            <APopconfirm :title="`确定要删除${record.id}?`" ok-text="确定" cancel-text="取消" @confirm="handleDelete(record.id!)">
+            <APopconfirm v-if="checkPermission(['DEL_WARN_BTN'])" :title="`确定要删除${record.id}?`" ok-text="确定" cancel-text="取消" @confirm="handleDelete(record.id!)">
               <a class="text-red">删除</a>
             </APopconfirm>
           </span>

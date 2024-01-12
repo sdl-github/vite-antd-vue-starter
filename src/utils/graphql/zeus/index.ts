@@ -1012,24 +1012,24 @@ export type ValueTypes = {
 deleteMenu?: [{	menuId?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
 createMenu?: [{	input: ValueTypes["MenuCreateInputInput"] | Variable<any, string>},ValueTypes["Menu"]],
 updateRole?: [{	input: ValueTypes["RoleUpdateInputInput"] | Variable<any, string>},ValueTypes["Role"]],
-revoke?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
-createRole?: [{	input: ValueTypes["RoleCreateInputInput"] | Variable<any, string>},ValueTypes["Role"]],
 deleteWarnEvent?: [{	id: string | Variable<any, string>},boolean | `@${string}`],
+createRole?: [{	input: ValueTypes["RoleCreateInputInput"] | Variable<any, string>},ValueTypes["Role"]],
 updateUser?: [{	input: ValueTypes["UserUpdateInputInput"] | Variable<any, string>},ValueTypes["User"]],
 deletePoint?: [{	id: string | Variable<any, string>},boolean | `@${string}`],
+revoke?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
 createPoint?: [{	input: ValueTypes["CreatePointInputInput"] | Variable<any, string>},ValueTypes["Point"]],
 deleteRole?: [{	roleId?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
 updateWarnEvent?: [{	input: ValueTypes["UpdateWarnEventInputInput"] | Variable<any, string>},ValueTypes["WarnEvent"]],
 updateMenu?: [{	input: ValueTypes["MenuUpdateInputInput"] | Variable<any, string>},ValueTypes["Menu"]],
 	logout?:boolean | `@${string}`,
-updateUserProfile?: [{	input?: ValueTypes["UpdateUserProfileInputInput"] | undefined | null | Variable<any, string>},boolean | `@${string}`],
 createWarnEvent?: [{	input: ValueTypes["CreateWarnEventInputInput"] | Variable<any, string>},ValueTypes["WarnEvent"]],
+updateUserProfile?: [{	input?: ValueTypes["UpdateUserProfileInputInput"] | undefined | null | Variable<any, string>},boolean | `@${string}`],
+deleteUser?: [{	userId: string | Variable<any, string>},boolean | `@${string}`],
 registerUser?: [{	input?: ValueTypes["UserRegisterInputInput"] | undefined | null | Variable<any, string>},boolean | `@${string}`],
 loginByAccount?: [{	input?: ValueTypes["LoginInputInput"] | undefined | null | Variable<any, string>},boolean | `@${string}`],
-deleteUser?: [{	userId: string | Variable<any, string>},boolean | `@${string}`],
 createUser?: [{	input: ValueTypes["UserCreateInputInput"] | Variable<any, string>},ValueTypes["User"]],
-deleteFileById?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
 updatePoint?: [{	input: ValueTypes["UpdatePointInputInput"] | Variable<any, string>},ValueTypes["Point"]],
+deleteFileById?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
 		__typename?: boolean | `@${string}`
 }>;
 	["NullHandling"]:NullHandling;
@@ -1284,6 +1284,7 @@ queryUser?: [{	userId?: string | undefined | null | Variable<any, string>},Value
 	/** id */
 	id?:boolean | `@${string}`,
 	nickName?:boolean | `@${string}`,
+	note?:boolean | `@${string}`,
 	phone?:boolean | `@${string}`,
 	roles?:ValueTypes["Role"],
 	/** 更新时间 */
@@ -1298,6 +1299,7 @@ queryUser?: [{	userId?: string | undefined | null | Variable<any, string>},Value
 	email?: string | undefined | null | Variable<any, string>,
 	gender?: ValueTypes["GenderEnum"] | undefined | null | Variable<any, string>,
 	nickName?: string | undefined | null | Variable<any, string>,
+	note?: string | undefined | null | Variable<any, string>,
 	password?: string | undefined | null | Variable<any, string>,
 	phone?: string | undefined | null | Variable<any, string>,
 	roleIds?: Array<string | undefined | null> | undefined | null | Variable<any, string>,
@@ -1343,6 +1345,7 @@ queryUser?: [{	userId?: string | undefined | null | Variable<any, string>},Value
 	gender?: ValueTypes["GenderEnum"] | undefined | null | Variable<any, string>,
 	id: string | Variable<any, string>,
 	nickName?: string | undefined | null | Variable<any, string>,
+	note?: string | undefined | null | Variable<any, string>,
 	phone?: string | undefined | null | Variable<any, string>,
 	roleIds?: Array<string | undefined | null> | undefined | null | Variable<any, string>
 };
@@ -1535,24 +1538,24 @@ export type ResolverInputTypes = {
 deleteMenu?: [{	menuId?: string | undefined | null},boolean | `@${string}`],
 createMenu?: [{	input: ResolverInputTypes["MenuCreateInputInput"]},ResolverInputTypes["Menu"]],
 updateRole?: [{	input: ResolverInputTypes["RoleUpdateInputInput"]},ResolverInputTypes["Role"]],
-revoke?: [{	id?: string | undefined | null},boolean | `@${string}`],
-createRole?: [{	input: ResolverInputTypes["RoleCreateInputInput"]},ResolverInputTypes["Role"]],
 deleteWarnEvent?: [{	id: string},boolean | `@${string}`],
+createRole?: [{	input: ResolverInputTypes["RoleCreateInputInput"]},ResolverInputTypes["Role"]],
 updateUser?: [{	input: ResolverInputTypes["UserUpdateInputInput"]},ResolverInputTypes["User"]],
 deletePoint?: [{	id: string},boolean | `@${string}`],
+revoke?: [{	id?: string | undefined | null},boolean | `@${string}`],
 createPoint?: [{	input: ResolverInputTypes["CreatePointInputInput"]},ResolverInputTypes["Point"]],
 deleteRole?: [{	roleId?: string | undefined | null},boolean | `@${string}`],
 updateWarnEvent?: [{	input: ResolverInputTypes["UpdateWarnEventInputInput"]},ResolverInputTypes["WarnEvent"]],
 updateMenu?: [{	input: ResolverInputTypes["MenuUpdateInputInput"]},ResolverInputTypes["Menu"]],
 	logout?:boolean | `@${string}`,
-updateUserProfile?: [{	input?: ResolverInputTypes["UpdateUserProfileInputInput"] | undefined | null},boolean | `@${string}`],
 createWarnEvent?: [{	input: ResolverInputTypes["CreateWarnEventInputInput"]},ResolverInputTypes["WarnEvent"]],
+updateUserProfile?: [{	input?: ResolverInputTypes["UpdateUserProfileInputInput"] | undefined | null},boolean | `@${string}`],
+deleteUser?: [{	userId: string},boolean | `@${string}`],
 registerUser?: [{	input?: ResolverInputTypes["UserRegisterInputInput"] | undefined | null},boolean | `@${string}`],
 loginByAccount?: [{	input?: ResolverInputTypes["LoginInputInput"] | undefined | null},boolean | `@${string}`],
-deleteUser?: [{	userId: string},boolean | `@${string}`],
 createUser?: [{	input: ResolverInputTypes["UserCreateInputInput"]},ResolverInputTypes["User"]],
-deleteFileById?: [{	id?: string | undefined | null},boolean | `@${string}`],
 updatePoint?: [{	input: ResolverInputTypes["UpdatePointInputInput"]},ResolverInputTypes["Point"]],
+deleteFileById?: [{	id?: string | undefined | null},boolean | `@${string}`],
 		__typename?: boolean | `@${string}`
 }>;
 	["NullHandling"]:NullHandling;
@@ -1807,6 +1810,7 @@ queryUser?: [{	userId?: string | undefined | null},ResolverInputTypes["User"]],
 	/** id */
 	id?:boolean | `@${string}`,
 	nickName?:boolean | `@${string}`,
+	note?:boolean | `@${string}`,
 	phone?:boolean | `@${string}`,
 	roles?:ResolverInputTypes["Role"],
 	/** 更新时间 */
@@ -1821,6 +1825,7 @@ queryUser?: [{	userId?: string | undefined | null},ResolverInputTypes["User"]],
 	email?: string | undefined | null,
 	gender?: ResolverInputTypes["GenderEnum"] | undefined | null,
 	nickName?: string | undefined | null,
+	note?: string | undefined | null,
 	password?: string | undefined | null,
 	phone?: string | undefined | null,
 	roleIds?: Array<string | undefined | null> | undefined | null,
@@ -1866,6 +1871,7 @@ queryUser?: [{	userId?: string | undefined | null},ResolverInputTypes["User"]],
 	gender?: ResolverInputTypes["GenderEnum"] | undefined | null,
 	id: string,
 	nickName?: string | undefined | null,
+	note?: string | undefined | null,
 	phone?: string | undefined | null,
 	roleIds?: Array<string | undefined | null> | undefined | null
 };
@@ -2042,24 +2048,24 @@ export type ModelTypes = {
 		deleteMenu: boolean,
 	createMenu?: ModelTypes["Menu"] | undefined,
 	updateRole?: ModelTypes["Role"] | undefined,
-	revoke: boolean,
-	createRole?: ModelTypes["Role"] | undefined,
 	deleteWarnEvent: boolean,
+	createRole?: ModelTypes["Role"] | undefined,
 	updateUser?: ModelTypes["User"] | undefined,
 	deletePoint: boolean,
+	revoke: boolean,
 	createPoint?: ModelTypes["Point"] | undefined,
 	deleteRole: boolean,
 	updateWarnEvent?: ModelTypes["WarnEvent"] | undefined,
 	updateMenu?: ModelTypes["Menu"] | undefined,
 	logout: boolean,
-	updateUserProfile?: boolean | undefined,
 	createWarnEvent?: ModelTypes["WarnEvent"] | undefined,
+	updateUserProfile?: boolean | undefined,
+	deleteUser: boolean,
 	registerUser?: boolean | undefined,
 	loginByAccount?: string | undefined,
-	deleteUser: boolean,
 	createUser?: ModelTypes["User"] | undefined,
-	deleteFileById: boolean,
-	updatePoint?: ModelTypes["Point"] | undefined
+	updatePoint?: ModelTypes["Point"] | undefined,
+	deleteFileById: boolean
 };
 	["NullHandling"]:NullHandling;
 	["Order"]: {
@@ -2301,6 +2307,7 @@ export type ModelTypes = {
 	/** id */
 	id?: string | undefined,
 	nickName?: string | undefined,
+	note?: string | undefined,
 	phone?: string | undefined,
 	roles?: Array<ModelTypes["Role"] | undefined> | undefined,
 	/** 更新时间 */
@@ -2314,6 +2321,7 @@ export type ModelTypes = {
 	email?: string | undefined,
 	gender?: ModelTypes["GenderEnum"] | undefined,
 	nickName?: string | undefined,
+	note?: string | undefined,
 	password?: string | undefined,
 	phone?: string | undefined,
 	roleIds?: Array<string | undefined> | undefined,
@@ -2358,6 +2366,7 @@ export type ModelTypes = {
 	gender?: ModelTypes["GenderEnum"] | undefined,
 	id: string,
 	nickName?: string | undefined,
+	note?: string | undefined,
 	phone?: string | undefined,
 	roleIds?: Array<string | undefined> | undefined
 };
@@ -2554,24 +2563,24 @@ export type GraphQLTypes = {
 	deleteMenu: boolean,
 	createMenu?: GraphQLTypes["Menu"] | undefined,
 	updateRole?: GraphQLTypes["Role"] | undefined,
-	revoke: boolean,
-	createRole?: GraphQLTypes["Role"] | undefined,
 	deleteWarnEvent: boolean,
+	createRole?: GraphQLTypes["Role"] | undefined,
 	updateUser?: GraphQLTypes["User"] | undefined,
 	deletePoint: boolean,
+	revoke: boolean,
 	createPoint?: GraphQLTypes["Point"] | undefined,
 	deleteRole: boolean,
 	updateWarnEvent?: GraphQLTypes["WarnEvent"] | undefined,
 	updateMenu?: GraphQLTypes["Menu"] | undefined,
 	logout: boolean,
-	updateUserProfile?: boolean | undefined,
 	createWarnEvent?: GraphQLTypes["WarnEvent"] | undefined,
+	updateUserProfile?: boolean | undefined,
+	deleteUser: boolean,
 	registerUser?: boolean | undefined,
 	loginByAccount?: string | undefined,
-	deleteUser: boolean,
 	createUser?: GraphQLTypes["User"] | undefined,
-	deleteFileById: boolean,
-	updatePoint?: GraphQLTypes["Point"] | undefined
+	updatePoint?: GraphQLTypes["Point"] | undefined,
+	deleteFileById: boolean
 };
 	["NullHandling"]: NullHandling;
 	["Order"]: {
@@ -2826,6 +2835,7 @@ export type GraphQLTypes = {
 	/** id */
 	id?: string | undefined,
 	nickName?: string | undefined,
+	note?: string | undefined,
 	phone?: string | undefined,
 	roles?: Array<GraphQLTypes["Role"] | undefined> | undefined,
 	/** 更新时间 */
@@ -2839,6 +2849,7 @@ export type GraphQLTypes = {
 	email?: string | undefined,
 	gender?: GraphQLTypes["GenderEnum"] | undefined,
 	nickName?: string | undefined,
+	note?: string | undefined,
 	password?: string | undefined,
 	phone?: string | undefined,
 	roleIds?: Array<string | undefined> | undefined,
@@ -2884,6 +2895,7 @@ export type GraphQLTypes = {
 	gender?: GraphQLTypes["GenderEnum"] | undefined,
 	id: string,
 	nickName?: string | undefined,
+	note?: string | undefined,
 	phone?: string | undefined,
 	roleIds?: Array<string | undefined> | undefined
 };

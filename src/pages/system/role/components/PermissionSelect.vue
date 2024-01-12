@@ -46,12 +46,11 @@ function deepTreeToList(tree: any[]) {
   const list: any[] = []
   const dfs = (tree: any[]) => {
     tree.forEach((item) => {
-      if (item.children && item.children.length > 0) {
+      if (item.children && item.children.length > 0)
         dfs(item.children)
-      }
-      else {
+
+      else
         list.push(item.id)
-      }
     })
   }
   dfs(tree)
@@ -81,26 +80,26 @@ function handleSave() {
 </script>
 
 <template>
-  <a-drawer :visible="visible" title="权限配置" placement="right" @close="emits('handleCancel')">
+  <ADrawer :visible="visible" title="权限配置" placement="right" @close="emits('handleCancel')">
     <template #extra>
-      <a-button class="mr-2" @click="emits('handleCancel')">
+      <AButton class="mr-2" @click="emits('handleCancel')">
         取消
-      </a-button>
-      <a-button type="primary" @click="handleSave">
+      </AButton>
+      <AButton type="primary" @click="handleSave">
         保存
-      </a-button>
+      </AButton>
     </template>
     <div
       v-if="currentRole.name"
-      class="mb-2 ml-2 px-2 py-1 bg-purple-100 dark:bg-purple-100 text-xs font-semibold text-purple-800 dark:text-purple-800 rounded uppercase"
+      class="mb-2 ml-2 rounded bg-purple-100 px-2 py-1 text-xs font-semibold uppercase text-purple-800 dark:bg-purple-100 dark:text-purple-800"
     >
       当前选择： {{ currentRole.name }}
     </div>
-    <a-tree
+    <ATree
       v-model:checkedKeys="checkedKeys" default-expand-all :selectable="false" :tree-data="treeData"
       :field-names="fileName" checkable @check="handleCheck"
     />
-  </a-drawer>
+  </ADrawer>
 </template>
 
 <style lang="scss" scoped>

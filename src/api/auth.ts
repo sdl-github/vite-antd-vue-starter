@@ -63,3 +63,11 @@ export function updateUserProfile(data: ModelTypes['UpdateUserProfileInputInput'
     data,
   })
 }
+
+export function registerUser(data: ModelTypes['UserRegisterInputInput']) {
+  return request({
+    url: '/auth/registerUser',
+    method: 'POST',
+    data,
+  })
+}

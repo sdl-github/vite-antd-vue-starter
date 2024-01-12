@@ -55,8 +55,8 @@ const { setProps, show, destroy } = useTippy(() => document.body, {
             <div class="ml-2">{point.value.z && (point.value.z - 600) || '-'}</div>
           </div>
           <div class="flex">
-            <div>呼救信息:</div>
-            <div class="ml-2">一切正常</div>
+            <div>状态:</div>
+            <div class="ml-2">{point.value.user?.note}</div>
           </div>
           <div class="flex">
             <div>监控时间:</div>
