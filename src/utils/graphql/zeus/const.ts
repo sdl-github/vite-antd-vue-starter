@@ -44,19 +44,19 @@ export const AllTypesProps: Record<string,any> = {
 		updateRole:{
 			input:"RoleUpdateInputInput"
 		},
-		deleteWarnEvent:{
+		revoke:{
 
-		},
-		createRole:{
-			input:"RoleCreateInputInput"
 		},
 		updateUser:{
 			input:"UserUpdateInputInput"
 		},
-		deletePoint:{
+		createRole:{
+			input:"RoleCreateInputInput"
+		},
+		deleteWarnEvent:{
 
 		},
-		revoke:{
+		deletePoint:{
 
 		},
 		createPoint:{
@@ -71,14 +71,11 @@ export const AllTypesProps: Record<string,any> = {
 		updateMenu:{
 			input:"MenuUpdateInputInput"
 		},
-		createWarnEvent:{
-			input:"CreateWarnEventInputInput"
-		},
 		updateUserProfile:{
 			input:"UpdateUserProfileInputInput"
 		},
-		deleteUser:{
-
+		createWarnEvent:{
+			input:"CreateWarnEventInputInput"
 		},
 		registerUser:{
 			input:"UserRegisterInputInput"
@@ -86,14 +83,17 @@ export const AllTypesProps: Record<string,any> = {
 		loginByAccount:{
 			input:"LoginInputInput"
 		},
+		deleteUser:{
+
+		},
 		createUser:{
 			input:"UserCreateInputInput"
 		},
-		updatePoint:{
-			input:"UpdatePointInputInput"
-		},
 		deleteFileById:{
 
+		},
+		updatePoint:{
+			input:"UpdatePointInputInput"
 		}
 	},
 	NullHandling: "enum" as const,
@@ -229,24 +229,24 @@ export const ReturnTypes: Record<string,any> = {
 		deleteMenu:"Boolean",
 		createMenu:"Menu",
 		updateRole:"Role",
-		deleteWarnEvent:"Boolean",
-		createRole:"Role",
-		updateUser:"User",
-		deletePoint:"Boolean",
 		revoke:"Boolean",
+		updateUser:"User",
+		createRole:"Role",
+		deleteWarnEvent:"Boolean",
+		deletePoint:"Boolean",
 		createPoint:"Point",
 		deleteRole:"Boolean",
 		updateWarnEvent:"WarnEvent",
 		updateMenu:"Menu",
 		logout:"Boolean",
-		createWarnEvent:"WarnEvent",
 		updateUserProfile:"Boolean",
-		deleteUser:"Boolean",
+		createWarnEvent:"WarnEvent",
 		registerUser:"Boolean",
 		loginByAccount:"String",
+		deleteUser:"Boolean",
 		createUser:"User",
-		updatePoint:"Point",
-		deleteFileById:"Boolean"
+		deleteFileById:"Boolean",
+		updatePoint:"Point"
 	},
 	Order:{
 		direction:"Direction",
@@ -412,6 +412,7 @@ export const ReturnTypes: Record<string,any> = {
 		email:"String",
 		gender:"GenderEnum",
 		id:"String",
+		job:"String",
 		nickName:"String",
 		note:"String",
 		phone:"String",

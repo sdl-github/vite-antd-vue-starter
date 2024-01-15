@@ -43,6 +43,12 @@ export const columns: TableColumnType<User>[] = [
     key: 'note',
   },
   {
+    title: '职位',
+    align: 'center',
+    dataIndex: 'job',
+    key: 'job',
+  },
+  {
     title: '性别',
     align: 'center',
     dataIndex: 'gender',

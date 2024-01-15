@@ -13,6 +13,7 @@ export function queryUserPage(param: ModelTypes['UserQueryParamInput']) {
         email: true,
         gender: true,
         note: true,
+        job: true,
         roles: {
           id: true,
           name: true,

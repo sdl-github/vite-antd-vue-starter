@@ -162,7 +162,7 @@ function handleOpenCreate() {
                 <div>
                   媒体信息
                   <div v-if="!record.fileUrl">暂无</div>
-                  <div v-esle>
+                  <div v-else>
                     <div v-if="record.fileUrl.match(/\.([^.]+)$/)[1] === 'jpg'">
                       <AImage
                         :width="200"
