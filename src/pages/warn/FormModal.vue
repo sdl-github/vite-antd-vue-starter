@@ -3,8 +3,9 @@ import { reactive, ref, toRefs, unref, watch } from 'vue'
 import type { FormInstance, UploadProps } from 'ant-design-vue'
 import { Upload, message } from 'ant-design-vue'
 import type { UploadRequestOption } from 'ant-design-vue/es/vc-upload/interface'
+import type { Rule } from 'ant-design-vue/es/form'
 import type { WarnEvent, WarnEventCreateInput, WarnEventUpdateInput } from './data'
-import { createWarnEventPage, updateWarnEventPage } from '~/api/warn'
+import { createWarnEventPage, updateWarnEvent } from '~/api/warn'
 import { upload } from '~/api/file'
 
 type ModelType = (WarnEventCreateInput & WarnEventUpdateInput)
@@ -35,8 +36,8 @@ function generateModel(): ModelType {
 
 const formRef = ref<FormInstance>()
 
-const rules = {
-  required: [{ required: true, message: '必填项' }],
+const rules: Record<string, Rule[]> = {
+  required: [{ required: true, message: '必填项', trigger: 'blur' }],
 }
 
 const confirmLoading = ref(false)
@@ -46,9 +47,9 @@ const state = reactive({
 
 const { model } = toRefs(state)
 
-watch(() => props.currentItem, (val) => {
-  if (val?.id)
-    state.model = JSON.parse(JSON.stringify(val))
+watch(() => props.open, (val) => {
+  if (val)
+    state.model = { ...generateModel(), ...props.currentItem }
 })
 
 function requireMessage(key: string) {
@@ -79,7 +80,7 @@ function handleOk() {
         warnTime,
         fileUrl,
       }
-      const api = data.id ? updateWarnEventPage : createWarnEventPage
+      const api = data.id ? updateWarnEvent : createWarnEventPage
       const input = (data.id ? updateInput : createInput) as ModelType
       confirmLoading.value = true
       api(input).then(() => {
@@ -141,6 +142,7 @@ const beforeUpload: UploadProps['beforeUpload'] = (file) => {
             <ADatePicker
               v-model:value="model.warnTime" placeholder="开始时间" :show-time="{ format: 'HH:mm' }"
               format="YYYY-MM-DD HH:mm:ss"
+              value-format="YYYY-MM-DD HH:mm:ss"
             />
           </AFormItem>
         </ACol>
@@ -175,7 +177,6 @@ const beforeUpload: UploadProps['beforeUpload'] = (file) => {
               :before-upload="beforeUpload"
             >
               <AButton>
-                <UploadOutlined />
                 上传文件
               </AButton>
             </AUpload>

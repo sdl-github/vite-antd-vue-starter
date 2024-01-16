@@ -76,7 +76,7 @@ function handleRegister() {
           </AFormItem>
           <div class="cursor-pointer">
             有账号 <RouterLink to="/login" class="text-blue-500">
-              去注册
+              去登录
             </RouterLink>
           </div>
         </AForm>

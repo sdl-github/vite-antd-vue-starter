@@ -18,7 +18,7 @@ export function createWarnEventPage(data: ModelTypes['CreateWarnEventInputInput'
   })
 }
 
-export function updateWarnEventPage(data: ModelTypes['UpdateWarnEventInputInput']): Promise<Page<ModelTypes['WarnEvent']>> {
+export function updateWarnEvent(data: ModelTypes['UpdateWarnEventInputInput']): Promise<Page<ModelTypes['WarnEvent']>> {
   return request({
     url: '/warn-event/update',
     method: 'put',

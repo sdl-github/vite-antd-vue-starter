@@ -9,6 +9,7 @@ import { Table, Upload, message } from 'ant-design-vue'
 import { onMounted, reactive, toRefs } from 'vue'
 
 import type { UploadRequestOption } from 'ant-design-vue/es/vc-upload/interface'
+import dayjs from 'dayjs'
 import FromModal from './FormModal.vue'
 import { columns } from './data'
 import type { SearchParam, WarnEvent } from './data'
@@ -157,13 +158,23 @@ function handleOpenCreate() {
         </template>
         <template v-if="column.key === 'operation'">
           <span>
+            <AButton
+              v-if="checkPermission(['EDIT_WARN_BTN'])"
+              @click="() => {
+                state.currentItem = record
+                state.modalVisible = true
+              }"
+            >
+              编辑
+            </AButton>
+            <ADivider type="vertical" />
             <APopover placement="top" trigger="click">
               <template #content>
                 <div>
                   媒体信息
                   <div v-if="!record.fileUrl">暂无</div>
                   <div v-else>
-                    <div v-if="record.fileUrl.match(/\.([^.]+)$/)[1] === 'jpg'">
+                    <div v-if="['jpg', 'jpeg'].includes(record.fileUrl.match(/\.([^.]+)$/)[1])">
                       <AImage
                         :width="200"
                         :src="record.fileUrl"
@@ -176,9 +187,6 @@ function handleOpenCreate() {
                     </div>
                   </div>
                 </div>
-              </template>
-              <template #title>
-                <span>{{ record.user?.nickName }}</span>
               </template>
               <AButton>
                 预览资源
