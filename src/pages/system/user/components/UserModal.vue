@@ -31,7 +31,6 @@ function generateModel(): ModelType {
     gender: GenderEnum.UNKNOWN,
     roleIds: [],
     note: '',
-    job: '',
   }
 }
 
@@ -59,9 +58,9 @@ const { model } = toRefs(state)
 
 watch(() => props.currentItem, (val) => {
   if (val?.id) {
-    const { id, roles, userName = '', gender, nickName, phone, email, job } = val
+    const { id, roles, userName = '', gender, nickName, phone, email } = val
     const roleIds = roles?.map(role => role?.id)
-    state.model = { id, userName, nickName, gender, phone, email, roleIds, job }
+    state.model = { id, userName, nickName, gender, phone, email, roleIds }
   }
 })
 
@@ -73,7 +72,7 @@ function handleOk() {
   formRef.value?.validate().then(async (v) => {
     if (v) {
       const data = Object.assign({}, unref(model))
-      const { id, userName, gender, nickName, password, phone, email, roleIds, note, job } = data
+      const { id, userName, gender, nickName, password, phone, email, roleIds, note } = data
       const createInput: UserCreateInput = {
         userName,
         nickName,
@@ -83,7 +82,6 @@ function handleOk() {
         email,
         roleIds,
         note,
-        job,
       }
       const updateInput: UserUpdateInput = {
         id,
@@ -93,7 +91,6 @@ function handleOk() {
         email,
         roleIds,
         note,
-        job,
       }
       const api = data.id ? updateUser : createUser
       const input = (data.id ? updateInput : createInput) as ModelType
@@ -168,16 +165,6 @@ function handleCancel() {
           </AFormItem>
         </ACol>
         <ACol :span="12">
-          <AFormItem label="状态" name="note">
-            <AInput v-model:value="model.note" :placeholder="requireMessage('状态')" />
-          </AFormItem>
-        </ACol>
-        <ACol :span="12">
-          <AFormItem label="职位" name="job">
-            <AInput v-model:value="model.job" :placeholder="requireMessage('职位')" />
-          </AFormItem>
-        </ACol>
-        <ACol :span="12">
           <AFormItem label="性别" name="gender">
             <ASelect v-model:value="model.gender" placeholder="请选择">
               <ASelectOption :value="GenderEnum.MALE">
@@ -195,6 +182,11 @@ function handleCancel() {
         <ACol :span="12">
           <AFormItem label="角色" name="roleIds">
             <UserRoleItem v-model:value="model.roleIds" />
+          </AFormItem>
+        </ACol>
+        <ACol :span="12">
+          <AFormItem label="备注" name="note">
+            <AInput v-model:value="model.note" :placeholder="requireMessage('备注')" />
           </AFormItem>
         </ACol>
       </ARow>

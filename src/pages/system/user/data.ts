@@ -37,18 +37,6 @@ export const columns: TableColumnType<User>[] = [
     sorter: true,
   },
   {
-    title: '状态',
-    align: 'center',
-    dataIndex: 'note',
-    key: 'note',
-  },
-  {
-    title: '职位',
-    align: 'center',
-    dataIndex: 'job',
-    key: 'job',
-  },
-  {
     title: '性别',
     align: 'center',
     dataIndex: 'gender',
@@ -73,6 +61,12 @@ export const columns: TableColumnType<User>[] = [
     align: 'center',
     width: 300,
     dataIndex: 'roles',
+  },
+  {
+    title: '备注',
+    align: 'center',
+    dataIndex: 'note',
+    key: 'note',
   },
   {
     title: '创建时间',
