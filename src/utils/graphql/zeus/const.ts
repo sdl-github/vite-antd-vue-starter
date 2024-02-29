@@ -1,14 +1,8 @@
 /* eslint-disable */
 
 export const AllTypesProps: Record<string,any> = {
-	BigDecimal: `scalar.BigDecimal` as const,
-	CreatePointInputInput:{
-		x:"BigDecimal",
-		y:"BigDecimal",
-		z:"BigDecimal"
-	},
-	CreateWarnEventInputInput:{
-		warnTime:"LocalDateTime"
+	CreateArticleCategoryInputInput:{
+
 	},
 	Direction: "enum" as const,
 	FileProviderEnum: "enum" as const,
@@ -41,32 +35,29 @@ export const AllTypesProps: Record<string,any> = {
 		createMenu:{
 			input:"MenuCreateInputInput"
 		},
-		updateRole:{
-			input:"RoleUpdateInputInput"
-		},
-		revoke:{
+		deleteArticleCategory:{
 
 		},
-		updateUser:{
-			input:"UserUpdateInputInput"
+		updateArticleCategory:{
+			input:"UpdateArticleCategoryInputInput"
+		},
+		createArticleCategory:{
+			input:"CreateArticleCategoryInputInput"
+		},
+		updateRole:{
+			input:"RoleUpdateInputInput"
 		},
 		createRole:{
 			input:"RoleCreateInputInput"
 		},
-		deleteWarnEvent:{
-
+		updateUser:{
+			input:"UserUpdateInputInput"
 		},
-		deletePoint:{
+		revoke:{
 
-		},
-		createPoint:{
-			input:"CreatePointInputInput"
 		},
 		deleteRole:{
 
-		},
-		updateWarnEvent:{
-			input:"UpdateWarnEventInputInput"
 		},
 		updateMenu:{
 			input:"MenuUpdateInputInput"
@@ -74,8 +65,8 @@ export const AllTypesProps: Record<string,any> = {
 		updateUserProfile:{
 			input:"UpdateUserProfileInputInput"
 		},
-		createWarnEvent:{
-			input:"CreateWarnEventInputInput"
+		deleteUser:{
+
 		},
 		registerUser:{
 			input:"UserRegisterInputInput"
@@ -83,17 +74,11 @@ export const AllTypesProps: Record<string,any> = {
 		loginByAccount:{
 			input:"LoginInputInput"
 		},
-		deleteUser:{
-
-		},
 		createUser:{
 			input:"UserCreateInputInput"
 		},
 		deleteFileById:{
 
-		},
-		updatePoint:{
-			input:"UpdatePointInputInput"
 		}
 	},
 	NullHandling: "enum" as const,
@@ -104,17 +89,11 @@ export const AllTypesProps: Record<string,any> = {
 		queryUserPage:{
 			param:"UserQueryParamInput"
 		},
-		queryPointPage:{
-			param:"QueryPointPageParamInput"
-		},
 		queryMenuTree:{
 			param:"MenuQueryPageParamInput"
 		},
 		queryRolePage:{
 			param:"RoleQueryParamInput"
-		},
-		queryWarnEventPage:{
-			param:"QueryWarnEventParamInput"
 		},
 		queryRole:{
 
@@ -122,14 +101,14 @@ export const AllTypesProps: Record<string,any> = {
 		queryFilePage:{
 			param:"FileQueryPageParamInput"
 		},
+		queryArticleCategory:{
+			specification:"QueryArticleCategorySpecificationInput"
+		},
 		queryUser:{
 
 		}
 	},
-	QueryPointPageParamInput:{
-
-	},
-	QueryWarnEventParamInput:{
+	QueryArticleCategorySpecificationInput:{
 
 	},
 	RoleCreateInputInput:{
@@ -141,14 +120,11 @@ export const AllTypesProps: Record<string,any> = {
 	RoleUpdateInputInput:{
 
 	},
-	UpdatePointInputInput:{
+	UpdateArticleCategoryInputInput:{
 
 	},
 	UpdateUserProfileInputInput:{
 
-	},
-	UpdateWarnEventInputInput:{
-		warnTime:"LocalDateTime"
 	},
 	UserCreateInputInput:{
 		gender:"GenderEnum"
@@ -165,20 +141,51 @@ export const AllTypesProps: Record<string,any> = {
 }
 
 export const ReturnTypes: Record<string,any> = {
+	Article:{
+		author:"UserImport",
+		authorId:"String",
+		category:"ArticleCategory",
+		categoryId:"String",
+		createdAt:"LocalDateTime",
+		createdBy:"String",
+		html:"String",
+		id:"String",
+		image:"String",
+		markdown:"String",
+		metaDescription:"String",
+		metaTitle:"String",
+		publishedAt:"LocalDateTime",
+		publishedBy:"String",
+		updatedAt:"LocalDateTime",
+		updatedBy:"String"
+	},
+	ArticleCategory:{
+		articles:"Article",
+		children:"ArticleCategory",
+		createdAt:"LocalDateTime",
+		createdBy:"String",
+		icon:"String",
+		id:"String",
+		name:"String",
+		parent:"ArticleCategory",
+		parentId:"String",
+		sort:"Int",
+		updatedAt:"LocalDateTime",
+		updatedBy:"String"
+	},
 	BaseEntity:{
+		"...on Article": "Article",
+		"...on ArticleCategory": "ArticleCategory",
 		"...on File": "File",
 		"...on Menu": "Menu",
-		"...on Point": "Point",
 		"...on Role": "Role",
-		"...on User": "User",
-		"...on WarnEvent": "WarnEvent",
+		"...on UserImport": "UserImport",
 		createdAt:"LocalDateTime",
 		createdBy:"String",
 		id:"String",
 		updatedAt:"LocalDateTime",
 		updatedBy:"String"
 	},
-	BigDecimal: `scalar.BigDecimal` as const,
 	File:{
 		bucket:"String",
 		category:"String",
@@ -228,25 +235,22 @@ export const ReturnTypes: Record<string,any> = {
 	Mutation:{
 		deleteMenu:"Boolean",
 		createMenu:"Menu",
+		deleteArticleCategory:"Boolean",
+		updateArticleCategory:"ArticleCategory",
+		createArticleCategory:"ArticleCategory",
 		updateRole:"Role",
-		revoke:"Boolean",
-		updateUser:"User",
 		createRole:"Role",
-		deleteWarnEvent:"Boolean",
-		deletePoint:"Boolean",
-		createPoint:"Point",
+		updateUser:"UserImport",
+		revoke:"Boolean",
 		deleteRole:"Boolean",
-		updateWarnEvent:"WarnEvent",
 		updateMenu:"Menu",
 		logout:"Boolean",
 		updateUserProfile:"Boolean",
-		createWarnEvent:"WarnEvent",
+		deleteUser:"Boolean",
 		registerUser:"Boolean",
 		loginByAccount:"String",
-		deleteUser:"Boolean",
-		createUser:"User",
-		deleteFileById:"Boolean",
-		updatePoint:"Point"
+		createUser:"UserImport",
+		deleteFileById:"Boolean"
 	},
 	Order:{
 		direction:"Direction",
@@ -256,25 +260,6 @@ export const ReturnTypes: Record<string,any> = {
 	},
 	Page_File:{
 		content:"File",
-		first:"Boolean",
-		hasContent:"Boolean",
-		hasNext:"Boolean",
-		hasPrevious:"Boolean",
-		last:"Boolean",
-		nextOrLastPageable:"Pagination",
-		nextPageable:"Pagination",
-		number:"Int",
-		numberOfElements:"Int",
-		pageable:"Pagination",
-		previousOrFirstPageable:"Pagination",
-		previousPageable:"Pagination",
-		size:"Int",
-		sort:"Sorting",
-		totalElements:"Long",
-		totalPages:"Int"
-	},
-	Page_Point:{
-		content:"Point",
 		first:"Boolean",
 		hasContent:"Boolean",
 		hasNext:"Boolean",
@@ -311,27 +296,8 @@ export const ReturnTypes: Record<string,any> = {
 		totalElements:"Long",
 		totalPages:"Int"
 	},
-	Page_User:{
-		content:"User",
-		first:"Boolean",
-		hasContent:"Boolean",
-		hasNext:"Boolean",
-		hasPrevious:"Boolean",
-		last:"Boolean",
-		nextOrLastPageable:"Pagination",
-		nextPageable:"Pagination",
-		number:"Int",
-		numberOfElements:"Int",
-		pageable:"Pagination",
-		previousOrFirstPageable:"Pagination",
-		previousPageable:"Pagination",
-		size:"Int",
-		sort:"Sorting",
-		totalElements:"Long",
-		totalPages:"Int"
-	},
-	Page_WarnEvent:{
-		content:"WarnEvent",
+	Page_UserImport:{
+		content:"UserImport",
 		first:"Boolean",
 		hasContent:"Boolean",
 		hasNext:"Boolean",
@@ -354,37 +320,21 @@ export const ReturnTypes: Record<string,any> = {
 		pageSize:"Int",
 		sort:"Sort"
 	},
-	Point:{
-		createdAt:"LocalDateTime",
-		createdBy:"String",
-		file:"File",
-		fileId:"String",
-		id:"String",
-		level:"Int",
-		type:"Int",
-		updatedAt:"LocalDateTime",
-		updatedBy:"String",
-		user:"User",
-		userId:"String",
-		x:"BigDecimal",
-		y:"BigDecimal",
-		z:"BigDecimal"
-	},
 	Query:{
 		app:"String",
 		userInfo:"UserInfoResult",
 		queryMenuList:"Menu",
-		queryUserPage:"Page_User",
-		queryPointPage:"Page_Point",
+		queryArticleCategoryTree:"ArticleCategory",
+		queryUserPage:"Page_UserImport",
 		queryMenuTree:"Menu",
 		queryRolePage:"Page_Role",
 		queryLoginSessionList:"LoginSessionResult",
-		queryWarnEventPage:"Page_WarnEvent",
 		queryRole:"Role",
 		queryAllRoleList:"Role",
-		queryAllUserList:"User",
+		queryAllUserList:"UserImport",
 		queryFilePage:"Page_File",
-		queryUser:"User"
+		queryArticleCategory:"ArticleCategory",
+		queryUser:"UserImport"
 	},
 	Role:{
 		createdAt:"LocalDateTime",
@@ -397,7 +347,7 @@ export const ReturnTypes: Record<string,any> = {
 		name:"String",
 		updatedAt:"LocalDateTime",
 		updatedBy:"String",
-		users:"User"
+		users:"UserImport"
 	},
 	Sort:{
 		orders:"Order"
@@ -405,7 +355,7 @@ export const ReturnTypes: Record<string,any> = {
 	Sorting:{
 		orders:"Order"
 	},
-	User:{
+	UserImport:{
 		avatar:"String",
 		createdAt:"LocalDateTime",
 		createdBy:"String",
@@ -434,20 +384,6 @@ export const ReturnTypes: Record<string,any> = {
 		roles:"Role",
 		superAdmin:"Boolean",
 		userName:"String"
-	},
-	WarnEvent:{
-		code:"String",
-		createdAt:"LocalDateTime",
-		createdBy:"String",
-		fileUrl:"String",
-		id:"String",
-		level:"String",
-		location:"String",
-		name:"String",
-		title:"String",
-		updatedAt:"LocalDateTime",
-		updatedBy:"String",
-		warnTime:"LocalDateTime"
 	}
 }
 
