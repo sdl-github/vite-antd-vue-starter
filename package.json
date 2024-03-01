@@ -19,6 +19,7 @@
     "z": "zeus https://api.saybai.cn/graphql ./src/utils/graphql --ts"
   },
   "dependencies": {
+    "@tinymce/tinymce-vue": "^5.1.1",
     "@unhead/vue": "^1.7.4",
     "@unocss/reset": "^0.57.1",
     "@vueuse/core": "^10.5.0",
@@ -31,6 +32,7 @@
     "nprogress": "^0.2.0",
     "pinia": "^2.1.7",
     "swrv": "^1.0.4",
+    "tinymce": "^6.8.3",
     "vue": "^3.3.7",
     "vue-advanced-cropper": "^2.8.8",
     "vue-demi": "^0.14.6",

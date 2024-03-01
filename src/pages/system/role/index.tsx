@@ -30,8 +30,6 @@ function generateSearch() {
   const search: SearchParam = {
     pageNo: DEFAULT_PAGE_NO,
     pageSize: DEFAULT_PAGE_SIZE,
-    name: '',
-    key: '',
     sort: '',
   }
   return search

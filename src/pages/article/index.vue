@@ -19,6 +19,7 @@ const state: State = reactive({
   search: generateSearch(),
   total: 0,
 })
+const router = useRouter()
 const { search } = toRefs(state)
 
 initData()
@@ -65,7 +66,9 @@ function handleTableChange(pagination: any, filters: any, sorter: SorterResult) 
   initData()
 }
 
-function handleOpenCreate() {}
+function handleOpenCreate() {
+  router.push('/article/edit')
+}
 function handleOpenEdit(record: Article) {}
 function handleDelete(id: string) {}
 </script>

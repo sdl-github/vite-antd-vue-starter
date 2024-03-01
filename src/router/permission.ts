@@ -14,7 +14,7 @@ router.beforeEach(async (to, from, next) => {
       await userStore.init()
 
     const paths = userStore.user?.menus?.map(menu => menu?.path)
-    if (whiteList.includes(to.path) || whiteList.includes(to.name as string) || to.meta.offAuth || paths?.includes(to.path))
+    if (userStore.user?.superAdmin || whiteList.includes(to.path) || whiteList.includes(to.name as string) || to.meta.offAuth || paths?.includes(to.path))
       next()
 
     else
