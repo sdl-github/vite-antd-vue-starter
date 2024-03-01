@@ -7,7 +7,7 @@
 import useSWRV from 'swrv'
 import { message } from 'ant-design-vue'
 import type { ModelTypes, ValueTypes } from '@/utils/graphql/zeus'
-import { createArticleCategory, queryArticleCategoryTree, updateArticleCategory } from '@/api/article-category'
+import { createArticleCategory, deleteArticleCategory, queryArticleCategoryTree, updateArticleCategory } from '@/api/article-category'
 
 const rules = {
   name: [{ required: true, message: '必填项' }],
@@ -19,11 +19,13 @@ const form = ref<ModelTypes['ArticleCategory']>({})
 const { data, mutate } = useSWRV('queryArticleCategory', () => queryArticleCategoryTree())
 const formRef = ref()
 
-function addCategory() { }
-
-function handleOpenCreate() {
+function handleOpenCreate(source?: ModelTypes['ArticleCategory']) {
   form.value.id = ''
+  form.value.parentId = undefined
   form.value.sort = 0
+  if (source)
+    form.value.parentId = source.id
+
   open.value = true
 }
 
@@ -51,6 +53,7 @@ async function handleOk() {
 
 function handleClose() {
   form.value.id = ''
+  form.value.parentId = undefined
   form.value.sort = 0
   form.value.name = ''
   open.value = false
@@ -61,6 +64,21 @@ function handleOpenEdit({ name, id, sort }: ModelTypes['ArticleCategory']) {
   form.value.name = name
   form.value.sort = sort
   open.value = true
+}
+
+async function handleDelete({ id }: ModelTypes['ArticleCategory']) {
+  const loading = message.loading('加载中', 0)
+  try {
+    await deleteArticleCategory(id!)
+    loading()
+    mutate()
+    message.success('成功')
+    return true
+  }
+  catch (e) {
+    loading()
+    return false
+  }
 }
 </script>
 
@@ -96,7 +114,7 @@ function handleOpenEdit({ name, id, sort }: ModelTypes['ArticleCategory']) {
         分类管理
       </div>
 
-      <AButton type="primary" @click="handleOpenCreate">
+      <AButton type="primary" @click="handleOpenCreate()">
         添加一级分类
       </AButton>
       <div class="mt-4">
@@ -115,8 +133,11 @@ function handleOpenEdit({ name, id, sort }: ModelTypes['ArticleCategory']) {
                 <div @click="handleOpenEdit(item)">
                   编辑
                 </div>
-                <div class="ml-2">
+                <div class="ml-2" @click="handleOpenCreate(item)">
                   新增
+                </div>
+                <div class="ml-2" @click="handleDelete(item)">
+                  删除
                 </div>
               </div>
             </div>

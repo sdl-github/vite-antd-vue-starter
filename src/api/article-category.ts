@@ -22,3 +22,10 @@ export function updateArticleCategory(data: ModelTypes['ArticleCategory']): Prom
     data,
   })
 }
+
+export function deleteArticleCategory(id: string): Promise<void> {
+  return request({
+    url: `/article/category/delete/${id}`,
+    method: 'delete',
+  })
+}
