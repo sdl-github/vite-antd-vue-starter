@@ -36,14 +36,14 @@ export const AllTypesProps: Record<string,any> = {
 		deleteMenu:{
 
 		},
+		unpublishArticle:{
+
+		},
 		createMenu:{
 			input:"MenuCreateInputInput"
 		},
 		updateArticle:{
 			input:"UpdateArticleInputInput"
-		},
-		updateRole:{
-			input:"RoleUpdateInputInput"
 		},
 		deleteArticleCategory:{
 
@@ -54,17 +54,23 @@ export const AllTypesProps: Record<string,any> = {
 		createArticleCategory:{
 			input:"CreateArticleCategoryInputInput"
 		},
+		updateRole:{
+			input:"RoleUpdateInputInput"
+		},
 		createArticle:{
 			input:"CreateArticleInputInput"
 		},
-		createRole:{
-			input:"RoleCreateInputInput"
+		publishArticle:{
+
 		},
 		revoke:{
 
 		},
 		updateUser:{
 			input:"UserUpdateInputInput"
+		},
+		createRole:{
+			input:"RoleCreateInputInput"
 		},
 		deleteRole:{
 
@@ -120,11 +126,11 @@ export const AllTypesProps: Record<string,any> = {
 		queryFilePage:{
 			param:"FileQueryPageParamInput"
 		},
-		queryUser:{
-
-		},
 		queryArticleCategory:{
 			specification:"QueryArticleCategorySpecificationInput"
+		},
+		queryUser:{
+
 		}
 	},
 	QueryArticleCategorySpecificationInput:{
@@ -261,16 +267,18 @@ export const ReturnTypes: Record<string,any> = {
 	},
 	Mutation:{
 		deleteMenu:"Boolean",
+		unpublishArticle:"Boolean",
 		createMenu:"Menu",
 		updateArticle:"Article",
-		updateRole:"Role",
 		deleteArticleCategory:"Boolean",
 		updateArticleCategory:"ArticleCategory",
 		createArticleCategory:"ArticleCategory",
+		updateRole:"Role",
 		createArticle:"Article",
-		createRole:"Role",
+		publishArticle:"Boolean",
 		revoke:"Boolean",
 		updateUser:"User",
+		createRole:"Role",
 		deleteRole:"Boolean",
 		deleteArticle:"Boolean",
 		updateMenu:"Menu",
@@ -384,8 +392,8 @@ export const ReturnTypes: Record<string,any> = {
 		queryAllUserList:"User",
 		queryArticlePage:"Page_Article",
 		queryFilePage:"Page_File",
-		queryUser:"User",
-		queryArticleCategory:"ArticleCategory"
+		queryArticleCategory:"ArticleCategory",
+		queryUser:"User"
 	},
 	Role:{
 		createdAt:"LocalDateTime",

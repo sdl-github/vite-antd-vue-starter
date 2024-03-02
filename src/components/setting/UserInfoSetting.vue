@@ -3,7 +3,6 @@ import type { UploadRequestOption } from 'ant-design-vue/es/vc-upload/interface'
 import { message } from 'ant-design-vue'
 import AvatarCropperModal, { useModal } from '@/components/ImageCropperModal.vue'
 import { upload } from '~/api/file'
-import { updateUser } from '~/api/user'
 import { updateUserProfile } from '~/api/auth'
 
 const emits = defineEmits(['back'])

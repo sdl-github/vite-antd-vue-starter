@@ -19,7 +19,7 @@
     "z": "zeus https://api.saybai.cn/graphql ./src/utils/graphql --ts"
   },
   "dependencies": {
-    "@sdl-life/halo-richtext-editor": "0.0.0-alpha.34",
+    "@sdl-life/halo-richtext-editor": "0.0.0-alpha.33-patch",
     "@unhead/vue": "^1.7.4",
     "@unocss/reset": "^0.57.1",
     "@vueuse/core": "^10.5.0",

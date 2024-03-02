@@ -919,12 +919,12 @@ export type ValueTypes = {
 };
 	["CreateArticleInputInput"]: {
 	categoryId?: string | undefined | null | Variable<any, string>,
-	html: string | Variable<any, string>,
+	html?: string | undefined | null | Variable<any, string>,
 	image?: string | undefined | null | Variable<any, string>,
-	markdown: string | Variable<any, string>,
+	markdown?: string | undefined | null | Variable<any, string>,
 	metaDescription?: string | undefined | null | Variable<any, string>,
 	metaTitle?: string | undefined | null | Variable<any, string>,
-	title: string | Variable<any, string>
+	title?: string | undefined | null | Variable<any, string>
 };
 	["Direction"]:Direction;
 	["File"]: AliasType<{
@@ -1051,16 +1051,18 @@ export type ValueTypes = {
 	/** Mutation root */
 ["Mutation"]: AliasType<{
 deleteMenu?: [{	menuId?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
+unpublishArticle?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
 createMenu?: [{	input: ValueTypes["MenuCreateInputInput"] | Variable<any, string>},ValueTypes["Menu"]],
 updateArticle?: [{	input?: ValueTypes["UpdateArticleInputInput"] | undefined | null | Variable<any, string>},ValueTypes["Article"]],
-updateRole?: [{	input: ValueTypes["RoleUpdateInputInput"] | Variable<any, string>},ValueTypes["Role"]],
 deleteArticleCategory?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
 updateArticleCategory?: [{	input?: ValueTypes["UpdateArticleCategoryInputInput"] | undefined | null | Variable<any, string>},ValueTypes["ArticleCategory"]],
 createArticleCategory?: [{	input?: ValueTypes["CreateArticleCategoryInputInput"] | undefined | null | Variable<any, string>},ValueTypes["ArticleCategory"]],
+updateRole?: [{	input: ValueTypes["RoleUpdateInputInput"] | Variable<any, string>},ValueTypes["Role"]],
 createArticle?: [{	input?: ValueTypes["CreateArticleInputInput"] | undefined | null | Variable<any, string>},ValueTypes["Article"]],
-createRole?: [{	input: ValueTypes["RoleCreateInputInput"] | Variable<any, string>},ValueTypes["Role"]],
+publishArticle?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
 revoke?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
 updateUser?: [{	input: ValueTypes["UserUpdateInputInput"] | Variable<any, string>},ValueTypes["User"]],
+createRole?: [{	input: ValueTypes["RoleCreateInputInput"] | Variable<any, string>},ValueTypes["Role"]],
 deleteRole?: [{	roleId?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
 deleteArticle?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
 updateMenu?: [{	input: ValueTypes["MenuUpdateInputInput"] | Variable<any, string>},ValueTypes["Menu"]],
@@ -1183,8 +1185,8 @@ queryRole?: [{	roleId?: string | undefined | null | Variable<any, string>},Value
 	queryAllUserList?:ValueTypes["User"],
 queryArticlePage?: [{	specification?: ValueTypes["QueryArticlePageSpecificationInput"] | undefined | null | Variable<any, string>},ValueTypes["Page_Article"]],
 queryFilePage?: [{	param?: ValueTypes["FileQueryPageParamInput"] | undefined | null | Variable<any, string>},ValueTypes["Page_File"]],
-queryUser?: [{	userId?: string | undefined | null | Variable<any, string>},ValueTypes["User"]],
 queryArticleCategory?: [{	specification?: ValueTypes["QueryArticleCategorySpecificationInput"] | undefined | null | Variable<any, string>},ValueTypes["ArticleCategory"]],
+queryUser?: [{	userId?: string | undefined | null | Variable<any, string>},ValueTypes["User"]],
 		__typename?: boolean | `@${string}`
 }>;
 	["QueryArticleCategorySpecificationInput"]: {
@@ -1196,7 +1198,7 @@ queryArticleCategory?: [{	specification?: ValueTypes["QueryArticleCategorySpecif
 	markdown?: string | undefined | null | Variable<any, string>,
 	pageNo: number | Variable<any, string>,
 	pageSize: number | Variable<any, string>,
-	sort: string | Variable<any, string>,
+	sort?: string | undefined | null | Variable<any, string>,
 	title?: string | undefined | null | Variable<any, string>
 };
 	["Role"]: AliasType<{
@@ -1249,6 +1251,7 @@ queryArticleCategory?: [{	specification?: ValueTypes["QueryArticleCategorySpecif
 }>;
 	["UpdateArticleCategoryInputInput"]: {
 	icon?: string | undefined | null | Variable<any, string>,
+	/** id */
 	id?: string | undefined | null | Variable<any, string>,
 	name?: string | undefined | null | Variable<any, string>,
 	parentId?: string | undefined | null | Variable<any, string>,
@@ -1257,7 +1260,8 @@ queryArticleCategory?: [{	specification?: ValueTypes["QueryArticleCategorySpecif
 	["UpdateArticleInputInput"]: {
 	categoryId?: string | undefined | null | Variable<any, string>,
 	html?: string | undefined | null | Variable<any, string>,
-	id: string | Variable<any, string>,
+	/** id */
+	id?: string | undefined | null | Variable<any, string>,
 	image?: string | undefined | null | Variable<any, string>,
 	markdown?: string | undefined | null | Variable<any, string>,
 	metaDescription?: string | undefined | null | Variable<any, string>,
@@ -1426,12 +1430,12 @@ export type ResolverInputTypes = {
 };
 	["CreateArticleInputInput"]: {
 	categoryId?: string | undefined | null,
-	html: string,
+	html?: string | undefined | null,
 	image?: string | undefined | null,
-	markdown: string,
+	markdown?: string | undefined | null,
 	metaDescription?: string | undefined | null,
 	metaTitle?: string | undefined | null,
-	title: string
+	title?: string | undefined | null
 };
 	["Direction"]:Direction;
 	["File"]: AliasType<{
@@ -1558,16 +1562,18 @@ export type ResolverInputTypes = {
 	/** Mutation root */
 ["Mutation"]: AliasType<{
 deleteMenu?: [{	menuId?: string | undefined | null},boolean | `@${string}`],
+unpublishArticle?: [{	id?: string | undefined | null},boolean | `@${string}`],
 createMenu?: [{	input: ResolverInputTypes["MenuCreateInputInput"]},ResolverInputTypes["Menu"]],
 updateArticle?: [{	input?: ResolverInputTypes["UpdateArticleInputInput"] | undefined | null},ResolverInputTypes["Article"]],
-updateRole?: [{	input: ResolverInputTypes["RoleUpdateInputInput"]},ResolverInputTypes["Role"]],
 deleteArticleCategory?: [{	id?: string | undefined | null},boolean | `@${string}`],
 updateArticleCategory?: [{	input?: ResolverInputTypes["UpdateArticleCategoryInputInput"] | undefined | null},ResolverInputTypes["ArticleCategory"]],
 createArticleCategory?: [{	input?: ResolverInputTypes["CreateArticleCategoryInputInput"] | undefined | null},ResolverInputTypes["ArticleCategory"]],
+updateRole?: [{	input: ResolverInputTypes["RoleUpdateInputInput"]},ResolverInputTypes["Role"]],
 createArticle?: [{	input?: ResolverInputTypes["CreateArticleInputInput"] | undefined | null},ResolverInputTypes["Article"]],
-createRole?: [{	input: ResolverInputTypes["RoleCreateInputInput"]},ResolverInputTypes["Role"]],
+publishArticle?: [{	id?: string | undefined | null},boolean | `@${string}`],
 revoke?: [{	id?: string | undefined | null},boolean | `@${string}`],
 updateUser?: [{	input: ResolverInputTypes["UserUpdateInputInput"]},ResolverInputTypes["User"]],
+createRole?: [{	input: ResolverInputTypes["RoleCreateInputInput"]},ResolverInputTypes["Role"]],
 deleteRole?: [{	roleId?: string | undefined | null},boolean | `@${string}`],
 deleteArticle?: [{	id?: string | undefined | null},boolean | `@${string}`],
 updateMenu?: [{	input: ResolverInputTypes["MenuUpdateInputInput"]},ResolverInputTypes["Menu"]],
@@ -1690,8 +1696,8 @@ queryRole?: [{	roleId?: string | undefined | null},ResolverInputTypes["Role"]],
 	queryAllUserList?:ResolverInputTypes["User"],
 queryArticlePage?: [{	specification?: ResolverInputTypes["QueryArticlePageSpecificationInput"] | undefined | null},ResolverInputTypes["Page_Article"]],
 queryFilePage?: [{	param?: ResolverInputTypes["FileQueryPageParamInput"] | undefined | null},ResolverInputTypes["Page_File"]],
-queryUser?: [{	userId?: string | undefined | null},ResolverInputTypes["User"]],
 queryArticleCategory?: [{	specification?: ResolverInputTypes["QueryArticleCategorySpecificationInput"] | undefined | null},ResolverInputTypes["ArticleCategory"]],
+queryUser?: [{	userId?: string | undefined | null},ResolverInputTypes["User"]],
 		__typename?: boolean | `@${string}`
 }>;
 	["QueryArticleCategorySpecificationInput"]: {
@@ -1703,7 +1709,7 @@ queryArticleCategory?: [{	specification?: ResolverInputTypes["QueryArticleCatego
 	markdown?: string | undefined | null,
 	pageNo: number,
 	pageSize: number,
-	sort: string,
+	sort?: string | undefined | null,
 	title?: string | undefined | null
 };
 	["Role"]: AliasType<{
@@ -1756,6 +1762,7 @@ queryArticleCategory?: [{	specification?: ResolverInputTypes["QueryArticleCatego
 }>;
 	["UpdateArticleCategoryInputInput"]: {
 	icon?: string | undefined | null,
+	/** id */
 	id?: string | undefined | null,
 	name?: string | undefined | null,
 	parentId?: string | undefined | null,
@@ -1764,7 +1771,8 @@ queryArticleCategory?: [{	specification?: ResolverInputTypes["QueryArticleCatego
 	["UpdateArticleInputInput"]: {
 	categoryId?: string | undefined | null,
 	html?: string | undefined | null,
-	id: string,
+	/** id */
+	id?: string | undefined | null,
 	image?: string | undefined | null,
 	markdown?: string | undefined | null,
 	metaDescription?: string | undefined | null,
@@ -1918,12 +1926,12 @@ export type ModelTypes = {
 };
 	["CreateArticleInputInput"]: {
 	categoryId?: string | undefined,
-	html: string,
+	html?: string | undefined,
 	image?: string | undefined,
-	markdown: string,
+	markdown?: string | undefined,
 	metaDescription?: string | undefined,
 	metaTitle?: string | undefined,
-	title: string
+	title?: string | undefined
 };
 	["Direction"]:Direction;
 	["File"]: {
@@ -2047,16 +2055,18 @@ export type ModelTypes = {
 	/** Mutation root */
 ["Mutation"]: {
 		deleteMenu: boolean,
+	unpublishArticle?: boolean | undefined,
 	createMenu?: ModelTypes["Menu"] | undefined,
 	updateArticle?: ModelTypes["Article"] | undefined,
-	updateRole?: ModelTypes["Role"] | undefined,
 	deleteArticleCategory?: boolean | undefined,
 	updateArticleCategory?: ModelTypes["ArticleCategory"] | undefined,
 	createArticleCategory?: ModelTypes["ArticleCategory"] | undefined,
+	updateRole?: ModelTypes["Role"] | undefined,
 	createArticle?: ModelTypes["Article"] | undefined,
-	createRole?: ModelTypes["Role"] | undefined,
+	publishArticle?: boolean | undefined,
 	revoke: boolean,
 	updateUser?: ModelTypes["User"] | undefined,
+	createRole?: ModelTypes["Role"] | undefined,
 	deleteRole: boolean,
 	deleteArticle?: boolean | undefined,
 	updateMenu?: ModelTypes["Menu"] | undefined,
@@ -2172,8 +2182,8 @@ export type ModelTypes = {
 	queryAllUserList?: Array<ModelTypes["User"] | undefined> | undefined,
 	queryArticlePage?: ModelTypes["Page_Article"] | undefined,
 	queryFilePage?: ModelTypes["Page_File"] | undefined,
-	queryUser?: ModelTypes["User"] | undefined,
-	queryArticleCategory?: Array<ModelTypes["ArticleCategory"] | undefined> | undefined
+	queryArticleCategory?: Array<ModelTypes["ArticleCategory"] | undefined> | undefined,
+	queryUser?: ModelTypes["User"] | undefined
 };
 	["QueryArticleCategorySpecificationInput"]: {
 	name?: string | undefined,
@@ -2184,7 +2194,7 @@ export type ModelTypes = {
 	markdown?: string | undefined,
 	pageNo: number,
 	pageSize: number,
-	sort: string,
+	sort?: string | undefined,
 	title?: string | undefined
 };
 	["Role"]: {
@@ -2234,6 +2244,7 @@ export type ModelTypes = {
 };
 	["UpdateArticleCategoryInputInput"]: {
 	icon?: string | undefined,
+	/** id */
 	id?: string | undefined,
 	name?: string | undefined,
 	parentId?: string | undefined,
@@ -2242,7 +2253,8 @@ export type ModelTypes = {
 	["UpdateArticleInputInput"]: {
 	categoryId?: string | undefined,
 	html?: string | undefined,
-	id: string,
+	/** id */
+	id?: string | undefined,
 	image?: string | undefined,
 	markdown?: string | undefined,
 	metaDescription?: string | undefined,
@@ -2413,12 +2425,12 @@ export type GraphQLTypes = {
 };
 	["CreateArticleInputInput"]: {
 		categoryId?: string | undefined,
-	html: string,
+	html?: string | undefined,
 	image?: string | undefined,
-	markdown: string,
+	markdown?: string | undefined,
 	metaDescription?: string | undefined,
 	metaTitle?: string | undefined,
-	title: string
+	title?: string | undefined
 };
 	["Direction"]: Direction;
 	["File"]: {
@@ -2546,16 +2558,18 @@ export type GraphQLTypes = {
 ["Mutation"]: {
 	__typename: "Mutation",
 	deleteMenu: boolean,
+	unpublishArticle?: boolean | undefined,
 	createMenu?: GraphQLTypes["Menu"] | undefined,
 	updateArticle?: GraphQLTypes["Article"] | undefined,
-	updateRole?: GraphQLTypes["Role"] | undefined,
 	deleteArticleCategory?: boolean | undefined,
 	updateArticleCategory?: GraphQLTypes["ArticleCategory"] | undefined,
 	createArticleCategory?: GraphQLTypes["ArticleCategory"] | undefined,
+	updateRole?: GraphQLTypes["Role"] | undefined,
 	createArticle?: GraphQLTypes["Article"] | undefined,
-	createRole?: GraphQLTypes["Role"] | undefined,
+	publishArticle?: boolean | undefined,
 	revoke: boolean,
 	updateUser?: GraphQLTypes["User"] | undefined,
+	createRole?: GraphQLTypes["Role"] | undefined,
 	deleteRole: boolean,
 	deleteArticle?: boolean | undefined,
 	updateMenu?: GraphQLTypes["Menu"] | undefined,
@@ -2678,8 +2692,8 @@ export type GraphQLTypes = {
 	queryAllUserList?: Array<GraphQLTypes["User"] | undefined> | undefined,
 	queryArticlePage?: GraphQLTypes["Page_Article"] | undefined,
 	queryFilePage?: GraphQLTypes["Page_File"] | undefined,
-	queryUser?: GraphQLTypes["User"] | undefined,
-	queryArticleCategory?: Array<GraphQLTypes["ArticleCategory"] | undefined> | undefined
+	queryArticleCategory?: Array<GraphQLTypes["ArticleCategory"] | undefined> | undefined,
+	queryUser?: GraphQLTypes["User"] | undefined
 };
 	["QueryArticleCategorySpecificationInput"]: {
 		name?: string | undefined,
@@ -2690,7 +2704,7 @@ export type GraphQLTypes = {
 	markdown?: string | undefined,
 	pageNo: number,
 	pageSize: number,
-	sort: string,
+	sort?: string | undefined,
 	title?: string | undefined
 };
 	["Role"]: {
@@ -2743,6 +2757,7 @@ export type GraphQLTypes = {
 };
 	["UpdateArticleCategoryInputInput"]: {
 		icon?: string | undefined,
+	/** id */
 	id?: string | undefined,
 	name?: string | undefined,
 	parentId?: string | undefined,
@@ -2751,7 +2766,8 @@ export type GraphQLTypes = {
 	["UpdateArticleInputInput"]: {
 		categoryId?: string | undefined,
 	html?: string | undefined,
-	id: string,
+	/** id */
+	id?: string | undefined,
 	image?: string | undefined,
 	markdown?: string | undefined,
 	metaDescription?: string | undefined,

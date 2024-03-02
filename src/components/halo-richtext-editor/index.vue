@@ -57,6 +57,7 @@ const props = defineProps({
     default: "",
   },
 })
+
 const editor = useEditor({
   content: props.content,
   extensions: [
@@ -129,14 +130,14 @@ const editor = useEditor({
   },
 });
 
-watchEffect(() => {
-  console.log(String(props.content));
-});
+onUnmounted(() => {
+  editor.value?.destroy();
+})
 
 </script>
 
 <template>
-  <div style="height: 100vh" class="flex">
+  <div class="flex h-100vh">
     <RichTextEditor v-if="editor" :editor="editor" locale="zh" />
   </div>
 </template>

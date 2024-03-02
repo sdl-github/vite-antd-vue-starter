@@ -4,27 +4,101 @@
 </route>
 
 <script setup lang="ts">
-import { Article } from './data';
+import { message } from 'ant-design-vue';
+import { FormModel, generateFormModel } from './data';
+import { createArticle, queryArticle, updateArticle } from '~/api/article';
+import { useModal } from '~/components/ArticlePublishModal.vue';
 
+const route = useRoute()
+const loading = ref(true)
+const saveLoading = ref(false)
 const router = useRouter()
-const form = reactive<Article>({
-  html: ""
+const state = reactive<{ form: FormModel }>({
+  form: generateFormModel()
 })
+
+const { form} = toRefs(state)
+
+const articlePublishModal = useModal()
+
+watchEffect(() => {
+  const id = route.query.id
+  if (id) {
+    initData(id as string)
+    return
+  }
+  loading.value = false
+})
+
+
+async function initData(id: string) {
+  loading.value = true
+  const { queryArticle: res } = await queryArticle(id)
+  const { title, html, markdown, metaDescription, metaTitle, image, categoryId } = res as FormModel
+  state.form = {
+    id, title, html, markdown, metaDescription, metaTitle, image, categoryId
+  }
+  loading.value = false
+  console.log(form);
+}
+
+async function handleSave() {
+  saveLoading.value = true
+  const loading = message.loading('加载中', 0)
+  try {
+    const data = unref(form)
+    console.log(data);
+    
+    const api = data.id ? updateArticle : createArticle
+    console.log(api);
+    
+    if (!data.id) {
+      delete data.id
+    }
+    const res = await api(data)
+    console.log(res);
+    if (res.createArticle) {
+      form.id = res.createArticle.id
+    }
+    loading()
+    saveLoading.value = false
+    message.success('成功')
+    return true
+  }
+  catch (e) {
+    loading()
+    saveLoading.value = false
+    return false
+  }
+}
+
+async function handlePublish() {
+  articlePublishModal.open(unref(form))
+}
 </script>
 
 <template>
   <div class="w-full p-2">
+
+    <ArticlePublishModal />
+
     <div class="rounded bg-white">
       <APageHeader class="px-4 py-2" title="返回" sub-title="新建/编辑文章" @back="() => router.push('/article')">
         <template #extra>
-          <a-button key="1">保存草稿</a-button>
-          <a-button key="1" type="primary">发布</a-button>
+          <a-button :loading="saveLoading" @click="handleSave">保存</a-button>
+          <a-button @click="handlePublish" type="primary">发布</a-button>
         </template>
       </APageHeader>
     </div>
 
-    <div class="mt-2 rounded bg-white p-2">
-      <div class="mt-4">
+    <div class="mt-2 rounded bg-white p-2 min-h-40vh">
+      <div v-if="loading" class="h-100vh flex justify-center pt-10">
+        <div class="flex items-center flex-col">
+          <ASpin />
+          <div>加载中</div>
+        </div>
+      </div>
+      <div v-else class="">
         <HaloRichtextEditor v-model:content="form.html" />
       </div>
     </div>

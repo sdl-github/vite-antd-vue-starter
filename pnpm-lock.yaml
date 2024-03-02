@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@sdl-life/halo-richtext-editor':
-    specifier: 0.0.0-alpha.34
-    version: 0.0.0-alpha.34(vue@3.3.7)
+    specifier: 0.0.0-alpha.33-patch
+    version: 0.0.0-alpha.33-patch(vue@3.3.7)
   '@unhead/vue':
     specifier: ^1.7.4
     version: 1.7.4(vue@3.3.7)
@@ -1559,8 +1559,8 @@ packages:
     dev: true
     optional: true
 
-  /@sdl-life/halo-richtext-editor@0.0.0-alpha.34(vue@3.3.7):
-    resolution: {integrity: sha512-20p3eqpWxCOvU+vHF9KZ85afap8D6Rn524Mg512AP1XxjmHC3aEzaF4JukDivE1TqKx/mS2wf6YEWkg/5BpuXg==}
+  /@sdl-life/halo-richtext-editor@0.0.0-alpha.33-patch(vue@3.3.7):
+    resolution: {integrity: sha512-JrWFM/0CWomWbAeGs67NZXT4yhPb5YGxJ9WzBZFx/S5TezQkr3GF0emttf4APMfG8xxgk1hnPQhd1NFB6ck9oA==}
     peerDependencies:
       vue: ^3.2.37
     dependencies:

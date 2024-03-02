@@ -6,6 +6,21 @@ export type Article = ModelTypes['Article']
 
 export type CreateArticleInput = ModelTypes['CreateArticleInputInput']
 export type UpdateArticleInput = ModelTypes['UpdateArticleInputInput']
+export type FormModel = CreateArticleInput & UpdateArticleInput
+
+export function generateFormModel(): FormModel {
+  return {
+    id: "",
+    title: "未命名文章",
+    html: "",
+    markdown: "",
+    image: "",
+    metaTitle: "",
+    metaDescription: "",
+    categoryId: undefined
+  }
+}
+
 export const ArticleStatusList = [
   {
     label: '草稿',
@@ -45,51 +60,44 @@ export const columns: TableColumnType<Article>[] = [
     title: '标题',
     fixed: 'left',
     align: 'center',
+    width: '100px',
     dataIndex: 'title',
     key: 'title',
     ellipsis: true,
     sorter: true,
   },
   {
-    title: '副标题',
-    align: 'center',
-    dataIndex: 'metaTitle',
-    key: 'metaTitle',
-  },
-  {
     title: '分类',
     align: 'center',
+    width: '100px',
     dataIndex: 'category',
     key: 'category',
   },
   {
-    title: '图片',
-    align: 'center',
-    dataIndex: 'image',
-    key: 'image',
-  },
-  {
-    title: '描述',
-    align: 'center',
-    dataIndex: 'metaDescription',
-    key: 'metaDescription',
-  },
-  {
     title: '状态',
+    width: '100px',
     align: 'center',
     dataIndex: 'status',
     key: 'status',
   },
   {
     title: '创建时间',
+    width: '100px',
     align: 'center',
     dataIndex: 'createdAt',
     key: 'createdAt',
   },
   {
     title: '发布时间',
+    width: '100px',
     align: 'center',
     dataIndex: 'publishedAt',
     key: 'publishedAt',
   },
+  {
+    title: '操作',
+    width: '100px',
+    key: "operation",
+    fixed: "right"
+  }
 ]
