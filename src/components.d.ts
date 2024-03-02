@@ -58,6 +58,7 @@ declare module 'vue' {
     ATreeSelect: typeof import('ant-design-vue/es')['TreeSelect']
     AUpload: typeof import('ant-design-vue/es')['Upload']
     FengMap: typeof import('./components/FengMap.vue')['default']
+    HaloRichtextEditor: typeof import('./components/halo-richtext-editor/index.vue')['default']
     ImageCropperModal: typeof import('./components/ImageCropperModal.vue')['default']
     MenuItem: typeof import('./components/MenuItem.vue')['default']
     PointPopover: typeof import('./components/PointPopover.vue')['default']

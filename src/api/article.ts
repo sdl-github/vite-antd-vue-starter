@@ -22,3 +22,15 @@ export function queryArticlePage(specification: ValueTypes['QueryArticlePageSpec
     }],
   })
 }
+
+
+
+export function createArticle(input: ValueTypes["CreateArticleInputInput"]) {
+  return mutation({
+    createArticle: [
+      { input }, {
+        id: true
+      }
+    ]
+  })
+}
