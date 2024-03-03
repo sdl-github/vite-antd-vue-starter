@@ -2,10 +2,11 @@
 import { message } from 'ant-design-vue'
 import { defineComponent, ref } from 'vue'
 import { publishArticle, updateArticle } from '~/api/article'
-import { FormModel, generateFormModel } from '~/pages/article/data'
+import type { FormModel } from '~/pages/article/data'
+import { generateFormModel } from '~/pages/article/data'
 
 const state = reactive({
-  form: generateFormModel()
+  form: generateFormModel(),
 })
 const { form } = toRefs(state)
 
@@ -37,7 +38,7 @@ export default defineComponent({
       try {
         const data = unref(form)
         await updateArticle({
-          ...data
+          ...data,
         })
         await publishArticle(form.value.id!)
         loading()
@@ -67,15 +68,19 @@ export default defineComponent({
 </script>
 
 <template>
-  <AModal title="发布" ok-text="确定" cancel-text="取消" :closable="false" :open="open" :mask="false" width="400px"
-    @ok="handleOk" @cancel="setOpen(false)">
-    <div class="py-4 px-2">
+  <AModal
+    title="发布" ok-text="确定" cancel-text="取消" :mask-closable="false" :closable="false" :open="open" :mask="false" width="400px"
+    @ok="handleOk" @cancel="setOpen(false)"
+  >
+    <div class="px-2 py-4">
       <template v-if="loading">
         <ASkeleton active />
       </template>
 
-      <AForm :label-col="{ span: 6 }" :wrapper-col="{ span: 16 }" ref="formRef" :model="form" autocomplete="off"
-        label-width="200px">
+      <AForm
+        :label-col="{ span: 6 }" :wrapper-col="{ span: 16 }" :model="form" autocomplete="off"
+        label-width="200px"
+      >
         <ARow :gutter="[16, 8]">
           <ACol :span="24">
             <AFormItem label="标题" name="title">

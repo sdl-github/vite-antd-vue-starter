@@ -1,63 +1,61 @@
 <script lang="ts" setup>
-import "@sdl-life/halo-richtext-editor/dist/style.css";
-import { computed, watchEffect } from "vue";
-import { unified } from "unified";
-import rehypeParse from "rehype-parse";
-import rehypeFormat from "rehype-format";
-import rehypeStringify from "rehype-stringify";
+import '@sdl-life/halo-richtext-editor/dist/style.css'
+import { unified } from 'unified'
+import rehypeParse from 'rehype-parse'
+import rehypeFormat from 'rehype-format'
+import rehypeStringify from 'rehype-stringify'
 
 import {
+  ExtensionAudio,
   ExtensionBlockquote,
   ExtensionBold,
   ExtensionBulletList,
   ExtensionCode,
+  ExtensionCodeBlock,
+  ExtensionColor,
+  ExtensionColumn,
+  ExtensionColumns,
+  ExtensionCommands,
   ExtensionDocument,
+  ExtensionDraggable,
   ExtensionDropcursor,
+  ExtensionFontSize,
   ExtensionGapcursor,
   ExtensionHardBreak,
   ExtensionHeading,
+  ExtensionHighlight,
   ExtensionHistory,
   ExtensionHorizontalRule,
-  ExtensionItalic,
-  ExtensionOrderedList,
-  ExtensionStrike,
-  ExtensionText,
+  ExtensionIframe,
   ExtensionImage,
-  ExtensionTaskList,
+  ExtensionIndent,
+  ExtensionItalic,
   ExtensionLink,
-  ExtensionTextAlign,
-  ExtensionUnderline,
-  ExtensionTable,
+  ExtensionNodeSelected,
+  ExtensionOrderedList,
+  ExtensionPlaceholder,
+  ExtensionStrike,
   ExtensionSubscript,
   ExtensionSuperscript,
-  ExtensionPlaceholder,
-  ExtensionHighlight,
-  ExtensionCommands,
-  ExtensionIframe,
-  ExtensionVideo,
-  ExtensionAudio,
-  ExtensionCodeBlock,
-  ExtensionColor,
-  ExtensionFontSize,
-  lowlight,
-  RichTextEditor,
-  useEditor,
-  ExtensionIndent,
-  ExtensionDraggable,
-  ExtensionColumns,
-  ExtensionColumn,
-  ExtensionNodeSelected,
+  ExtensionTable,
+  ExtensionTaskList,
+  ExtensionText,
+  ExtensionTextAlign,
   ExtensionTrailingNode,
-} from "@sdl-life/halo-richtext-editor";
+  ExtensionUnderline,
+  ExtensionVideo,
+  RichTextEditor,
+  lowlight,
+  useEditor,
+} from '@sdl-life/halo-richtext-editor'
 
-const emits = defineEmits(["update:content"]);
 const props = defineProps({
   content: {
     type: String,
-    default: "",
+    default: '',
   },
 })
-
+const emits = defineEmits(['update:content'])
 const editor = useEditor({
   content: props.content,
   extensions: [
@@ -68,8 +66,8 @@ const editor = useEditor({
     ExtensionDocument,
     ExtensionDropcursor.configure({
       width: 2,
-      class: "dropcursor",
-      color: "skyblue",
+      class: 'dropcursor',
+      color: 'skyblue',
     }),
     ExtensionGapcursor,
     ExtensionHardBreak,
@@ -82,7 +80,7 @@ const editor = useEditor({
     ExtensionText,
     ExtensionImage.configure({
       HTMLAttributes: {
-        loading: "lazy",
+        loading: 'lazy',
       },
     }),
     ExtensionTaskList,
@@ -91,7 +89,7 @@ const editor = useEditor({
       openOnClick: false,
     }),
     ExtensionTextAlign.configure({
-      types: ["heading", "paragraph"],
+      types: ['heading', 'paragraph'],
     }),
     ExtensionUnderline,
     ExtensionTable.configure({
@@ -100,7 +98,7 @@ const editor = useEditor({
     ExtensionSubscript,
     ExtensionSuperscript,
     ExtensionPlaceholder.configure({
-      placeholder: "输入 / 以选择输入类型",
+      placeholder: '输入 / 以选择输入类型',
     }),
     ExtensionHighlight,
     ExtensionVideo,
@@ -120,24 +118,23 @@ const editor = useEditor({
     ExtensionTrailingNode,
   ],
   onUpdate: () => {
-    const content = editor.value?.getHTML() + ""
+    const content = `${editor.value?.getHTML()}`
     const formatContent = unified()
       .use(rehypeParse)
       .use(rehypeFormat)
       .use(rehypeStringify)
-      .processSync(content);
+      .processSync(content)
     emits('update:content', String(formatContent))
   },
-});
-
-onUnmounted(() => {
-  editor.value?.destroy();
 })
 
+onUnmounted(() => {
+  editor.value?.destroy()
+})
 </script>
 
 <template>
-  <div class="flex h-100vh">
+  <div class="h-100% flex">
     <RichTextEditor v-if="editor" :editor="editor" locale="zh" />
   </div>
 </template>
