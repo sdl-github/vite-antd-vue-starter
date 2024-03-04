@@ -6,10 +6,10 @@
 <script setup lang="ts">
 import type { SorterResult } from 'ant-design-vue/es/table/interface'
 import { type TableColumnType, message } from 'ant-design-vue'
-import { ArticleStatus, columns, generateSearch } from './data'
-import type { Article, State } from './data'
+import { OrgType, columns, generateSearch } from './data'
+import type { Org, State } from './data'
 import { delArticle, queryArticlePage, unpublishArticle } from '~/api/article'
-import { ArticleStatusEnum } from '~/utils/graphql/zeus'
+import { queryOrgPage } from '~/api/org'
 
 const state: State = reactive({
   loading: false,
@@ -27,9 +27,9 @@ initData()
 async function initData() {
   state.loading = true
   const { search } = state
-  const res = await queryArticlePage(search)
-  const { content, totalElements } = res.queryArticlePage!
-  state.data = content as Article[]
+  const res = await queryOrgPage(search)
+  const { content, totalElements } = res.queryOrgPage!
+  state.data = content as Org[]
   state.total = totalElements as number
   state.loading = false
 }
@@ -70,7 +70,7 @@ function handleOpenCreate() {
   router.push('/article/edit')
 }
 
-function handleOpenEdit(record: Article) {
+function handleOpenEdit(record: Org) {
   router.push(`/article/edit?id=${record.id}`)
 }
 
@@ -110,8 +110,7 @@ async function handleUnpublish(id: string) {
     <!-- 搜索 -->
     <ACard>
       <div class="flex">
-        <AInput v-model:value="search.title" placeholder="标题" class="w-200px" />
-        <ArticleCategorySelect v-model:value="search.categoryId" class="ml-2 w-200px" />
+        <AInput v-model:value="search.name" placeholder="名称" class="w-200px" />
         <div class="ml-2 flex items-center">
           <AButton :loading="state.loading" class="flex items-center justify-center" type="primary" @click="handleSearch">
             <template #icon>
@@ -148,14 +147,15 @@ async function handleUnpublish(id: string) {
       :pagination="false" :columns="columns" :row-key="(record: any) => record.id" :data-source="state.data"
       :loading="state.loading" @change="handleTableChange"
     >
-      <template #bodyCell="{ column, record }: { column: TableColumnType<Article>, record: Article }">
-        <template v-if="column.dataIndex === 'category'">
-          {{ record.category?.name }}
-        </template>
-        <template v-if="column.dataIndex === 'status'">
-          <ABadge :status="ArticleStatusEnum.DRAFT === record.status ? 'warning' : 'success'" />
+      <template #bodyCell="{ column, record }: { column: TableColumnType<Org>, record: Org }">
+        <template v-if="column.dataIndex === 'orgType'">
           <span>
-            {{ ArticleStatus[record.status!] }}
+            {{ OrgType[record.orgType!] }}
+          </span>
+        </template>
+        <template v-if="column.dataIndex === 'head'">
+          <span>
+            {{ record.lead?.nickName || record.lead?.userName }}
           </span>
         </template>
         <template v-if="column.dataIndex === 'createdAt'">
@@ -163,32 +163,17 @@ async function handleUnpublish(id: string) {
             {{ formatDate(record.createdAt) }}
           </span>
         </template>
-        <template v-if="column.dataIndex === 'publishedAt'">
-          <span>
-            {{ formatDate(record.publishedAt) }}
-          </span>
-        </template>
         <template v-if="column.key === 'operation'">
           <span>
             <a @click="handleOpenEdit(record)">编辑</a>
             <ADivider type="vertical" />
-            <template v-if="record.status === ArticleStatusEnum.PUBLISHED">
-              <APopconfirm
-                :title="`确定要下架${record.title}?`" ok-text="确定" cancel-text="取消"
-                @confirm="handleUnpublish(record.id!)"
-              >
-                <a>下架</a>
-              </APopconfirm>
-              <ADivider type="vertical" />
-            </template>
-            <template v-if="record.status === ArticleStatusEnum.DRAFT">
-              <APopconfirm
-                :title="`确定要删除${record.title}?`" ok-text="确定" cancel-text="取消"
-                @confirm="handleDelete(record.id!)"
-              >
-                <a>删除</a>
-              </APopconfirm>
-            </template>
+
+            <APopconfirm
+              :title="`确定要删除${record.name}?`" ok-text="确定" cancel-text="取消"
+              @confirm="handleDelete(record.id!)"
+            >
+              <a>删除</a>
+            </APopconfirm>
           </span>
         </template>
       </template>

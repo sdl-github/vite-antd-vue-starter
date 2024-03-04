@@ -8,6 +8,9 @@ export const AllTypesProps: Record<string,any> = {
 	CreateArticleInputInput:{
 
 	},
+	CreateOrgInputInput:{
+		orgType:"OrgTypeEnum"
+	},
 	Direction: "enum" as const,
 	FileProviderEnum: "enum" as const,
 	FileQueryPageParamInput:{
@@ -39,14 +42,8 @@ export const AllTypesProps: Record<string,any> = {
 		unpublishArticle:{
 
 		},
-		createMenu:{
-			input:"MenuCreateInputInput"
-		},
 		updateArticle:{
 			input:"UpdateArticleInputInput"
-		},
-		deleteArticleCategory:{
-
 		},
 		updateArticleCategory:{
 			input:"UpdateArticleCategoryInputInput"
@@ -57,29 +54,44 @@ export const AllTypesProps: Record<string,any> = {
 		updateRole:{
 			input:"RoleUpdateInputInput"
 		},
+		revoke:{
+
+		},
+		createRole:{
+			input:"RoleCreateInputInput"
+		},
+		updateOrg:{
+			input:"UpdateOrgInputInput"
+		},
+		updateMenu:{
+			input:"MenuUpdateInputInput"
+		},
+		createMenu:{
+			input:"MenuCreateInputInput"
+		},
+		createOrg:{
+			input:"CreateOrgInputInput"
+		},
+		deleteArticleCategory:{
+
+		},
 		createArticle:{
 			input:"CreateArticleInputInput"
+		},
+		deleteOrg:{
+
 		},
 		publishArticle:{
 
 		},
-		revoke:{
-
-		},
 		updateUser:{
 			input:"UserUpdateInputInput"
-		},
-		createRole:{
-			input:"RoleCreateInputInput"
 		},
 		deleteRole:{
 
 		},
 		deleteArticle:{
 
-		},
-		updateMenu:{
-			input:"MenuUpdateInputInput"
 		},
 		updateUserProfile:{
 			input:"UpdateUserProfileInputInput"
@@ -101,6 +113,7 @@ export const AllTypesProps: Record<string,any> = {
 		}
 	},
 	NullHandling: "enum" as const,
+	OrgTypeEnum: "enum" as const,
 	Query:{
 		queryMenuList:{
 			param:"MenuQueryParamInput"
@@ -123,6 +136,9 @@ export const AllTypesProps: Record<string,any> = {
 		queryArticlePage:{
 			specification:"QueryArticlePageSpecificationInput"
 		},
+		queryOrgPage:{
+			specification:"QueryOrgPageSpecificationInput"
+		},
 		queryFilePage:{
 			param:"FileQueryPageParamInput"
 		},
@@ -139,6 +155,9 @@ export const AllTypesProps: Record<string,any> = {
 	QueryArticlePageSpecificationInput:{
 
 	},
+	QueryOrgPageSpecificationInput:{
+		orgType:"OrgTypeEnum"
+	},
 	RoleCreateInputInput:{
 
 	},
@@ -153,6 +172,9 @@ export const AllTypesProps: Record<string,any> = {
 	},
 	UpdateArticleInputInput:{
 
+	},
+	UpdateOrgInputInput:{
+		orgType:"OrgTypeEnum"
 	},
 	UpdateUserProfileInputInput:{
 
@@ -211,6 +233,7 @@ export const ReturnTypes: Record<string,any> = {
 		"...on ArticleCategory": "ArticleCategory",
 		"...on File": "File",
 		"...on Menu": "Menu",
+		"...on Org": "Org",
 		"...on Role": "Role",
 		"...on User": "User",
 		createdAt:"LocalDateTime",
@@ -268,21 +291,24 @@ export const ReturnTypes: Record<string,any> = {
 	Mutation:{
 		deleteMenu:"Boolean",
 		unpublishArticle:"Boolean",
-		createMenu:"Menu",
 		updateArticle:"Article",
-		deleteArticleCategory:"Boolean",
 		updateArticleCategory:"ArticleCategory",
 		createArticleCategory:"ArticleCategory",
 		updateRole:"Role",
-		createArticle:"Article",
-		publishArticle:"Boolean",
 		revoke:"Boolean",
-		updateUser:"User",
 		createRole:"Role",
-		deleteRole:"Boolean",
-		deleteArticle:"Boolean",
+		updateOrg:"Org",
 		updateMenu:"Menu",
 		logout:"Boolean",
+		createMenu:"Menu",
+		createOrg:"Org",
+		deleteArticleCategory:"Boolean",
+		createArticle:"Article",
+		deleteOrg:"Boolean",
+		publishArticle:"Boolean",
+		updateUser:"User",
+		deleteRole:"Boolean",
+		deleteArticle:"Boolean",
 		updateUserProfile:"Boolean",
 		registerUser:"Boolean",
 		loginByAccount:"String",
@@ -295,6 +321,21 @@ export const ReturnTypes: Record<string,any> = {
 		ignoreCase:"Boolean",
 		nullHandlingHint:"NullHandling",
 		property:"String"
+	},
+	Org:{
+		address:"String",
+		createdAt:"LocalDateTime",
+		createdBy:"String",
+		id:"String",
+		latitude:"Float",
+		lead:"User",
+		leadId:"String",
+		longitude:"Float",
+		name:"String",
+		openTime:"String",
+		orgType:"OrgTypeEnum",
+		updatedAt:"LocalDateTime",
+		updatedBy:"String"
 	},
 	Page_Article:{
 		content:"Article",
@@ -317,6 +358,25 @@ export const ReturnTypes: Record<string,any> = {
 	},
 	Page_File:{
 		content:"File",
+		first:"Boolean",
+		hasContent:"Boolean",
+		hasNext:"Boolean",
+		hasPrevious:"Boolean",
+		last:"Boolean",
+		nextOrLastPageable:"Pagination",
+		nextPageable:"Pagination",
+		number:"Int",
+		numberOfElements:"Int",
+		pageable:"Pagination",
+		previousOrFirstPageable:"Pagination",
+		previousPageable:"Pagination",
+		size:"Int",
+		sort:"Sorting",
+		totalElements:"Long",
+		totalPages:"Int"
+	},
+	Page_Org:{
+		content:"Org",
 		first:"Boolean",
 		hasContent:"Boolean",
 		hasNext:"Boolean",
@@ -391,6 +451,7 @@ export const ReturnTypes: Record<string,any> = {
 		queryAllRoleList:"Role",
 		queryAllUserList:"User",
 		queryArticlePage:"Page_Article",
+		queryOrgPage:"Page_Org",
 		queryFilePage:"Page_File",
 		queryArticleCategory:"ArticleCategory",
 		queryUser:"User"

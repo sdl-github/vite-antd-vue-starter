@@ -907,6 +907,7 @@ export type ValueTypes = {
 		['...on ArticleCategory']?: Omit<ValueTypes["ArticleCategory"],keyof ValueTypes["BaseEntity"]>;
 		['...on File']?: Omit<ValueTypes["File"],keyof ValueTypes["BaseEntity"]>;
 		['...on Menu']?: Omit<ValueTypes["Menu"],keyof ValueTypes["BaseEntity"]>;
+		['...on Org']?: Omit<ValueTypes["Org"],keyof ValueTypes["BaseEntity"]>;
 		['...on Role']?: Omit<ValueTypes["Role"],keyof ValueTypes["BaseEntity"]>;
 		['...on User']?: Omit<ValueTypes["User"],keyof ValueTypes["BaseEntity"]>;
 		__typename?: boolean | `@${string}`
@@ -925,6 +926,15 @@ export type ValueTypes = {
 	metaDescription?: string | undefined | null | Variable<any, string>,
 	metaTitle?: string | undefined | null | Variable<any, string>,
 	title?: string | undefined | null | Variable<any, string>
+};
+	["CreateOrgInputInput"]: {
+	address?: string | undefined | null | Variable<any, string>,
+	latitude: number | Variable<any, string>,
+	leadId?: string | undefined | null | Variable<any, string>,
+	longitude: number | Variable<any, string>,
+	name?: string | undefined | null | Variable<any, string>,
+	openTime?: string | undefined | null | Variable<any, string>,
+	orgType?: ValueTypes["OrgTypeEnum"] | undefined | null | Variable<any, string>
 };
 	["Direction"]:Direction;
 	["File"]: AliasType<{
@@ -1052,21 +1062,24 @@ export type ValueTypes = {
 ["Mutation"]: AliasType<{
 deleteMenu?: [{	menuId?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
 unpublishArticle?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
-createMenu?: [{	input: ValueTypes["MenuCreateInputInput"] | Variable<any, string>},ValueTypes["Menu"]],
 updateArticle?: [{	input?: ValueTypes["UpdateArticleInputInput"] | undefined | null | Variable<any, string>},ValueTypes["Article"]],
-deleteArticleCategory?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
 updateArticleCategory?: [{	input?: ValueTypes["UpdateArticleCategoryInputInput"] | undefined | null | Variable<any, string>},ValueTypes["ArticleCategory"]],
 createArticleCategory?: [{	input?: ValueTypes["CreateArticleCategoryInputInput"] | undefined | null | Variable<any, string>},ValueTypes["ArticleCategory"]],
 updateRole?: [{	input: ValueTypes["RoleUpdateInputInput"] | Variable<any, string>},ValueTypes["Role"]],
-createArticle?: [{	input?: ValueTypes["CreateArticleInputInput"] | undefined | null | Variable<any, string>},ValueTypes["Article"]],
-publishArticle?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
 revoke?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
-updateUser?: [{	input: ValueTypes["UserUpdateInputInput"] | Variable<any, string>},ValueTypes["User"]],
 createRole?: [{	input: ValueTypes["RoleCreateInputInput"] | Variable<any, string>},ValueTypes["Role"]],
-deleteRole?: [{	roleId?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
-deleteArticle?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
+updateOrg?: [{	input?: ValueTypes["UpdateOrgInputInput"] | undefined | null | Variable<any, string>},ValueTypes["Org"]],
 updateMenu?: [{	input: ValueTypes["MenuUpdateInputInput"] | Variable<any, string>},ValueTypes["Menu"]],
 	logout?:boolean | `@${string}`,
+createMenu?: [{	input: ValueTypes["MenuCreateInputInput"] | Variable<any, string>},ValueTypes["Menu"]],
+createOrg?: [{	input?: ValueTypes["CreateOrgInputInput"] | undefined | null | Variable<any, string>},ValueTypes["Org"]],
+deleteArticleCategory?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
+createArticle?: [{	input?: ValueTypes["CreateArticleInputInput"] | undefined | null | Variable<any, string>},ValueTypes["Article"]],
+deleteOrg?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
+publishArticle?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
+updateUser?: [{	input: ValueTypes["UserUpdateInputInput"] | Variable<any, string>},ValueTypes["User"]],
+deleteRole?: [{	roleId?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
+deleteArticle?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
 updateUserProfile?: [{	input?: ValueTypes["UpdateUserProfileInputInput"] | undefined | null | Variable<any, string>},boolean | `@${string}`],
 registerUser?: [{	input?: ValueTypes["UserRegisterInputInput"] | undefined | null | Variable<any, string>},boolean | `@${string}`],
 loginByAccount?: [{	input?: ValueTypes["LoginInputInput"] | undefined | null | Variable<any, string>},boolean | `@${string}`],
@@ -1083,6 +1096,28 @@ deleteFileById?: [{	id?: string | undefined | null | Variable<any, string>},bool
 	property?:boolean | `@${string}`,
 		__typename?: boolean | `@${string}`
 }>;
+	["Org"]: AliasType<{
+	address?:boolean | `@${string}`,
+	/** 创建时间 */
+	createdAt?:boolean | `@${string}`,
+	/** 创建人 */
+	createdBy?:boolean | `@${string}`,
+	/** id */
+	id?:boolean | `@${string}`,
+	latitude?:boolean | `@${string}`,
+	lead?:ValueTypes["User"],
+	leadId?:boolean | `@${string}`,
+	longitude?:boolean | `@${string}`,
+	name?:boolean | `@${string}`,
+	openTime?:boolean | `@${string}`,
+	orgType?:boolean | `@${string}`,
+	/** 更新时间 */
+	updatedAt?:boolean | `@${string}`,
+	/** 更新人 */
+	updatedBy?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
+	["OrgTypeEnum"]:OrgTypeEnum;
 	["Page_Article"]: AliasType<{
 	content?:ValueTypes["Article"],
 	first?:boolean | `@${string}`,
@@ -1105,6 +1140,26 @@ deleteFileById?: [{	id?: string | undefined | null | Variable<any, string>},bool
 }>;
 	["Page_File"]: AliasType<{
 	content?:ValueTypes["File"],
+	first?:boolean | `@${string}`,
+	hasContent?:boolean | `@${string}`,
+	hasNext?:boolean | `@${string}`,
+	hasPrevious?:boolean | `@${string}`,
+	last?:boolean | `@${string}`,
+	nextOrLastPageable?:ValueTypes["Pagination"],
+	nextPageable?:ValueTypes["Pagination"],
+	number?:boolean | `@${string}`,
+	numberOfElements?:boolean | `@${string}`,
+	pageable?:ValueTypes["Pagination"],
+	previousOrFirstPageable?:ValueTypes["Pagination"],
+	previousPageable?:ValueTypes["Pagination"],
+	size?:boolean | `@${string}`,
+	sort?:ValueTypes["Sorting"],
+	totalElements?:boolean | `@${string}`,
+	totalPages?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
+	["Page_Org"]: AliasType<{
+	content?:ValueTypes["Org"],
 	first?:boolean | `@${string}`,
 	hasContent?:boolean | `@${string}`,
 	hasNext?:boolean | `@${string}`,
@@ -1184,6 +1239,7 @@ queryRole?: [{	roleId?: string | undefined | null | Variable<any, string>},Value
 	queryAllRoleList?:ValueTypes["Role"],
 	queryAllUserList?:ValueTypes["User"],
 queryArticlePage?: [{	specification?: ValueTypes["QueryArticlePageSpecificationInput"] | undefined | null | Variable<any, string>},ValueTypes["Page_Article"]],
+queryOrgPage?: [{	specification?: ValueTypes["QueryOrgPageSpecificationInput"] | undefined | null | Variable<any, string>},ValueTypes["Page_Org"]],
 queryFilePage?: [{	param?: ValueTypes["FileQueryPageParamInput"] | undefined | null | Variable<any, string>},ValueTypes["Page_File"]],
 queryArticleCategory?: [{	specification?: ValueTypes["QueryArticleCategorySpecificationInput"] | undefined | null | Variable<any, string>},ValueTypes["ArticleCategory"]],
 queryUser?: [{	userId?: string | undefined | null | Variable<any, string>},ValueTypes["User"]],
@@ -1200,6 +1256,16 @@ queryUser?: [{	userId?: string | undefined | null | Variable<any, string>},Value
 	pageSize: number | Variable<any, string>,
 	sort?: string | undefined | null | Variable<any, string>,
 	title?: string | undefined | null | Variable<any, string>
+};
+	["QueryOrgPageSpecificationInput"]: {
+	address?: string | undefined | null | Variable<any, string>,
+	lat?: number | undefined | null | Variable<any, string>,
+	lng?: number | undefined | null | Variable<any, string>,
+	name?: string | undefined | null | Variable<any, string>,
+	orgType?: ValueTypes["OrgTypeEnum"] | undefined | null | Variable<any, string>,
+	pageNo: number | Variable<any, string>,
+	pageSize: number | Variable<any, string>,
+	sort?: string | undefined | null | Variable<any, string>
 };
 	["Role"]: AliasType<{
 	/** 创建时间 */
@@ -1267,6 +1333,17 @@ queryUser?: [{	userId?: string | undefined | null | Variable<any, string>},Value
 	metaDescription?: string | undefined | null | Variable<any, string>,
 	metaTitle?: string | undefined | null | Variable<any, string>,
 	title?: string | undefined | null | Variable<any, string>
+};
+	["UpdateOrgInputInput"]: {
+	address?: string | undefined | null | Variable<any, string>,
+	/** id */
+	id?: string | undefined | null | Variable<any, string>,
+	latitude: number | Variable<any, string>,
+	leadId?: string | undefined | null | Variable<any, string>,
+	longitude: number | Variable<any, string>,
+	name?: string | undefined | null | Variable<any, string>,
+	openTime?: string | undefined | null | Variable<any, string>,
+	orgType?: ValueTypes["OrgTypeEnum"] | undefined | null | Variable<any, string>
 };
 	["UpdateUserProfileInputInput"]: {
 	avatar?: string | undefined | null | Variable<any, string>,
@@ -1418,6 +1495,7 @@ export type ResolverInputTypes = {
 		['...on ArticleCategory']?: Omit<ResolverInputTypes["ArticleCategory"],keyof ResolverInputTypes["BaseEntity"]>;
 		['...on File']?: Omit<ResolverInputTypes["File"],keyof ResolverInputTypes["BaseEntity"]>;
 		['...on Menu']?: Omit<ResolverInputTypes["Menu"],keyof ResolverInputTypes["BaseEntity"]>;
+		['...on Org']?: Omit<ResolverInputTypes["Org"],keyof ResolverInputTypes["BaseEntity"]>;
 		['...on Role']?: Omit<ResolverInputTypes["Role"],keyof ResolverInputTypes["BaseEntity"]>;
 		['...on User']?: Omit<ResolverInputTypes["User"],keyof ResolverInputTypes["BaseEntity"]>;
 		__typename?: boolean | `@${string}`
@@ -1436,6 +1514,15 @@ export type ResolverInputTypes = {
 	metaDescription?: string | undefined | null,
 	metaTitle?: string | undefined | null,
 	title?: string | undefined | null
+};
+	["CreateOrgInputInput"]: {
+	address?: string | undefined | null,
+	latitude: number,
+	leadId?: string | undefined | null,
+	longitude: number,
+	name?: string | undefined | null,
+	openTime?: string | undefined | null,
+	orgType?: ResolverInputTypes["OrgTypeEnum"] | undefined | null
 };
 	["Direction"]:Direction;
 	["File"]: AliasType<{
@@ -1563,21 +1650,24 @@ export type ResolverInputTypes = {
 ["Mutation"]: AliasType<{
 deleteMenu?: [{	menuId?: string | undefined | null},boolean | `@${string}`],
 unpublishArticle?: [{	id?: string | undefined | null},boolean | `@${string}`],
-createMenu?: [{	input: ResolverInputTypes["MenuCreateInputInput"]},ResolverInputTypes["Menu"]],
 updateArticle?: [{	input?: ResolverInputTypes["UpdateArticleInputInput"] | undefined | null},ResolverInputTypes["Article"]],
-deleteArticleCategory?: [{	id?: string | undefined | null},boolean | `@${string}`],
 updateArticleCategory?: [{	input?: ResolverInputTypes["UpdateArticleCategoryInputInput"] | undefined | null},ResolverInputTypes["ArticleCategory"]],
 createArticleCategory?: [{	input?: ResolverInputTypes["CreateArticleCategoryInputInput"] | undefined | null},ResolverInputTypes["ArticleCategory"]],
 updateRole?: [{	input: ResolverInputTypes["RoleUpdateInputInput"]},ResolverInputTypes["Role"]],
-createArticle?: [{	input?: ResolverInputTypes["CreateArticleInputInput"] | undefined | null},ResolverInputTypes["Article"]],
-publishArticle?: [{	id?: string | undefined | null},boolean | `@${string}`],
 revoke?: [{	id?: string | undefined | null},boolean | `@${string}`],
-updateUser?: [{	input: ResolverInputTypes["UserUpdateInputInput"]},ResolverInputTypes["User"]],
 createRole?: [{	input: ResolverInputTypes["RoleCreateInputInput"]},ResolverInputTypes["Role"]],
-deleteRole?: [{	roleId?: string | undefined | null},boolean | `@${string}`],
-deleteArticle?: [{	id?: string | undefined | null},boolean | `@${string}`],
+updateOrg?: [{	input?: ResolverInputTypes["UpdateOrgInputInput"] | undefined | null},ResolverInputTypes["Org"]],
 updateMenu?: [{	input: ResolverInputTypes["MenuUpdateInputInput"]},ResolverInputTypes["Menu"]],
 	logout?:boolean | `@${string}`,
+createMenu?: [{	input: ResolverInputTypes["MenuCreateInputInput"]},ResolverInputTypes["Menu"]],
+createOrg?: [{	input?: ResolverInputTypes["CreateOrgInputInput"] | undefined | null},ResolverInputTypes["Org"]],
+deleteArticleCategory?: [{	id?: string | undefined | null},boolean | `@${string}`],
+createArticle?: [{	input?: ResolverInputTypes["CreateArticleInputInput"] | undefined | null},ResolverInputTypes["Article"]],
+deleteOrg?: [{	id?: string | undefined | null},boolean | `@${string}`],
+publishArticle?: [{	id?: string | undefined | null},boolean | `@${string}`],
+updateUser?: [{	input: ResolverInputTypes["UserUpdateInputInput"]},ResolverInputTypes["User"]],
+deleteRole?: [{	roleId?: string | undefined | null},boolean | `@${string}`],
+deleteArticle?: [{	id?: string | undefined | null},boolean | `@${string}`],
 updateUserProfile?: [{	input?: ResolverInputTypes["UpdateUserProfileInputInput"] | undefined | null},boolean | `@${string}`],
 registerUser?: [{	input?: ResolverInputTypes["UserRegisterInputInput"] | undefined | null},boolean | `@${string}`],
 loginByAccount?: [{	input?: ResolverInputTypes["LoginInputInput"] | undefined | null},boolean | `@${string}`],
@@ -1594,6 +1684,28 @@ deleteFileById?: [{	id?: string | undefined | null},boolean | `@${string}`],
 	property?:boolean | `@${string}`,
 		__typename?: boolean | `@${string}`
 }>;
+	["Org"]: AliasType<{
+	address?:boolean | `@${string}`,
+	/** 创建时间 */
+	createdAt?:boolean | `@${string}`,
+	/** 创建人 */
+	createdBy?:boolean | `@${string}`,
+	/** id */
+	id?:boolean | `@${string}`,
+	latitude?:boolean | `@${string}`,
+	lead?:ResolverInputTypes["User"],
+	leadId?:boolean | `@${string}`,
+	longitude?:boolean | `@${string}`,
+	name?:boolean | `@${string}`,
+	openTime?:boolean | `@${string}`,
+	orgType?:boolean | `@${string}`,
+	/** 更新时间 */
+	updatedAt?:boolean | `@${string}`,
+	/** 更新人 */
+	updatedBy?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
+	["OrgTypeEnum"]:OrgTypeEnum;
 	["Page_Article"]: AliasType<{
 	content?:ResolverInputTypes["Article"],
 	first?:boolean | `@${string}`,
@@ -1616,6 +1728,26 @@ deleteFileById?: [{	id?: string | undefined | null},boolean | `@${string}`],
 }>;
 	["Page_File"]: AliasType<{
 	content?:ResolverInputTypes["File"],
+	first?:boolean | `@${string}`,
+	hasContent?:boolean | `@${string}`,
+	hasNext?:boolean | `@${string}`,
+	hasPrevious?:boolean | `@${string}`,
+	last?:boolean | `@${string}`,
+	nextOrLastPageable?:ResolverInputTypes["Pagination"],
+	nextPageable?:ResolverInputTypes["Pagination"],
+	number?:boolean | `@${string}`,
+	numberOfElements?:boolean | `@${string}`,
+	pageable?:ResolverInputTypes["Pagination"],
+	previousOrFirstPageable?:ResolverInputTypes["Pagination"],
+	previousPageable?:ResolverInputTypes["Pagination"],
+	size?:boolean | `@${string}`,
+	sort?:ResolverInputTypes["Sorting"],
+	totalElements?:boolean | `@${string}`,
+	totalPages?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
+	["Page_Org"]: AliasType<{
+	content?:ResolverInputTypes["Org"],
 	first?:boolean | `@${string}`,
 	hasContent?:boolean | `@${string}`,
 	hasNext?:boolean | `@${string}`,
@@ -1695,6 +1827,7 @@ queryRole?: [{	roleId?: string | undefined | null},ResolverInputTypes["Role"]],
 	queryAllRoleList?:ResolverInputTypes["Role"],
 	queryAllUserList?:ResolverInputTypes["User"],
 queryArticlePage?: [{	specification?: ResolverInputTypes["QueryArticlePageSpecificationInput"] | undefined | null},ResolverInputTypes["Page_Article"]],
+queryOrgPage?: [{	specification?: ResolverInputTypes["QueryOrgPageSpecificationInput"] | undefined | null},ResolverInputTypes["Page_Org"]],
 queryFilePage?: [{	param?: ResolverInputTypes["FileQueryPageParamInput"] | undefined | null},ResolverInputTypes["Page_File"]],
 queryArticleCategory?: [{	specification?: ResolverInputTypes["QueryArticleCategorySpecificationInput"] | undefined | null},ResolverInputTypes["ArticleCategory"]],
 queryUser?: [{	userId?: string | undefined | null},ResolverInputTypes["User"]],
@@ -1711,6 +1844,16 @@ queryUser?: [{	userId?: string | undefined | null},ResolverInputTypes["User"]],
 	pageSize: number,
 	sort?: string | undefined | null,
 	title?: string | undefined | null
+};
+	["QueryOrgPageSpecificationInput"]: {
+	address?: string | undefined | null,
+	lat?: number | undefined | null,
+	lng?: number | undefined | null,
+	name?: string | undefined | null,
+	orgType?: ResolverInputTypes["OrgTypeEnum"] | undefined | null,
+	pageNo: number,
+	pageSize: number,
+	sort?: string | undefined | null
 };
 	["Role"]: AliasType<{
 	/** 创建时间 */
@@ -1778,6 +1921,17 @@ queryUser?: [{	userId?: string | undefined | null},ResolverInputTypes["User"]],
 	metaDescription?: string | undefined | null,
 	metaTitle?: string | undefined | null,
 	title?: string | undefined | null
+};
+	["UpdateOrgInputInput"]: {
+	address?: string | undefined | null,
+	/** id */
+	id?: string | undefined | null,
+	latitude: number,
+	leadId?: string | undefined | null,
+	longitude: number,
+	name?: string | undefined | null,
+	openTime?: string | undefined | null,
+	orgType?: ResolverInputTypes["OrgTypeEnum"] | undefined | null
 };
 	["UpdateUserProfileInputInput"]: {
 	avatar?: string | undefined | null,
@@ -1917,7 +2071,7 @@ export type ModelTypes = {
 	updatedBy?: string | undefined
 };
 	["ArticleStatusEnum"]:ArticleStatusEnum;
-	["BaseEntity"]: ModelTypes["Article"] | ModelTypes["ArticleCategory"] | ModelTypes["File"] | ModelTypes["Menu"] | ModelTypes["Role"] | ModelTypes["User"];
+	["BaseEntity"]: ModelTypes["Article"] | ModelTypes["ArticleCategory"] | ModelTypes["File"] | ModelTypes["Menu"] | ModelTypes["Org"] | ModelTypes["Role"] | ModelTypes["User"];
 	["CreateArticleCategoryInputInput"]: {
 	icon?: string | undefined,
 	name?: string | undefined,
@@ -1932,6 +2086,15 @@ export type ModelTypes = {
 	metaDescription?: string | undefined,
 	metaTitle?: string | undefined,
 	title?: string | undefined
+};
+	["CreateOrgInputInput"]: {
+	address?: string | undefined,
+	latitude: number,
+	leadId?: string | undefined,
+	longitude: number,
+	name?: string | undefined,
+	openTime?: string | undefined,
+	orgType?: ModelTypes["OrgTypeEnum"] | undefined
 };
 	["Direction"]:Direction;
 	["File"]: {
@@ -2056,21 +2219,24 @@ export type ModelTypes = {
 ["Mutation"]: {
 		deleteMenu: boolean,
 	unpublishArticle?: boolean | undefined,
-	createMenu?: ModelTypes["Menu"] | undefined,
 	updateArticle?: ModelTypes["Article"] | undefined,
-	deleteArticleCategory?: boolean | undefined,
 	updateArticleCategory?: ModelTypes["ArticleCategory"] | undefined,
 	createArticleCategory?: ModelTypes["ArticleCategory"] | undefined,
 	updateRole?: ModelTypes["Role"] | undefined,
-	createArticle?: ModelTypes["Article"] | undefined,
-	publishArticle?: boolean | undefined,
 	revoke: boolean,
-	updateUser?: ModelTypes["User"] | undefined,
 	createRole?: ModelTypes["Role"] | undefined,
-	deleteRole: boolean,
-	deleteArticle?: boolean | undefined,
+	updateOrg?: ModelTypes["Org"] | undefined,
 	updateMenu?: ModelTypes["Menu"] | undefined,
 	logout: boolean,
+	createMenu?: ModelTypes["Menu"] | undefined,
+	createOrg?: ModelTypes["Org"] | undefined,
+	deleteArticleCategory?: boolean | undefined,
+	createArticle?: ModelTypes["Article"] | undefined,
+	deleteOrg?: boolean | undefined,
+	publishArticle?: boolean | undefined,
+	updateUser?: ModelTypes["User"] | undefined,
+	deleteRole: boolean,
+	deleteArticle?: boolean | undefined,
 	updateUserProfile?: boolean | undefined,
 	registerUser?: boolean | undefined,
 	loginByAccount?: string | undefined,
@@ -2085,6 +2251,27 @@ export type ModelTypes = {
 	nullHandlingHint?: ModelTypes["NullHandling"] | undefined,
 	property: string
 };
+	["Org"]: {
+		address?: string | undefined,
+	/** 创建时间 */
+	createdAt?: ModelTypes["LocalDateTime"] | undefined,
+	/** 创建人 */
+	createdBy?: string | undefined,
+	/** id */
+	id?: string | undefined,
+	latitude: number,
+	lead?: ModelTypes["User"] | undefined,
+	leadId?: string | undefined,
+	longitude: number,
+	name?: string | undefined,
+	openTime?: string | undefined,
+	orgType?: ModelTypes["OrgTypeEnum"] | undefined,
+	/** 更新时间 */
+	updatedAt?: ModelTypes["LocalDateTime"] | undefined,
+	/** 更新人 */
+	updatedBy?: string | undefined
+};
+	["OrgTypeEnum"]:OrgTypeEnum;
 	["Page_Article"]: {
 		content?: Array<ModelTypes["Article"] | undefined> | undefined,
 	first: boolean,
@@ -2106,6 +2293,25 @@ export type ModelTypes = {
 };
 	["Page_File"]: {
 		content?: Array<ModelTypes["File"] | undefined> | undefined,
+	first: boolean,
+	hasContent: boolean,
+	hasNext: boolean,
+	hasPrevious: boolean,
+	last: boolean,
+	nextOrLastPageable?: ModelTypes["Pagination"] | undefined,
+	nextPageable?: ModelTypes["Pagination"] | undefined,
+	number: number,
+	numberOfElements: number,
+	pageable?: ModelTypes["Pagination"] | undefined,
+	previousOrFirstPageable?: ModelTypes["Pagination"] | undefined,
+	previousPageable?: ModelTypes["Pagination"] | undefined,
+	size: number,
+	sort?: ModelTypes["Sorting"] | undefined,
+	totalElements: ModelTypes["Long"],
+	totalPages: number
+};
+	["Page_Org"]: {
+		content?: Array<ModelTypes["Org"] | undefined> | undefined,
 	first: boolean,
 	hasContent: boolean,
 	hasNext: boolean,
@@ -2181,6 +2387,7 @@ export type ModelTypes = {
 	queryAllRoleList?: Array<ModelTypes["Role"] | undefined> | undefined,
 	queryAllUserList?: Array<ModelTypes["User"] | undefined> | undefined,
 	queryArticlePage?: ModelTypes["Page_Article"] | undefined,
+	queryOrgPage?: ModelTypes["Page_Org"] | undefined,
 	queryFilePage?: ModelTypes["Page_File"] | undefined,
 	queryArticleCategory?: Array<ModelTypes["ArticleCategory"] | undefined> | undefined,
 	queryUser?: ModelTypes["User"] | undefined
@@ -2196,6 +2403,16 @@ export type ModelTypes = {
 	pageSize: number,
 	sort?: string | undefined,
 	title?: string | undefined
+};
+	["QueryOrgPageSpecificationInput"]: {
+	address?: string | undefined,
+	lat?: number | undefined,
+	lng?: number | undefined,
+	name?: string | undefined,
+	orgType?: ModelTypes["OrgTypeEnum"] | undefined,
+	pageNo: number,
+	pageSize: number,
+	sort?: string | undefined
 };
 	["Role"]: {
 		/** 创建时间 */
@@ -2260,6 +2477,17 @@ export type ModelTypes = {
 	metaDescription?: string | undefined,
 	metaTitle?: string | undefined,
 	title?: string | undefined
+};
+	["UpdateOrgInputInput"]: {
+	address?: string | undefined,
+	/** id */
+	id?: string | undefined,
+	latitude: number,
+	leadId?: string | undefined,
+	longitude: number,
+	name?: string | undefined,
+	openTime?: string | undefined,
+	orgType?: ModelTypes["OrgTypeEnum"] | undefined
 };
 	["UpdateUserProfileInputInput"]: {
 	avatar?: string | undefined,
@@ -2399,7 +2627,7 @@ export type GraphQLTypes = {
 };
 	["ArticleStatusEnum"]: ArticleStatusEnum;
 	["BaseEntity"]: {
-	__typename:"Article" | "ArticleCategory" | "File" | "Menu" | "Role" | "User",
+	__typename:"Article" | "ArticleCategory" | "File" | "Menu" | "Org" | "Role" | "User",
 	/** 创建时间 */
 	createdAt?: GraphQLTypes["LocalDateTime"] | undefined,
 	/** 创建人 */
@@ -2414,6 +2642,7 @@ export type GraphQLTypes = {
 	['...on ArticleCategory']: '__union' & GraphQLTypes["ArticleCategory"];
 	['...on File']: '__union' & GraphQLTypes["File"];
 	['...on Menu']: '__union' & GraphQLTypes["Menu"];
+	['...on Org']: '__union' & GraphQLTypes["Org"];
 	['...on Role']: '__union' & GraphQLTypes["Role"];
 	['...on User']: '__union' & GraphQLTypes["User"];
 };
@@ -2431,6 +2660,15 @@ export type GraphQLTypes = {
 	metaDescription?: string | undefined,
 	metaTitle?: string | undefined,
 	title?: string | undefined
+};
+	["CreateOrgInputInput"]: {
+		address?: string | undefined,
+	latitude: number,
+	leadId?: string | undefined,
+	longitude: number,
+	name?: string | undefined,
+	openTime?: string | undefined,
+	orgType?: GraphQLTypes["OrgTypeEnum"] | undefined
 };
 	["Direction"]: Direction;
 	["File"]: {
@@ -2559,21 +2797,24 @@ export type GraphQLTypes = {
 	__typename: "Mutation",
 	deleteMenu: boolean,
 	unpublishArticle?: boolean | undefined,
-	createMenu?: GraphQLTypes["Menu"] | undefined,
 	updateArticle?: GraphQLTypes["Article"] | undefined,
-	deleteArticleCategory?: boolean | undefined,
 	updateArticleCategory?: GraphQLTypes["ArticleCategory"] | undefined,
 	createArticleCategory?: GraphQLTypes["ArticleCategory"] | undefined,
 	updateRole?: GraphQLTypes["Role"] | undefined,
-	createArticle?: GraphQLTypes["Article"] | undefined,
-	publishArticle?: boolean | undefined,
 	revoke: boolean,
-	updateUser?: GraphQLTypes["User"] | undefined,
 	createRole?: GraphQLTypes["Role"] | undefined,
-	deleteRole: boolean,
-	deleteArticle?: boolean | undefined,
+	updateOrg?: GraphQLTypes["Org"] | undefined,
 	updateMenu?: GraphQLTypes["Menu"] | undefined,
 	logout: boolean,
+	createMenu?: GraphQLTypes["Menu"] | undefined,
+	createOrg?: GraphQLTypes["Org"] | undefined,
+	deleteArticleCategory?: boolean | undefined,
+	createArticle?: GraphQLTypes["Article"] | undefined,
+	deleteOrg?: boolean | undefined,
+	publishArticle?: boolean | undefined,
+	updateUser?: GraphQLTypes["User"] | undefined,
+	deleteRole: boolean,
+	deleteArticle?: boolean | undefined,
 	updateUserProfile?: boolean | undefined,
 	registerUser?: boolean | undefined,
 	loginByAccount?: string | undefined,
@@ -2589,6 +2830,28 @@ export type GraphQLTypes = {
 	nullHandlingHint?: GraphQLTypes["NullHandling"] | undefined,
 	property: string
 };
+	["Org"]: {
+	__typename: "Org",
+	address?: string | undefined,
+	/** 创建时间 */
+	createdAt?: GraphQLTypes["LocalDateTime"] | undefined,
+	/** 创建人 */
+	createdBy?: string | undefined,
+	/** id */
+	id?: string | undefined,
+	latitude: number,
+	lead?: GraphQLTypes["User"] | undefined,
+	leadId?: string | undefined,
+	longitude: number,
+	name?: string | undefined,
+	openTime?: string | undefined,
+	orgType?: GraphQLTypes["OrgTypeEnum"] | undefined,
+	/** 更新时间 */
+	updatedAt?: GraphQLTypes["LocalDateTime"] | undefined,
+	/** 更新人 */
+	updatedBy?: string | undefined
+};
+	["OrgTypeEnum"]: OrgTypeEnum;
 	["Page_Article"]: {
 	__typename: "Page_Article",
 	content?: Array<GraphQLTypes["Article"] | undefined> | undefined,
@@ -2612,6 +2875,26 @@ export type GraphQLTypes = {
 	["Page_File"]: {
 	__typename: "Page_File",
 	content?: Array<GraphQLTypes["File"] | undefined> | undefined,
+	first: boolean,
+	hasContent: boolean,
+	hasNext: boolean,
+	hasPrevious: boolean,
+	last: boolean,
+	nextOrLastPageable?: GraphQLTypes["Pagination"] | undefined,
+	nextPageable?: GraphQLTypes["Pagination"] | undefined,
+	number: number,
+	numberOfElements: number,
+	pageable?: GraphQLTypes["Pagination"] | undefined,
+	previousOrFirstPageable?: GraphQLTypes["Pagination"] | undefined,
+	previousPageable?: GraphQLTypes["Pagination"] | undefined,
+	size: number,
+	sort?: GraphQLTypes["Sorting"] | undefined,
+	totalElements: GraphQLTypes["Long"],
+	totalPages: number
+};
+	["Page_Org"]: {
+	__typename: "Page_Org",
+	content?: Array<GraphQLTypes["Org"] | undefined> | undefined,
 	first: boolean,
 	hasContent: boolean,
 	hasNext: boolean,
@@ -2691,6 +2974,7 @@ export type GraphQLTypes = {
 	queryAllRoleList?: Array<GraphQLTypes["Role"] | undefined> | undefined,
 	queryAllUserList?: Array<GraphQLTypes["User"] | undefined> | undefined,
 	queryArticlePage?: GraphQLTypes["Page_Article"] | undefined,
+	queryOrgPage?: GraphQLTypes["Page_Org"] | undefined,
 	queryFilePage?: GraphQLTypes["Page_File"] | undefined,
 	queryArticleCategory?: Array<GraphQLTypes["ArticleCategory"] | undefined> | undefined,
 	queryUser?: GraphQLTypes["User"] | undefined
@@ -2706,6 +2990,16 @@ export type GraphQLTypes = {
 	pageSize: number,
 	sort?: string | undefined,
 	title?: string | undefined
+};
+	["QueryOrgPageSpecificationInput"]: {
+		address?: string | undefined,
+	lat?: number | undefined,
+	lng?: number | undefined,
+	name?: string | undefined,
+	orgType?: GraphQLTypes["OrgTypeEnum"] | undefined,
+	pageNo: number,
+	pageSize: number,
+	sort?: string | undefined
 };
 	["Role"]: {
 	__typename: "Role",
@@ -2773,6 +3067,17 @@ export type GraphQLTypes = {
 	metaDescription?: string | undefined,
 	metaTitle?: string | undefined,
 	title?: string | undefined
+};
+	["UpdateOrgInputInput"]: {
+		address?: string | undefined,
+	/** id */
+	id?: string | undefined,
+	latitude: number,
+	leadId?: string | undefined,
+	longitude: number,
+	name?: string | undefined,
+	openTime?: string | undefined,
+	orgType?: GraphQLTypes["OrgTypeEnum"] | undefined
 };
 	["UpdateUserProfileInputInput"]: {
 		avatar?: string | undefined,
@@ -2888,11 +3193,16 @@ export const enum NullHandling {
 	NULLS_FIRST = "NULLS_FIRST",
 	NULLS_LAST = "NULLS_LAST"
 }
+export const enum OrgTypeEnum {
+	COMMUNITY = "COMMUNITY",
+	HOSPITAL = "HOSPITAL"
+}
 
 type ZEUS_VARIABLES = {
 	["ArticleStatusEnum"]: ValueTypes["ArticleStatusEnum"];
 	["CreateArticleCategoryInputInput"]: ValueTypes["CreateArticleCategoryInputInput"];
 	["CreateArticleInputInput"]: ValueTypes["CreateArticleInputInput"];
+	["CreateOrgInputInput"]: ValueTypes["CreateOrgInputInput"];
 	["Direction"]: ValueTypes["Direction"];
 	["FileProviderEnum"]: ValueTypes["FileProviderEnum"];
 	["FileQueryPageParamInput"]: ValueTypes["FileQueryPageParamInput"];
@@ -2906,13 +3216,16 @@ type ZEUS_VARIABLES = {
 	["MenuTypeEnum"]: ValueTypes["MenuTypeEnum"];
 	["MenuUpdateInputInput"]: ValueTypes["MenuUpdateInputInput"];
 	["NullHandling"]: ValueTypes["NullHandling"];
+	["OrgTypeEnum"]: ValueTypes["OrgTypeEnum"];
 	["QueryArticleCategorySpecificationInput"]: ValueTypes["QueryArticleCategorySpecificationInput"];
 	["QueryArticlePageSpecificationInput"]: ValueTypes["QueryArticlePageSpecificationInput"];
+	["QueryOrgPageSpecificationInput"]: ValueTypes["QueryOrgPageSpecificationInput"];
 	["RoleCreateInputInput"]: ValueTypes["RoleCreateInputInput"];
 	["RoleQueryParamInput"]: ValueTypes["RoleQueryParamInput"];
 	["RoleUpdateInputInput"]: ValueTypes["RoleUpdateInputInput"];
 	["UpdateArticleCategoryInputInput"]: ValueTypes["UpdateArticleCategoryInputInput"];
 	["UpdateArticleInputInput"]: ValueTypes["UpdateArticleInputInput"];
+	["UpdateOrgInputInput"]: ValueTypes["UpdateOrgInputInput"];
 	["UpdateUserProfileInputInput"]: ValueTypes["UpdateUserProfileInputInput"];
 	["UserCreateInputInput"]: ValueTypes["UserCreateInputInput"];
 	["UserQueryParamInput"]: ValueTypes["UserQueryParamInput"];
