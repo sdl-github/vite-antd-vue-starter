@@ -4,8 +4,8 @@
   "packageManager": "pnpm@8.9.2",
   "scripts": {
     "build": "vite build",
-    "dev": "vite --port 3333 --open",
-    "dev:local": "vite --port 3333 --open --mode test",
+    "dev": "vite --port 3333 --open --host",
+    "dev:local": "vite --port 3333 --open --mode test --host",
     "lint": "eslint .",
     "preview": "vite preview",
     "preview-https": "serve dist",
