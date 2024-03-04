@@ -9,8 +9,7 @@ import { type TableColumnType, message } from 'ant-design-vue'
 import { OrgType, columns, generateSearch } from './data'
 import type { Org, State } from './data'
 import OrgModal from './components/OrgModal.vue'
-import { delArticle, queryArticlePage, unpublishArticle } from '~/api/article'
-import { queryOrgPage } from '~/api/org'
+import { deleteOrg, queryOrgPage } from '~/api/org'
 
 const state: State = reactive({
   loading: false,
@@ -20,7 +19,7 @@ const state: State = reactive({
   search: generateSearch(),
   total: 0,
 })
-const router = useRouter()
+
 const { search } = toRefs(state)
 
 initData()
@@ -79,7 +78,7 @@ function handleOpenEdit(record: Org) {
 async function handleDelete(id: string) {
   const loading = message.loading('加载中', 0)
   try {
-    await delArticle(id)
+    await deleteOrg(id)
     initData()
     loading()
     message.success('成功')
@@ -94,7 +93,7 @@ async function handleDelete(id: string) {
 
 <template>
   <div class="w-full">
-    <OrgModal v-model:open="state.modalVisible" :current-item="state.currentItem" />
+    <OrgModal v-model:open="state.modalVisible" :current-item="state.currentItem" @ok="initData" @cancel="() => state.currentItem = null" />
     <!-- 搜索 -->
     <ACard>
       <div class="flex">

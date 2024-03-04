@@ -14,6 +14,7 @@ export function queryOrgPage(specification: ValueTypes['QueryOrgPageSpecificatio
         longitude: true,
         openTime: true,
         createdAt: true,
+        leadId: true,
         lead: {
           userName: true,
           nickName: true,

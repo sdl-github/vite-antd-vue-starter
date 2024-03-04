@@ -11,6 +11,7 @@ export const AllTypesProps: Record<string,any> = {
 	CreateOrgInputInput:{
 		orgType:"OrgTypeEnum"
 	},
+	DefaultRoleEnum: "enum" as const,
 	Direction: "enum" as const,
 	FileProviderEnum: "enum" as const,
 	FileQueryPageParamInput:{
@@ -45,14 +46,14 @@ export const AllTypesProps: Record<string,any> = {
 		updateArticle:{
 			input:"UpdateArticleInputInput"
 		},
-		updateRole:{
-			input:"RoleUpdateInputInput"
-		},
 		updateArticleCategory:{
 			input:"UpdateArticleCategoryInputInput"
 		},
 		createArticleCategory:{
 			input:"CreateArticleCategoryInputInput"
+		},
+		updateRole:{
+			input:"RoleUpdateInputInput"
 		},
 		createRole:{
 			input:"RoleCreateInputInput"
@@ -66,11 +67,11 @@ export const AllTypesProps: Record<string,any> = {
 		updateMenu:{
 			input:"MenuUpdateInputInput"
 		},
-		createMenu:{
-			input:"MenuCreateInputInput"
-		},
 		createOrg:{
 			input:"CreateOrgInputInput"
+		},
+		createMenu:{
+			input:"MenuCreateInputInput"
 		},
 		deleteArticleCategory:{
 
@@ -96,14 +97,14 @@ export const AllTypesProps: Record<string,any> = {
 		updateUserProfile:{
 			input:"UpdateUserProfileInputInput"
 		},
+		deleteUser:{
+
+		},
 		registerUser:{
 			input:"UserRegisterInputInput"
 		},
 		loginByAccount:{
 			input:"LoginInputInput"
-		},
-		deleteUser:{
-
 		},
 		createUser:{
 			input:"UserCreateInputInput"
@@ -292,16 +293,16 @@ export const ReturnTypes: Record<string,any> = {
 		deleteMenu:"Boolean",
 		unpublishArticle:"Boolean",
 		updateArticle:"Article",
-		updateRole:"Role",
 		updateArticleCategory:"ArticleCategory",
 		createArticleCategory:"ArticleCategory",
+		updateRole:"Role",
 		createRole:"Role",
 		revoke:"Boolean",
 		updateOrg:"Org",
 		updateMenu:"Menu",
 		logout:"Boolean",
-		createMenu:"Menu",
 		createOrg:"Org",
+		createMenu:"Menu",
 		deleteArticleCategory:"Boolean",
 		createArticle:"Article",
 		deleteOrg:"Boolean",
@@ -310,9 +311,9 @@ export const ReturnTypes: Record<string,any> = {
 		deleteRole:"Boolean",
 		deleteArticle:"Boolean",
 		updateUserProfile:"Boolean",
+		deleteUser:"Boolean",
 		registerUser:"Boolean",
 		loginByAccount:"String",
-		deleteUser:"Boolean",
 		createUser:"User",
 		deleteFileById:"Boolean"
 	},
@@ -449,6 +450,7 @@ export const ReturnTypes: Record<string,any> = {
 		queryLoginSessionList:"LoginSessionResult",
 		queryRole:"Role",
 		queryAllRoleList:"Role",
+		queryDefaultRole:"DefaultRoleEnum",
 		queryAllUserList:"User",
 		queryArticlePage:"Page_Article",
 		queryOrgPage:"Page_Org",

@@ -2,10 +2,13 @@
 import { reactive, ref, toRefs, unref, watch } from 'vue'
 import type { FormInstance } from 'ant-design-vue'
 import { message } from 'ant-design-vue'
+import useSWRV from 'swrv'
 import { OrgTypeList, generateFormModel } from '../data'
 import type { CreateOrgInput, FormModel, Org, UpdateOrgInput } from '../data'
 import type { GeoCode } from '~/api/org'
 import { createOrg, queryGeoByAddress, updateOrg } from '~/api/org'
+import { queryUserList } from '~/api/user'
+import { DefaultRoleEnum } from '~/utils/graphql/zeus'
 
 interface Props {
   open: boolean
@@ -17,6 +20,18 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const emits = defineEmits(['update:open', 'ok', 'cancel'])
+
+const { data } = useSWRV('queryUserList/', () => queryUserList(DefaultRoleEnum.ORG_HEAD))
+
+const userListOptions = computed(() => {
+  return data.value?.map((item) => {
+    return {
+      label: item.nickName || item.userName,
+      value: item.id,
+    }
+  })
+})
+
 const searchLoading = ref(false)
 const searchAddressOption = ref<(GeoCode & { label: string;value: string })[]>([])
 const formRef = ref<FormInstance>()
@@ -34,9 +49,12 @@ const state = reactive<{ model: FormModel }>({
 
 const { model } = toRefs(state)
 
-watch(() => props.currentItem, (val) => {
-  if (val?.id)
-    state.model = val as FormModel
+watchEffect(() => {
+  if (!props.open)
+    state.model = generateFormModel()
+
+  if (props.open && props.currentItem && props.currentItem.id)
+    state.model = Object.assign({}, props.currentItem)
 })
 
 function handleOk() {
@@ -126,7 +144,7 @@ function handleChange(val: any, option: GeoCode) {
         </ACol>
         <ACol :span="12">
           <AFormItem label="负责人" name="leadId">
-            <AInput v-model:value="model.leadId" placeholder="负责人" />
+            <ASelect v-model:value="model.leadId" placeholder="请选择" :options="userListOptions" />
           </AFormItem>
         </ACol>
         <ACol :span="24">

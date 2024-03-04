@@ -85,6 +85,7 @@ function handleOk() {
       }
       const updateInput: UserUpdateInput = {
         id,
+        userName,
         nickName,
         gender,
         phone,

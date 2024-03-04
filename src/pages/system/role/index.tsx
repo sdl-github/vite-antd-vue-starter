@@ -15,6 +15,7 @@ import type { Role, RoleUpdateInput, SearchParam } from './data'
 import RoleModal from './components/RoleModal.vue'
 import PermissionSelect from './components/PermissionSelect.vue'
 import { deleteRole, queryRolePage, updateRole } from '@/api/role'
+import { DefaultRoleEnum } from '~/utils/graphql/zeus'
 
 interface State {
   loading: boolean
@@ -99,20 +100,26 @@ export default defineComponent({
         align: 'center',
         customRender: ({ record }) => (
           <span>
-            {!record.default && (
+            {DefaultRoleEnum.SUPER_ADMIN !== record.key && (
               <div>
-                <a onClick={() => {
-                  state.currentItem = record
-                  state.modalVisible = true
-                }}
-                >
-                  编辑
-                </a>
-                <Divider type="vertical"></Divider>
-                <Popconfirm title={`确定要删除${record.name}?`} onConfirm={() => handleDelete(record.id!)}>
-                  <a>删除</a>
-                </Popconfirm>
-                <Divider type="vertical"></Divider>
+                {
+                  !record.default && (
+                    <>
+                      <a onClick={() => {
+                        state.currentItem = record
+                        state.modalVisible = true
+                      }}
+                      >
+                        编辑
+                      </a>
+                      <Divider type="vertical"></Divider>
+                      <Popconfirm title={`确定要删除${record.name}?`} onConfirm={() => handleDelete(record.id!)}>
+                        <a>删除</a>
+                      </Popconfirm>
+                      <Divider type="vertical"></Divider>
+                    </>
+                  )
+                }
                 <a onClick={() => {
                   state.currentItem = record
                   state.permissionVisible = true

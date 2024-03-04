@@ -47,9 +47,12 @@ export function deleteUser(userId: string) {
   })
 }
 
-export function queryAllUserList(): Promise<ModelTypes['User'][]> {
+export function queryUserList(key: string): Promise<ModelTypes['User'][]> {
   return request({
-    url: '/user/queryAllUserList',
+    url: '/user/queryUserList',
     method: 'get',
+    params: {
+      key,
+    },
   })
 }
