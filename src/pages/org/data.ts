@@ -10,7 +10,6 @@ export type FormModel = CreateOrgInput & UpdateOrgInput
 
 export function generateFormModel(): FormModel {
   return {
-    id: '',
     name: '',
     latitude: 0,
     longitude: 0,

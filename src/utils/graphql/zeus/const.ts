@@ -45,20 +45,20 @@ export const AllTypesProps: Record<string,any> = {
 		updateArticle:{
 			input:"UpdateArticleInputInput"
 		},
+		updateRole:{
+			input:"RoleUpdateInputInput"
+		},
 		updateArticleCategory:{
 			input:"UpdateArticleCategoryInputInput"
 		},
 		createArticleCategory:{
 			input:"CreateArticleCategoryInputInput"
 		},
-		updateRole:{
-			input:"RoleUpdateInputInput"
+		createRole:{
+			input:"RoleCreateInputInput"
 		},
 		revoke:{
 
-		},
-		createRole:{
-			input:"RoleCreateInputInput"
 		},
 		updateOrg:{
 			input:"UpdateOrgInputInput"
@@ -292,11 +292,11 @@ export const ReturnTypes: Record<string,any> = {
 		deleteMenu:"Boolean",
 		unpublishArticle:"Boolean",
 		updateArticle:"Article",
+		updateRole:"Role",
 		updateArticleCategory:"ArticleCategory",
 		createArticleCategory:"ArticleCategory",
-		updateRole:"Role",
-		revoke:"Boolean",
 		createRole:"Role",
+		revoke:"Boolean",
 		updateOrg:"Org",
 		updateMenu:"Menu",
 		logout:"Boolean",

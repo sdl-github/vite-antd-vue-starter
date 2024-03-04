@@ -8,6 +8,7 @@ import type { SorterResult } from 'ant-design-vue/es/table/interface'
 import { type TableColumnType, message } from 'ant-design-vue'
 import { OrgType, columns, generateSearch } from './data'
 import type { Org, State } from './data'
+import OrgModal from './components/OrgModal.vue'
 import { delArticle, queryArticlePage, unpublishArticle } from '~/api/article'
 import { queryOrgPage } from '~/api/org'
 
@@ -67,11 +68,12 @@ function handleTableChange(pagination: any, filters: any, sorter: SorterResult) 
 }
 
 function handleOpenCreate() {
-  router.push('/article/edit')
+  state.modalVisible = true
 }
 
 function handleOpenEdit(record: Org) {
-  router.push(`/article/edit?id=${record.id}`)
+  state.modalVisible = true
+  state.currentItem = record
 }
 
 async function handleDelete(id: string) {
@@ -88,25 +90,11 @@ async function handleDelete(id: string) {
     return false
   }
 }
-
-async function handleUnpublish(id: string) {
-  const loading = message.loading('加载中', 0)
-  try {
-    await unpublishArticle(id)
-    loading()
-    initData()
-    message.success('成功')
-    return true
-  }
-  catch (e) {
-    loading()
-    return false
-  }
-}
 </script>
 
 <template>
   <div class="w-full">
+    <OrgModal v-model:open="state.modalVisible" :current-item="state.currentItem" />
     <!-- 搜索 -->
     <ACard>
       <div class="flex">
