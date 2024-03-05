@@ -9,7 +9,7 @@ export const AllTypesProps: Record<string,any> = {
 
 	},
 	CreateDoctorScheduleInputInput:{
-		date:"LocalDateTime"
+		date:"LocalDate"
 	},
 	CreateMenuInputInput:{
 		type:"MenuTypeEnum"
@@ -30,6 +30,7 @@ export const AllTypesProps: Record<string,any> = {
 		provider:"FileProviderEnum"
 	},
 	GenderEnum: "enum" as const,
+	LocalDate: `scalar.LocalDate` as const,
 	LocalDateTime: `scalar.LocalDateTime` as const,
 	Long: `scalar.Long` as const,
 	MenuQueryPageParamInput:{
@@ -58,11 +59,11 @@ export const AllTypesProps: Record<string,any> = {
 		updateRole:{
 			input:"UpdateRoleInputInput"
 		},
-		createRole:{
-			input:"CreateRoleInputInput"
-		},
 		revoke:{
 
+		},
+		createRole:{
+			input:"CreateRoleInputInput"
 		},
 		updateOrg:{
 			input:"UpdateOrgInputInput"
@@ -132,16 +133,16 @@ export const AllTypesProps: Record<string,any> = {
 			param:"MenuQueryParamInput"
 		},
 		queryUserPage:{
-			param:"UserQueryParamInput"
+			specification:"QueryUserPageSpecificationInput"
 		},
 		queryArticle:{
 
 		},
-		queryMenuTree:{
-			param:"MenuQueryPageParamInput"
-		},
 		queryDoctorSchedulePage:{
 			specification:"QueryDoctorSchedulePageSpecificationInput"
+		},
+		queryMenuTree:{
+			param:"MenuQueryPageParamInput"
 		},
 		queryRolePage:{
 			param:"RoleQueryParamInput"
@@ -161,11 +162,11 @@ export const AllTypesProps: Record<string,any> = {
 		queryFilePage:{
 			param:"FileQueryPageParamInput"
 		},
-		queryArticleCategory:{
-			specification:"QueryArticleCategorySpecificationInput"
-		},
 		queryUser:{
 
+		},
+		queryArticleCategory:{
+			specification:"QueryArticleCategorySpecificationInput"
 		}
 	},
 	QueryArticleCategorySpecificationInput:{
@@ -175,10 +176,13 @@ export const AllTypesProps: Record<string,any> = {
 
 	},
 	QueryDoctorSchedulePageSpecificationInput:{
-		date:"LocalDateTime"
+
 	},
 	QueryOrgPageSpecificationInput:{
 		orgType:"OrgTypeEnum"
+	},
+	QueryUserPageSpecificationInput:{
+
 	},
 	QueryUserSpecificationInput:{
 
@@ -210,14 +214,11 @@ export const AllTypesProps: Record<string,any> = {
 	UserLoginInputInput:{
 
 	},
-	UserQueryParamInput:{
-
-	},
 	UserRegisterInputInput:{
 
 	},
 	updateDoctorScheduleInputInput:{
-		date:"LocalDateTime"
+		date:"LocalDate"
 	}
 }
 
@@ -274,10 +275,12 @@ export const ReturnTypes: Record<string,any> = {
 	DoctorSchedule:{
 		createdAt:"LocalDateTime",
 		createdBy:"String",
-		date:"LocalDateTime",
+		date:"LocalDate",
 		doctor:"User",
 		doctorId:"String",
 		id:"String",
+		org:"Org",
+		orgId:"String",
 		shift:"String",
 		updatedAt:"LocalDateTime",
 		updatedBy:"String"
@@ -298,6 +301,7 @@ export const ReturnTypes: Record<string,any> = {
 		updatedBy:"String",
 		url:"String"
 	},
+	LocalDate: `scalar.LocalDate` as const,
 	LocalDateTime: `scalar.LocalDateTime` as const,
 	LoginSessionResult:{
 		createdAt:"LocalDateTime",
@@ -335,8 +339,8 @@ export const ReturnTypes: Record<string,any> = {
 		updateArticleCategory:"ArticleCategory",
 		createArticleCategory:"ArticleCategory",
 		updateRole:"Role",
-		createRole:"Role",
 		revoke:"Boolean",
+		createRole:"Role",
 		updateOrg:"Org",
 		updateMenu:"Menu",
 		logout:"Boolean",
@@ -506,8 +510,8 @@ export const ReturnTypes: Record<string,any> = {
 		queryArticleCategoryTree:"ArticleCategory",
 		queryUserPage:"Page_User",
 		queryArticle:"Article",
-		queryMenuTree:"Menu",
 		queryDoctorSchedulePage:"Page_DoctorSchedule",
+		queryMenuTree:"Menu",
 		queryRolePage:"Page_Role",
 		queryLoginSessionList:"LoginSessionResult",
 		queryRole:"Role",
@@ -517,8 +521,8 @@ export const ReturnTypes: Record<string,any> = {
 		queryArticlePage:"Page_Article",
 		queryOrgPage:"Page_Org",
 		queryFilePage:"Page_File",
-		queryArticleCategory:"ArticleCategory",
-		queryUser:"User"
+		queryUser:"User",
+		queryArticleCategory:"ArticleCategory"
 	},
 	Role:{
 		createdAt:"LocalDateTime",

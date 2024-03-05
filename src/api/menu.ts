@@ -10,7 +10,7 @@ export function queryMenuTree(params?: ModelTypes['MenuQueryPageParamInput']): P
   })
 }
 
-export function createMenu(input: ModelTypes['MenuCreateInputInput']) {
+export function createMenu(input: ModelTypes['CreateMenuInputInput']) {
   return mutation({
     createMenu: [
       { input },
@@ -19,7 +19,7 @@ export function createMenu(input: ModelTypes['MenuCreateInputInput']) {
   })
 }
 
-export function updateMenu(input: ModelTypes['MenuUpdateInputInput']) {
+export function updateMenu(input: ModelTypes['UpdateMenuInputInput']) {
   return mutation({
     updateMenu: [
       { input },

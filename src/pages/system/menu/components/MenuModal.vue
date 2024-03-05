@@ -85,12 +85,12 @@ function handleOk() {
       const api = data.id ? updateMenu : createMenu
       const input = (data.id ? updateInput : createInput) as ModelType
       confirmLoading.value = true
-      api(input).then((res) => {
+      api(input).then(() => {
         confirmLoading.value = false
         message.success('操作成功')
         emits('ok')
         handleCancel()
-      }).catch((e) => {
+      }).catch(() => {
         confirmLoading.value = false
       })
     }

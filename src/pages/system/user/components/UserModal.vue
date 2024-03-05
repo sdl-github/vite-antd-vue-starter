@@ -2,10 +2,13 @@
 import { reactive, ref, toRefs, unref, watch } from 'vue'
 import type { FormInstance } from 'ant-design-vue'
 import { message } from 'ant-design-vue'
+import useSWRV from 'swrv'
 import type { User, UserCreateInput, UserUpdateInput } from '../data'
 import { GenderEnum } from '@/utils/graphql/zeus'
 import UserRoleItem from '@/pages/system/user/components/UserRoleSelect.vue'
 import { createUser, updateUser } from '@/api/user'
+import { queryOrgPage } from '~/api/org'
+import { queryRolePage } from '~/api/role'
 
 type ModelType = (UserCreateInput & UserUpdateInput)
 
@@ -17,7 +20,6 @@ const props = withDefaults(defineProps<Props>(), {
   modelVisible: false,
   currentItem: null,
 })
-
 const emits = defineEmits(['update:open', 'ok', 'cancel'])
 
 function generateModel(): ModelType {
@@ -31,6 +33,7 @@ function generateModel(): ModelType {
     gender: GenderEnum.UNKNOWN,
     roleIds: [],
     note: '',
+    orgId: '',
   }
 }
 
@@ -56,11 +59,40 @@ const state = reactive({
 
 const { model } = toRefs(state)
 
+const { data: roleRes } = useSWRV(`queryRolePage`, () => queryRolePage({
+  pageNo: 1,
+  pageSize: 999,
+  sort: '',
+}))
+
+const { data: orgRes } = useSWRV(`queryOrgPage`, () => queryOrgPage({
+  pageNo: 1,
+  pageSize: 999,
+  sort: '',
+}))
+
+const orgOptions = computed(() => {
+  return orgRes.value?.queryOrgPage?.content?.map((item) => {
+    return {
+      label: item.name,
+      value: item.id,
+    }
+  })
+})
+const roleOptions = computed(() => {
+  return roleRes.value?.queryRolePage?.content?.map((item) => {
+    return {
+      label: item.name,
+      value: item.id,
+    }
+  })
+})
+
 watch(() => props.currentItem, (val) => {
   if (val?.id) {
-    const { id, roles, userName = '', gender, nickName, phone, email } = val
+    const { id, roles, userName = '', gender, nickName, phone, email, orgId } = val
     const roleIds = roles?.map(role => role?.id)
-    state.model = { id, userName, nickName, gender, phone, email, roleIds }
+    state.model = { id, userName, nickName, gender, phone, email, roleIds, orgId }
   }
 })
 
@@ -72,7 +104,7 @@ function handleOk() {
   formRef.value?.validate().then(async (v) => {
     if (v) {
       const data = Object.assign({}, unref(model))
-      const { id, userName, gender, nickName, password, phone, email, roleIds, note } = data
+      const { id, userName, gender, nickName, password, phone, email, roleIds, note, orgId } = data
       const createInput: UserCreateInput = {
         userName,
         nickName,
@@ -82,6 +114,7 @@ function handleOk() {
         email,
         roleIds,
         note,
+        orgId,
       }
       const updateInput: UserUpdateInput = {
         id,
@@ -92,6 +125,7 @@ function handleOk() {
         email,
         roleIds,
         note,
+        orgId,
       }
       const api = data.id ? updateUser : createUser
       const input = (data.id ? updateInput : createInput) as ModelType
@@ -182,7 +216,12 @@ function handleCancel() {
         </ACol>
         <ACol :span="12">
           <AFormItem label="角色" name="roleIds">
-            <UserRoleItem v-model:value="model.roleIds" />
+            <UserRoleItem v-model:value="model.roleIds" :options="roleOptions" />
+          </AFormItem>
+        </ACol>
+        <ACol :span="12">
+          <AFormItem label="机构" name="orgId">
+            <ASelect v-model:value="model.orgId" placeholder="请选择" :options="orgOptions" />
           </AFormItem>
         </ACol>
         <ACol :span="12">

@@ -7,8 +7,8 @@ export type Menu = ModelTypes['Menu']
 
 export type MenuType = ModelTypes['MenuTypeEnum']
 
-export type MenuCreateInput = ModelTypes['MenuCreateInputInput']
-export type MenuUpdateInput = ModelTypes['MenuUpdateInputInput']
+export type MenuCreateInput = ModelTypes['CreateMenuInputInput']
+export type MenuUpdateInput = ModelTypes['UpdateMenuInputInput']
 
 export const columns: TableColumnType<Menu>[] = [
   {

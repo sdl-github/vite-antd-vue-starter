@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { reactive, ref, toRefs, unref, watch } from 'vue'
+import { reactive, ref, toRefs, unref } from 'vue'
 import type { FormInstance } from 'ant-design-vue'
 import { message } from 'ant-design-vue'
 import useSWRV from 'swrv'
 import { OrgTypeList, generateFormModel } from '../data'
-import type { CreateOrgInput, FormModel, Org, UpdateOrgInput } from '../data'
+import type { FormModel, Org } from '../data'
 import type { GeoCode } from '~/api/org'
 import { createOrg, queryGeoByAddress, updateOrg } from '~/api/org'
 import { queryUserList } from '~/api/user'

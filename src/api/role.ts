@@ -34,15 +34,16 @@ export function queryRolePage(param: ModelTypes['RoleQueryParamInput']) {
   })
 }
 
-export function createRole(input: ModelTypes['RoleCreateInputInput']) {
+export function createRole(input: ModelTypes['CreateRoleInputInput']) {
   return mutation({
     createRole: [
-      { input }, { id: true },
+      { input },
+      { id: true },
     ],
   })
 }
 
-export function updateRole(input: ModelTypes['RoleUpdateInputInput']) {
+export function updateRole(input: ModelTypes['UpdateRoleInputInput']) {
   return mutation({
     updateRole: [{ input }, { id: true }],
   })

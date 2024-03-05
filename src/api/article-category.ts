@@ -1,4 +1,3 @@
-import { mutation, query } from '@/utils/graphql'
 import type { ModelTypes } from '@/utils/graphql/zeus'
 
 export function queryArticleCategoryTree(): Promise<ModelTypes['ArticleCategory'][]> {

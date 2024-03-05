@@ -8,12 +8,13 @@ import type { TableColumnType } from 'ant-design-vue'
 import { Table, message } from 'ant-design-vue'
 import type { SorterResult } from 'ant-design-vue/es/table/interface'
 import { onMounted, reactive, toRefs } from 'vue'
+import useSWRV from 'swrv'
 import type { SearchParam, User } from './data'
 import { GenderEnum, columns } from './data'
 import UserModal from './components/UserModal.vue'
-
 import { deleteUser, queryUserPage } from '~/api/user'
 import { DEFAULT_PAGE_NO, DEFAULT_PAGE_SIZE } from '@/constants'
+import { queryRolePage } from '~/api/role'
 
 interface State {
   loading: boolean
@@ -31,7 +32,19 @@ const state: State = reactive({
   search: generateSearch(),
   total: 0,
 })
-
+const { data: roleRes } = useSWRV(`queryRolePage`, () => queryRolePage({
+  pageNo: 1,
+  pageSize: 999,
+  sort: '',
+}))
+const roleOptions = computed(() => {
+  return roleRes.value?.queryRolePage?.content?.map((item) => {
+    return {
+      label: item.name,
+      value: item.id,
+    }
+  })
+})
 const { search } = toRefs(state)
 
 onMounted(() => {
@@ -132,6 +145,7 @@ function handleTableChange(pagination: any, filters: any, sorter: SorterResult) 
     <ACard>
       <div class="flex">
         <AInput v-model:value="search.userName" placeholder="用户名" class="w-200px" />
+        <ASelect v-model:value="search.roleIds" mode="tags" class="ml-2 w-200px" :options="roleOptions" placeholder="角色" />
         <AInput v-model:value="search.nickName" placeholder="姓名" class="ml-4 w-200px" />
         <AInput v-model:value="search.phone" placeholder="手机" class="ml-4 w-200px" />
         <AInput v-model:value="search.email" placeholder="邮箱" class="ml-4 w-200px" />
@@ -254,4 +268,5 @@ function handleTableChange(pagination: any, filters: any, sorter: SorterResult) 
     padding: 0 20px;
   }
 }
-</style>
+</style>import useSWRV from 'swrv'
+import { queryRolePage } from '~/api/role'

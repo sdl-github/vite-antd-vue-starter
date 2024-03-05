@@ -839,6 +839,7 @@ export const $ = <Type extends GraphQLVariableType, Name extends string>(name: N
 };
 type ZEUS_INTERFACES = GraphQLTypes["BaseEntity"]
 export type ScalarCoders = {
+	LocalDate?: ScalarResolver;
 	LocalDateTime?: ScalarResolver;
 	Long?: ScalarResolver;
 }
@@ -929,8 +930,9 @@ export type ValueTypes = {
 	title?: string | undefined | null | Variable<any, string>
 };
 	["CreateDoctorScheduleInputInput"]: {
-	date?: ValueTypes["LocalDateTime"] | undefined | null | Variable<any, string>,
+	date?: ValueTypes["LocalDate"] | undefined | null | Variable<any, string>,
 	doctorId?: string | undefined | null | Variable<any, string>,
+	orgId?: string | undefined | null | Variable<any, string>,
 	shift?: string | undefined | null | Variable<any, string>
 };
 	["CreateMenuInputInput"]: {
@@ -967,6 +969,7 @@ export type ValueTypes = {
 	job?: string | undefined | null | Variable<any, string>,
 	nickName?: string | undefined | null | Variable<any, string>,
 	note?: string | undefined | null | Variable<any, string>,
+	orgId?: string | undefined | null | Variable<any, string>,
 	password?: string | undefined | null | Variable<any, string>,
 	phone?: string | undefined | null | Variable<any, string>,
 	roleIds?: Array<string | undefined | null> | undefined | null | Variable<any, string>,
@@ -984,6 +987,8 @@ export type ValueTypes = {
 	doctorId?:boolean | `@${string}`,
 	/** id */
 	id?:boolean | `@${string}`,
+	org?:ValueTypes["Org"],
+	orgId?:boolean | `@${string}`,
 	shift?:boolean | `@${string}`,
 	/** 更新时间 */
 	updatedAt?:boolean | `@${string}`,
@@ -1025,6 +1030,8 @@ export type ValueTypes = {
 	sort?: string | undefined | null | Variable<any, string>
 };
 	["GenderEnum"]:GenderEnum;
+	/** Built-in scalar representing a local date */
+["LocalDate"]:unknown;
 	/** Built-in scalar representing a local date-time */
 ["LocalDateTime"]:unknown;
 	["LoginSessionResult"]: AliasType<{
@@ -1089,8 +1096,8 @@ updateArticle?: [{	input?: ValueTypes["UpdateArticleInputInput"] | undefined | n
 updateArticleCategory?: [{	input?: ValueTypes["UpdateArticleCategoryInputInput"] | undefined | null | Variable<any, string>},ValueTypes["ArticleCategory"]],
 createArticleCategory?: [{	input?: ValueTypes["CreateArticleCategoryInputInput"] | undefined | null | Variable<any, string>},ValueTypes["ArticleCategory"]],
 updateRole?: [{	input: ValueTypes["UpdateRoleInputInput"] | Variable<any, string>},ValueTypes["Role"]],
-createRole?: [{	input: ValueTypes["CreateRoleInputInput"] | Variable<any, string>},ValueTypes["Role"]],
 revoke?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
+createRole?: [{	input: ValueTypes["CreateRoleInputInput"] | Variable<any, string>},ValueTypes["Role"]],
 updateOrg?: [{	input?: ValueTypes["UpdateOrgInputInput"] | undefined | null | Variable<any, string>},ValueTypes["Org"]],
 updateMenu?: [{	input: ValueTypes["UpdateMenuInputInput"] | Variable<any, string>},ValueTypes["Menu"]],
 	logout?:boolean | `@${string}`,
@@ -1276,10 +1283,10 @@ deleteFileById?: [{	id?: string | undefined | null | Variable<any, string>},bool
 	userInfo?:ValueTypes["UserInfoResult"],
 queryMenuList?: [{	param?: ValueTypes["MenuQueryParamInput"] | undefined | null | Variable<any, string>},ValueTypes["Menu"]],
 	queryArticleCategoryTree?:ValueTypes["ArticleCategory"],
-queryUserPage?: [{	param: ValueTypes["UserQueryParamInput"] | Variable<any, string>},ValueTypes["Page_User"]],
+queryUserPage?: [{	specification: ValueTypes["QueryUserPageSpecificationInput"] | Variable<any, string>},ValueTypes["Page_User"]],
 queryArticle?: [{	id?: string | undefined | null | Variable<any, string>},ValueTypes["Article"]],
-queryMenuTree?: [{	param?: ValueTypes["MenuQueryPageParamInput"] | undefined | null | Variable<any, string>},ValueTypes["Menu"]],
 queryDoctorSchedulePage?: [{	specification?: ValueTypes["QueryDoctorSchedulePageSpecificationInput"] | undefined | null | Variable<any, string>},ValueTypes["Page_DoctorSchedule"]],
+queryMenuTree?: [{	param?: ValueTypes["MenuQueryPageParamInput"] | undefined | null | Variable<any, string>},ValueTypes["Menu"]],
 queryRolePage?: [{	param?: ValueTypes["RoleQueryParamInput"] | undefined | null | Variable<any, string>},ValueTypes["Page_Role"]],
 	queryLoginSessionList?:ValueTypes["LoginSessionResult"],
 queryRole?: [{	roleId?: string | undefined | null | Variable<any, string>},ValueTypes["Role"]],
@@ -1289,8 +1296,8 @@ queryUserList?: [{	specification?: ValueTypes["QueryUserSpecificationInput"] | u
 queryArticlePage?: [{	specification?: ValueTypes["QueryArticlePageSpecificationInput"] | undefined | null | Variable<any, string>},ValueTypes["Page_Article"]],
 queryOrgPage?: [{	specification?: ValueTypes["QueryOrgPageSpecificationInput"] | undefined | null | Variable<any, string>},ValueTypes["Page_Org"]],
 queryFilePage?: [{	param?: ValueTypes["FileQueryPageParamInput"] | undefined | null | Variable<any, string>},ValueTypes["Page_File"]],
-queryArticleCategory?: [{	specification?: ValueTypes["QueryArticleCategorySpecificationInput"] | undefined | null | Variable<any, string>},ValueTypes["ArticleCategory"]],
 queryUser?: [{	userId?: string | undefined | null | Variable<any, string>},ValueTypes["User"]],
+queryArticleCategory?: [{	specification?: ValueTypes["QueryArticleCategorySpecificationInput"] | undefined | null | Variable<any, string>},ValueTypes["ArticleCategory"]],
 		__typename?: boolean | `@${string}`
 }>;
 	["QueryArticleCategorySpecificationInput"]: {
@@ -1306,7 +1313,9 @@ queryUser?: [{	userId?: string | undefined | null | Variable<any, string>},Value
 	title?: string | undefined | null | Variable<any, string>
 };
 	["QueryDoctorSchedulePageSpecificationInput"]: {
-	date?: ValueTypes["LocalDateTime"] | undefined | null | Variable<any, string>,
+	day?: string | undefined | null | Variable<any, string>,
+	doctorName?: string | undefined | null | Variable<any, string>,
+	orgName?: string | undefined | null | Variable<any, string>,
 	pageNo: number | Variable<any, string>,
 	pageSize: number | Variable<any, string>,
 	shift?: string | undefined | null | Variable<any, string>,
@@ -1321,6 +1330,17 @@ queryUser?: [{	userId?: string | undefined | null | Variable<any, string>},Value
 	pageNo: number | Variable<any, string>,
 	pageSize: number | Variable<any, string>,
 	sort?: string | undefined | null | Variable<any, string>
+};
+	["QueryUserPageSpecificationInput"]: {
+	email?: string | undefined | null | Variable<any, string>,
+	nickName?: string | undefined | null | Variable<any, string>,
+	orgId?: string | undefined | null | Variable<any, string>,
+	pageNo: number | Variable<any, string>,
+	pageSize: number | Variable<any, string>,
+	phone?: string | undefined | null | Variable<any, string>,
+	roleIds?: Array<string | undefined | null> | undefined | null | Variable<any, string>,
+	sort?: string | undefined | null | Variable<any, string>,
+	userName?: string | undefined | null | Variable<any, string>
 };
 	["QueryUserSpecificationInput"]: {
 	key?: string | undefined | null | Variable<any, string>,
@@ -1424,6 +1444,7 @@ queryUser?: [{	userId?: string | undefined | null | Variable<any, string>},Value
 	job?: string | undefined | null | Variable<any, string>,
 	nickName?: string | undefined | null | Variable<any, string>,
 	note?: string | undefined | null | Variable<any, string>,
+	orgId?: string | undefined | null | Variable<any, string>,
 	password?: string | undefined | null | Variable<any, string>,
 	phone?: string | undefined | null | Variable<any, string>,
 	roleIds?: Array<string | undefined | null> | undefined | null | Variable<any, string>,
@@ -1480,18 +1501,6 @@ queryUser?: [{	userId?: string | undefined | null | Variable<any, string>},Value
 	/** 密码 */
 	password?: string | undefined | null | Variable<any, string>
 };
-	["UserQueryParamInput"]: {
-	createdAtFrom?: string | undefined | null | Variable<any, string>,
-	createdAtTo?: string | undefined | null | Variable<any, string>,
-	email?: string | undefined | null | Variable<any, string>,
-	nickName?: string | undefined | null | Variable<any, string>,
-	pageNo?: number | undefined | null | Variable<any, string>,
-	pageSize?: number | undefined | null | Variable<any, string>,
-	phone?: string | undefined | null | Variable<any, string>,
-	roleIds?: Array<string | undefined | null> | undefined | null | Variable<any, string>,
-	sort?: string | undefined | null | Variable<any, string>,
-	userName?: string | undefined | null | Variable<any, string>
-};
 	["UserRegisterInputInput"]: {
 	account?: string | undefined | null | Variable<any, string>,
 	email?: string | undefined | null | Variable<any, string>,
@@ -1500,10 +1509,11 @@ queryUser?: [{	userId?: string | undefined | null | Variable<any, string>},Value
 	phone?: string | undefined | null | Variable<any, string>
 };
 	["updateDoctorScheduleInputInput"]: {
-	date?: ValueTypes["LocalDateTime"] | undefined | null | Variable<any, string>,
+	date?: ValueTypes["LocalDate"] | undefined | null | Variable<any, string>,
 	doctorId?: string | undefined | null | Variable<any, string>,
 	/** id */
 	id?: string | undefined | null | Variable<any, string>,
+	orgId?: string | undefined | null | Variable<any, string>,
 	shift?: string | undefined | null | Variable<any, string>
 }
   }
@@ -1593,8 +1603,9 @@ export type ResolverInputTypes = {
 	title?: string | undefined | null
 };
 	["CreateDoctorScheduleInputInput"]: {
-	date?: ResolverInputTypes["LocalDateTime"] | undefined | null,
+	date?: ResolverInputTypes["LocalDate"] | undefined | null,
 	doctorId?: string | undefined | null,
+	orgId?: string | undefined | null,
 	shift?: string | undefined | null
 };
 	["CreateMenuInputInput"]: {
@@ -1631,6 +1642,7 @@ export type ResolverInputTypes = {
 	job?: string | undefined | null,
 	nickName?: string | undefined | null,
 	note?: string | undefined | null,
+	orgId?: string | undefined | null,
 	password?: string | undefined | null,
 	phone?: string | undefined | null,
 	roleIds?: Array<string | undefined | null> | undefined | null,
@@ -1648,6 +1660,8 @@ export type ResolverInputTypes = {
 	doctorId?:boolean | `@${string}`,
 	/** id */
 	id?:boolean | `@${string}`,
+	org?:ResolverInputTypes["Org"],
+	orgId?:boolean | `@${string}`,
 	shift?:boolean | `@${string}`,
 	/** 更新时间 */
 	updatedAt?:boolean | `@${string}`,
@@ -1689,6 +1703,8 @@ export type ResolverInputTypes = {
 	sort?: string | undefined | null
 };
 	["GenderEnum"]:GenderEnum;
+	/** Built-in scalar representing a local date */
+["LocalDate"]:unknown;
 	/** Built-in scalar representing a local date-time */
 ["LocalDateTime"]:unknown;
 	["LoginSessionResult"]: AliasType<{
@@ -1753,8 +1769,8 @@ updateArticle?: [{	input?: ResolverInputTypes["UpdateArticleInputInput"] | undef
 updateArticleCategory?: [{	input?: ResolverInputTypes["UpdateArticleCategoryInputInput"] | undefined | null},ResolverInputTypes["ArticleCategory"]],
 createArticleCategory?: [{	input?: ResolverInputTypes["CreateArticleCategoryInputInput"] | undefined | null},ResolverInputTypes["ArticleCategory"]],
 updateRole?: [{	input: ResolverInputTypes["UpdateRoleInputInput"]},ResolverInputTypes["Role"]],
-createRole?: [{	input: ResolverInputTypes["CreateRoleInputInput"]},ResolverInputTypes["Role"]],
 revoke?: [{	id?: string | undefined | null},boolean | `@${string}`],
+createRole?: [{	input: ResolverInputTypes["CreateRoleInputInput"]},ResolverInputTypes["Role"]],
 updateOrg?: [{	input?: ResolverInputTypes["UpdateOrgInputInput"] | undefined | null},ResolverInputTypes["Org"]],
 updateMenu?: [{	input: ResolverInputTypes["UpdateMenuInputInput"]},ResolverInputTypes["Menu"]],
 	logout?:boolean | `@${string}`,
@@ -1940,10 +1956,10 @@ deleteFileById?: [{	id?: string | undefined | null},boolean | `@${string}`],
 	userInfo?:ResolverInputTypes["UserInfoResult"],
 queryMenuList?: [{	param?: ResolverInputTypes["MenuQueryParamInput"] | undefined | null},ResolverInputTypes["Menu"]],
 	queryArticleCategoryTree?:ResolverInputTypes["ArticleCategory"],
-queryUserPage?: [{	param: ResolverInputTypes["UserQueryParamInput"]},ResolverInputTypes["Page_User"]],
+queryUserPage?: [{	specification: ResolverInputTypes["QueryUserPageSpecificationInput"]},ResolverInputTypes["Page_User"]],
 queryArticle?: [{	id?: string | undefined | null},ResolverInputTypes["Article"]],
-queryMenuTree?: [{	param?: ResolverInputTypes["MenuQueryPageParamInput"] | undefined | null},ResolverInputTypes["Menu"]],
 queryDoctorSchedulePage?: [{	specification?: ResolverInputTypes["QueryDoctorSchedulePageSpecificationInput"] | undefined | null},ResolverInputTypes["Page_DoctorSchedule"]],
+queryMenuTree?: [{	param?: ResolverInputTypes["MenuQueryPageParamInput"] | undefined | null},ResolverInputTypes["Menu"]],
 queryRolePage?: [{	param?: ResolverInputTypes["RoleQueryParamInput"] | undefined | null},ResolverInputTypes["Page_Role"]],
 	queryLoginSessionList?:ResolverInputTypes["LoginSessionResult"],
 queryRole?: [{	roleId?: string | undefined | null},ResolverInputTypes["Role"]],
@@ -1953,8 +1969,8 @@ queryUserList?: [{	specification?: ResolverInputTypes["QueryUserSpecificationInp
 queryArticlePage?: [{	specification?: ResolverInputTypes["QueryArticlePageSpecificationInput"] | undefined | null},ResolverInputTypes["Page_Article"]],
 queryOrgPage?: [{	specification?: ResolverInputTypes["QueryOrgPageSpecificationInput"] | undefined | null},ResolverInputTypes["Page_Org"]],
 queryFilePage?: [{	param?: ResolverInputTypes["FileQueryPageParamInput"] | undefined | null},ResolverInputTypes["Page_File"]],
-queryArticleCategory?: [{	specification?: ResolverInputTypes["QueryArticleCategorySpecificationInput"] | undefined | null},ResolverInputTypes["ArticleCategory"]],
 queryUser?: [{	userId?: string | undefined | null},ResolverInputTypes["User"]],
+queryArticleCategory?: [{	specification?: ResolverInputTypes["QueryArticleCategorySpecificationInput"] | undefined | null},ResolverInputTypes["ArticleCategory"]],
 		__typename?: boolean | `@${string}`
 }>;
 	["QueryArticleCategorySpecificationInput"]: {
@@ -1970,7 +1986,9 @@ queryUser?: [{	userId?: string | undefined | null},ResolverInputTypes["User"]],
 	title?: string | undefined | null
 };
 	["QueryDoctorSchedulePageSpecificationInput"]: {
-	date?: ResolverInputTypes["LocalDateTime"] | undefined | null,
+	day?: string | undefined | null,
+	doctorName?: string | undefined | null,
+	orgName?: string | undefined | null,
 	pageNo: number,
 	pageSize: number,
 	shift?: string | undefined | null,
@@ -1985,6 +2003,17 @@ queryUser?: [{	userId?: string | undefined | null},ResolverInputTypes["User"]],
 	pageNo: number,
 	pageSize: number,
 	sort?: string | undefined | null
+};
+	["QueryUserPageSpecificationInput"]: {
+	email?: string | undefined | null,
+	nickName?: string | undefined | null,
+	orgId?: string | undefined | null,
+	pageNo: number,
+	pageSize: number,
+	phone?: string | undefined | null,
+	roleIds?: Array<string | undefined | null> | undefined | null,
+	sort?: string | undefined | null,
+	userName?: string | undefined | null
 };
 	["QueryUserSpecificationInput"]: {
 	key?: string | undefined | null,
@@ -2088,6 +2117,7 @@ queryUser?: [{	userId?: string | undefined | null},ResolverInputTypes["User"]],
 	job?: string | undefined | null,
 	nickName?: string | undefined | null,
 	note?: string | undefined | null,
+	orgId?: string | undefined | null,
 	password?: string | undefined | null,
 	phone?: string | undefined | null,
 	roleIds?: Array<string | undefined | null> | undefined | null,
@@ -2144,18 +2174,6 @@ queryUser?: [{	userId?: string | undefined | null},ResolverInputTypes["User"]],
 	/** 密码 */
 	password?: string | undefined | null
 };
-	["UserQueryParamInput"]: {
-	createdAtFrom?: string | undefined | null,
-	createdAtTo?: string | undefined | null,
-	email?: string | undefined | null,
-	nickName?: string | undefined | null,
-	pageNo?: number | undefined | null,
-	pageSize?: number | undefined | null,
-	phone?: string | undefined | null,
-	roleIds?: Array<string | undefined | null> | undefined | null,
-	sort?: string | undefined | null,
-	userName?: string | undefined | null
-};
 	["UserRegisterInputInput"]: {
 	account?: string | undefined | null,
 	email?: string | undefined | null,
@@ -2164,10 +2182,11 @@ queryUser?: [{	userId?: string | undefined | null},ResolverInputTypes["User"]],
 	phone?: string | undefined | null
 };
 	["updateDoctorScheduleInputInput"]: {
-	date?: ResolverInputTypes["LocalDateTime"] | undefined | null,
+	date?: ResolverInputTypes["LocalDate"] | undefined | null,
 	doctorId?: string | undefined | null,
 	/** id */
 	id?: string | undefined | null,
+	orgId?: string | undefined | null,
 	shift?: string | undefined | null
 };
 	["schema"]: AliasType<{
@@ -2240,8 +2259,9 @@ export type ModelTypes = {
 	title?: string | undefined
 };
 	["CreateDoctorScheduleInputInput"]: {
-	date?: ModelTypes["LocalDateTime"] | undefined,
+	date?: ModelTypes["LocalDate"] | undefined,
 	doctorId?: string | undefined,
+	orgId?: string | undefined,
 	shift?: string | undefined
 };
 	["CreateMenuInputInput"]: {
@@ -2278,6 +2298,7 @@ export type ModelTypes = {
 	job?: string | undefined,
 	nickName?: string | undefined,
 	note?: string | undefined,
+	orgId?: string | undefined,
 	password?: string | undefined,
 	phone?: string | undefined,
 	roleIds?: Array<string | undefined> | undefined,
@@ -2290,11 +2311,13 @@ export type ModelTypes = {
 	createdAt?: ModelTypes["LocalDateTime"] | undefined,
 	/** 创建人 */
 	createdBy?: string | undefined,
-	date?: ModelTypes["LocalDateTime"] | undefined,
+	date?: ModelTypes["LocalDate"] | undefined,
 	doctor?: ModelTypes["User"] | undefined,
 	doctorId?: string | undefined,
 	/** id */
 	id?: string | undefined,
+	org?: ModelTypes["Org"] | undefined,
+	orgId?: string | undefined,
 	shift?: string | undefined,
 	/** 更新时间 */
 	updatedAt?: ModelTypes["LocalDateTime"] | undefined,
@@ -2334,6 +2357,8 @@ export type ModelTypes = {
 	sort?: string | undefined
 };
 	["GenderEnum"]:GenderEnum;
+	/** Built-in scalar representing a local date */
+["LocalDate"]:any;
 	/** Built-in scalar representing a local date-time */
 ["LocalDateTime"]:any;
 	["LoginSessionResult"]: {
@@ -2396,8 +2421,8 @@ export type ModelTypes = {
 	updateArticleCategory?: ModelTypes["ArticleCategory"] | undefined,
 	createArticleCategory?: ModelTypes["ArticleCategory"] | undefined,
 	updateRole?: ModelTypes["Role"] | undefined,
-	createRole?: ModelTypes["Role"] | undefined,
 	revoke: boolean,
+	createRole?: ModelTypes["Role"] | undefined,
 	updateOrg?: ModelTypes["Org"] | undefined,
 	updateMenu?: ModelTypes["Menu"] | undefined,
 	logout: boolean,
@@ -2575,8 +2600,8 @@ export type ModelTypes = {
 	queryArticleCategoryTree?: Array<ModelTypes["ArticleCategory"] | undefined> | undefined,
 	queryUserPage?: ModelTypes["Page_User"] | undefined,
 	queryArticle?: ModelTypes["Article"] | undefined,
-	queryMenuTree?: Array<ModelTypes["Menu"] | undefined> | undefined,
 	queryDoctorSchedulePage?: ModelTypes["Page_DoctorSchedule"] | undefined,
+	queryMenuTree?: Array<ModelTypes["Menu"] | undefined> | undefined,
 	queryRolePage?: ModelTypes["Page_Role"] | undefined,
 	queryLoginSessionList?: Array<ModelTypes["LoginSessionResult"] | undefined> | undefined,
 	queryRole?: ModelTypes["Role"] | undefined,
@@ -2586,8 +2611,8 @@ export type ModelTypes = {
 	queryArticlePage?: ModelTypes["Page_Article"] | undefined,
 	queryOrgPage?: ModelTypes["Page_Org"] | undefined,
 	queryFilePage?: ModelTypes["Page_File"] | undefined,
-	queryArticleCategory?: Array<ModelTypes["ArticleCategory"] | undefined> | undefined,
-	queryUser?: ModelTypes["User"] | undefined
+	queryUser?: ModelTypes["User"] | undefined,
+	queryArticleCategory?: Array<ModelTypes["ArticleCategory"] | undefined> | undefined
 };
 	["QueryArticleCategorySpecificationInput"]: {
 	name?: string | undefined,
@@ -2602,7 +2627,9 @@ export type ModelTypes = {
 	title?: string | undefined
 };
 	["QueryDoctorSchedulePageSpecificationInput"]: {
-	date?: ModelTypes["LocalDateTime"] | undefined,
+	day?: string | undefined,
+	doctorName?: string | undefined,
+	orgName?: string | undefined,
 	pageNo: number,
 	pageSize: number,
 	shift?: string | undefined,
@@ -2617,6 +2644,17 @@ export type ModelTypes = {
 	pageNo: number,
 	pageSize: number,
 	sort?: string | undefined
+};
+	["QueryUserPageSpecificationInput"]: {
+	email?: string | undefined,
+	nickName?: string | undefined,
+	orgId?: string | undefined,
+	pageNo: number,
+	pageSize: number,
+	phone?: string | undefined,
+	roleIds?: Array<string | undefined> | undefined,
+	sort?: string | undefined,
+	userName?: string | undefined
 };
 	["QueryUserSpecificationInput"]: {
 	key?: string | undefined,
@@ -2717,6 +2755,7 @@ export type ModelTypes = {
 	job?: string | undefined,
 	nickName?: string | undefined,
 	note?: string | undefined,
+	orgId?: string | undefined,
 	password?: string | undefined,
 	phone?: string | undefined,
 	roleIds?: Array<string | undefined> | undefined,
@@ -2771,18 +2810,6 @@ export type ModelTypes = {
 	/** 密码 */
 	password?: string | undefined
 };
-	["UserQueryParamInput"]: {
-	createdAtFrom?: string | undefined,
-	createdAtTo?: string | undefined,
-	email?: string | undefined,
-	nickName?: string | undefined,
-	pageNo?: number | undefined,
-	pageSize?: number | undefined,
-	phone?: string | undefined,
-	roleIds?: Array<string | undefined> | undefined,
-	sort?: string | undefined,
-	userName?: string | undefined
-};
 	["UserRegisterInputInput"]: {
 	account?: string | undefined,
 	email?: string | undefined,
@@ -2791,10 +2818,11 @@ export type ModelTypes = {
 	phone?: string | undefined
 };
 	["updateDoctorScheduleInputInput"]: {
-	date?: ModelTypes["LocalDateTime"] | undefined,
+	date?: ModelTypes["LocalDate"] | undefined,
 	doctorId?: string | undefined,
 	/** id */
 	id?: string | undefined,
+	orgId?: string | undefined,
 	shift?: string | undefined
 };
 	["schema"]: {
@@ -2888,8 +2916,9 @@ export type GraphQLTypes = {
 	title?: string | undefined
 };
 	["CreateDoctorScheduleInputInput"]: {
-		date?: GraphQLTypes["LocalDateTime"] | undefined,
+		date?: GraphQLTypes["LocalDate"] | undefined,
 	doctorId?: string | undefined,
+	orgId?: string | undefined,
 	shift?: string | undefined
 };
 	["CreateMenuInputInput"]: {
@@ -2926,6 +2955,7 @@ export type GraphQLTypes = {
 	job?: string | undefined,
 	nickName?: string | undefined,
 	note?: string | undefined,
+	orgId?: string | undefined,
 	password?: string | undefined,
 	phone?: string | undefined,
 	roleIds?: Array<string | undefined> | undefined,
@@ -2939,11 +2969,13 @@ export type GraphQLTypes = {
 	createdAt?: GraphQLTypes["LocalDateTime"] | undefined,
 	/** 创建人 */
 	createdBy?: string | undefined,
-	date?: GraphQLTypes["LocalDateTime"] | undefined,
+	date?: GraphQLTypes["LocalDate"] | undefined,
 	doctor?: GraphQLTypes["User"] | undefined,
 	doctorId?: string | undefined,
 	/** id */
 	id?: string | undefined,
+	org?: GraphQLTypes["Org"] | undefined,
+	orgId?: string | undefined,
 	shift?: string | undefined,
 	/** 更新时间 */
 	updatedAt?: GraphQLTypes["LocalDateTime"] | undefined,
@@ -2984,6 +3016,8 @@ export type GraphQLTypes = {
 	sort?: string | undefined
 };
 	["GenderEnum"]: GenderEnum;
+	/** Built-in scalar representing a local date */
+["LocalDate"]: "scalar" & { name: "LocalDate" };
 	/** Built-in scalar representing a local date-time */
 ["LocalDateTime"]: "scalar" & { name: "LocalDateTime" };
 	["LoginSessionResult"]: {
@@ -3049,8 +3083,8 @@ export type GraphQLTypes = {
 	updateArticleCategory?: GraphQLTypes["ArticleCategory"] | undefined,
 	createArticleCategory?: GraphQLTypes["ArticleCategory"] | undefined,
 	updateRole?: GraphQLTypes["Role"] | undefined,
-	createRole?: GraphQLTypes["Role"] | undefined,
 	revoke: boolean,
+	createRole?: GraphQLTypes["Role"] | undefined,
 	updateOrg?: GraphQLTypes["Org"] | undefined,
 	updateMenu?: GraphQLTypes["Menu"] | undefined,
 	logout: boolean,
@@ -3238,8 +3272,8 @@ export type GraphQLTypes = {
 	queryArticleCategoryTree?: Array<GraphQLTypes["ArticleCategory"] | undefined> | undefined,
 	queryUserPage?: GraphQLTypes["Page_User"] | undefined,
 	queryArticle?: GraphQLTypes["Article"] | undefined,
-	queryMenuTree?: Array<GraphQLTypes["Menu"] | undefined> | undefined,
 	queryDoctorSchedulePage?: GraphQLTypes["Page_DoctorSchedule"] | undefined,
+	queryMenuTree?: Array<GraphQLTypes["Menu"] | undefined> | undefined,
 	queryRolePage?: GraphQLTypes["Page_Role"] | undefined,
 	queryLoginSessionList?: Array<GraphQLTypes["LoginSessionResult"] | undefined> | undefined,
 	queryRole?: GraphQLTypes["Role"] | undefined,
@@ -3249,8 +3283,8 @@ export type GraphQLTypes = {
 	queryArticlePage?: GraphQLTypes["Page_Article"] | undefined,
 	queryOrgPage?: GraphQLTypes["Page_Org"] | undefined,
 	queryFilePage?: GraphQLTypes["Page_File"] | undefined,
-	queryArticleCategory?: Array<GraphQLTypes["ArticleCategory"] | undefined> | undefined,
-	queryUser?: GraphQLTypes["User"] | undefined
+	queryUser?: GraphQLTypes["User"] | undefined,
+	queryArticleCategory?: Array<GraphQLTypes["ArticleCategory"] | undefined> | undefined
 };
 	["QueryArticleCategorySpecificationInput"]: {
 		name?: string | undefined,
@@ -3265,7 +3299,9 @@ export type GraphQLTypes = {
 	title?: string | undefined
 };
 	["QueryDoctorSchedulePageSpecificationInput"]: {
-		date?: GraphQLTypes["LocalDateTime"] | undefined,
+		day?: string | undefined,
+	doctorName?: string | undefined,
+	orgName?: string | undefined,
 	pageNo: number,
 	pageSize: number,
 	shift?: string | undefined,
@@ -3280,6 +3316,17 @@ export type GraphQLTypes = {
 	pageNo: number,
 	pageSize: number,
 	sort?: string | undefined
+};
+	["QueryUserPageSpecificationInput"]: {
+		email?: string | undefined,
+	nickName?: string | undefined,
+	orgId?: string | undefined,
+	pageNo: number,
+	pageSize: number,
+	phone?: string | undefined,
+	roleIds?: Array<string | undefined> | undefined,
+	sort?: string | undefined,
+	userName?: string | undefined
 };
 	["QueryUserSpecificationInput"]: {
 		key?: string | undefined,
@@ -3383,6 +3430,7 @@ export type GraphQLTypes = {
 	job?: string | undefined,
 	nickName?: string | undefined,
 	note?: string | undefined,
+	orgId?: string | undefined,
 	password?: string | undefined,
 	phone?: string | undefined,
 	roleIds?: Array<string | undefined> | undefined,
@@ -3439,18 +3487,6 @@ export type GraphQLTypes = {
 	/** 密码 */
 	password?: string | undefined
 };
-	["UserQueryParamInput"]: {
-		createdAtFrom?: string | undefined,
-	createdAtTo?: string | undefined,
-	email?: string | undefined,
-	nickName?: string | undefined,
-	pageNo?: number | undefined,
-	pageSize?: number | undefined,
-	phone?: string | undefined,
-	roleIds?: Array<string | undefined> | undefined,
-	sort?: string | undefined,
-	userName?: string | undefined
-};
 	["UserRegisterInputInput"]: {
 		account?: string | undefined,
 	email?: string | undefined,
@@ -3459,10 +3495,11 @@ export type GraphQLTypes = {
 	phone?: string | undefined
 };
 	["updateDoctorScheduleInputInput"]: {
-		date?: GraphQLTypes["LocalDateTime"] | undefined,
+		date?: GraphQLTypes["LocalDate"] | undefined,
 	doctorId?: string | undefined,
 	/** id */
 	id?: string | undefined,
+	orgId?: string | undefined,
 	shift?: string | undefined
 }
     }
@@ -3519,6 +3556,7 @@ type ZEUS_VARIABLES = {
 	["FileProviderEnum"]: ValueTypes["FileProviderEnum"];
 	["FileQueryPageParamInput"]: ValueTypes["FileQueryPageParamInput"];
 	["GenderEnum"]: ValueTypes["GenderEnum"];
+	["LocalDate"]: ValueTypes["LocalDate"];
 	["LocalDateTime"]: ValueTypes["LocalDateTime"];
 	["Long"]: ValueTypes["Long"];
 	["MenuQueryPageParamInput"]: ValueTypes["MenuQueryPageParamInput"];
@@ -3530,6 +3568,7 @@ type ZEUS_VARIABLES = {
 	["QueryArticlePageSpecificationInput"]: ValueTypes["QueryArticlePageSpecificationInput"];
 	["QueryDoctorSchedulePageSpecificationInput"]: ValueTypes["QueryDoctorSchedulePageSpecificationInput"];
 	["QueryOrgPageSpecificationInput"]: ValueTypes["QueryOrgPageSpecificationInput"];
+	["QueryUserPageSpecificationInput"]: ValueTypes["QueryUserPageSpecificationInput"];
 	["QueryUserSpecificationInput"]: ValueTypes["QueryUserSpecificationInput"];
 	["RoleQueryParamInput"]: ValueTypes["RoleQueryParamInput"];
 	["UpdateArticleCategoryInputInput"]: ValueTypes["UpdateArticleCategoryInputInput"];
@@ -3540,7 +3579,6 @@ type ZEUS_VARIABLES = {
 	["UpdateUserInputInput"]: ValueTypes["UpdateUserInputInput"];
 	["UpdateUserProfileInputInput"]: ValueTypes["UpdateUserProfileInputInput"];
 	["UserLoginInputInput"]: ValueTypes["UserLoginInputInput"];
-	["UserQueryParamInput"]: ValueTypes["UserQueryParamInput"];
 	["UserRegisterInputInput"]: ValueTypes["UserRegisterInputInput"];
 	["updateDoctorScheduleInputInput"]: ValueTypes["updateDoctorScheduleInputInput"];
 }

@@ -5,10 +5,15 @@ import dayjs from 'dayjs'
 const LOCAL_PREFIX = 'LOCAL_PREFIX'
 
 export function formatDate(date: Date | string) {
-  if(!date) {
+  if (!date)
     return
-  }
   return dayjs(date).format('YYYY-MM-DD HH:mm:ss')
+}
+
+export function formatDateNoMin(date: Date | string) {
+  if (!date)
+    return
+  return dayjs(date).format('YYYY-MM-DD')
 }
 
 export function deepClone<T>(obj: T): T {

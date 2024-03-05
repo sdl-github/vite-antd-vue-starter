@@ -36,8 +36,8 @@ function handleChange(value: string) {
 </script>
 
 <template>
-  <a-spin :spinning="loading">
-    <a-tree-select
+  <ASpin :spinning="loading">
+    <ATreeSelect
       show-search
       style="width: 100%"
       placeholder="请选择"
@@ -52,5 +52,5 @@ function handleChange(value: string) {
       :tree-data="treeData"
       @change="handleChange"
     />
-  </a-spin>
+  </ASpin>
 </template>
