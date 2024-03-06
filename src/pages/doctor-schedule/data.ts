@@ -22,7 +22,7 @@ export function generateSearch() {
   const search: QueryDoctorSchedulePageSpecificationInput = {
     pageNo: DEFAULT_PAGE_NO,
     pageSize: DEFAULT_PAGE_SIZE,
-    day: '',
+    date: undefined,
     doctorName: '',
     orgName: '',
     sort: '',

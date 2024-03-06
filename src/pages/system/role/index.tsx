@@ -14,7 +14,7 @@ import {
 import type { Role, RoleUpdateInput, SearchParam } from './data'
 import RoleModal from './components/RoleModal.vue'
 import PermissionSelect from './components/PermissionSelect.vue'
-import { deleteRole, queryRolePage, updateRole } from '@/api/role'
+import { deleteRole, queryRolePage, updateRole, updateRoleMenu } from '@/api/role'
 import { DefaultRoleEnum } from '~/utils/graphql/zeus'
 
 interface State {
@@ -182,7 +182,7 @@ export default defineComponent({
     async function handleSetPermissions(params: RoleUpdateInput) {
       const loading = message.loading('加载中', 0)
       try {
-        await updateRole(params)
+        await updateRoleMenu(params)
         loading()
         initData()
         message.success('成功')

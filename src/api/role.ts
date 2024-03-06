@@ -48,6 +48,11 @@ export function updateRole(input: ModelTypes['UpdateRoleInputInput']) {
     updateRole: [{ input }, { id: true }],
   })
 }
+export function updateRoleMenu(input: ModelTypes['UpdateRoleMenuInputInput']) {
+  return mutation({
+    updateRoleMenu: [{ input }, true],
+  })
+}
 
 export function deleteRole(roleId: string) {
   return mutation({

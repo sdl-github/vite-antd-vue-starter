@@ -7,9 +7,9 @@
 import type { SorterResult } from 'ant-design-vue/es/table/interface'
 import { type TableColumnType, message } from 'ant-design-vue'
 import { columns, generateSearch } from './data'
-import type { DoctorSchedule, State } from './data'
-import DoctorScheduleModal from './components/DoctorScheduleModal.vue'
-import { deleteDoctorSchedule, queryDoctorSchedulePage } from '~/api/doctor-schedule'
+import type { PhysicalExam, State } from './data'
+import PhysicalExamModal from './components/PhysicalExamModal.vue'
+import { deletePhysicalExam, queryPhysicalExamPage } from '~/api/physical-exam'
 
 const state: State = reactive({
   loading: false,
@@ -27,9 +27,9 @@ initData()
 async function initData() {
   state.loading = true
   const { search } = state
-  const res = await queryDoctorSchedulePage(search)
-  const { content, totalElements } = res.queryDoctorSchedulePage!
-  state.data = content as DoctorSchedule[]
+  const res = await queryPhysicalExamPage(search)
+  const { content, totalElements } = res!
+  state.data = content as PhysicalExam[]
   state.total = totalElements as number
   state.loading = false
 }
@@ -70,15 +70,10 @@ function handleOpenCreate() {
   state.modalVisible = true
 }
 
-function handleOpenEdit(record: DoctorSchedule) {
-  state.modalVisible = true
-  state.currentItem = record
-}
-
 async function handleDelete(id: string) {
   const loading = message.loading('加载中', 0)
   try {
-    await deleteDoctorSchedule(id)
+    await deletePhysicalExam(id)
     initData()
     loading()
     message.success('成功')
@@ -93,13 +88,13 @@ async function handleDelete(id: string) {
 
 <template>
   <div class="w-full">
-    <DoctorScheduleModal v-model:open="state.modalVisible" :current-item="state.currentItem" @ok="initData" @cancel="() => state.currentItem = null" />
+    <PhysicalExamModal v-model:open="state.modalVisible" :current-item="state.currentItem" @ok="initData" @cancel="() => state.currentItem = null" />
     <!-- 搜索 -->
     <ACard>
       <div class="flex">
         <AInput v-model:value="search.orgName" placeholder="机构名称" class="w-200px" />
-        <AInput v-model:value="search.doctorName" placeholder="医生姓名" class="ml-2 w-200px" />
-        <ADatePicker v-model:value="search.date" value-format="YYYY-MM-DD" placeholder="日期" class="ml-2" />
+        <AInput v-model:value="search.userName" placeholder="姓名" class="ml-2 w-200px" />
+        <ADatePicker v-model:value="search.date" placeholder="日期" class="ml-2" />
         <div class="ml-2 flex items-center">
           <AButton :loading="state.loading" class="flex items-center justify-center" type="primary" @click="handleSearch">
             <template #icon>
@@ -136,20 +131,20 @@ async function handleDelete(id: string) {
       :pagination="false" :columns="columns" :row-key="(record: any) => record.id" :data-source="state.data"
       :loading="state.loading" @change="handleTableChange"
     >
-      <template #bodyCell="{ column, record }: { column: TableColumnType<DoctorSchedule>, record: DoctorSchedule }">
+      <template #bodyCell="{ column, record }: { column: TableColumnType<PhysicalExam>, record: PhysicalExam }">
         <template v-if="column.dataIndex === 'org'">
           <span>
             {{ record.org?.name }}
           </span>
         </template>
-        <template v-if="column.dataIndex === 'doctor'">
+        <template v-if="column.dataIndex === 'user'">
           <span>
-            {{ record.doctor?.nickName || record.doctor?.userName }}
+            {{ record.user?.nickName || record.user?.userName }}
           </span>
         </template>
         <template v-if="column.dataIndex === 'date'">
           <span>
-            {{ formatDateNoMin(record.createdAt) }}
+            {{ formatDateNoMin(record.date) }}
           </span>
         </template>
         <template v-if="column.dataIndex === 'createdAt'">
@@ -159,11 +154,8 @@ async function handleDelete(id: string) {
         </template>
         <template v-if="column.key === 'operation'">
           <span>
-            <a @click="handleOpenEdit(record)">编辑</a>
-            <ADivider type="vertical" />
-
             <APopconfirm
-              :title="`确定要删除${record.date}?`" ok-text="确定" cancel-text="取消"
+              :title="`确定要删除${record.user?.nickName}-${formatDateNoMin(record.date)}?`" ok-text="确定" cancel-text="取消"
               @confirm="handleDelete(record.id!)"
             >
               <a>删除</a>

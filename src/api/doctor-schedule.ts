@@ -27,7 +27,7 @@ export function queryDoctorSchedulePage(specification: ValueTypes['QueryDoctorSc
 
 export function createDoctorSchedule(data: ModelTypes['DoctorSchedule']): Promise<ModelTypes['DoctorSchedule']> {
   return request({
-    url: '/doctor/schedule/create',
+    url: '/doctor_schedule/create',
     method: 'post',
     data,
   })
@@ -35,7 +35,7 @@ export function createDoctorSchedule(data: ModelTypes['DoctorSchedule']): Promis
 
 export function updateDoctorSchedule(data: ModelTypes['DoctorSchedule']): Promise<ModelTypes['DoctorSchedule']> {
   return request({
-    url: '/doctor/schedule/update',
+    url: '/doctor_schedule/update',
     method: 'put',
     data,
   })
@@ -43,7 +43,7 @@ export function updateDoctorSchedule(data: ModelTypes['DoctorSchedule']): Promis
 
 export function deleteDoctorSchedule(id: string): Promise<void> {
   return request({
-    url: `/doctor/schedule/delete/${id}`,
+    url: `/doctor_schedule/delete/${id}`,
     method: 'delete',
   })
 }
