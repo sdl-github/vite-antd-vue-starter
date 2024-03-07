@@ -32,15 +32,6 @@ export interface State {
 
 export const columns: TableColumnType<Comment>[] = [
   {
-    title: '机构',
-    fixed: 'left',
-    align: 'center',
-    width: '100px',
-    dataIndex: 'org',
-    key: 'org',
-    ellipsis: true,
-  },
-  {
     title: '内容',
     fixed: 'left',
     align: 'center',

@@ -220,11 +220,6 @@ function handleCancel() {
           </AFormItem>
         </ACol>
         <ACol :span="12">
-          <AFormItem label="机构" name="orgId">
-            <ASelect v-model:value="model.orgId" placeholder="请选择" :options="orgOptions" />
-          </AFormItem>
-        </ACol>
-        <ACol :span="12">
           <AFormItem label="备注" name="note">
             <AInput v-model:value="model.note" :placeholder="requireMessage('备注')" />
           </AFormItem>
