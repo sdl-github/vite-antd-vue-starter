@@ -48,6 +48,14 @@ const messageList = ref<ModelTypes['Message'][]>([
     type: MessageTypeEnum.TEXT,
     content: 'Use box-border to set an element’s box-sizing to border-box, telling the browser to include the element’s borders and padding when you give it a height or width.',
   },
+  {
+    fromUser: {
+      id: '1',
+      nickName: '张三',
+    },
+    type: MessageTypeEnum.IMAGE,
+    content: 'https://dogefs.s3.ladydaily.com/~/source/wallhaven/full/d6/wallhaven-d6dvdl.png?w=2560&h=1440&fmt=webp',
+  },
 ])
 
 async function loadMoreData($state?: any) {
@@ -69,12 +77,20 @@ async function loadMoreData($state?: any) {
     $state && $state.error()
   }
 }
+
+function handleSetSession(item: ModelTypes['Message'], index: number) {
+  current.value = index
+}
+
+function showMessage(item: ModelTypes['Message'], isMe: boolean) {
+  return true
+}
 </script>
 
 <template>
   <div class="m-4 h-90% flex border rounded-10px bg-white">
     <div class="box-border w-300px border rounded-10px bg-#e7f8ff p-20px">
-      <div v-for="(item, index) in sessionList" :key="item?.id" :class="`mb-10px h-70px w-260px flex items-center rounded-10px bg-white px-14px py-10px shadow-[0px_2px_4px_0px_rgba(0,0,0,.05)] ${current === index && 'border-#1d93ab border'}`">
+      <div v-for="(item, index) in sessionList" :key="item?.id" :class="`mb-10px h-70px w-260px flex items-center rounded-10px bg-white px-14px py-10px shadow-[0px_2px_4px_0px_rgba(0,0,0,.05)] ${current === index && 'border-#1d93ab border'}`" @click="handleSetSession(item, index)">
         <AAvatar style="background-color: #1890ff" :src="item?.avatar">
           {{ item?.nickName || item?.userName }}
         </AAvatar>
@@ -102,23 +118,60 @@ async function loadMoreData($state?: any) {
             </div>
           </template>
         </InfiniteLoading>
-        <div v-for="(item, index) in messageList" :key="index" class="flex">
-          <div>
-            <AAvatar style="background-color: #1890ff" :src="item?.fromUser?.avatar">
-              {{ item?.fromUser?.nickName || item?.fromUser?.userName }}
-            </AAvatar>
-          </div>
-          <div class="ml-2">
-            <div>{{ item.fromUser?.nickName }}</div>
-            <div class="mt-1 box-border border rounded-10px bg-[rgba(0,0,0,.05)] p-2">
-              <div v-if="item.type === MessageTypeEnum.TEXT">
-                {{ item.content }}
-              </div>
-              <div v-if="item.type === MessageTypeEnum.IMAGE">
-                IMAGE
+        <div v-for="(item, index) in messageList" :key="index">
+          <!-- left -->
+          <div v-if="showMessage(item, false)" class="my-2 flex">
+            <div>
+              <AAvatar style="background-color: #1890ff" :src="item?.fromUser?.avatar">
+                {{ item?.fromUser?.nickName || item?.fromUser?.userName }}
+              </AAvatar>
+            </div>
+            <div>
+              <div class="ml-2">
+                <div>{{ item.fromUser?.nickName }}</div>
+                <div class="mt-1 box-border border rounded-10px bg-[rgba(0,0,0,.05)] p-2">
+                  <div v-if="item.type === MessageTypeEnum.TEXT">
+                    {{ item.content }}
+                  </div>
+                  <div v-if="item.type === MessageTypeEnum.IMAGE">
+                    <AImage
+                      :width="400"
+                      :src="item.content"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+          <!-- right -->
+          <div v-if="showMessage(item, true)" class="my-2 flex justify-end">
+            <div>
+              <div class="mr-2">
+                <div class="flex justify-end">
+                  {{ item.fromUser?.nickName }}
+                </div>
+
+                <div class="mt-1 box-border border rounded-10px bg-[rgba(0,0,0,.05)] p-2">
+                  <div v-if="item.type === MessageTypeEnum.TEXT">
+                    {{ item.content }}
+                  </div>
+                  <div v-if="item.type === MessageTypeEnum.IMAGE">
+                    <AImage
+                      :width="400"
+                      :src="item.content"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <AAvatar style="background-color: #1890ff" :src="item?.fromUser?.avatar">
+                {{ item?.fromUser?.nickName || item?.fromUser?.userName }}
+              </AAvatar>
+            </div>
+          </div>
+          <!-- end -->
         </div>
       </div>
       <div class="border-t">
