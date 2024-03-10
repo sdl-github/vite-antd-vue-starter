@@ -5,17 +5,20 @@
 
 <script setup lang="ts">
 import useSWRV from 'swrv'
-import InfiniteLoading from 'v3-infinite-loading'
-import { queryMessagePage, queryMessageSessionPage } from '@/api/chat'
-import { MessageTypeEnum, type ModelTypes } from '~/utils/graphql/zeus'
+import { message } from 'ant-design-vue'
+import { queryMessagePage, queryMessageSessionPage, sendMessage } from '@/api/chat'
+import { MessageTypeEnum } from '~/utils/graphql/zeus'
+import type { ModelTypes, ValueTypes } from '~/utils/graphql/zeus'
 
+const messageContentRef = ref()
 const userStore = useUserStore()
 const user = computed(() => userStore.user)
 const { data, mutate } = useSWRV(`queryOrgPage`, () => queryMessageSessionPage({
   pageNo: 1,
   pageSize: 10,
 }))
-
+let timer: NodeJS.Timer | null = null
+const content = ref('')
 const current = ref(0)
 
 mutate()
@@ -23,54 +26,39 @@ mutate()
 const sessionList = computed(() => {
   const userId = user.value?.id as string
   return data.value?.queryMessageSessionPage?.content?.map((item) => {
-    const { fromUserId, fromUser, toUserId, toUser } = item
+    const { id: sessionId, fromUserId, fromUser, toUserId, toUser } = item
     const userObj = {
       [fromUserId!]: toUser,
       [toUserId!]: fromUser,
     }
-    return userObj[userId]
+    return { ...userObj[userId], sessionId }
   })
 })
 const hasNext = ref(true)
+
+const currentSession = computed<ModelTypes['User'] & { sessionId?: string }>(() => sessionList.value && sessionList.value[current.value] || {})
 const params = reactive<ModelTypes['QueryMessagePageSpecificationInput']>({
   pageNo: 0,
-  pageSize: 10,
+  pageSize: 999,
+  sessionId: '2',
 })
-
-const currentSession = computed(() => sessionList.value && sessionList.value[current.value] || {})
-
-const messageList = ref<ModelTypes['Message'][]>([
-  {
-    fromUser: {
-      id: '1',
-      nickName: '张三',
-    },
-    type: MessageTypeEnum.TEXT,
-    content: 'Use box-border to set an element’s box-sizing to border-box, telling the browser to include the element’s borders and padding when you give it a height or width.',
-  },
-  {
-    fromUser: {
-      id: '1',
-      nickName: '张三',
-    },
-    type: MessageTypeEnum.IMAGE,
-    content: 'https://dogefs.s3.ladydaily.com/~/source/wallhaven/full/d6/wallhaven-d6dvdl.png?w=2560&h=1440&fmt=webp',
-  },
-])
+const messageList = ref<(ModelTypes['Message'] & {
+  isMe?: boolean
+  info?: ModelTypes['User']
+})[]>([])
 
 async function loadMoreData($state?: any) {
   if (!hasNext.value) {
     $state && $state.complete()
     return
   }
-  params.pageNo = params.pageNo + 1
+  (params.pageNo = params.pageNo + 1)
+  const list = await getMessageData()
   try {
-    const res = await queryMessagePage(params)!
-    const { content, hasNext: hasNextPage } = res.queryMessagePage!
-    messageList.value?.push(...content!)
+    messageList.value?.push(...list!)
+    messageContentRef.value && (messageContentRef.value.scrollTop = messageContentRef.value.scrollHeight)
     $state && $state.loaded()
-    hasNext.value = !!hasNextPage
-    if (!hasNextPage)
+    if (!hasNext.value)
       $state && $state.complete()
   }
   catch (e) {
@@ -78,12 +66,63 @@ async function loadMoreData($state?: any) {
   }
 }
 
+async function getMessageData() {
+  const res = await queryMessagePage(params)!
+  const { content, hasNext: hasNextPage } = res.queryMessagePage!
+  const data = content?.map((item) => {
+    const isMe = item.fromUserId === user.value?.id
+    const info = isMe ? item.fromUser : item.toUser
+    return { ...item, isMe, info }
+  })
+  hasNext.value = !!hasNextPage
+  return data
+}
+
+onMounted(() => {
+  loadMoreData()
+  timer = setInterval(async () => {
+    const list = await getMessageData()
+    messageList.value = [...list!]
+    messageContentRef.value && (messageContentRef.value.scrollTop = messageContentRef.value.scrollHeight)
+  }, 1000)
+})
+
+onBeforeRouteLeave(() => {
+  timer && clearTimeout(timer)
+  timer = null
+})
+
 function handleSetSession(item: ModelTypes['Message'], index: number) {
   current.value = index
 }
 
-function showMessage(item: ModelTypes['Message'], isMe: boolean) {
-  return true
+async function handleSend(type: MessageTypeEnum) {
+  if (!content.value) {
+    message.warning('请输入内容')
+    return
+  }
+  const loading = message.loading('加载中', 0)
+  try {
+    const input: ValueTypes['SendMessageInputInput'] = {
+      content: content.value,
+      toUserId: currentSession.value.id,
+      sessionId: currentSession.value.sessionId,
+      type,
+    }
+    await sendMessage(input)
+    await loading()
+    const list = await getMessageData()
+    messageList.value = [...list!]
+    content.value = ''
+    messageContentRef.value && (messageContentRef.value.scrollTop = messageContentRef.value.scrollHeight)
+
+    // message.success('成功')
+    return true
+  }
+  catch (e) {
+    loading()
+    return false
+  }
 }
 </script>
 
@@ -105,30 +144,18 @@ function showMessage(item: ModelTypes['Message'], isMe: boolean) {
           {{ currentSession.nickName }}
         </div>
       </div>
-      <div class="flex-1 overflow-y-auto p-4">
-        <InfiniteLoading :firstload="true" :top="true" @infinite="loadMoreData">
-          <template #spinner>
-            <div class="w-full flex justify-center py-4">
-              <ASpin />
-            </div>
-          </template>
-          <template #complete>
-            <div class="w-full flex justify-center py-4 text-12px color-[#515767]">
-              <span>上面没有了</span>
-            </div>
-          </template>
-        </InfiniteLoading>
+      <div ref="messageContentRef" class="flex-1 overflow-y-auto p-4">
         <div v-for="(item, index) in messageList" :key="index">
           <!-- left -->
-          <div v-if="showMessage(item, false)" class="my-2 flex">
+          <div v-if="!item.isMe" class="my-2 flex">
             <div>
-              <AAvatar style="background-color: #1890ff" :src="item?.fromUser?.avatar">
-                {{ item?.fromUser?.nickName || item?.fromUser?.userName }}
+              <AAvatar style="background-color: #1890ff" :src="item?.info?.avatar">
+                {{ item?.info?.nickName || item?.info?.userName }}
               </AAvatar>
             </div>
             <div>
               <div class="ml-2">
-                <div>{{ item.fromUser?.nickName }}</div>
+                <div>{{ item.info?.nickName }}</div>
                 <div class="mt-1 box-border border rounded-10px bg-[rgba(0,0,0,.05)] p-2">
                   <div v-if="item.type === MessageTypeEnum.TEXT">
                     {{ item.content }}
@@ -144,11 +171,11 @@ function showMessage(item: ModelTypes['Message'], isMe: boolean) {
             </div>
           </div>
           <!-- right -->
-          <div v-if="showMessage(item, true)" class="my-2 flex justify-end">
+          <div v-if="item.isMe" class="my-2 flex justify-end">
             <div>
               <div class="mr-2">
                 <div class="flex justify-end">
-                  {{ item.fromUser?.nickName }}
+                  {{ item.info?.nickName }}
                 </div>
 
                 <div class="mt-1 box-border border rounded-10px bg-[rgba(0,0,0,.05)] p-2">
@@ -166,8 +193,8 @@ function showMessage(item: ModelTypes['Message'], isMe: boolean) {
             </div>
 
             <div>
-              <AAvatar style="background-color: #1890ff" :src="item?.fromUser?.avatar">
-                {{ item?.fromUser?.nickName || item?.fromUser?.userName }}
+              <AAvatar style="background-color: #1890ff" :src="item?.info?.avatar">
+                {{ item?.info?.nickName || item?.info?.userName }}
               </AAvatar>
             </div>
           </div>
@@ -178,8 +205,8 @@ function showMessage(item: ModelTypes['Message'], isMe: boolean) {
         <div class="my-2">
           <div>图片</div>
         </div>
-        <ATextarea placeholder="请输入" />
-        <AButton type="primary" class="mt-2">
+        <ATextarea v-model:value="content" placeholder="请输入" />
+        <AButton type="primary" class="mt-2" @click="handleSend(MessageTypeEnum.TEXT)">
           发送
         </AButton>
       </div>

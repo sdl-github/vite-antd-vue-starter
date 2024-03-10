@@ -1,5 +1,5 @@
 import type { ModelTypes, ValueTypes } from '@/utils/graphql/zeus'
-import { query } from '~/utils/graphql'
+import { mutation, query } from '~/utils/graphql'
 
 export function queryMessageSessionPage(specification: ValueTypes['QueryMessageSessionPageSpecificationInput']) {
   return query({
@@ -40,6 +40,7 @@ export function queryMessagePage(specification: ValueTypes['QueryMessagePageSpec
           content: true,
           type: true,
           createdAt: true,
+          fromUserId: true,
           fromUser: {
             id: true,
             userName: true,
@@ -57,5 +58,13 @@ export function queryMessagePage(specification: ValueTypes['QueryMessagePageSpec
         hasNext: true,
       },
     ],
+  })
+}
+
+export function sendMessage(input: ValueTypes['SendMessageInputInput']) {
+  return mutation({
+    sendMessage: [{ input }, {
+      id: true,
+    }],
   })
 }
