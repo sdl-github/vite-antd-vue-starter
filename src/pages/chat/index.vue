@@ -6,9 +6,11 @@
 <script setup lang="ts">
 import useSWRV from 'swrv'
 import { message } from 'ant-design-vue'
+import type { UploadRequestOption } from 'ant-design-vue/es/vc-upload/interface'
 import { queryMessagePage, queryMessageSessionPage, sendMessage } from '@/api/chat'
 import { MessageTypeEnum } from '~/utils/graphql/zeus'
 import type { ModelTypes, ValueTypes } from '~/utils/graphql/zeus'
+import { upload } from '~/api/file'
 
 const messageContentRef = ref()
 const userStore = useUserStore()
@@ -17,6 +19,7 @@ const { data, mutate } = useSWRV(`queryOrgPage`, () => queryMessageSessionPage({
   pageNo: 1,
   pageSize: 10,
 }))
+
 let timer: NodeJS.Timer | null = null
 const content = ref('')
 const current = ref(0)
@@ -40,7 +43,6 @@ const currentSession = computed<ModelTypes['User'] & { sessionId?: string }>(() 
 const params = reactive<ModelTypes['QueryMessagePageSpecificationInput']>({
   pageNo: 0,
   pageSize: 999,
-  sessionId: '2',
 })
 const messageList = ref<(ModelTypes['Message'] & {
   isMe?: boolean
@@ -67,7 +69,7 @@ async function loadMoreData($state?: any) {
 }
 
 async function getMessageData() {
-  const res = await queryMessagePage(params)!
+  const res = await queryMessagePage({ ...params, sessionId: currentSession.value.sessionId })!
   const { content, hasNext: hasNextPage } = res.queryMessagePage!
   const data = content?.map((item) => {
     const isMe = item.fromUserId === user.value?.id
@@ -78,33 +80,49 @@ async function getMessageData() {
   return data
 }
 
-onMounted(() => {
-  loadMoreData()
-  timer = setInterval(async () => {
-    const list = await getMessageData()
-    messageList.value = [...list!]
-    messageContentRef.value && (messageContentRef.value.scrollTop = messageContentRef.value.scrollHeight)
-  }, 1000)
+onMounted(async () => {
+  await loadMoreData()
+  scrollToBottom()
+  setTimeout(() => {
+    handleSetTimeout()
+  }, 500)
 })
 
 onBeforeRouteLeave(() => {
-  timer && clearTimeout(timer)
-  timer = null
+  handleClearTimeout()
 })
 
-function handleSetSession(item: ModelTypes['Message'], index: number) {
-  current.value = index
+function handleSetTimeout() {
+  timer = setInterval(async () => {
+    const list = await getMessageData()
+    messageList.value = [...list!]
+  }, 5000)
 }
 
-async function handleSend(type: MessageTypeEnum) {
-  if (!content.value) {
+function handleClearTimeout() {
+  timer && clearTimeout(timer)
+  timer = null
+}
+
+async function handleSetSession(item: ModelTypes['Message'], index: number) {
+  current.value = index
+  messageList.value = []
+  const list = await getMessageData()
+  messageList.value = [...list!]
+  handleClearTimeout()
+  handleSetTimeout()
+  scrollToBottom()
+}
+
+async function handleSend(type: MessageTypeEnum, value: string) {
+  if (!value) {
     message.warning('请输入内容')
     return
   }
   const loading = message.loading('加载中', 0)
   try {
     const input: ValueTypes['SendMessageInputInput'] = {
-      content: content.value,
+      content: value,
       toUserId: currentSession.value.id,
       sessionId: currentSession.value.sessionId,
       type,
@@ -114,9 +132,29 @@ async function handleSend(type: MessageTypeEnum) {
     const list = await getMessageData()
     messageList.value = [...list!]
     content.value = ''
-    messageContentRef.value && (messageContentRef.value.scrollTop = messageContentRef.value.scrollHeight)
-
+    scrollToBottom()
     // message.success('成功')
+    return true
+  }
+  catch (e) {
+    loading()
+    return false
+  }
+}
+
+function scrollToBottom() {
+  nextTick(() => {
+    messageContentRef.value && (messageContentRef.value.scrollTop = messageContentRef.value.scrollHeight)
+  })
+}
+
+async function handleUpload(e: UploadRequestOption) {
+  const { file } = e
+  const loading = message.loading('加载中', 0)
+  try {
+    const res = await upload(file, 'message')
+    loading()
+    await handleSend(MessageTypeEnum.IMAGE, res.url!)
     return true
   }
   catch (e) {
@@ -147,7 +185,7 @@ async function handleSend(type: MessageTypeEnum) {
       <div ref="messageContentRef" class="flex-1 overflow-y-auto p-4">
         <div v-for="(item, index) in messageList" :key="index">
           <!-- left -->
-          <div v-if="!item.isMe" class="my-2 flex">
+          <div v-if="!item.isMe" class="my-4 flex">
             <div>
               <AAvatar style="background-color: #1890ff" :src="item?.info?.avatar">
                 {{ item?.info?.nickName || item?.info?.userName }}
@@ -171,13 +209,17 @@ async function handleSend(type: MessageTypeEnum) {
             </div>
           </div>
           <!-- right -->
-          <div v-if="item.isMe" class="my-2 flex justify-end">
+          <div v-if="item.isMe" class="my-4 flex justify-end">
             <div>
               <div class="mr-2">
                 <div class="flex justify-end">
-                  {{ item.info?.nickName }}
+                  <!-- <div>
+                    {{ item.createdAt }}
+                  </div> -->
+                  <div>
+                    {{ item.info?.nickName }}
+                  </div>
                 </div>
-
                 <div class="mt-1 box-border border rounded-10px bg-[rgba(0,0,0,.05)] p-2">
                   <div v-if="item.type === MessageTypeEnum.TEXT">
                     {{ item.content }}
@@ -203,10 +245,14 @@ async function handleSend(type: MessageTypeEnum) {
       </div>
       <div class="border-t">
         <div class="my-2">
-          <div>图片</div>
+          <AUpload :show-upload-list="false" :custom-request="handleUpload">
+            <AButton>
+              图片
+            </AButton>
+          </AUpload>
         </div>
         <ATextarea v-model:value="content" placeholder="请输入" />
-        <AButton type="primary" class="mt-2" @click="handleSend(MessageTypeEnum.TEXT)">
+        <AButton type="primary" class="mt-2" @click="handleSend(MessageTypeEnum.TEXT, content)">
           发送
         </AButton>
       </div>
