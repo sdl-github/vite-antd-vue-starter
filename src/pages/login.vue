@@ -78,9 +78,14 @@ function handleLogin() {
 <style lang="scss" scoped>
 .login-warp {
   background: radial-gradient(26.76% 85.52% at 86.73% -12.86%, #c241ff 6.65%, #6b57ff 100%);
-  background: url('https://dogefs.s3.ladydaily.com/~/source/unsplash/photo-1673124817681-c236cd92ba67?ixid=MnwyNjY4NDZ8MHwxfHRvcGljfHxxUFlzRHp2Sk9ZY3x8fHx8Mnx8MTY4MDM5MTI0MQ&ixlib=rb-4.0.3&w=2560&h=1440&fmt=webp');
+  background: url('/public/health-bg.jpg');
+  background-size:100% 100%;
   min-height: 100vh;
+  height:100%;
+  width:100%;
+  overflow: hidden;
   height: 100vh;
+  background-size: cover;
   display: flex;
   justify-content: center;
   align-items: center;
