@@ -70,11 +70,11 @@ export const AllTypesProps: Record<string,any> = {
 		deleteComment:{
 
 		},
-		revoke:{
-
-		},
 		createRole:{
 			input:"CreateRoleInputInput"
+		},
+		revoke:{
+
 		},
 		updateOrg:{
 			input:"UpdateOrgInputInput"
@@ -94,11 +94,11 @@ export const AllTypesProps: Record<string,any> = {
 		createDoctorSchedule:{
 			input:"CreateDoctorScheduleInputInput"
 		},
-		createMenu:{
-			input:"CreateMenuInputInput"
-		},
 		createOrg:{
 			input:"CreateOrgInputInput"
+		},
+		createMenu:{
+			input:"CreateMenuInputInput"
 		},
 		deleteArticleCategory:{
 
@@ -109,10 +109,10 @@ export const AllTypesProps: Record<string,any> = {
 		deleteOrg:{
 
 		},
-		deleteDoctorSchedule:{
+		publishArticle:{
 
 		},
-		publishArticle:{
+		deleteDoctorSchedule:{
 
 		},
 		updateRoleMenu:{
@@ -124,11 +124,11 @@ export const AllTypesProps: Record<string,any> = {
 		sendMessage:{
 			input:"SendMessageInputInput"
 		},
-		updateComment:{
-			input:"UpdateCommentInputInput"
-		},
 		deleteRole:{
 
+		},
+		updateComment:{
+			input:"UpdateCommentInputInput"
 		},
 		deleteArticle:{
 
@@ -136,14 +136,14 @@ export const AllTypesProps: Record<string,any> = {
 		updateUserProfile:{
 			input:"UpdateUserProfileInputInput"
 		},
+		deleteUser:{
+
+		},
 		registerUser:{
 			input:"UserRegisterInputInput"
 		},
 		loginByAccount:{
 			input:"UserLoginInputInput"
-		},
-		deleteUser:{
-
 		},
 		createUser:{
 			input:"CreateUserInputInput"
@@ -206,11 +206,11 @@ export const AllTypesProps: Record<string,any> = {
 		queryFilePage:{
 			param:"FileQueryPageParamInput"
 		},
-		queryArticleCategory:{
-			specification:"QueryArticleCategorySpecificationInput"
-		},
 		queryUser:{
 
+		},
+		queryArticleCategory:{
+			specification:"QueryArticleCategorySpecificationInput"
 		}
 	},
 	QueryArticleCategorySpecificationInput:{
@@ -450,8 +450,8 @@ export const ReturnTypes: Record<string,any> = {
 		createArticleCategory:"ArticleCategory",
 		updateRole:"Role",
 		deleteComment:"Boolean",
-		revoke:"Boolean",
 		createRole:"Role",
+		revoke:"Boolean",
 		updateOrg:"Org",
 		deletePhysicalExam:"Boolean",
 		createComment:"Comment",
@@ -459,23 +459,23 @@ export const ReturnTypes: Record<string,any> = {
 		logout:"Boolean",
 		updateDoctorSchedule:"DoctorSchedule",
 		createDoctorSchedule:"DoctorSchedule",
-		createMenu:"Menu",
 		createOrg:"Org",
+		createMenu:"Menu",
 		deleteArticleCategory:"Boolean",
 		createArticle:"Article",
 		deleteOrg:"Boolean",
-		deleteDoctorSchedule:"Boolean",
 		publishArticle:"Boolean",
+		deleteDoctorSchedule:"Boolean",
 		updateRoleMenu:"Boolean",
 		updateUser:"User",
 		sendMessage:"Message",
-		updateComment:"Comment",
 		deleteRole:"Boolean",
+		updateComment:"Comment",
 		deleteArticle:"Boolean",
 		updateUserProfile:"Boolean",
+		deleteUser:"Boolean",
 		registerUser:"Boolean",
 		loginByAccount:"String",
-		deleteUser:"Boolean",
 		createUser:"User",
 		deleteFileById:"Boolean",
 		createPhysicalExam:"PhysicalExam"
@@ -494,6 +494,7 @@ export const ReturnTypes: Record<string,any> = {
 		latitude:"Float",
 		lead:"User",
 		leadId:"String",
+		logo:"String",
 		longitude:"Float",
 		name:"String",
 		openTime:"String",
@@ -739,8 +740,8 @@ export const ReturnTypes: Record<string,any> = {
 		queryOrgPage:"Page_Org",
 		queryMessageSessionPage:"Page_MessageSession",
 		queryFilePage:"Page_File",
-		queryArticleCategory:"ArticleCategory",
-		queryUser:"User"
+		queryUser:"User",
+		queryArticleCategory:"ArticleCategory"
 	},
 	Role:{
 		createdAt:"LocalDateTime",

@@ -135,6 +135,12 @@ async function handleDelete(id: string) {
       :loading="state.loading" @change="handleTableChange"
     >
       <template #bodyCell="{ column, record }: { column: TableColumnType<Org>, record: Org }">
+        <template v-if="column.dataIndex === 'logo'">
+          <AImage
+            :width="100"
+            :src="record.logo"
+          />
+        </template>
         <template v-if="column.dataIndex === 'orgType'">
           <span>
             {{ OrgType[record.orgType!] }}

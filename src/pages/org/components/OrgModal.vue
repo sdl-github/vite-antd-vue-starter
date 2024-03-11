@@ -3,12 +3,14 @@ import { reactive, ref, toRefs, unref } from 'vue'
 import type { FormInstance } from 'ant-design-vue'
 import { message } from 'ant-design-vue'
 import useSWRV from 'swrv'
+import type { UploadRequestOption } from 'ant-design-vue/es/vc-upload/interface'
 import { OrgTypeList, generateFormModel } from '../data'
 import type { FormModel, Org } from '../data'
 import type { GeoCode } from '~/api/org'
 import { createOrg, queryGeoByAddress, updateOrg } from '~/api/org'
 import { queryUserList } from '~/api/user'
 import { DefaultRoleEnum } from '~/utils/graphql/zeus'
+import { upload } from '~/api/file'
 
 interface Props {
   open: boolean
@@ -114,6 +116,21 @@ function handleChange(val: any, option: GeoCode) {
   model.value.longitude = longitude
   model.value.latitude = latitude
 }
+
+async function handleUpload(e: UploadRequestOption) {
+  const { file } = e
+  const loading = message.loading('加载中', 0)
+  try {
+    const res = await upload(file, 'org')
+    model.value.logo = res.url
+    loading()
+    return true
+  }
+  catch (e) {
+    loading()
+    return false
+  }
+}
 </script>
 
 <template>
@@ -127,6 +144,23 @@ function handleChange(val: any, option: GeoCode) {
       autocomplete="off"
     >
       <ARow :gutter="[16, 8]">
+        <ACol :span="24">
+          <AFormItem label="Logo" name="logo">
+            <AUpload
+              name="file"
+              accept="image/png, image/jpeg"
+              :show-upload-list="false"
+              :custom-request="handleUpload"
+            >
+              <div class="relative cursor-pointer">
+                <AAvatar :size="72" :src="model.logo" />
+                <div class="absolute right-[-10px] top-[50px] h-[25px] w-[25px] flex items-center justify-center rounded-[50%] bg-#e8f3ff">
+                  <div class="i-carbon-cloud-upload color-#1677ff" />
+                </div>
+              </div>
+            </AUpload>
+          </AFormItem>
+        </ACol>
         <ACol :span="12">
           <AFormItem label="名称" name="name" :rules="rules.name">
             <AInput v-model:value="model.name" placeholder="名称" />
