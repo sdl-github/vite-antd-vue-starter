@@ -78,7 +78,7 @@ function handleLogin() {
 <style lang="scss" scoped>
 .login-warp {
   background: radial-gradient(26.76% 85.52% at 86.73% -12.86%, #c241ff 6.65%, #6b57ff 100%);
-  background: url('/public/health-bg.jpg');
+  background: url('/health-bg.jpg');
   background-size:100% 100%;
   min-height: 100vh;
   height:100%;

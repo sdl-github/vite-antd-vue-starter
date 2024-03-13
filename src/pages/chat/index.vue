@@ -57,7 +57,7 @@ async function loadMoreData($state?: any) {
   (params.pageNo = params.pageNo + 1)
   const list = await getMessageData()
   try {
-    messageList.value?.push(...list!)
+    messageList.value = [...list!]
     messageContentRef.value && (messageContentRef.value.scrollTop = messageContentRef.value.scrollHeight)
     $state && $state.loaded()
     if (!hasNext.value)

@@ -12,7 +12,6 @@ const request = axios.create({
 request.interceptors.request.use((config) => {
   if (getToken())
     config.headers!.Authorization = `${getToken()}` as string
-
   return config
 }, (err) => {
   return Promise.reject(err)
