@@ -10,14 +10,14 @@ export type FormModel = CreateArticleInput & UpdateArticleInput
 
 export function generateFormModel(): FormModel {
   return {
-    id: "",
-    title: "未命名文章",
-    html: "",
-    markdown: "",
-    image: "",
-    metaTitle: "",
-    metaDescription: "",
-    categoryId: undefined
+    id: undefined,
+    title: '未命名文章',
+    html: '',
+    markdown: '',
+    image: '',
+    metaTitle: '',
+    metaDescription: '',
+    categoryId: undefined,
   }
 }
 
@@ -97,7 +97,7 @@ export const columns: TableColumnType<Article>[] = [
   {
     title: '操作',
     width: '100px',
-    key: "operation",
-    fixed: "right"
-  }
+    key: 'operation',
+    fixed: 'right',
+  },
 ]
