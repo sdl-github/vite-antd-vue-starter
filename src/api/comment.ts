@@ -8,6 +8,7 @@ export function queryCommentPage(specification: ValueTypes['QueryCommentPageSpec
         id: true,
         createdAt: true,
         content: true,
+        type: true,
         org: {
           name: true,
         },

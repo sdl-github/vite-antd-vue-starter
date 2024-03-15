@@ -11,17 +11,11 @@ export const AllTypesProps: Record<string,any> = {
 	CreateCommentInputInput:{
 
 	},
-	CreateDoctorScheduleInputInput:{
-		date:"LocalDate"
-	},
 	CreateMenuInputInput:{
 		type:"MenuTypeEnum"
 	},
 	CreateOrgInputInput:{
 		orgType:"OrgTypeEnum"
-	},
-	CreatePhysicalExamInputInput:{
-		date:"Date"
 	},
 	CreateRoleInputInput:{
 
@@ -29,7 +23,6 @@ export const AllTypesProps: Record<string,any> = {
 	CreateUserInputInput:{
 		gender:"GenderEnum"
 	},
-	Date: `scalar.Date` as const,
 	DefaultRoleEnum: "enum" as const,
 	Direction: "enum" as const,
 	FileProviderEnum: "enum" as const,
@@ -57,41 +50,32 @@ export const AllTypesProps: Record<string,any> = {
 		updateArticle:{
 			input:"UpdateArticleInputInput"
 		},
+		updateRole:{
+			input:"UpdateRoleInputInput"
+		},
 		updateArticleCategory:{
 			input:"UpdateArticleCategoryInputInput"
 		},
 		createArticleCategory:{
 			input:"CreateArticleCategoryInputInput"
 		},
-		updateRole:{
-			input:"UpdateRoleInputInput"
-		},
 		deleteComment:{
-
-		},
-		revoke:{
 
 		},
 		createRole:{
 			input:"CreateRoleInputInput"
 		},
+		revoke:{
+
+		},
 		updateOrg:{
 			input:"UpdateOrgInputInput"
-		},
-		deletePhysicalExam:{
-
 		},
 		createComment:{
 			input:"CreateCommentInputInput"
 		},
 		updateMenu:{
 			input:"UpdateMenuInputInput"
-		},
-		updateDoctorSchedule:{
-			input:"updateDoctorScheduleInputInput"
-		},
-		createDoctorSchedule:{
-			input:"CreateDoctorScheduleInputInput"
 		},
 		createOrg:{
 			input:"CreateOrgInputInput"
@@ -108,23 +92,20 @@ export const AllTypesProps: Record<string,any> = {
 		deleteOrg:{
 
 		},
-		publishArticle:{
-
-		},
-		deleteDoctorSchedule:{
-
-		},
 		updateRoleMenu:{
 			input:"UpdateRoleMenuInputInput"
+		},
+		publishArticle:{
+
 		},
 		updateUser:{
 			input:"UpdateUserInputInput"
 		},
-		updateComment:{
-			input:"UpdateCommentInputInput"
-		},
 		deleteRole:{
 
+		},
+		updateComment:{
+			input:"UpdateCommentInputInput"
 		},
 		deleteArticle:{
 
@@ -146,31 +127,25 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		deleteFileById:{
 
-		},
-		createPhysicalExam:{
-			input:"CreatePhysicalExamInputInput"
 		}
 	},
 	NullHandling: "enum" as const,
 	OrgTypeEnum: "enum" as const,
 	Query:{
-		queryCommentPage:{
-			specification:"QueryCommentPageSpecificationInput"
-		},
 		queryMenuList:{
 			param:"MenuQueryParamInput"
+		},
+		queryCommentPage:{
+			specification:"QueryCommentPageSpecificationInput"
 		},
 		queryUserPage:{
 			specification:"QueryUserPageSpecificationInput"
 		},
-		queryPhysicalExamPage:{
-			specification:"QueryPhysicalExamPageSpecificationInput"
+		queryStudyPlanPage:{
+			specification:"QueryStudyPlanPageSpecificationInput"
 		},
 		queryArticle:{
 
-		},
-		queryDoctorSchedulePage:{
-			specification:"QueryDoctorSchedulePageSpecificationInput"
 		},
 		queryMenuTree:{
 			param:"MenuQueryPageParamInput"
@@ -187,6 +162,9 @@ export const AllTypesProps: Record<string,any> = {
 		queryArticlePage:{
 			specification:"QueryArticlePageSpecificationInput"
 		},
+		queryWordRecordPage:{
+			specification:"QueryWordRecordPageSpecificationInput"
+		},
 		queryOrgPage:{
 			specification:"QueryOrgPageSpecificationInput"
 		},
@@ -198,6 +176,9 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		queryArticleCategory:{
 			specification:"QueryArticleCategorySpecificationInput"
+		},
+		setDayPlanAndName:{
+			input:"SetPlanAndNickNameInputInput"
 		}
 	},
 	QueryArticleCategorySpecificationInput:{
@@ -209,14 +190,11 @@ export const AllTypesProps: Record<string,any> = {
 	QueryCommentPageSpecificationInput:{
 
 	},
-	QueryDoctorSchedulePageSpecificationInput:{
-		date:"LocalDate"
-	},
 	QueryOrgPageSpecificationInput:{
 		orgType:"OrgTypeEnum"
 	},
-	QueryPhysicalExamPageSpecificationInput:{
-		date:"Date"
+	QueryStudyPlanPageSpecificationInput:{
+
 	},
 	QueryUserPageSpecificationInput:{
 
@@ -224,7 +202,13 @@ export const AllTypesProps: Record<string,any> = {
 	QueryUserSpecificationInput:{
 
 	},
+	QueryWordRecordPageSpecificationInput:{
+
+	},
 	RoleQueryParamInput:{
+
+	},
+	SetPlanAndNickNameInputInput:{
 
 	},
 	UpdateArticleCategoryInputInput:{
@@ -259,9 +243,6 @@ export const AllTypesProps: Record<string,any> = {
 	},
 	UserRegisterInputInput:{
 
-	},
-	updateDoctorScheduleInputInput:{
-		date:"LocalDate"
 	}
 }
 
@@ -304,13 +285,13 @@ export const ReturnTypes: Record<string,any> = {
 		"...on Article": "Article",
 		"...on ArticleCategory": "ArticleCategory",
 		"...on Comment": "Comment",
-		"...on DoctorSchedule": "DoctorSchedule",
 		"...on File": "File",
 		"...on Menu": "Menu",
 		"...on Org": "Org",
-		"...on PhysicalExam": "PhysicalExam",
 		"...on Role": "Role",
+		"...on StudyPlan": "StudyPlan",
 		"...on User": "User",
+		"...on WordRecord": "WordRecord",
 		createdAt:"LocalDateTime",
 		createdBy:"String",
 		id:"String",
@@ -326,24 +307,11 @@ export const ReturnTypes: Record<string,any> = {
 		location:"String",
 		org:"Org",
 		orgId:"String",
+		type:"String",
 		updatedAt:"LocalDateTime",
 		updatedBy:"String",
 		user:"User",
 		userId:"String"
-	},
-	Date: `scalar.Date` as const,
-	DoctorSchedule:{
-		createdAt:"LocalDateTime",
-		createdBy:"String",
-		date:"LocalDate",
-		doctor:"User",
-		doctorId:"String",
-		id:"String",
-		org:"Org",
-		orgId:"String",
-		shift:"String",
-		updatedAt:"LocalDateTime",
-		updatedBy:"String"
 	},
 	File:{
 		bucket:"String",
@@ -396,38 +364,33 @@ export const ReturnTypes: Record<string,any> = {
 		deleteMenu:"Boolean",
 		unpublishArticle:"Boolean",
 		updateArticle:"Article",
+		updateRole:"Role",
 		updateArticleCategory:"ArticleCategory",
 		createArticleCategory:"ArticleCategory",
-		updateRole:"Role",
 		deleteComment:"Boolean",
-		revoke:"Boolean",
 		createRole:"Role",
+		revoke:"Boolean",
 		updateOrg:"Org",
-		deletePhysicalExam:"Boolean",
 		createComment:"Comment",
 		updateMenu:"Menu",
 		logout:"Boolean",
-		updateDoctorSchedule:"DoctorSchedule",
-		createDoctorSchedule:"DoctorSchedule",
 		createOrg:"Org",
 		createMenu:"Menu",
 		deleteArticleCategory:"Boolean",
 		createArticle:"Article",
 		deleteOrg:"Boolean",
-		publishArticle:"Boolean",
-		deleteDoctorSchedule:"Boolean",
 		updateRoleMenu:"Boolean",
+		publishArticle:"Boolean",
 		updateUser:"User",
-		updateComment:"Comment",
 		deleteRole:"Boolean",
+		updateComment:"Comment",
 		deleteArticle:"Boolean",
 		updateUserProfile:"Boolean",
 		deleteUser:"Boolean",
 		registerUser:"Boolean",
 		loginByAccount:"String",
 		createUser:"User",
-		deleteFileById:"Boolean",
-		createPhysicalExam:"PhysicalExam"
+		deleteFileById:"Boolean"
 	},
 	Order:{
 		direction:"Direction",
@@ -488,25 +451,6 @@ export const ReturnTypes: Record<string,any> = {
 		totalElements:"Long",
 		totalPages:"Int"
 	},
-	Page_DoctorSchedule:{
-		content:"DoctorSchedule",
-		first:"Boolean",
-		hasContent:"Boolean",
-		hasNext:"Boolean",
-		hasPrevious:"Boolean",
-		last:"Boolean",
-		nextOrLastPageable:"Pagination",
-		nextPageable:"Pagination",
-		number:"Int",
-		numberOfElements:"Int",
-		pageable:"Pagination",
-		previousOrFirstPageable:"Pagination",
-		previousPageable:"Pagination",
-		size:"Int",
-		sort:"Sorting",
-		totalElements:"Long",
-		totalPages:"Int"
-	},
 	Page_File:{
 		content:"File",
 		first:"Boolean",
@@ -545,8 +489,8 @@ export const ReturnTypes: Record<string,any> = {
 		totalElements:"Long",
 		totalPages:"Int"
 	},
-	Page_PhysicalExam:{
-		content:"PhysicalExam",
+	Page_Role:{
+		content:"Role",
 		first:"Boolean",
 		hasContent:"Boolean",
 		hasNext:"Boolean",
@@ -564,8 +508,8 @@ export const ReturnTypes: Record<string,any> = {
 		totalElements:"Long",
 		totalPages:"Int"
 	},
-	Page_Role:{
-		content:"Role",
+	Page_StudyPlan:{
+		content:"StudyPlan",
 		first:"Boolean",
 		hasContent:"Boolean",
 		hasNext:"Boolean",
@@ -602,41 +546,39 @@ export const ReturnTypes: Record<string,any> = {
 		totalElements:"Long",
 		totalPages:"Int"
 	},
+	Page_WordRecord:{
+		content:"WordRecord",
+		first:"Boolean",
+		hasContent:"Boolean",
+		hasNext:"Boolean",
+		hasPrevious:"Boolean",
+		last:"Boolean",
+		nextOrLastPageable:"Pagination",
+		nextPageable:"Pagination",
+		number:"Int",
+		numberOfElements:"Int",
+		pageable:"Pagination",
+		previousOrFirstPageable:"Pagination",
+		previousPageable:"Pagination",
+		size:"Int",
+		sort:"Sorting",
+		totalElements:"Long",
+		totalPages:"Int"
+	},
 	Pagination:{
 		pageNumber:"Int",
 		pageSize:"Int",
 		sort:"Sort"
 	},
-	PhysicalExam:{
-		bloodPressure:"String",
-		cholesterolLevel:"Float",
-		createdAt:"LocalDateTime",
-		createdBy:"String",
-		date:"Date",
-		doctorNotes:"String",
-		heartRate:"Int",
-		height:"Float",
-		id:"String",
-		org:"Org",
-		orgId:"String",
-		result:"String",
-		sugarLevel:"Float",
-		updatedAt:"LocalDateTime",
-		updatedBy:"String",
-		user:"User",
-		userId:"String",
-		weight:"Float"
-	},
 	Query:{
 		app:"String",
 		userInfo:"UserInfoResult",
-		queryCommentPage:"Page_Comment",
 		queryMenuList:"Menu",
+		queryCommentPage:"Page_Comment",
 		queryArticleCategoryTree:"ArticleCategory",
 		queryUserPage:"Page_User",
-		queryPhysicalExamPage:"Page_PhysicalExam",
+		queryStudyPlanPage:"Page_StudyPlan",
 		queryArticle:"Article",
-		queryDoctorSchedulePage:"Page_DoctorSchedule",
 		queryMenuTree:"Menu",
 		queryRolePage:"Page_Role",
 		queryLoginSessionList:"LoginSessionResult",
@@ -645,10 +587,12 @@ export const ReturnTypes: Record<string,any> = {
 		queryAllRoleList:"Role",
 		queryDefaultRole:"DefaultRoleEnum",
 		queryArticlePage:"Page_Article",
+		queryWordRecordPage:"Page_WordRecord",
 		queryOrgPage:"Page_Org",
 		queryFilePage:"Page_File",
 		queryUser:"User",
-		queryArticleCategory:"ArticleCategory"
+		queryArticleCategory:"ArticleCategory",
+		setDayPlanAndName:"Boolean"
 	},
 	Role:{
 		createdAt:"LocalDateTime",
@@ -670,10 +614,23 @@ export const ReturnTypes: Record<string,any> = {
 	Sorting:{
 		orders:"Order"
 	},
+	StudyPlan:{
+		createdAt:"LocalDateTime",
+		createdBy:"String",
+		date:"LocalDate",
+		dayCount:"Int",
+		id:"String",
+		planCount:"Int",
+		updatedAt:"LocalDateTime",
+		updatedBy:"String",
+		user:"User",
+		userId:"String"
+	},
 	User:{
 		avatar:"String",
 		createdAt:"LocalDateTime",
 		createdBy:"String",
+		dayCount:"Int",
 		email:"String",
 		gender:"GenderEnum",
 		id:"String",
@@ -684,12 +641,14 @@ export const ReturnTypes: Record<string,any> = {
 		orgId:"String",
 		phone:"String",
 		roles:"Role",
+		totalCount:"Int",
 		updatedAt:"LocalDateTime",
 		updatedBy:"String",
 		userName:"String"
 	},
 	UserInfoResult:{
 		avatar:"String",
+		dayCount:"Int",
 		email:"String",
 		gender:"GenderEnum",
 		id:"String",
@@ -700,7 +659,21 @@ export const ReturnTypes: Record<string,any> = {
 		phone:"String",
 		roles:"Role",
 		superAdmin:"Boolean",
+		totalCount:"Int",
 		userName:"String"
+	},
+	WordRecord:{
+		createdAt:"LocalDateTime",
+		createdBy:"String",
+		detail:"String",
+		id:"String",
+		image:"String",
+		type:"String",
+		updatedAt:"LocalDateTime",
+		updatedBy:"String",
+		user:"User",
+		userId:"String",
+		word:"String"
 	}
 }
 

@@ -14,7 +14,7 @@ const loading = ref(false)
         <div class="mx-6 mt-4 rounded bg-white p-4">
           <ARow>
             <ACol :span="6">
-              <AStatistic title="当前在线用户" :value="1" style="margin-right: 50px" />
+              欢迎使用
             </ACol>
           </ARow>
         </div>

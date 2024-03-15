@@ -9,6 +9,7 @@ import { type TableColumnType, message } from 'ant-design-vue'
 import { columns, generateSearch } from './data'
 import type { Comment, State } from './data'
 import { deleteComment, queryCommentPage } from '~/api/comment'
+import { queryWordRecordPage } from '~/api/word'
 
 const state: State = reactive({
   loading: false,
@@ -26,8 +27,8 @@ initData()
 async function initData() {
   state.loading = true
   const { search } = state
-  const res = await queryCommentPage(search)
-  const { content, totalElements } = res.queryCommentPage!
+  const res = await queryWordRecordPage(search)
+  const { content, totalElements } = res.queryWordRecordPage!
   state.data = content as Comment[]
   state.total = totalElements as number
   state.loading = false
@@ -123,7 +124,7 @@ async function handleDelete(id: string) {
       <template #bodyCell="{ column, record }: { column: TableColumnType<Comment>, record: Comment }">
         <template v-if="column.dataIndex === 'type'">
           <span>
-            {{ record.type === '1' ? '留言' : '心得' }}
+            {{ record.type === '1' ? '查单词' : '刷单词' }}
           </span>
         </template>
         <template v-if="column.dataIndex === 'user'">
@@ -134,6 +135,16 @@ async function handleDelete(id: string) {
         <template v-if="column.dataIndex === 'createdAt'">
           <span>
             {{ formatDate(record.createdAt) }}
+          </span>
+        </template>
+        <template v-if="column.key === 'operation'">
+          <span>
+            <APopconfirm
+              :title="`确定要删除${record.id}?`" ok-text="确定" cancel-text="取消"
+              @confirm="handleDelete(record.id!)"
+            >
+              <a>删除</a>
+            </APopconfirm>
           </span>
         </template>
       </template>
