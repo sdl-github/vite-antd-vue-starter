@@ -154,7 +154,8 @@ async function handleSetWarn(id: string) {
     <!-- 表格 -->
     <ATable
       :pagination="false" :columns="columns" :row-key="(record: any) => record.id" :data-source="state.data"
-      :loading="state.loading" @change="handleTableChange"
+      :loading="state.loading" :scroll="{ x: 1500 }"
+      @change="handleTableChange"
     >
       <template #bodyCell="{ column, record }: { column: TableColumnType<PhysicalExam>, record: PhysicalExam }">
         <template v-if="column.dataIndex === 'org'">
