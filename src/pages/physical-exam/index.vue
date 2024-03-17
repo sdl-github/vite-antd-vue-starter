@@ -202,8 +202,6 @@ async function handleSetWarn(id: string) {
               <a>删除</a>
             </APopconfirm>
             <ADivider type="vertical" />
-            <a class="text-green" @click="handleSetWarn(record.id!)">电话提醒</a>
-            <ADivider type="vertical" />
             <a class="text-pink" @click="handleSetWarn(record.id!)">短信提醒</a>
           </span>
         </template>
