@@ -1,6 +1,17 @@
 import type { ModelTypes, ValueTypes } from '@/utils/graphql/zeus'
 import { mutation, query } from '~/utils/graphql'
 
+export function queryOpenChat(userId: string) {
+  return query({
+    userOpenMessage: [{ userId }, true],
+  })
+}
+
+export function setOpenChat(userId: string, open: boolean) {
+  return mutation({
+    setUserOpenMessage: [{ userId, open }, true],
+  })
+}
 export function queryMessageSessionPage(specification: ValueTypes['QueryMessageSessionPageSpecificationInput']) {
   return query({
     queryMessageSessionPage: [

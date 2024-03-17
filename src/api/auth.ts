@@ -23,6 +23,7 @@ export function userInfo() {
       avatar: true,
       superAdmin: true,
       passwordEnable: true,
+      openMessage: true,
       menus: {
         id: true,
         parentId: true,

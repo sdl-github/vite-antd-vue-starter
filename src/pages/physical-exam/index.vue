@@ -6,10 +6,11 @@
 <script setup lang="ts">
 import type { SorterResult } from 'ant-design-vue/es/table/interface'
 import { type TableColumnType, message } from 'ant-design-vue'
+import dayjs from 'dayjs'
 import { columns, generateSearch } from './data'
 import type { PhysicalExam, State } from './data'
 import PhysicalExamModal from './components/PhysicalExamModal.vue'
-import { deletePhysicalExam, queryPhysicalExamPage } from '~/api/physical-exam'
+import { deletePhysicalExam, queryPhysicalExamPage, setWarn } from '~/api/physical-exam'
 
 const state: State = reactive({
   loading: false,
@@ -29,7 +30,13 @@ async function initData() {
   const { search } = state
   const res = await queryPhysicalExamPage(search)
   const { content, totalElements } = res!
-  state.data = content as PhysicalExam[]
+  state.data = (content as PhysicalExam[]).map((item) => {
+    // 设置一个日期，例如半年前
+    const halfYearAgo = dayjs().subtract(6, 'months')
+    // 判断当前日期是否在半年以上
+    const onDate = dayjs(item.user?.lastExamData).diff(halfYearAgo, 'day') > 0
+    return { ...item, onDate }
+  })
   state.total = totalElements as number
   state.loading = false
 }
@@ -74,6 +81,24 @@ async function handleDelete(id: string) {
   const loading = message.loading('加载中', 0)
   try {
     await deletePhysicalExam(id)
+    initData()
+    loading()
+    message.success('成功')
+    return true
+  }
+  catch (e) {
+    loading()
+    return false
+  }
+}
+
+async function handleSetWarn(id: string) {
+  const loading = message.loading('加载中', 0)
+  try {
+    await setWarn({
+      id,
+      warn: true,
+    })
     initData()
     loading()
     message.success('成功')
@@ -137,6 +162,11 @@ async function handleDelete(id: string) {
             {{ record.org?.name }}
           </span>
         </template>
+        <template v-if="column.dataIndex === 'warn'">
+          <span :class="`${record.warn ? 'text-green' : 'text-red'}`">
+            {{ record.warn && '已提醒' || '未提醒' }}
+          </span>
+        </template>
         <template v-if="column.dataIndex === 'user'">
           <span>
             {{ record.user?.nickName || record.user?.userName }}
@@ -147,9 +177,19 @@ async function handleDelete(id: string) {
             {{ formatDateNoMin(record.date) }}
           </span>
         </template>
+        <template v-if="column.dataIndex === 'onDate'">
+          <span :class="`${record.onDate ? 'text-green' : 'text-red'}`">
+            {{ record.onDate && "是" || "否" }}
+          </span>
+        </template>
         <template v-if="column.dataIndex === 'createdAt'">
           <span>
-            {{ formatDate(record.createdAt) }}
+            {{ formatDateNoMin(record.createdAt) }}
+          </span>
+        </template>
+        <template v-if="column.dataIndex === 'lastDate'">
+          <span>
+            {{ formatDateNoMin(record.user?.lastExamData) }}
           </span>
         </template>
         <template v-if="column.key === 'operation'">
@@ -160,6 +200,10 @@ async function handleDelete(id: string) {
             >
               <a>删除</a>
             </APopconfirm>
+            <ADivider type="vertical" />
+            <a class="text-green" @click="handleSetWarn(record.id!)">电话提醒</a>
+            <ADivider type="vertical" />
+            <a class="text-pink" @click="handleSetWarn(record.id!)">短信提醒</a>
           </span>
         </template>
       </template>

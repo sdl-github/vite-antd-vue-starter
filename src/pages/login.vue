@@ -20,7 +20,6 @@ function handleLogin() {
       loginByAccount(account, password).then(async ({ loginByAccount: accessToken }) => {
         if (!accessToken)
           return
-
         setToken(accessToken!)
         await router.push('/')
         notification.success({
