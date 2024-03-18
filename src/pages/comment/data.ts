@@ -18,6 +18,7 @@ export function generateSearch() {
     pageNo: DEFAULT_PAGE_NO,
     pageSize: DEFAULT_PAGE_SIZE,
     sort: '',
+    content: undefined,
   }
   return search
 }
@@ -32,6 +33,29 @@ export interface State {
 
 export const columns: TableColumnType<Comment>[] = [
   {
+    title: '意见人',
+    align: 'center',
+    width: '100px',
+    dataIndex: 'user',
+    key: 'user',
+  },
+  {
+    title: '意见内容',
+    fixed: 'left',
+    align: 'center',
+    width: '300px',
+    dataIndex: 'content',
+    key: 'content',
+    ellipsis: true,
+  },
+  {
+    title: '意见时间',
+    width: '100px',
+    align: 'center',
+    dataIndex: 'createdAt',
+    key: 'createdAt',
+  },
+  {
     title: '机构',
     fixed: 'left',
     align: 'center',
@@ -41,27 +65,34 @@ export const columns: TableColumnType<Comment>[] = [
     ellipsis: true,
   },
   {
-    title: '内容',
+    title: '回复人',
+    align: 'center',
+    width: '100px',
+    dataIndex: 'replyUser',
+    key: 'replyUser',
+  },
+  {
+    title: '回复内容',
     fixed: 'left',
     align: 'center',
     width: '300px',
-    dataIndex: 'content',
-    key: 'content',
+    dataIndex: 'reply',
+    key: 'reply',
     ellipsis: true,
   },
   {
-    title: '用户',
-    align: 'center',
+    title: '回复时间',
     width: '100px',
-    dataIndex: 'user',
-    key: 'user',
+    align: 'center',
+    dataIndex: 'replyAt',
+    key: 'replyAt',
   },
   {
-    title: '创建时间',
+    title: '状态',
     width: '100px',
     align: 'center',
-    dataIndex: 'createdAt',
-    key: 'createdAt',
+    dataIndex: 'status',
+    key: 'status',
   },
   {
     title: '操作',

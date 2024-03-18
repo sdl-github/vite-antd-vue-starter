@@ -1,5 +1,5 @@
 import type { ModelTypes, ValueTypes } from '@/utils/graphql/zeus'
-import { query } from '~/utils/graphql'
+import { mutation, query } from '~/utils/graphql'
 
 export function queryCommentPage(specification: ValueTypes['QueryCommentPageSpecificationInput']) {
   return query({
@@ -12,6 +12,12 @@ export function queryCommentPage(specification: ValueTypes['QueryCommentPageSpec
           name: true,
         },
         user: {
+          nickName: true,
+          userName: true,
+        },
+        reply: true,
+        replyAt: true,
+        replyUser: {
           nickName: true,
           userName: true,
         },
@@ -42,5 +48,14 @@ export function deleteComment(id: string): Promise<void> {
   return request({
     url: `/comment/delete/${id}`,
     method: 'delete',
+  })
+}
+
+export function replyComment(input: ValueTypes['ReplyCommentInputInput']) {
+  return mutation({
+    replyComment: [
+      { input },
+      { id: true },
+    ],
   })
 }

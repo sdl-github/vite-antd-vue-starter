@@ -214,7 +214,7 @@ function handleCancel() {
             </ASelect>
           </AFormItem>
         </ACol>
-        <ACol :span="12">
+        <ACol v-if="checkPermission(['SUPER_ADMIN', 'ADMIN'])" :span="12">
           <AFormItem label="角色" name="roleIds">
             <UserRoleItem v-model:value="model.roleIds" :options="roleOptions" />
           </AFormItem>

@@ -8,7 +8,7 @@ import type { SorterResult } from 'ant-design-vue/es/table/interface'
 import { type TableColumnType, message } from 'ant-design-vue'
 import { columns, generateSearch } from './data'
 import type { Comment, State } from './data'
-import { deleteComment, queryCommentPage } from '~/api/comment'
+import { deleteComment, queryCommentPage, replyComment } from '~/api/comment'
 
 const state: State = reactive({
   loading: false,
@@ -79,6 +79,24 @@ async function handleDelete(id: string) {
     return false
   }
 }
+
+async function handleReply(item: any) {
+  const loading = message.loading('加载中', 0)
+  try {
+    await replyComment({
+      id: item.id,
+      reply: item.reply,
+    })
+    initData()
+    loading()
+    message.success('成功')
+    return true
+  }
+  catch (e) {
+    loading()
+    return false
+  }
+}
 </script>
 
 <template>
@@ -86,8 +104,7 @@ async function handleDelete(id: string) {
     <!-- 搜索 -->
     <ACard>
       <div class="flex">
-        <AInput v-model:value="search.orgName" placeholder="机构名称" class="w-200px" />
-        <AInput v-model:value="search.userName" placeholder="用户姓名" class="ml-2 w-200px" />
+        <AInput v-model:value="search.content" placeholder="意见内容" class="w-200px" />
         <div class="ml-2 flex items-center">
           <AButton :loading="state.loading" class="flex items-center justify-center" type="primary" @click="handleSearch">
             <template #icon>
@@ -127,18 +144,33 @@ async function handleDelete(id: string) {
             {{ record.org?.name }}
           </span>
         </template>
-
         <template v-if="column.dataIndex === 'content'">
-          <span v-html="record?.content" />
+          <div v-html="record?.content" />
         </template>
         <template v-if="column.dataIndex === 'user'">
           <span>
             {{ record.user?.nickName || record.user?.userName }}
           </span>
         </template>
+        <template v-if="column.dataIndex === 'replyUser'">
+          <span>
+            {{ record.replyUser?.nickName || record.replyUser?.userName }}
+          </span>
+        </template>
+
         <template v-if="column.dataIndex === 'createdAt'">
           <span>
             {{ formatDate(record.createdAt) }}
+          </span>
+        </template>
+        <template v-if="column.dataIndex === 'replyAt'">
+          <span>
+            {{ formatDate(record.replyAt) }}
+          </span>
+        </template>
+        <template v-if="column.dataIndex === 'status'">
+          <span>
+            {{ record.replyAt ? '已回复' : '未回复' }}
           </span>
         </template>
         <template v-if="column.key === 'operation'">
@@ -148,6 +180,18 @@ async function handleDelete(id: string) {
               @confirm="handleDelete(record.id!)"
             >
               <a>删除</a>
+            </APopconfirm>
+            <ADivider type="vertical" />
+            <APopconfirm ok-text="确定" cancel-text="取消" @confirm="handleReply(record)" @cancel="record.reply = ''">
+              <template #icon />
+              <template #title>
+                <ATextarea
+                  v-model:value="record.reply"
+                  placeholder="请输入"
+                  :auto-size="{ minRows: 2, maxRows: 5 }"
+                />
+              </template>
+              <a>回复</a>
             </APopconfirm>
           </span>
         </template>

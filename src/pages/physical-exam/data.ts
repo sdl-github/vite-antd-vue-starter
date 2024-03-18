@@ -18,8 +18,8 @@ export function generateSearch() {
   const search: QueryPhysicalExamPageSpecificationInput = {
     pageNo: DEFAULT_PAGE_NO,
     pageSize: DEFAULT_PAGE_SIZE,
-    orgName: '',
-    userName: '',
+    orgName: undefined,
+    userName: undefined,
     sort: 'createdAt desc',
   }
   return search

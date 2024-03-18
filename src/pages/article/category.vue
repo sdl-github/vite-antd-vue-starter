@@ -13,6 +13,10 @@ const rules = {
   name: [{ required: true, message: '必填项' }],
   sort: [{ required: true, message: '必填项' }],
 }
+const columns = [
+  { title: '分类名称', dataIndex: 'name', key: 'name', fixed: true },
+  { title: '操作', key: 'action' },
+]
 const open = ref(false)
 const confirmLoading = ref(false)
 const form = ref<ModelTypes['ArticleCategory']>({})
@@ -118,31 +122,23 @@ async function handleDelete({ id }: ModelTypes['ArticleCategory']) {
         添加一级分类
       </AButton>
       <div class="mt-4">
-        <ATree
-          :tree-data="data as any"
-          :field-names="{
-            children: 'children',
-            title: 'name',
-            key: 'id',
-          }"
-        >
-          <template #title="item">
-            <div class="min-w-200px flex items-center justify-between px-2">
-              <div>{{ item.name }}</div>
+        <ATable :row-key="(record: any) => record.id" :columns="columns" :data-source="data" :scroll="{ x: 2000 }" :expand-column-width="100">
+          <template #bodyCell="{ column, record }">
+            <template v-if="column.key === 'action'">
               <div class="flex items-center">
-                <div @click="handleOpenEdit(item)">
+                <a @click="handleOpenEdit(record)">
                   编辑
-                </div>
-                <div class="ml-2" @click="handleOpenCreate(item)">
+                </a>
+                <a class="ml-2" @click="handleOpenCreate(record)">
                   新增
-                </div>
-                <div class="ml-2" @click="handleDelete(item)">
+                </a>
+                <a class="ml-2" @click="handleDelete(record)">
                   删除
-                </div>
+                </a>
               </div>
-            </div>
+            </template>
           </template>
-        </ATree>
+        </ATable>
       </div>
     </div>
   </div>

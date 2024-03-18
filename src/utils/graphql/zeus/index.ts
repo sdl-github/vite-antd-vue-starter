@@ -931,6 +931,10 @@ export type ValueTypes = {
 	location?:boolean | `@${string}`,
 	org?:ValueTypes["Org"],
 	orgId?:boolean | `@${string}`,
+	reply?:boolean | `@${string}`,
+	replyAt?:boolean | `@${string}`,
+	replyUser?:ValueTypes["User"],
+	replyUserId?:boolean | `@${string}`,
 	/** 更新时间 */
 	updatedAt?:boolean | `@${string}`,
 	/** 更新人 */
@@ -1177,12 +1181,12 @@ export type ValueTypes = {
 deleteMenu?: [{	menuId?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
 unpublishArticle?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
 updateArticle?: [{	input?: ValueTypes["UpdateArticleInputInput"] | undefined | null | Variable<any, string>},ValueTypes["Article"]],
+updateRole?: [{	input: ValueTypes["UpdateRoleInputInput"] | Variable<any, string>},ValueTypes["Role"]],
 updateArticleCategory?: [{	input?: ValueTypes["UpdateArticleCategoryInputInput"] | undefined | null | Variable<any, string>},ValueTypes["ArticleCategory"]],
 createArticleCategory?: [{	input?: ValueTypes["CreateArticleCategoryInputInput"] | undefined | null | Variable<any, string>},ValueTypes["ArticleCategory"]],
-updateRole?: [{	input: ValueTypes["UpdateRoleInputInput"] | Variable<any, string>},ValueTypes["Role"]],
 deleteComment?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
-revoke?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
 createRole?: [{	input: ValueTypes["CreateRoleInputInput"] | Variable<any, string>},ValueTypes["Role"]],
+revoke?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
 updateOrg?: [{	input?: ValueTypes["UpdateOrgInputInput"] | undefined | null | Variable<any, string>},ValueTypes["Org"]],
 deletePhysicalExam?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
 createComment?: [{	input?: ValueTypes["CreateCommentInputInput"] | undefined | null | Variable<any, string>},ValueTypes["Comment"]],
@@ -1192,23 +1196,24 @@ setUserOpenMessage?: [{	userId?: string | undefined | null | Variable<any, strin
 setWarn?: [{	input?: ValueTypes["SetWarnInputInput"] | undefined | null | Variable<any, string>},boolean | `@${string}`],
 updateDoctorSchedule?: [{	input?: ValueTypes["updateDoctorScheduleInputInput"] | undefined | null | Variable<any, string>},ValueTypes["DoctorSchedule"]],
 createDoctorSchedule?: [{	input?: ValueTypes["CreateDoctorScheduleInputInput"] | undefined | null | Variable<any, string>},ValueTypes["DoctorSchedule"]],
-createOrg?: [{	input?: ValueTypes["CreateOrgInputInput"] | undefined | null | Variable<any, string>},ValueTypes["Org"]],
 createMenu?: [{	input: ValueTypes["CreateMenuInputInput"] | Variable<any, string>},ValueTypes["Menu"]],
+createOrg?: [{	input?: ValueTypes["CreateOrgInputInput"] | undefined | null | Variable<any, string>},ValueTypes["Org"]],
 deleteArticleCategory?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
 createArticle?: [{	input?: ValueTypes["CreateArticleInputInput"] | undefined | null | Variable<any, string>},ValueTypes["Article"]],
 deleteOrg?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
-publishArticle?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
 deleteDoctorSchedule?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
 updateRoleMenu?: [{	input: ValueTypes["UpdateRoleMenuInputInput"] | Variable<any, string>},boolean | `@${string}`],
-sendMessage?: [{	input?: ValueTypes["SendMessageInputInput"] | undefined | null | Variable<any, string>},ValueTypes["Message"]],
+publishArticle?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
 updateUser?: [{	input: ValueTypes["UpdateUserInputInput"] | Variable<any, string>},ValueTypes["User"]],
+sendMessage?: [{	input?: ValueTypes["SendMessageInputInput"] | undefined | null | Variable<any, string>},ValueTypes["Message"]],
 deleteRole?: [{	roleId?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
 updateComment?: [{	input?: ValueTypes["UpdateCommentInputInput"] | undefined | null | Variable<any, string>},ValueTypes["Comment"]],
 deleteArticle?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
 updateUserProfile?: [{	input?: ValueTypes["UpdateUserProfileInputInput"] | undefined | null | Variable<any, string>},boolean | `@${string}`],
-registerUser?: [{	input?: ValueTypes["UserRegisterInputInput"] | undefined | null | Variable<any, string>},boolean | `@${string}`],
-loginByAccount?: [{	input?: ValueTypes["UserLoginInputInput"] | undefined | null | Variable<any, string>},boolean | `@${string}`],
+replyComment?: [{	input?: ValueTypes["ReplyCommentInputInput"] | undefined | null | Variable<any, string>},ValueTypes["Comment"]],
 deleteUser?: [{	userId: string | Variable<any, string>},boolean | `@${string}`],
+loginByAccount?: [{	input?: ValueTypes["UserLoginInputInput"] | undefined | null | Variable<any, string>},boolean | `@${string}`],
+registerUser?: [{	input?: ValueTypes["UserRegisterInputInput"] | undefined | null | Variable<any, string>},boolean | `@${string}`],
 createUser?: [{	input: ValueTypes["CreateUserInputInput"] | Variable<any, string>},ValueTypes["User"]],
 deleteFileById?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
 createPhysicalExam?: [{	input?: ValueTypes["CreatePhysicalExamInputInput"] | undefined | null | Variable<any, string>},ValueTypes["PhysicalExam"]],
@@ -1481,8 +1486,8 @@ createPhysicalExam?: [{	input?: ValueTypes["CreatePhysicalExamInputInput"] | und
 	/** Query root */
 ["Query"]: AliasType<{
 	userInfo?:ValueTypes["UserInfoResult"],
-queryOrg?: [{	id?: string | undefined | null | Variable<any, string>},ValueTypes["Org"]],
 queryMessageSession?: [{	id?: string | undefined | null | Variable<any, string>},ValueTypes["MessageSession"]],
+queryOrg?: [{	id?: string | undefined | null | Variable<any, string>},ValueTypes["Org"]],
 queryPhysical?: [{	id?: string | undefined | null | Variable<any, string>},ValueTypes["PhysicalExam"]],
 queryPhysicalExamPage?: [{	specification?: ValueTypes["QueryPhysicalExamPageSpecificationInput"] | undefined | null | Variable<any, string>},ValueTypes["Page_PhysicalExam"]],
 queryRolePage?: [{	param?: ValueTypes["RoleQueryParamInput"] | undefined | null | Variable<any, string>},ValueTypes["Page_Role"]],
@@ -1502,8 +1507,8 @@ queryCommentPage?: [{	specification?: ValueTypes["QueryCommentPageSpecificationI
 queryUserPage?: [{	specification: ValueTypes["QueryUserPageSpecificationInput"] | Variable<any, string>},ValueTypes["Page_User"]],
 messageSession?: [{	toId?: string | undefined | null | Variable<any, string>},ValueTypes["MessageSession"]],
 queryArticle?: [{	id?: string | undefined | null | Variable<any, string>},ValueTypes["Article"]],
-queryMenuTree?: [{	param?: ValueTypes["MenuQueryPageParamInput"] | undefined | null | Variable<any, string>},ValueTypes["Menu"]],
 queryDoctorSchedulePage?: [{	specification?: ValueTypes["QueryDoctorSchedulePageSpecificationInput"] | undefined | null | Variable<any, string>},ValueTypes["Page_DoctorSchedule"]],
+queryMenuTree?: [{	param?: ValueTypes["MenuQueryPageParamInput"] | undefined | null | Variable<any, string>},ValueTypes["Menu"]],
 queryUserList?: [{	specification?: ValueTypes["QueryUserSpecificationInput"] | undefined | null | Variable<any, string>},ValueTypes["User"]],
 	queryDefaultRole?:boolean | `@${string}`,
 queryMessageSessionPage?: [{	specification?: ValueTypes["QueryMessageSessionPageSpecificationInput"] | undefined | null | Variable<any, string>},ValueTypes["Page_MessageSession"]],
@@ -1523,6 +1528,7 @@ queryUser?: [{	userId?: string | undefined | null | Variable<any, string>},Value
 	title?: string | undefined | null | Variable<any, string>
 };
 	["QueryCommentPageSpecificationInput"]: {
+	content?: string | undefined | null | Variable<any, string>,
 	orgId?: string | undefined | null | Variable<any, string>,
 	orgName?: string | undefined | null | Variable<any, string>,
 	pageNo: number | Variable<any, string>,
@@ -1586,6 +1592,11 @@ queryUser?: [{	userId?: string | undefined | null | Variable<any, string>},Value
 	key?: string | undefined | null | Variable<any, string>,
 	nickName?: string | undefined | null | Variable<any, string>,
 	userName?: string | undefined | null | Variable<any, string>
+};
+	["ReplyCommentInputInput"]: {
+	/** id */
+	id?: string | undefined | null | Variable<any, string>,
+	reply?: string | undefined | null | Variable<any, string>
 };
 	["Role"]: AliasType<{
 	/** 创建时间 */
@@ -1869,6 +1880,10 @@ export type ResolverInputTypes = {
 	location?:boolean | `@${string}`,
 	org?:ResolverInputTypes["Org"],
 	orgId?:boolean | `@${string}`,
+	reply?:boolean | `@${string}`,
+	replyAt?:boolean | `@${string}`,
+	replyUser?:ResolverInputTypes["User"],
+	replyUserId?:boolean | `@${string}`,
 	/** 更新时间 */
 	updatedAt?:boolean | `@${string}`,
 	/** 更新人 */
@@ -2115,12 +2130,12 @@ export type ResolverInputTypes = {
 deleteMenu?: [{	menuId?: string | undefined | null},boolean | `@${string}`],
 unpublishArticle?: [{	id?: string | undefined | null},boolean | `@${string}`],
 updateArticle?: [{	input?: ResolverInputTypes["UpdateArticleInputInput"] | undefined | null},ResolverInputTypes["Article"]],
+updateRole?: [{	input: ResolverInputTypes["UpdateRoleInputInput"]},ResolverInputTypes["Role"]],
 updateArticleCategory?: [{	input?: ResolverInputTypes["UpdateArticleCategoryInputInput"] | undefined | null},ResolverInputTypes["ArticleCategory"]],
 createArticleCategory?: [{	input?: ResolverInputTypes["CreateArticleCategoryInputInput"] | undefined | null},ResolverInputTypes["ArticleCategory"]],
-updateRole?: [{	input: ResolverInputTypes["UpdateRoleInputInput"]},ResolverInputTypes["Role"]],
 deleteComment?: [{	id?: string | undefined | null},boolean | `@${string}`],
-revoke?: [{	id?: string | undefined | null},boolean | `@${string}`],
 createRole?: [{	input: ResolverInputTypes["CreateRoleInputInput"]},ResolverInputTypes["Role"]],
+revoke?: [{	id?: string | undefined | null},boolean | `@${string}`],
 updateOrg?: [{	input?: ResolverInputTypes["UpdateOrgInputInput"] | undefined | null},ResolverInputTypes["Org"]],
 deletePhysicalExam?: [{	id?: string | undefined | null},boolean | `@${string}`],
 createComment?: [{	input?: ResolverInputTypes["CreateCommentInputInput"] | undefined | null},ResolverInputTypes["Comment"]],
@@ -2130,23 +2145,24 @@ setUserOpenMessage?: [{	userId?: string | undefined | null,	open?: boolean | und
 setWarn?: [{	input?: ResolverInputTypes["SetWarnInputInput"] | undefined | null},boolean | `@${string}`],
 updateDoctorSchedule?: [{	input?: ResolverInputTypes["updateDoctorScheduleInputInput"] | undefined | null},ResolverInputTypes["DoctorSchedule"]],
 createDoctorSchedule?: [{	input?: ResolverInputTypes["CreateDoctorScheduleInputInput"] | undefined | null},ResolverInputTypes["DoctorSchedule"]],
-createOrg?: [{	input?: ResolverInputTypes["CreateOrgInputInput"] | undefined | null},ResolverInputTypes["Org"]],
 createMenu?: [{	input: ResolverInputTypes["CreateMenuInputInput"]},ResolverInputTypes["Menu"]],
+createOrg?: [{	input?: ResolverInputTypes["CreateOrgInputInput"] | undefined | null},ResolverInputTypes["Org"]],
 deleteArticleCategory?: [{	id?: string | undefined | null},boolean | `@${string}`],
 createArticle?: [{	input?: ResolverInputTypes["CreateArticleInputInput"] | undefined | null},ResolverInputTypes["Article"]],
 deleteOrg?: [{	id?: string | undefined | null},boolean | `@${string}`],
-publishArticle?: [{	id?: string | undefined | null},boolean | `@${string}`],
 deleteDoctorSchedule?: [{	id?: string | undefined | null},boolean | `@${string}`],
 updateRoleMenu?: [{	input: ResolverInputTypes["UpdateRoleMenuInputInput"]},boolean | `@${string}`],
-sendMessage?: [{	input?: ResolverInputTypes["SendMessageInputInput"] | undefined | null},ResolverInputTypes["Message"]],
+publishArticle?: [{	id?: string | undefined | null},boolean | `@${string}`],
 updateUser?: [{	input: ResolverInputTypes["UpdateUserInputInput"]},ResolverInputTypes["User"]],
+sendMessage?: [{	input?: ResolverInputTypes["SendMessageInputInput"] | undefined | null},ResolverInputTypes["Message"]],
 deleteRole?: [{	roleId?: string | undefined | null},boolean | `@${string}`],
 updateComment?: [{	input?: ResolverInputTypes["UpdateCommentInputInput"] | undefined | null},ResolverInputTypes["Comment"]],
 deleteArticle?: [{	id?: string | undefined | null},boolean | `@${string}`],
 updateUserProfile?: [{	input?: ResolverInputTypes["UpdateUserProfileInputInput"] | undefined | null},boolean | `@${string}`],
-registerUser?: [{	input?: ResolverInputTypes["UserRegisterInputInput"] | undefined | null},boolean | `@${string}`],
-loginByAccount?: [{	input?: ResolverInputTypes["UserLoginInputInput"] | undefined | null},boolean | `@${string}`],
+replyComment?: [{	input?: ResolverInputTypes["ReplyCommentInputInput"] | undefined | null},ResolverInputTypes["Comment"]],
 deleteUser?: [{	userId: string},boolean | `@${string}`],
+loginByAccount?: [{	input?: ResolverInputTypes["UserLoginInputInput"] | undefined | null},boolean | `@${string}`],
+registerUser?: [{	input?: ResolverInputTypes["UserRegisterInputInput"] | undefined | null},boolean | `@${string}`],
 createUser?: [{	input: ResolverInputTypes["CreateUserInputInput"]},ResolverInputTypes["User"]],
 deleteFileById?: [{	id?: string | undefined | null},boolean | `@${string}`],
 createPhysicalExam?: [{	input?: ResolverInputTypes["CreatePhysicalExamInputInput"] | undefined | null},ResolverInputTypes["PhysicalExam"]],
@@ -2419,8 +2435,8 @@ createPhysicalExam?: [{	input?: ResolverInputTypes["CreatePhysicalExamInputInput
 	/** Query root */
 ["Query"]: AliasType<{
 	userInfo?:ResolverInputTypes["UserInfoResult"],
-queryOrg?: [{	id?: string | undefined | null},ResolverInputTypes["Org"]],
 queryMessageSession?: [{	id?: string | undefined | null},ResolverInputTypes["MessageSession"]],
+queryOrg?: [{	id?: string | undefined | null},ResolverInputTypes["Org"]],
 queryPhysical?: [{	id?: string | undefined | null},ResolverInputTypes["PhysicalExam"]],
 queryPhysicalExamPage?: [{	specification?: ResolverInputTypes["QueryPhysicalExamPageSpecificationInput"] | undefined | null},ResolverInputTypes["Page_PhysicalExam"]],
 queryRolePage?: [{	param?: ResolverInputTypes["RoleQueryParamInput"] | undefined | null},ResolverInputTypes["Page_Role"]],
@@ -2440,8 +2456,8 @@ queryCommentPage?: [{	specification?: ResolverInputTypes["QueryCommentPageSpecif
 queryUserPage?: [{	specification: ResolverInputTypes["QueryUserPageSpecificationInput"]},ResolverInputTypes["Page_User"]],
 messageSession?: [{	toId?: string | undefined | null},ResolverInputTypes["MessageSession"]],
 queryArticle?: [{	id?: string | undefined | null},ResolverInputTypes["Article"]],
-queryMenuTree?: [{	param?: ResolverInputTypes["MenuQueryPageParamInput"] | undefined | null},ResolverInputTypes["Menu"]],
 queryDoctorSchedulePage?: [{	specification?: ResolverInputTypes["QueryDoctorSchedulePageSpecificationInput"] | undefined | null},ResolverInputTypes["Page_DoctorSchedule"]],
+queryMenuTree?: [{	param?: ResolverInputTypes["MenuQueryPageParamInput"] | undefined | null},ResolverInputTypes["Menu"]],
 queryUserList?: [{	specification?: ResolverInputTypes["QueryUserSpecificationInput"] | undefined | null},ResolverInputTypes["User"]],
 	queryDefaultRole?:boolean | `@${string}`,
 queryMessageSessionPage?: [{	specification?: ResolverInputTypes["QueryMessageSessionPageSpecificationInput"] | undefined | null},ResolverInputTypes["Page_MessageSession"]],
@@ -2461,6 +2477,7 @@ queryUser?: [{	userId?: string | undefined | null},ResolverInputTypes["User"]],
 	title?: string | undefined | null
 };
 	["QueryCommentPageSpecificationInput"]: {
+	content?: string | undefined | null,
 	orgId?: string | undefined | null,
 	orgName?: string | undefined | null,
 	pageNo: number,
@@ -2524,6 +2541,11 @@ queryUser?: [{	userId?: string | undefined | null},ResolverInputTypes["User"]],
 	key?: string | undefined | null,
 	nickName?: string | undefined | null,
 	userName?: string | undefined | null
+};
+	["ReplyCommentInputInput"]: {
+	/** id */
+	id?: string | undefined | null,
+	reply?: string | undefined | null
 };
 	["Role"]: AliasType<{
 	/** 创建时间 */
@@ -2786,6 +2808,10 @@ export type ModelTypes = {
 	location?: string | undefined,
 	org?: ModelTypes["Org"] | undefined,
 	orgId?: string | undefined,
+	reply?: string | undefined,
+	replyAt?: ModelTypes["LocalDateTime"] | undefined,
+	replyUser?: ModelTypes["User"] | undefined,
+	replyUserId?: string | undefined,
 	/** 更新时间 */
 	updatedAt?: ModelTypes["LocalDateTime"] | undefined,
 	/** 更新人 */
@@ -3025,12 +3051,12 @@ export type ModelTypes = {
 		deleteMenu: boolean,
 	unpublishArticle?: boolean | undefined,
 	updateArticle?: ModelTypes["Article"] | undefined,
+	updateRole?: ModelTypes["Role"] | undefined,
 	updateArticleCategory?: ModelTypes["ArticleCategory"] | undefined,
 	createArticleCategory?: ModelTypes["ArticleCategory"] | undefined,
-	updateRole?: ModelTypes["Role"] | undefined,
 	deleteComment?: boolean | undefined,
-	revoke: boolean,
 	createRole?: ModelTypes["Role"] | undefined,
+	revoke: boolean,
 	updateOrg?: ModelTypes["Org"] | undefined,
 	deletePhysicalExam?: boolean | undefined,
 	createComment?: ModelTypes["Comment"] | undefined,
@@ -3040,23 +3066,24 @@ export type ModelTypes = {
 	setWarn?: boolean | undefined,
 	updateDoctorSchedule?: ModelTypes["DoctorSchedule"] | undefined,
 	createDoctorSchedule?: ModelTypes["DoctorSchedule"] | undefined,
-	createOrg?: ModelTypes["Org"] | undefined,
 	createMenu?: ModelTypes["Menu"] | undefined,
+	createOrg?: ModelTypes["Org"] | undefined,
 	deleteArticleCategory?: boolean | undefined,
 	createArticle?: ModelTypes["Article"] | undefined,
 	deleteOrg?: boolean | undefined,
-	publishArticle?: boolean | undefined,
 	deleteDoctorSchedule?: boolean | undefined,
 	updateRoleMenu?: boolean | undefined,
-	sendMessage?: ModelTypes["Message"] | undefined,
+	publishArticle?: boolean | undefined,
 	updateUser?: ModelTypes["User"] | undefined,
+	sendMessage?: ModelTypes["Message"] | undefined,
 	deleteRole: boolean,
 	updateComment?: ModelTypes["Comment"] | undefined,
 	deleteArticle?: boolean | undefined,
 	updateUserProfile?: boolean | undefined,
-	registerUser?: boolean | undefined,
-	loginByAccount?: string | undefined,
+	replyComment?: ModelTypes["Comment"] | undefined,
 	deleteUser: boolean,
+	loginByAccount?: string | undefined,
+	registerUser?: boolean | undefined,
 	createUser?: ModelTypes["User"] | undefined,
 	deleteFileById: boolean,
 	createPhysicalExam?: ModelTypes["PhysicalExam"] | undefined
@@ -3314,8 +3341,8 @@ export type ModelTypes = {
 	/** Query root */
 ["Query"]: {
 		userInfo?: ModelTypes["UserInfoResult"] | undefined,
-	queryOrg?: ModelTypes["Org"] | undefined,
 	queryMessageSession?: ModelTypes["MessageSession"] | undefined,
+	queryOrg?: ModelTypes["Org"] | undefined,
 	queryPhysical?: ModelTypes["PhysicalExam"] | undefined,
 	queryPhysicalExamPage?: ModelTypes["Page_PhysicalExam"] | undefined,
 	queryRolePage?: ModelTypes["Page_Role"] | undefined,
@@ -3335,8 +3362,8 @@ export type ModelTypes = {
 	queryUserPage?: ModelTypes["Page_User"] | undefined,
 	messageSession?: ModelTypes["MessageSession"] | undefined,
 	queryArticle?: ModelTypes["Article"] | undefined,
-	queryMenuTree?: Array<ModelTypes["Menu"] | undefined> | undefined,
 	queryDoctorSchedulePage?: ModelTypes["Page_DoctorSchedule"] | undefined,
+	queryMenuTree?: Array<ModelTypes["Menu"] | undefined> | undefined,
 	queryUserList?: Array<ModelTypes["User"] | undefined> | undefined,
 	queryDefaultRole?: Array<ModelTypes["DefaultRoleEnum"] | undefined> | undefined,
 	queryMessageSessionPage?: ModelTypes["Page_MessageSession"] | undefined,
@@ -3355,6 +3382,7 @@ export type ModelTypes = {
 	title?: string | undefined
 };
 	["QueryCommentPageSpecificationInput"]: {
+	content?: string | undefined,
 	orgId?: string | undefined,
 	orgName?: string | undefined,
 	pageNo: number,
@@ -3418,6 +3446,11 @@ export type ModelTypes = {
 	key?: string | undefined,
 	nickName?: string | undefined,
 	userName?: string | undefined
+};
+	["ReplyCommentInputInput"]: {
+	/** id */
+	id?: string | undefined,
+	reply?: string | undefined
 };
 	["Role"]: {
 		/** 创建时间 */
@@ -3701,6 +3734,10 @@ export type GraphQLTypes = {
 	location?: string | undefined,
 	org?: GraphQLTypes["Org"] | undefined,
 	orgId?: string | undefined,
+	reply?: string | undefined,
+	replyAt?: GraphQLTypes["LocalDateTime"] | undefined,
+	replyUser?: GraphQLTypes["User"] | undefined,
+	replyUserId?: string | undefined,
 	/** 更新时间 */
 	updatedAt?: GraphQLTypes["LocalDateTime"] | undefined,
 	/** 更新人 */
@@ -3947,12 +3984,12 @@ export type GraphQLTypes = {
 	deleteMenu: boolean,
 	unpublishArticle?: boolean | undefined,
 	updateArticle?: GraphQLTypes["Article"] | undefined,
+	updateRole?: GraphQLTypes["Role"] | undefined,
 	updateArticleCategory?: GraphQLTypes["ArticleCategory"] | undefined,
 	createArticleCategory?: GraphQLTypes["ArticleCategory"] | undefined,
-	updateRole?: GraphQLTypes["Role"] | undefined,
 	deleteComment?: boolean | undefined,
-	revoke: boolean,
 	createRole?: GraphQLTypes["Role"] | undefined,
+	revoke: boolean,
 	updateOrg?: GraphQLTypes["Org"] | undefined,
 	deletePhysicalExam?: boolean | undefined,
 	createComment?: GraphQLTypes["Comment"] | undefined,
@@ -3962,23 +3999,24 @@ export type GraphQLTypes = {
 	setWarn?: boolean | undefined,
 	updateDoctorSchedule?: GraphQLTypes["DoctorSchedule"] | undefined,
 	createDoctorSchedule?: GraphQLTypes["DoctorSchedule"] | undefined,
-	createOrg?: GraphQLTypes["Org"] | undefined,
 	createMenu?: GraphQLTypes["Menu"] | undefined,
+	createOrg?: GraphQLTypes["Org"] | undefined,
 	deleteArticleCategory?: boolean | undefined,
 	createArticle?: GraphQLTypes["Article"] | undefined,
 	deleteOrg?: boolean | undefined,
-	publishArticle?: boolean | undefined,
 	deleteDoctorSchedule?: boolean | undefined,
 	updateRoleMenu?: boolean | undefined,
-	sendMessage?: GraphQLTypes["Message"] | undefined,
+	publishArticle?: boolean | undefined,
 	updateUser?: GraphQLTypes["User"] | undefined,
+	sendMessage?: GraphQLTypes["Message"] | undefined,
 	deleteRole: boolean,
 	updateComment?: GraphQLTypes["Comment"] | undefined,
 	deleteArticle?: boolean | undefined,
 	updateUserProfile?: boolean | undefined,
-	registerUser?: boolean | undefined,
-	loginByAccount?: string | undefined,
+	replyComment?: GraphQLTypes["Comment"] | undefined,
 	deleteUser: boolean,
+	loginByAccount?: string | undefined,
+	registerUser?: boolean | undefined,
 	createUser?: GraphQLTypes["User"] | undefined,
 	deleteFileById: boolean,
 	createPhysicalExam?: GraphQLTypes["PhysicalExam"] | undefined
@@ -4251,8 +4289,8 @@ export type GraphQLTypes = {
 ["Query"]: {
 	__typename: "Query",
 	userInfo?: GraphQLTypes["UserInfoResult"] | undefined,
-	queryOrg?: GraphQLTypes["Org"] | undefined,
 	queryMessageSession?: GraphQLTypes["MessageSession"] | undefined,
+	queryOrg?: GraphQLTypes["Org"] | undefined,
 	queryPhysical?: GraphQLTypes["PhysicalExam"] | undefined,
 	queryPhysicalExamPage?: GraphQLTypes["Page_PhysicalExam"] | undefined,
 	queryRolePage?: GraphQLTypes["Page_Role"] | undefined,
@@ -4272,8 +4310,8 @@ export type GraphQLTypes = {
 	queryUserPage?: GraphQLTypes["Page_User"] | undefined,
 	messageSession?: GraphQLTypes["MessageSession"] | undefined,
 	queryArticle?: GraphQLTypes["Article"] | undefined,
-	queryMenuTree?: Array<GraphQLTypes["Menu"] | undefined> | undefined,
 	queryDoctorSchedulePage?: GraphQLTypes["Page_DoctorSchedule"] | undefined,
+	queryMenuTree?: Array<GraphQLTypes["Menu"] | undefined> | undefined,
 	queryUserList?: Array<GraphQLTypes["User"] | undefined> | undefined,
 	queryDefaultRole?: Array<GraphQLTypes["DefaultRoleEnum"] | undefined> | undefined,
 	queryMessageSessionPage?: GraphQLTypes["Page_MessageSession"] | undefined,
@@ -4292,7 +4330,8 @@ export type GraphQLTypes = {
 	title?: string | undefined
 };
 	["QueryCommentPageSpecificationInput"]: {
-		orgId?: string | undefined,
+		content?: string | undefined,
+	orgId?: string | undefined,
 	orgName?: string | undefined,
 	pageNo: number,
 	pageSize: number,
@@ -4355,6 +4394,11 @@ export type GraphQLTypes = {
 		key?: string | undefined,
 	nickName?: string | undefined,
 	userName?: string | undefined
+};
+	["ReplyCommentInputInput"]: {
+		/** id */
+	id?: string | undefined,
+	reply?: string | undefined
 };
 	["Role"]: {
 	__typename: "Role",
@@ -4631,6 +4675,7 @@ type ZEUS_VARIABLES = {
 	["QueryPhysicalExamPageSpecificationInput"]: ValueTypes["QueryPhysicalExamPageSpecificationInput"];
 	["QueryUserPageSpecificationInput"]: ValueTypes["QueryUserPageSpecificationInput"];
 	["QueryUserSpecificationInput"]: ValueTypes["QueryUserSpecificationInput"];
+	["ReplyCommentInputInput"]: ValueTypes["ReplyCommentInputInput"];
 	["RoleQueryParamInput"]: ValueTypes["RoleQueryParamInput"];
 	["SendMessageInputInput"]: ValueTypes["SendMessageInputInput"];
 	["SetWarnInputInput"]: ValueTypes["SetWarnInputInput"];
