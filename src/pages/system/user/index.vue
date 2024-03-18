@@ -24,6 +24,7 @@ interface State {
   search: SearchParam
   total: number
 }
+const userstore = useUserStore()
 const state: State = reactive({
   loading: false,
   modalVisible: false,
@@ -31,6 +32,13 @@ const state: State = reactive({
   data: [],
   search: generateSearch(),
   total: 0,
+})
+const onlyHead = computed(() => {
+  const user = userstore.user
+  const roles = user?.roles?.map(item => item?.key)
+  if (roles?.length === 1 && roles.includes('ORG_HEAD'))
+    return 'ORG_HEAD'
+  return false
 })
 const { data: roleRes } = useSWRV(`queryRolePage`, () => queryRolePage({
   pageNo: 1,
@@ -61,6 +69,7 @@ function generateSearch() {
     email: '',
     roleIds: [],
     sort: '',
+    roleKey: undefined,
   }
   return search
 }
@@ -69,6 +78,9 @@ function generateSearch() {
 async function initData() {
   state.loading = true
   const { search } = state
+  if (onlyHead.value)
+    search.roleKey = 'USER'
+
   const res = await queryUserPage(search)
   const { content, totalElements } = res.queryUserPage!
   state.data = content as User[]
@@ -145,7 +157,7 @@ function handleTableChange(pagination: any, filters: any, sorter: SorterResult) 
     <ACard>
       <div class="flex">
         <AInput v-model:value="search.userName" placeholder="用户名" class="w-200px" />
-        <ASelect v-model:value="search.roleIds" mode="tags" class="ml-2 w-200px" :options="roleOptions" placeholder="角色" />
+        <ASelect v-if="!onlyHead" v-model:value="search.roleIds" mode="tags" class="ml-2 w-200px" :options="roleOptions" placeholder="角色" />
         <AInput v-model:value="search.nickName" placeholder="姓名" class="ml-4 w-200px" />
         <AInput v-model:value="search.phone" placeholder="手机" class="ml-4 w-200px" />
         <AInput v-model:value="search.email" placeholder="邮箱" class="ml-4 w-200px" />
