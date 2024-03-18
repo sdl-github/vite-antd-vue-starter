@@ -1,7 +1,7 @@
 <script lang="ts">
 import { message } from 'ant-design-vue'
 import { defineComponent, ref } from 'vue'
-import { publishArticle, updateArticle } from '~/api/article'
+import { createArticle, publishArticle, updateArticle } from '~/api/article'
 import type { FormModel } from '~/pages/article/data'
 import { generateFormModel } from '~/pages/article/data'
 
@@ -37,9 +37,13 @@ export default defineComponent({
       const loading = message.loading('加载中', 0)
       try {
         const data = unref(form)
-        await updateArticle({
+        const api = data.id ? updateArticle : createArticle
+        const res = await api({
           ...data,
         })
+        if ('createArticle' in res)
+          form.value.id = res.createArticle?.id
+
         await publishArticle(form.value.id!)
         loading()
         saveLoading.value = false

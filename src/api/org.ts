@@ -13,6 +13,7 @@ export function queryOrgPage(specification: ValueTypes['QueryOrgPageSpecificatio
         latitude: true,
         longitude: true,
         openTime: true,
+        logo: true,
         createdAt: true,
         leadId: true,
         lead: {

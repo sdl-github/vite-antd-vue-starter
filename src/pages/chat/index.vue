@@ -7,7 +7,7 @@
 import useSWRV from 'swrv'
 import { message } from 'ant-design-vue'
 import type { UploadRequestOption } from 'ant-design-vue/es/vc-upload/interface'
-import { queryMessagePage, queryMessageSessionPage, sendMessage } from '@/api/chat'
+import { queryMessagePage, queryMessageSessionPage, queryOpenChat, sendMessage, setOpenChat } from '@/api/chat'
 import { MessageTypeEnum } from '~/utils/graphql/zeus'
 import type { ModelTypes, ValueTypes } from '~/utils/graphql/zeus'
 import { upload } from '~/api/file'
@@ -15,6 +15,7 @@ import { upload } from '~/api/file'
 const messageContentRef = ref()
 const userStore = useUserStore()
 const user = computed(() => userStore.user)
+const { data: openChat, mutate: mutateQueryOpenChat } = useSWRV(user.value?.id ? `queryOpenChat/${user.value?.id}` : null, () => queryOpenChat(user.value!.id!))
 const { data, mutate } = useSWRV(`queryOrgPage`, () => queryMessageSessionPage({
   pageNo: 1,
   pageSize: 10,
@@ -162,100 +163,119 @@ async function handleUpload(e: UploadRequestOption) {
     return false
   }
 }
+async function handleChangeOpenChat() {
+  const loading = message.loading('加载中', 0)
+  try {
+    await setOpenChat(user.value!.id!, !openChat.value?.userOpenMessage)
+    await mutateQueryOpenChat()
+    loading()
+    return true
+  }
+  catch (e) {
+    loading()
+    return false
+  }
+}
 </script>
 
 <template>
   <div class="m-4 h-90% flex border rounded-10px bg-white">
-    <div class="box-border w-300px border rounded-10px bg-#e7f8ff p-20px">
-      <div v-for="(item, index) in sessionList" :key="item?.id" :class="`mb-10px h-70px w-260px flex items-center rounded-10px bg-white px-14px py-10px shadow-[0px_2px_4px_0px_rgba(0,0,0,.05)] ${current === index && 'border-#1d93ab border'}`" @click="handleSetSession(item, index)">
-        <AAvatar style="background-color: #1890ff" :src="item?.avatar">
-          {{ item?.nickName || item?.userName }}
-        </AAvatar>
-        <div class="ml-2">
-          {{ item?.userName }}
-        </div>
-      </div>
+    <div class="my-2 ml-2">
+      线上问诊
+      <ASwitch :checked="openChat?.userOpenMessage" @click="handleChangeOpenChat" />
     </div>
-    <div class="w-full flex flex-col p-2">
-      <div class="h-50px flex items-center border-b pl-4">
-        <div class="text-xl font-bold">
-          {{ currentSession.nickName }}
+    <template v-if="openChat?.userOpenMessage">
+      <div class="box-border w-300px border rounded-10px bg-#e7f8ff p-20px">
+        <div v-for="(item, index) in sessionList" :key="item?.id" :class="`mb-10px h-70px w-260px flex items-center rounded-10px bg-white px-14px py-10px shadow-[0px_2px_4px_0px_rgba(0,0,0,.05)] ${current === index && 'border-#1d93ab border'}`" @click="handleSetSession(item, index)">
+          <AAvatar style="background-color: #1890ff" :src="item?.avatar">
+            {{ item?.nickName || item?.userName }}
+          </AAvatar>
+          <div class="ml-2">
+            {{ item?.userName }}
+          </div>
         </div>
       </div>
-      <div ref="messageContentRef" class="flex-1 overflow-y-auto p-4">
-        <div v-for="(item, index) in messageList" :key="index">
-          <!-- left -->
-          <div v-if="!item.isMe" class="my-4 flex">
-            <div>
-              <AAvatar style="background-color: #1890ff" :src="item?.info?.avatar">
-                {{ item?.info?.nickName || item?.info?.userName }}
-              </AAvatar>
-            </div>
-            <div>
-              <div class="ml-2">
-                <div>{{ item.info?.nickName }}</div>
-                <div class="mt-1 box-border border rounded-10px bg-[rgba(0,0,0,.05)] p-2">
-                  <div v-if="item.type === MessageTypeEnum.TEXT">
-                    {{ item.content }}
-                  </div>
-                  <div v-if="item.type === MessageTypeEnum.IMAGE">
-                    <AImage
-                      :width="400"
-                      :src="item.content"
-                    />
+      <div class="w-full flex flex-col p-2">
+        <div class="h-50px flex items-center border-b pl-4">
+          <div class="text-xl font-bold">
+            {{ currentSession.nickName }}
+          </div>
+        </div>
+        <div ref="messageContentRef" class="flex-1 overflow-y-auto p-4">
+          <div v-for="(item, index) in messageList" :key="index">
+            <!-- left -->
+            <div v-if="!item.isMe" class="my-4 flex">
+              <div>
+                <AAvatar style="background-color: #1890ff" :src="item?.info?.avatar">
+                  {{ item?.info?.nickName || item?.info?.userName }}
+                </AAvatar>
+              </div>
+              <div>
+                <div class="ml-2">
+                  <div>{{ item.info?.nickName }}</div>
+                  <div class="mt-1 box-border border rounded-10px bg-[rgba(0,0,0,.05)] p-2">
+                    <div v-if="item.type === MessageTypeEnum.TEXT">
+                      {{ item.content }}
+                    </div>
+                    <div v-if="item.type === MessageTypeEnum.IMAGE">
+                      <AImage
+                        :width="400"
+                        :src="item.content"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          <!-- right -->
-          <div v-if="item.isMe" class="my-4 flex justify-end">
-            <div>
-              <div class="mr-2">
-                <div class="flex justify-end">
-                  <!-- <div>
+            <!-- right -->
+            <div v-if="item.isMe" class="my-4 flex justify-end">
+              <div>
+                <div class="mr-2">
+                  <div class="flex justify-end">
+                    <!-- <div>
                     {{ item.createdAt }}
                   </div> -->
-                  <div>
-                    {{ item.info?.nickName }}
+                    <div>
+                      {{ item.info?.nickName }}
+                    </div>
                   </div>
-                </div>
-                <div class="mt-1 box-border border rounded-10px bg-[rgba(0,0,0,.05)] p-2">
-                  <div v-if="item.type === MessageTypeEnum.TEXT">
-                    {{ item.content }}
-                  </div>
-                  <div v-if="item.type === MessageTypeEnum.IMAGE">
-                    <AImage
-                      :width="400"
-                      :src="item.content"
-                    />
+                  <div class="mt-1 box-border border rounded-10px bg-[rgba(0,0,0,.05)] p-2">
+                    <div v-if="item.type === MessageTypeEnum.TEXT">
+                      {{ item.content }}
+                    </div>
+                    <div v-if="item.type === MessageTypeEnum.IMAGE">
+                      <AImage
+                        :width="400"
+                        :src="item.content"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <div>
-              <AAvatar style="background-color: #1890ff" :src="item?.info?.avatar">
-                {{ item?.info?.nickName || item?.info?.userName }}
-              </AAvatar>
+              <div>
+                <AAvatar style="background-color: #1890ff" :src="item?.info?.avatar">
+                  {{ item?.info?.nickName || item?.info?.userName }}
+                </AAvatar>
+              </div>
             </div>
-          </div>
           <!-- end -->
+          </div>
+        </div>
+        <div class="border-t">
+          <div class="my-2">
+            <AUpload :show-upload-list="false" :custom-request="handleUpload">
+              <AButton>
+                图片
+              </AButton>
+            </AUpload>
+          </div>
+          <ATextarea v-model:value="content" placeholder="请输入" />
+          <AButton type="primary" class="mt-2" @click="handleSend(MessageTypeEnum.TEXT, content)">
+            发送
+          </AButton>
         </div>
       </div>
-      <div class="border-t">
-        <div class="my-2">
-          <AUpload :show-upload-list="false" :custom-request="handleUpload">
-            <AButton>
-              图片
-            </AButton>
-          </AUpload>
-        </div>
-        <ATextarea v-model:value="content" placeholder="请输入" />
-        <AButton type="primary" class="mt-2" @click="handleSend(MessageTypeEnum.TEXT, content)">
-          发送
-        </AButton>
-      </div>
-    </div>
+    </template>
   </div>
 </template>

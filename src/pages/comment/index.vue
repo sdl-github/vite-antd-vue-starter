@@ -127,6 +127,10 @@ async function handleDelete(id: string) {
             {{ record.org?.name }}
           </span>
         </template>
+
+        <template v-if="column.dataIndex === 'content'">
+          <span v-html="record?.content" />
+        </template>
         <template v-if="column.dataIndex === 'user'">
           <span>
             {{ record.user?.nickName || record.user?.userName }}

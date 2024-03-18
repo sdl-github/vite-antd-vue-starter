@@ -88,17 +88,23 @@ export const AllTypesProps: Record<string,any> = {
 		updateMenu:{
 			input:"UpdateMenuInputInput"
 		},
+		setUserOpenMessage:{
+
+		},
+		setWarn:{
+			input:"SetWarnInputInput"
+		},
 		updateDoctorSchedule:{
 			input:"updateDoctorScheduleInputInput"
 		},
 		createDoctorSchedule:{
 			input:"CreateDoctorScheduleInputInput"
 		},
-		createMenu:{
-			input:"CreateMenuInputInput"
-		},
 		createOrg:{
 			input:"CreateOrgInputInput"
+		},
+		createMenu:{
+			input:"CreateMenuInputInput"
 		},
 		deleteArticleCategory:{
 
@@ -109,26 +115,26 @@ export const AllTypesProps: Record<string,any> = {
 		deleteOrg:{
 
 		},
-		deleteDoctorSchedule:{
+		publishArticle:{
 
 		},
-		publishArticle:{
+		deleteDoctorSchedule:{
 
 		},
 		updateRoleMenu:{
 			input:"UpdateRoleMenuInputInput"
 		},
-		updateUser:{
-			input:"UpdateUserInputInput"
-		},
 		sendMessage:{
 			input:"SendMessageInputInput"
 		},
-		updateComment:{
-			input:"UpdateCommentInputInput"
+		updateUser:{
+			input:"UpdateUserInputInput"
 		},
 		deleteRole:{
 
+		},
+		updateComment:{
+			input:"UpdateCommentInputInput"
 		},
 		deleteArticle:{
 
@@ -158,6 +164,42 @@ export const AllTypesProps: Record<string,any> = {
 	NullHandling: "enum" as const,
 	OrgTypeEnum: "enum" as const,
 	Query:{
+		queryOrg:{
+
+		},
+		queryMessageSession:{
+
+		},
+		queryPhysical:{
+
+		},
+		queryPhysicalExamPage:{
+			specification:"QueryPhysicalExamPageSpecificationInput"
+		},
+		queryRolePage:{
+			param:"RoleQueryParamInput"
+		},
+		queryRole:{
+
+		},
+		queryMessagePage:{
+			specification:"QueryMessagePageSpecificationInput"
+		},
+		queryArticlePage:{
+			specification:"QueryArticlePageSpecificationInput"
+		},
+		queryOrgPage:{
+			specification:"QueryOrgPageSpecificationInput"
+		},
+		queryFilePage:{
+			param:"FileQueryPageParamInput"
+		},
+		userOpenMessage:{
+
+		},
+		queryArticleCategory:{
+			specification:"QueryArticleCategorySpecificationInput"
+		},
 		queryMenuList:{
 			param:"MenuQueryParamInput"
 		},
@@ -170,44 +212,20 @@ export const AllTypesProps: Record<string,any> = {
 		messageSession:{
 
 		},
-		queryPhysicalExamPage:{
-			specification:"QueryPhysicalExamPageSpecificationInput"
-		},
 		queryArticle:{
 
-		},
-		queryDoctorSchedulePage:{
-			specification:"QueryDoctorSchedulePageSpecificationInput"
 		},
 		queryMenuTree:{
 			param:"MenuQueryPageParamInput"
 		},
-		queryRolePage:{
-			param:"RoleQueryParamInput"
-		},
-		queryRole:{
-
+		queryDoctorSchedulePage:{
+			specification:"QueryDoctorSchedulePageSpecificationInput"
 		},
 		queryUserList:{
 			specification:"QueryUserSpecificationInput"
 		},
-		queryMessagePage:{
-			specification:"QueryMessagePageSpecificationInput"
-		},
-		queryArticlePage:{
-			specification:"QueryArticlePageSpecificationInput"
-		},
-		queryOrgPage:{
-			specification:"QueryOrgPageSpecificationInput"
-		},
 		queryMessageSessionPage:{
 			specification:"QueryMessageSessionPageSpecificationInput"
-		},
-		queryFilePage:{
-			param:"FileQueryPageParamInput"
-		},
-		queryArticleCategory:{
-			specification:"QueryArticleCategorySpecificationInput"
 		},
 		queryUser:{
 
@@ -248,6 +266,9 @@ export const AllTypesProps: Record<string,any> = {
 	},
 	SendMessageInputInput:{
 		type:"MessageTypeEnum"
+	},
+	SetWarnInputInput:{
+
 	},
 	UpdateArticleCategoryInputInput:{
 
@@ -457,20 +478,22 @@ export const ReturnTypes: Record<string,any> = {
 		createComment:"Comment",
 		updateMenu:"Menu",
 		logout:"Boolean",
+		setUserOpenMessage:"Boolean",
+		setWarn:"Boolean",
 		updateDoctorSchedule:"DoctorSchedule",
 		createDoctorSchedule:"DoctorSchedule",
-		createMenu:"Menu",
 		createOrg:"Org",
+		createMenu:"Menu",
 		deleteArticleCategory:"Boolean",
 		createArticle:"Article",
 		deleteOrg:"Boolean",
-		deleteDoctorSchedule:"Boolean",
 		publishArticle:"Boolean",
+		deleteDoctorSchedule:"Boolean",
 		updateRoleMenu:"Boolean",
-		updateUser:"User",
 		sendMessage:"Message",
-		updateComment:"Comment",
+		updateUser:"User",
 		deleteRole:"Boolean",
+		updateComment:"Comment",
 		deleteArticle:"Boolean",
 		updateUserProfile:"Boolean",
 		registerUser:"Boolean",
@@ -494,6 +517,7 @@ export const ReturnTypes: Record<string,any> = {
 		latitude:"Float",
 		lead:"User",
 		leadId:"String",
+		logo:"String",
 		longitude:"Float",
 		name:"String",
 		openTime:"String",
@@ -714,32 +738,37 @@ export const ReturnTypes: Record<string,any> = {
 		updatedBy:"String",
 		user:"User",
 		userId:"String",
+		warn:"Boolean",
 		weight:"Float"
 	},
 	Query:{
-		app:"String",
 		userInfo:"UserInfoResult",
+		queryOrg:"Org",
+		queryMessageSession:"MessageSession",
+		queryPhysical:"PhysicalExam",
+		queryPhysicalExamPage:"Page_PhysicalExam",
+		queryRolePage:"Page_Role",
+		queryLoginSessionList:"LoginSessionResult",
+		queryRole:"Role",
+		queryAllRoleList:"Role",
+		queryMessagePage:"Page_Message",
+		queryArticlePage:"Page_Article",
+		queryOrgPage:"Page_Org",
+		queryFilePage:"Page_File",
+		userOpenMessage:"Boolean",
+		queryArticleCategory:"ArticleCategory",
+		app:"String",
 		queryMenuList:"Menu",
 		queryCommentPage:"Page_Comment",
 		queryArticleCategoryTree:"ArticleCategory",
 		queryUserPage:"Page_User",
 		messageSession:"MessageSession",
-		queryPhysicalExamPage:"Page_PhysicalExam",
 		queryArticle:"Article",
-		queryDoctorSchedulePage:"Page_DoctorSchedule",
 		queryMenuTree:"Menu",
-		queryRolePage:"Page_Role",
-		queryLoginSessionList:"LoginSessionResult",
-		queryRole:"Role",
+		queryDoctorSchedulePage:"Page_DoctorSchedule",
 		queryUserList:"User",
-		queryAllRoleList:"Role",
-		queryMessagePage:"Page_Message",
 		queryDefaultRole:"DefaultRoleEnum",
-		queryArticlePage:"Page_Article",
-		queryOrgPage:"Page_Org",
 		queryMessageSessionPage:"Page_MessageSession",
-		queryFilePage:"Page_File",
-		queryArticleCategory:"ArticleCategory",
 		queryUser:"User"
 	},
 	Role:{
@@ -770,8 +799,10 @@ export const ReturnTypes: Record<string,any> = {
 		gender:"GenderEnum",
 		id:"String",
 		job:"String",
+		lastExamData:"Date",
 		nickName:"String",
 		note:"String",
+		openMessage:"Boolean",
 		org:"Org",
 		orgId:"String",
 		phone:"String",
@@ -785,8 +816,10 @@ export const ReturnTypes: Record<string,any> = {
 		email:"String",
 		gender:"GenderEnum",
 		id:"String",
+		lastExamData:"Date",
 		menus:"Menu",
 		nickName:"String",
+		openMessage:"Boolean",
 		passwordEnable:"Boolean",
 		permissions:"String",
 		phone:"String",

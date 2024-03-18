@@ -63,6 +63,13 @@ export const columns: TableColumnType<Org>[] = [
     sorter: true,
   },
   {
+    title: '图标',
+    align: 'center',
+    width: '100px',
+    dataIndex: 'logo',
+    key: 'logo',
+  },
+  {
     title: '类型',
     align: 'center',
     width: '100px',
