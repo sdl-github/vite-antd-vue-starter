@@ -1,7 +1,11 @@
 /* eslint-disable */
 
 export const AllTypesProps: Record<string,any> = {
+	ActivityStatusEnum: "enum" as const,
 	ArticleStatusEnum: "enum" as const,
+	CreateActivityInputInput:{
+
+	},
 	CreateArticleCategoryInputInput:{
 
 	},
@@ -22,6 +26,9 @@ export const AllTypesProps: Record<string,any> = {
 	},
 	CreatePhysicalExamInputInput:{
 		date:"Date"
+	},
+	CreateReservationInputInput:{
+		appointmentDate:"LocalDate"
 	},
 	CreateRoleInputInput:{
 
@@ -55,11 +62,11 @@ export const AllTypesProps: Record<string,any> = {
 		unpublishArticle:{
 
 		},
+		unpublishActivity:{
+
+		},
 		updateArticle:{
 			input:"UpdateArticleInputInput"
-		},
-		updateRole:{
-			input:"UpdateRoleInputInput"
 		},
 		updateArticleCategory:{
 			input:"UpdateArticleCategoryInputInput"
@@ -67,13 +74,22 @@ export const AllTypesProps: Record<string,any> = {
 		createArticleCategory:{
 			input:"CreateArticleCategoryInputInput"
 		},
+		createReservation:{
+			input:"CreateReservationInputInput"
+		},
+		updateRole:{
+			input:"UpdateRoleInputInput"
+		},
 		deleteComment:{
+
+		},
+		revoke:{
 
 		},
 		createRole:{
 			input:"CreateRoleInputInput"
 		},
-		revoke:{
+		publishActivity:{
 
 		},
 		updateOrg:{
@@ -82,8 +98,14 @@ export const AllTypesProps: Record<string,any> = {
 		deletePhysicalExam:{
 
 		},
+		deleteReservation:{
+
+		},
 		createComment:{
 			input:"CreateCommentInputInput"
+		},
+		updateActivity:{
+			input:"UpdateActivityInputInput"
 		},
 		updateMenu:{
 			input:"UpdateMenuInputInput"
@@ -100,6 +122,9 @@ export const AllTypesProps: Record<string,any> = {
 		createDoctorSchedule:{
 			input:"CreateDoctorScheduleInputInput"
 		},
+		createActivity:{
+			input:"CreateActivityInputInput"
+		},
 		createMenu:{
 			input:"CreateMenuInputInput"
 		},
@@ -115,14 +140,14 @@ export const AllTypesProps: Record<string,any> = {
 		deleteOrg:{
 
 		},
+		publishArticle:{
+
+		},
 		deleteDoctorSchedule:{
 
 		},
 		updateRoleMenu:{
 			input:"UpdateRoleMenuInputInput"
-		},
-		publishArticle:{
-
 		},
 		updateUser:{
 			input:"UpdateUserInputInput"
@@ -142,17 +167,23 @@ export const AllTypesProps: Record<string,any> = {
 		updateUserProfile:{
 			input:"UpdateUserProfileInputInput"
 		},
+		deleteActivity:{
+
+		},
+		updateStatus:{
+			input:"UpdateReservationInputInput"
+		},
 		replyComment:{
 			input:"ReplyCommentInputInput"
 		},
-		deleteUser:{
-
+		registerUser:{
+			input:"UserRegisterInputInput"
 		},
 		loginByAccount:{
 			input:"UserLoginInputInput"
 		},
-		registerUser:{
-			input:"UserRegisterInputInput"
+		deleteUser:{
+
 		},
 		createUser:{
 			input:"CreateUserInputInput"
@@ -167,10 +198,13 @@ export const AllTypesProps: Record<string,any> = {
 	NullHandling: "enum" as const,
 	OrgTypeEnum: "enum" as const,
 	Query:{
-		queryMessageSession:{
+		queryActivity:{
 
 		},
 		queryOrg:{
+
+		},
+		queryMessageSession:{
 
 		},
 		queryPhysical:{
@@ -203,6 +237,9 @@ export const AllTypesProps: Record<string,any> = {
 		queryArticleCategory:{
 			specification:"QueryArticleCategorySpecificationInput"
 		},
+		queryActivityPage:{
+			specification:"QueryActivityPageSpecificationInput"
+		},
 		queryMenuList:{
 			param:"MenuQueryParamInput"
 		},
@@ -218,21 +255,33 @@ export const AllTypesProps: Record<string,any> = {
 		queryArticle:{
 
 		},
-		queryDoctorSchedulePage:{
-			specification:"QueryDoctorSchedulePageSpecificationInput"
-		},
 		queryMenuTree:{
 			param:"MenuQueryPageParamInput"
 		},
+		queryDoctorSchedulePage:{
+			specification:"QueryDoctorSchedulePageSpecificationInput"
+		},
+		queryReservationPage:{
+			specification:"QueryReservationPageSpecificationInput"
+		},
 		queryUserList:{
 			specification:"QueryUserSpecificationInput"
+		},
+		queryUserReservationPage:{
+			specification:"QueryReservationPageSpecificationInput"
 		},
 		queryMessageSessionPage:{
 			specification:"QueryMessageSessionPageSpecificationInput"
 		},
 		queryUser:{
 
+		},
+		queryDocReservationPage:{
+			specification:"QueryReservationPageSpecificationInput"
 		}
+	},
+	QueryActivityPageSpecificationInput:{
+
 	},
 	QueryArticleCategorySpecificationInput:{
 
@@ -258,6 +307,10 @@ export const AllTypesProps: Record<string,any> = {
 	QueryPhysicalExamPageSpecificationInput:{
 		date:"Date"
 	},
+	QueryReservationPageSpecificationInput:{
+		endDate:"LocalDate",
+		startDate:"LocalDate"
+	},
 	QueryUserPageSpecificationInput:{
 
 	},
@@ -276,6 +329,9 @@ export const AllTypesProps: Record<string,any> = {
 	SetWarnInputInput:{
 
 	},
+	UpdateActivityInputInput:{
+
+	},
 	UpdateArticleCategoryInputInput:{
 
 	},
@@ -290,6 +346,9 @@ export const AllTypesProps: Record<string,any> = {
 	},
 	UpdateOrgInputInput:{
 		orgType:"OrgTypeEnum"
+	},
+	UpdateReservationInputInput:{
+
 	},
 	UpdateRoleInputInput:{
 
@@ -315,6 +374,24 @@ export const AllTypesProps: Record<string,any> = {
 }
 
 export const ReturnTypes: Record<string,any> = {
+	Activity:{
+		author:"User",
+		authorId:"String",
+		createdAt:"LocalDateTime",
+		createdBy:"String",
+		html:"String",
+		id:"String",
+		image:"String",
+		markdown:"String",
+		metaDescription:"String",
+		metaTitle:"String",
+		publishedAt:"LocalDateTime",
+		publishedBy:"String",
+		status:"ActivityStatusEnum",
+		title:"String",
+		updatedAt:"LocalDateTime",
+		updatedBy:"String"
+	},
 	Article:{
 		author:"User",
 		authorId:"String",
@@ -350,6 +427,7 @@ export const ReturnTypes: Record<string,any> = {
 		updatedBy:"String"
 	},
 	BaseEntity:{
+		"...on Activity": "Activity",
 		"...on Article": "Article",
 		"...on ArticleCategory": "ArticleCategory",
 		"...on Comment": "Comment",
@@ -360,6 +438,7 @@ export const ReturnTypes: Record<string,any> = {
 		"...on MessageSession": "MessageSession",
 		"...on Org": "Org",
 		"...on PhysicalExam": "PhysicalExam",
+		"...on Reservation": "Reservation",
 		"...on Role": "Role",
 		"...on User": "User",
 		createdAt:"LocalDateTime",
@@ -476,40 +555,48 @@ export const ReturnTypes: Record<string,any> = {
 	Mutation:{
 		deleteMenu:"Boolean",
 		unpublishArticle:"Boolean",
+		unpublishActivity:"Boolean",
 		updateArticle:"Article",
-		updateRole:"Role",
 		updateArticleCategory:"ArticleCategory",
 		createArticleCategory:"ArticleCategory",
+		createReservation:"Reservation",
+		updateRole:"Role",
 		deleteComment:"Boolean",
-		createRole:"Role",
 		revoke:"Boolean",
+		createRole:"Role",
+		publishActivity:"Boolean",
 		updateOrg:"Org",
 		deletePhysicalExam:"Boolean",
+		deleteReservation:"Boolean",
 		createComment:"Comment",
+		updateActivity:"Activity",
 		updateMenu:"Menu",
 		logout:"Boolean",
 		setUserOpenMessage:"Boolean",
 		setWarn:"Boolean",
 		updateDoctorSchedule:"DoctorSchedule",
 		createDoctorSchedule:"DoctorSchedule",
+		createActivity:"Activity",
 		createMenu:"Menu",
 		createOrg:"Org",
 		deleteArticleCategory:"Boolean",
 		createArticle:"Article",
 		deleteOrg:"Boolean",
+		publishArticle:"Boolean",
 		deleteDoctorSchedule:"Boolean",
 		updateRoleMenu:"Boolean",
-		publishArticle:"Boolean",
 		updateUser:"User",
 		sendMessage:"Message",
 		deleteRole:"Boolean",
 		updateComment:"Comment",
 		deleteArticle:"Boolean",
 		updateUserProfile:"Boolean",
+		deleteActivity:"Boolean",
+		updateStatus:"Reservation",
 		replyComment:"Comment",
-		deleteUser:"Boolean",
-		loginByAccount:"String",
 		registerUser:"Boolean",
+		loginByAccount:"String",
+		deleteUser:"Boolean",
 		createUser:"User",
 		deleteFileById:"Boolean",
 		createPhysicalExam:"PhysicalExam"
@@ -534,7 +621,27 @@ export const ReturnTypes: Record<string,any> = {
 		openTime:"String",
 		orgType:"OrgTypeEnum",
 		updatedAt:"LocalDateTime",
-		updatedBy:"String"
+		updatedBy:"String",
+		users:"User"
+	},
+	Page_Activity:{
+		content:"Activity",
+		first:"Boolean",
+		hasContent:"Boolean",
+		hasNext:"Boolean",
+		hasPrevious:"Boolean",
+		last:"Boolean",
+		nextOrLastPageable:"Pagination",
+		nextPageable:"Pagination",
+		number:"Int",
+		numberOfElements:"Int",
+		pageable:"Pagination",
+		previousOrFirstPageable:"Pagination",
+		previousPageable:"Pagination",
+		size:"Int",
+		sort:"Sorting",
+		totalElements:"Long",
+		totalPages:"Int"
 	},
 	Page_Article:{
 		content:"Article",
@@ -688,6 +795,25 @@ export const ReturnTypes: Record<string,any> = {
 		totalElements:"Long",
 		totalPages:"Int"
 	},
+	Page_Reservation:{
+		content:"Reservation",
+		first:"Boolean",
+		hasContent:"Boolean",
+		hasNext:"Boolean",
+		hasPrevious:"Boolean",
+		last:"Boolean",
+		nextOrLastPageable:"Pagination",
+		nextPageable:"Pagination",
+		number:"Int",
+		numberOfElements:"Int",
+		pageable:"Pagination",
+		previousOrFirstPageable:"Pagination",
+		previousPageable:"Pagination",
+		size:"Int",
+		sort:"Sorting",
+		totalElements:"Long",
+		totalPages:"Int"
+	},
 	Page_Role:{
 		content:"Role",
 		first:"Boolean",
@@ -754,8 +880,9 @@ export const ReturnTypes: Record<string,any> = {
 	},
 	Query:{
 		userInfo:"UserInfoResult",
-		queryMessageSession:"MessageSession",
+		queryActivity:"Activity",
 		queryOrg:"Org",
+		queryMessageSession:"MessageSession",
 		queryPhysical:"PhysicalExam",
 		queryPhysicalExamPage:"Page_PhysicalExam",
 		queryRolePage:"Page_Role",
@@ -769,18 +896,39 @@ export const ReturnTypes: Record<string,any> = {
 		userOpenMessage:"Boolean",
 		queryArticleCategory:"ArticleCategory",
 		app:"String",
+		queryActivityPage:"Page_Activity",
 		queryMenuList:"Menu",
 		queryCommentPage:"Page_Comment",
 		queryArticleCategoryTree:"ArticleCategory",
 		queryUserPage:"Page_User",
 		messageSession:"MessageSession",
 		queryArticle:"Article",
-		queryDoctorSchedulePage:"Page_DoctorSchedule",
 		queryMenuTree:"Menu",
+		queryDoctorSchedulePage:"Page_DoctorSchedule",
+		queryReservationPage:"Page_Reservation",
 		queryUserList:"User",
+		queryUserReservationPage:"Page_Reservation",
 		queryDefaultRole:"DefaultRoleEnum",
 		queryMessageSessionPage:"Page_MessageSession",
-		queryUser:"User"
+		queryUser:"User",
+		queryDocReservationPage:"Page_Reservation"
+	},
+	Reservation:{
+		appointmentDate:"LocalDate",
+		createdAt:"LocalDateTime",
+		createdBy:"String",
+		doctor:"User",
+		doctorId:"String",
+		id:"String",
+		org:"Org",
+		orgId:"String",
+		schedule:"DoctorSchedule",
+		scheduleId:"String",
+		status:"String",
+		updatedAt:"LocalDateTime",
+		updatedBy:"String",
+		user:"User",
+		userId:"String"
 	},
 	Role:{
 		createdAt:"LocalDateTime",
@@ -831,6 +979,8 @@ export const ReturnTypes: Record<string,any> = {
 		menus:"Menu",
 		nickName:"String",
 		openMessage:"Boolean",
+		org:"Org",
+		orgId:"String",
 		passwordEnable:"Boolean",
 		permissions:"String",
 		phone:"String",

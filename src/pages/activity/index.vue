@@ -6,10 +6,10 @@
 <script setup lang="ts">
 import type { SorterResult } from 'ant-design-vue/es/table/interface'
 import { type TableColumnType, message } from 'ant-design-vue'
-import { OrgType, OrgTypeList, columns, generateSearch } from './data'
-import type { Org, State } from './data'
-import OrgModal from './components/OrgModal.vue'
-import { deleteOrg, queryOrgPage } from '~/api/org'
+import { ActivityStatus, columns, generateSearch } from './data'
+import type { Activity, State } from './data'
+import { delActivity, queryActivityPage, unpublishActivity } from '~/api/activity'
+import { ActivityStatusEnum } from '~/utils/graphql/zeus'
 
 const state: State = reactive({
   loading: false,
@@ -19,7 +19,7 @@ const state: State = reactive({
   search: generateSearch(),
   total: 0,
 })
-
+const router = useRouter()
 const { search } = toRefs(state)
 
 initData()
@@ -27,9 +27,9 @@ initData()
 async function initData() {
   state.loading = true
   const { search } = state
-  const res = await queryOrgPage(search)
-  const { content, totalElements } = res.queryOrgPage!
-  state.data = content as Org[]
+  const res = await queryActivityPage(search)
+  const { content, totalElements } = res.queryActivityPage!
+  state.data = content as Activity[]
   state.total = totalElements as number
   state.loading = false
 }
@@ -67,20 +67,34 @@ function handleTableChange(pagination: any, filters: any, sorter: SorterResult) 
 }
 
 function handleOpenCreate() {
-  state.modalVisible = true
+  router.push('/activity/edit')
 }
 
-function handleOpenEdit(record: Org) {
-  state.modalVisible = true
-  state.currentItem = record
+function handleOpenEdit(record: Activity) {
+  router.push(`/activity/edit?id=${record.id}`)
 }
 
 async function handleDelete(id: string) {
   const loading = message.loading('加载中', 0)
   try {
-    await deleteOrg(id)
+    await delActivity(id)
     initData()
     loading()
+    message.success('成功')
+    return true
+  }
+  catch (e) {
+    loading()
+    return false
+  }
+}
+
+async function handleUnpublish(id: string) {
+  const loading = message.loading('加载中', 0)
+  try {
+    await unpublishActivity(id)
+    loading()
+    initData()
     message.success('成功')
     return true
   }
@@ -93,12 +107,10 @@ async function handleDelete(id: string) {
 
 <template>
   <div class="w-full">
-    <OrgModal v-model:open="state.modalVisible" :current-item="state.currentItem" @ok="initData" @cancel="() => state.currentItem = null" />
     <!-- 搜索 -->
     <ACard>
       <div class="flex">
-        <AInput v-model:value="search.name" placeholder="名称" class="w-200px" />
-        <ASelect v-model:value="search.orgType" placeholder="请选择类型" :options="OrgTypeList" />
+        <AInput v-model:value="search.title" placeholder="标题" class="w-200px" />
         <div class="ml-2 flex items-center">
           <AButton :loading="state.loading" class="flex items-center justify-center" type="primary" @click="handleSearch">
             <template #icon>
@@ -135,21 +147,11 @@ async function handleDelete(id: string) {
       :pagination="false" :columns="columns" :row-key="(record: any) => record.id" :data-source="state.data"
       :loading="state.loading" @change="handleTableChange"
     >
-      <template #bodyCell="{ column, record }: { column: TableColumnType<Org>, record: Org }">
-        <template v-if="column.dataIndex === 'logo'">
-          <AImage
-            :width="100"
-            :src="record.logo"
-          />
-        </template>
-        <template v-if="column.dataIndex === 'orgType'">
+      <template #bodyCell="{ column, record }: { column: TableColumnType<Activity>, record: Activity }">
+        <template v-if="column.dataIndex === 'status'">
+          <ABadge :status="ActivityStatusEnum.DRAFT === record.status ? 'warning' : 'success'" />
           <span>
-            {{ OrgType[record.orgType!] }}
-          </span>
-        </template>
-        <template v-if="column.dataIndex === 'head'">
-          <span>
-            {{ record.lead?.nickName || record.lead?.userName }}
+            {{ ActivityStatus[record.status!] }}
           </span>
         </template>
         <template v-if="column.dataIndex === 'createdAt'">
@@ -157,17 +159,32 @@ async function handleDelete(id: string) {
             {{ formatDate(record.createdAt) }}
           </span>
         </template>
+        <template v-if="column.dataIndex === 'publishedAt'">
+          <span>
+            {{ formatDate(record.publishedAt) }}
+          </span>
+        </template>
         <template v-if="column.key === 'operation'">
           <span>
             <a @click="handleOpenEdit(record)">编辑</a>
             <ADivider type="vertical" />
-
-            <APopconfirm
-              :title="`确定要删除${record.name}?`" ok-text="确定" cancel-text="取消"
-              @confirm="handleDelete(record.id!)"
-            >
-              <a>删除</a>
-            </APopconfirm>
+            <template v-if="record.status === ActivityStatusEnum.PUBLISHED">
+              <APopconfirm
+                :title="`确定要下架${record.title}?`" ok-text="确定" cancel-text="取消"
+                @confirm="handleUnpublish(record.id!)"
+              >
+                <a>下架</a>
+              </APopconfirm>
+              <ADivider type="vertical" />
+            </template>
+            <template v-if="record.status === ActivityStatusEnum.DRAFT">
+              <APopconfirm
+                :title="`确定要删除${record.title}?`" ok-text="确定" cancel-text="取消"
+                @confirm="handleDelete(record.id!)"
+              >
+                <a>删除</a>
+              </APopconfirm>
+            </template>
           </span>
         </template>
       </template>

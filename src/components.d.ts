@@ -15,6 +15,7 @@ declare module 'vue' {
     ACard: typeof import('ant-design-vue/es')['Card']
     ACheckbox: typeof import('ant-design-vue/es')['Checkbox']
     ACol: typeof import('ant-design-vue/es')['Col']
+    ActivityPublishModal: typeof import('./components/ActivityPublishModal.vue')['default']
     ADatePicker: typeof import('ant-design-vue/es')['DatePicker']
     ADescriptions: typeof import('ant-design-vue/es')['Descriptions']
     ADescriptionsItem: typeof import('ant-design-vue/es')['DescriptionsItem']

@@ -74,7 +74,7 @@ async function getMessageData() {
   const { content, hasNext: hasNextPage } = res.queryMessagePage!
   const data = content?.map((item) => {
     const isMe = item.fromUserId === user.value?.id
-    const info = isMe ? item.fromUser : item.toUser
+    const info = isMe ? item.fromUser :  item.fromUser
     return { ...item, isMe, info }
   })
   hasNext.value = !!hasNextPage
