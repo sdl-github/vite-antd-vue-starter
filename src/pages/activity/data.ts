@@ -86,6 +86,12 @@ export const columns: TableColumnType<Activity>[] = [
     key: 'publishedAt',
   },
   {
+    title: '作者',
+    width: '100px',
+    dataIndex: 'author',
+    key: 'author',
+  },
+  {
     title: '操作',
     width: '100px',
     key: 'operation',

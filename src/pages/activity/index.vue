@@ -164,6 +164,11 @@ async function handleUnpublish(id: string) {
             {{ formatDate(record.publishedAt) }}
           </span>
         </template>
+        <template v-if="column.dataIndex === 'author'">
+          <span>
+            {{ record.author?.nickName }}
+          </span>
+        </template>
         <template v-if="column.key === 'operation'">
           <span>
             <a @click="handleOpenEdit(record)">编辑</a>

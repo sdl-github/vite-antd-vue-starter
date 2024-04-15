@@ -1,7 +1,7 @@
 import NProgress from 'nprogress'
 import router from './index'
 
-const whiteList = ['/login', '/register', '/oauth', '/bind', '/403', '/404', '/mock', '/article/edit']
+const whiteList = ['/login', '/register', '/oauth', '/bind', '/403', '/404', '/mock', '/article/edit', '/activity/edit']
 router.beforeEach(async (to, from, next) => {
   if (to.path !== from.path)
     NProgress.start()
