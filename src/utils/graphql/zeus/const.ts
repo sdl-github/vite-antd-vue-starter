@@ -68,6 +68,9 @@ export const AllTypesProps: Record<string,any> = {
 		updateArticle:{
 			input:"UpdateArticleInputInput"
 		},
+		updateRole:{
+			input:"UpdateRoleInputInput"
+		},
 		updateArticleCategory:{
 			input:"UpdateArticleCategoryInputInput"
 		},
@@ -77,23 +80,20 @@ export const AllTypesProps: Record<string,any> = {
 		createReservation:{
 			input:"CreateReservationInputInput"
 		},
-		updateRole:{
-			input:"UpdateRoleInputInput"
-		},
 		deleteComment:{
-
-		},
-		revoke:{
 
 		},
 		createRole:{
 			input:"CreateRoleInputInput"
 		},
-		publishActivity:{
+		revoke:{
 
 		},
 		updateOrg:{
 			input:"UpdateOrgInputInput"
+		},
+		publishActivity:{
+
 		},
 		deletePhysicalExam:{
 
@@ -104,11 +104,11 @@ export const AllTypesProps: Record<string,any> = {
 		createComment:{
 			input:"CreateCommentInputInput"
 		},
-		updateActivity:{
-			input:"UpdateActivityInputInput"
-		},
 		updateMenu:{
 			input:"UpdateMenuInputInput"
+		},
+		updateActivity:{
+			input:"UpdateActivityInputInput"
 		},
 		setUserOpenMessage:{
 
@@ -122,14 +122,14 @@ export const AllTypesProps: Record<string,any> = {
 		createDoctorSchedule:{
 			input:"CreateDoctorScheduleInputInput"
 		},
-		createActivity:{
-			input:"CreateActivityInputInput"
+		createOrg:{
+			input:"CreateOrgInputInput"
 		},
 		createMenu:{
 			input:"CreateMenuInputInput"
 		},
-		createOrg:{
-			input:"CreateOrgInputInput"
+		createActivity:{
+			input:"CreateActivityInputInput"
 		},
 		deleteArticleCategory:{
 
@@ -140,14 +140,14 @@ export const AllTypesProps: Record<string,any> = {
 		deleteOrg:{
 
 		},
-		publishArticle:{
-
+		updateRoleMenu:{
+			input:"UpdateRoleMenuInputInput"
 		},
 		deleteDoctorSchedule:{
 
 		},
-		updateRoleMenu:{
-			input:"UpdateRoleMenuInputInput"
+		publishArticle:{
+
 		},
 		updateUser:{
 			input:"UpdateUserInputInput"
@@ -176,14 +176,14 @@ export const AllTypesProps: Record<string,any> = {
 		replyComment:{
 			input:"ReplyCommentInputInput"
 		},
+		deleteUser:{
+
+		},
 		registerUser:{
 			input:"UserRegisterInputInput"
 		},
 		loginByAccount:{
 			input:"UserLoginInputInput"
-		},
-		deleteUser:{
-
 		},
 		createUser:{
 			input:"CreateUserInputInput"
@@ -240,11 +240,11 @@ export const AllTypesProps: Record<string,any> = {
 		queryActivityPage:{
 			specification:"QueryActivityPageSpecificationInput"
 		},
-		queryMenuList:{
-			param:"MenuQueryParamInput"
-		},
 		queryCommentPage:{
 			specification:"QueryCommentPageSpecificationInput"
+		},
+		queryMenuList:{
+			param:"MenuQueryParamInput"
 		},
 		queryUserPage:{
 			specification:"QueryUserPageSpecificationInput"
@@ -255,11 +255,11 @@ export const AllTypesProps: Record<string,any> = {
 		queryArticle:{
 
 		},
-		queryMenuTree:{
-			param:"MenuQueryPageParamInput"
-		},
 		queryDoctorSchedulePage:{
 			specification:"QueryDoctorSchedulePageSpecificationInput"
+		},
+		queryMenuTree:{
+			param:"MenuQueryPageParamInput"
 		},
 		queryReservationPage:{
 			specification:"QueryReservationPageSpecificationInput"
@@ -281,7 +281,7 @@ export const AllTypesProps: Record<string,any> = {
 		}
 	},
 	QueryActivityPageSpecificationInput:{
-
+		status:"ActivityStatusEnum"
 	},
 	QueryArticleCategorySpecificationInput:{
 
@@ -426,10 +426,20 @@ export const ReturnTypes: Record<string,any> = {
 		updatedAt:"LocalDateTime",
 		updatedBy:"String"
 	},
+	Banner:{
+		createdAt:"LocalDateTime",
+		createdBy:"String",
+		desc:"String",
+		id:"String",
+		updatedAt:"LocalDateTime",
+		updatedBy:"String",
+		url:"String"
+	},
 	BaseEntity:{
 		"...on Activity": "Activity",
 		"...on Article": "Article",
 		"...on ArticleCategory": "ArticleCategory",
+		"...on Banner": "Banner",
 		"...on Comment": "Comment",
 		"...on DoctorSchedule": "DoctorSchedule",
 		"...on File": "File",
@@ -557,46 +567,47 @@ export const ReturnTypes: Record<string,any> = {
 		unpublishArticle:"Boolean",
 		unpublishActivity:"Boolean",
 		updateArticle:"Article",
+		updateRole:"Role",
 		updateArticleCategory:"ArticleCategory",
 		createArticleCategory:"ArticleCategory",
 		createReservation:"Reservation",
-		updateRole:"Role",
 		deleteComment:"Boolean",
-		revoke:"Boolean",
 		createRole:"Role",
-		publishActivity:"Boolean",
+		revoke:"Boolean",
 		updateOrg:"Org",
+		publishActivity:"Boolean",
 		deletePhysicalExam:"Boolean",
 		deleteReservation:"Boolean",
 		createComment:"Comment",
-		updateActivity:"Activity",
 		updateMenu:"Menu",
+		updateActivity:"Activity",
 		logout:"Boolean",
 		setUserOpenMessage:"Boolean",
 		setWarn:"Boolean",
 		updateDoctorSchedule:"DoctorSchedule",
 		createDoctorSchedule:"DoctorSchedule",
-		createActivity:"Activity",
-		createMenu:"Menu",
 		createOrg:"Org",
+		createMenu:"Menu",
+		createActivity:"Activity",
 		deleteArticleCategory:"Boolean",
 		createArticle:"Article",
 		deleteOrg:"Boolean",
-		publishArticle:"Boolean",
-		deleteDoctorSchedule:"Boolean",
 		updateRoleMenu:"Boolean",
+		deleteDoctorSchedule:"Boolean",
+		publishArticle:"Boolean",
 		updateUser:"User",
 		sendMessage:"Message",
 		deleteRole:"Boolean",
 		updateComment:"Comment",
 		deleteArticle:"Boolean",
+		createBanner:"Boolean",
 		updateUserProfile:"Boolean",
 		deleteActivity:"Boolean",
 		updateStatus:"Reservation",
 		replyComment:"Comment",
+		deleteUser:"Boolean",
 		registerUser:"Boolean",
 		loginByAccount:"String",
-		deleteUser:"Boolean",
 		createUser:"User",
 		deleteFileById:"Boolean",
 		createPhysicalExam:"PhysicalExam"
@@ -888,6 +899,7 @@ export const ReturnTypes: Record<string,any> = {
 		queryRolePage:"Page_Role",
 		queryLoginSessionList:"LoginSessionResult",
 		queryRole:"Role",
+		queryAllBanner:"Banner",
 		queryAllRoleList:"Role",
 		queryMessagePage:"Page_Message",
 		queryArticlePage:"Page_Article",
@@ -897,14 +909,14 @@ export const ReturnTypes: Record<string,any> = {
 		queryArticleCategory:"ArticleCategory",
 		app:"String",
 		queryActivityPage:"Page_Activity",
-		queryMenuList:"Menu",
 		queryCommentPage:"Page_Comment",
+		queryMenuList:"Menu",
 		queryArticleCategoryTree:"ArticleCategory",
 		queryUserPage:"Page_User",
 		messageSession:"MessageSession",
 		queryArticle:"Article",
-		queryMenuTree:"Menu",
 		queryDoctorSchedulePage:"Page_DoctorSchedule",
+		queryMenuTree:"Menu",
 		queryReservationPage:"Page_Reservation",
 		queryUserList:"User",
 		queryUserReservationPage:"Page_Reservation",
