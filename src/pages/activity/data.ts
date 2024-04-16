@@ -42,6 +42,7 @@ export function generateSearch() {
     title: '',
     markdown: '',
     sort: '',
+    authorId: '',
   }
   return search
 }

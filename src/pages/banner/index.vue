@@ -5,10 +5,10 @@
 
 <script setup lang="ts">
 import { type TableColumnType, message } from 'ant-design-vue'
-import { columns, generateSearch } from './data'
+import { columns } from './data'
 import type { Banner, State } from './data'
-import { deleteComment, queryCommentPage, replyComment } from '~/api/comment'
-import { queryAllBannerList } from '~/api/banner'
+import BannerModal from './components/BannerModal.vue'
+import { deleteBanner, queryAllBannerList } from '~/api/banner'
 
 const state: State = reactive({
   loading: false,
@@ -21,7 +21,7 @@ const state: State = reactive({
 initData()
 
 function handleOpenCreate() {
-
+  state.modalVisible = true
 }
 // 初始化数据
 async function initData() {
@@ -34,7 +34,7 @@ async function initData() {
 async function handleDelete(id: string) {
   const loading = message.loading('加载中', 0)
   try {
-    await deleteComment(id)
+    await deleteBanner(id)
     initData()
     loading()
     message.success('成功')
@@ -49,6 +49,7 @@ async function handleDelete(id: string) {
 
 <template>
   <div class="w-full">
+    <BannerModal v-model:open="state.modalVisible" :current-item="state.currentItem" @ok="initData" />
     <!-- 搜索 -->
     <ACard>
       <div class="flex">
@@ -85,11 +86,9 @@ async function handleDelete(id: string) {
       :pagination="false" :columns="columns" :row-key="(record: any) => record.id" :data-source="state.data"
       :loading="state.loading"
     >
-      <template #bodyCell="{ column, record }: { column: TableColumnType<Comment>, record: Comment }">
-        <template v-if="column.dataIndex === 'createdAt'">
-          <span>
-            {{ formatDate(record.createdAt) }}
-          </span>
+      <template #bodyCell="{ column, record }: { column: TableColumnType<Banner>, record: Banner }">
+        <template v-if="column.dataIndex === 'url'">
+          <AImage :src="record.url" :width="200" />
         </template>
 
         <template v-if="column.key === 'operation'">

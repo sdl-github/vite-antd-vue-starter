@@ -78,8 +78,10 @@ function generateSearch() {
 async function initData() {
   state.loading = true
   const { search } = state
-  if (onlyHead.value)
+  if (onlyHead.value) {
     search.roleKey = 'USER'
+    search.orgId = userstore.user?.orgId
+  }
 
   const res = await queryUserPage(search)
   const { content, totalElements } = res.queryUserPage!

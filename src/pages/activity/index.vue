@@ -19,14 +19,19 @@ const state: State = reactive({
   search: generateSearch(),
   total: 0,
 })
+const userstore = useUserStore()
+
 const router = useRouter()
 const { search } = toRefs(state)
-
+const isOrgHead = computed(() => checkPermission(['ORG_HEAD']))
 initData()
 // 初始化数据
 async function initData() {
   state.loading = true
   const { search } = state
+  if (isOrgHead.value)
+    search.authorId = userstore.user?.id
+
   const res = await queryActivityPage(search)
   const { content, totalElements } = res.queryActivityPage!
   state.data = content as Activity[]

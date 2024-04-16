@@ -12,6 +12,9 @@ export const AllTypesProps: Record<string,any> = {
 	CreateArticleInputInput:{
 
 	},
+	CreateBannerInputInput:{
+
+	},
 	CreateCommentInputInput:{
 
 	},
@@ -59,14 +62,17 @@ export const AllTypesProps: Record<string,any> = {
 		deleteMenu:{
 
 		},
-		unpublishArticle:{
+		unpublishActivity:{
 
 		},
-		unpublishActivity:{
+		unpublishArticle:{
 
 		},
 		updateArticle:{
 			input:"UpdateArticleInputInput"
+		},
+		createReservation:{
+			input:"CreateReservationInputInput"
 		},
 		updateRole:{
 			input:"UpdateRoleInputInput"
@@ -77,9 +83,6 @@ export const AllTypesProps: Record<string,any> = {
 		createArticleCategory:{
 			input:"CreateArticleCategoryInputInput"
 		},
-		createReservation:{
-			input:"CreateReservationInputInput"
-		},
 		deleteComment:{
 
 		},
@@ -89,11 +92,11 @@ export const AllTypesProps: Record<string,any> = {
 		revoke:{
 
 		},
-		updateOrg:{
-			input:"UpdateOrgInputInput"
-		},
 		publishActivity:{
 
+		},
+		updateOrg:{
+			input:"UpdateOrgInputInput"
 		},
 		deletePhysicalExam:{
 
@@ -104,11 +107,14 @@ export const AllTypesProps: Record<string,any> = {
 		createComment:{
 			input:"CreateCommentInputInput"
 		},
+		updateActivity:{
+			input:"UpdateActivityInputInput"
+		},
 		updateMenu:{
 			input:"UpdateMenuInputInput"
 		},
-		updateActivity:{
-			input:"UpdateActivityInputInput"
+		deleteBanner:{
+
 		},
 		setUserOpenMessage:{
 
@@ -122,14 +128,14 @@ export const AllTypesProps: Record<string,any> = {
 		createDoctorSchedule:{
 			input:"CreateDoctorScheduleInputInput"
 		},
+		createActivity:{
+			input:"CreateActivityInputInput"
+		},
 		createOrg:{
 			input:"CreateOrgInputInput"
 		},
 		createMenu:{
 			input:"CreateMenuInputInput"
-		},
-		createActivity:{
-			input:"CreateActivityInputInput"
 		},
 		deleteArticleCategory:{
 
@@ -143,10 +149,10 @@ export const AllTypesProps: Record<string,any> = {
 		updateRoleMenu:{
 			input:"UpdateRoleMenuInputInput"
 		},
-		deleteDoctorSchedule:{
+		publishArticle:{
 
 		},
-		publishArticle:{
+		deleteDoctorSchedule:{
 
 		},
 		updateUser:{
@@ -164,11 +170,14 @@ export const AllTypesProps: Record<string,any> = {
 		deleteArticle:{
 
 		},
-		updateUserProfile:{
-			input:"UpdateUserProfileInputInput"
+		createBanner:{
+			input:"CreateBannerInputInput"
 		},
 		deleteActivity:{
 
+		},
+		updateUserProfile:{
+			input:"UpdateUserProfileInputInput"
 		},
 		updateStatus:{
 			input:"UpdateReservationInputInput"
@@ -228,11 +237,11 @@ export const AllTypesProps: Record<string,any> = {
 		queryOrgPage:{
 			specification:"QueryOrgPageSpecificationInput"
 		},
-		queryFilePage:{
-			param:"FileQueryPageParamInput"
-		},
 		userOpenMessage:{
 
+		},
+		queryFilePage:{
+			param:"FileQueryPageParamInput"
 		},
 		queryArticleCategory:{
 			specification:"QueryArticleCategorySpecificationInput"
@@ -564,45 +573,46 @@ export const ReturnTypes: Record<string,any> = {
 	},
 	Mutation:{
 		deleteMenu:"Boolean",
-		unpublishArticle:"Boolean",
 		unpublishActivity:"Boolean",
+		unpublishArticle:"Boolean",
 		updateArticle:"Article",
+		createReservation:"Reservation",
 		updateRole:"Role",
 		updateArticleCategory:"ArticleCategory",
 		createArticleCategory:"ArticleCategory",
-		createReservation:"Reservation",
 		deleteComment:"Boolean",
 		createRole:"Role",
 		revoke:"Boolean",
-		updateOrg:"Org",
 		publishActivity:"Boolean",
+		updateOrg:"Org",
 		deletePhysicalExam:"Boolean",
 		deleteReservation:"Boolean",
 		createComment:"Comment",
-		updateMenu:"Menu",
 		updateActivity:"Activity",
+		updateMenu:"Menu",
 		logout:"Boolean",
+		deleteBanner:"Boolean",
 		setUserOpenMessage:"Boolean",
 		setWarn:"Boolean",
 		updateDoctorSchedule:"DoctorSchedule",
 		createDoctorSchedule:"DoctorSchedule",
+		createActivity:"Activity",
 		createOrg:"Org",
 		createMenu:"Menu",
-		createActivity:"Activity",
 		deleteArticleCategory:"Boolean",
 		createArticle:"Article",
 		deleteOrg:"Boolean",
 		updateRoleMenu:"Boolean",
-		deleteDoctorSchedule:"Boolean",
 		publishArticle:"Boolean",
+		deleteDoctorSchedule:"Boolean",
 		updateUser:"User",
 		sendMessage:"Message",
 		deleteRole:"Boolean",
 		updateComment:"Comment",
 		deleteArticle:"Boolean",
 		createBanner:"Boolean",
-		updateUserProfile:"Boolean",
 		deleteActivity:"Boolean",
+		updateUserProfile:"Boolean",
 		updateStatus:"Reservation",
 		replyComment:"Comment",
 		deleteUser:"Boolean",
@@ -904,8 +914,8 @@ export const ReturnTypes: Record<string,any> = {
 		queryMessagePage:"Page_Message",
 		queryArticlePage:"Page_Article",
 		queryOrgPage:"Page_Org",
-		queryFilePage:"Page_File",
 		userOpenMessage:"Boolean",
+		queryFilePage:"Page_File",
 		queryArticleCategory:"ArticleCategory",
 		app:"String",
 		queryActivityPage:"Page_Activity",
