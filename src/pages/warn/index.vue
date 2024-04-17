@@ -103,7 +103,7 @@ function handleOpenCreate() {
 
 <template>
   <div class="WarnEvent-container">
-    <FromModal v-model:open="state.modalVisible" :current-item="state.currentItem" @ok="initData" />
+    <FromModal v-model:open="state.modalVisible" :current-item="state.currentItem" @ok="initData();state.currentItem = null" @cancel="state.currentItem = null" />
     <ACard>
       <div class="flex">
         <AInput v-model:value="search.level" placeholder="等级" class="w-200px" />

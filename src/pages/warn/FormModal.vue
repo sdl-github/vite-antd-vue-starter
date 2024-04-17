@@ -4,6 +4,7 @@ import type { FormInstance, UploadProps } from 'ant-design-vue'
 import { Upload, message } from 'ant-design-vue'
 import type { UploadRequestOption } from 'ant-design-vue/es/vc-upload/interface'
 import type { Rule } from 'ant-design-vue/es/form'
+import dayjs from 'dayjs'
 import type { WarnEvent, WarnEventCreateInput, WarnEventUpdateInput } from './data'
 import { createWarnEventPage, updateWarnEvent } from '~/api/warn'
 import { upload } from '~/api/file'
@@ -67,7 +68,7 @@ function handleOk() {
         code,
         level,
         location,
-        warnTime,
+        warnTime: dayjs(warnTime).toISOString(),
         fileUrl,
       }
       const updateInput: WarnEventUpdateInput = {
@@ -77,7 +78,7 @@ function handleOk() {
         code,
         level,
         location,
-        warnTime,
+        warnTime: dayjs(warnTime).toISOString(),
         fileUrl,
       }
       const api = data.id ? updateWarnEvent : createWarnEventPage
