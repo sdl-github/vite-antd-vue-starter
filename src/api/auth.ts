@@ -24,6 +24,7 @@ export function userInfo() {
       superAdmin: true,
       passwordEnable: true,
       openMessage: true,
+      orgId: true,
       menus: {
         id: true,
         parentId: true,
