@@ -53,3 +53,10 @@ export function queryAllUserList(): Promise<ModelTypes['User'][]> {
     method: 'get',
   })
 }
+
+export function queryAllNoticeUserList(): Promise<ModelTypes['User'][]> {
+  return request({
+    url: '/user/queryAllNoticeUserList',
+    method: 'get',
+  })
+}

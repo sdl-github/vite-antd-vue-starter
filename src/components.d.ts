@@ -58,6 +58,7 @@ declare module 'vue' {
     FengMap: typeof import('./components/FengMap.vue')['default']
     ImageCropperModal: typeof import('./components/ImageCropperModal.vue')['default']
     MenuItem: typeof import('./components/MenuItem.vue')['default']
+    NoticeBar: typeof import('./components/NoticeBar.vue')['default']
     PointPopover: typeof import('./components/PointPopover.vue')['default']
     PointPopver: typeof import('./components/PointPopver.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

@@ -161,6 +161,7 @@ function addLocationMarker(ops: Point) {
 
 <template>
   <div class="relative h-full w-full">
+    <NoticeBar />
     <ASpin :spinning="loading" tip="加载中...">
       <div class="absolute left-0 right-0 top-0 z-99 rounded">
         <div class="mx-6 mt-4 rounded bg-white p-4">
