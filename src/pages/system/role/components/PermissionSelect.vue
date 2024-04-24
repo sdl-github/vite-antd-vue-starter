@@ -8,7 +8,7 @@ import type { ModelTypes } from '@/utils/graphql/zeus'
 const props = defineProps({
   currentRole: {
     type: Object as PropType<ModelTypes['Role']>,
-    default: () => {},
+    default: () => { },
   },
   visible: {
     type: Boolean,
@@ -58,7 +58,9 @@ function deepTreeToList(tree: any[]) {
 }
 
 async function initData() {
-  const data = await queryMenuTree()
+  const data = await queryMenuTree({
+    sort: 'createdAt desc',
+  })
   treeData.value = data as any
 }
 
@@ -104,10 +106,10 @@ function handleSave() {
 
 <style lang="scss" scoped>
 .permission_card {
-    width: 100%;
-    min-width: 300px;
-    height: 600px;
-    overflow: auto;
-    margin-left: 24px;
+  width: 100%;
+  min-width: 300px;
+  height: 600px;
+  overflow: auto;
+  margin-left: 24px;
 }
 </style>

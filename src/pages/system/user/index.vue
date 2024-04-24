@@ -127,7 +127,8 @@ function handleTableChange(pagination: any, filters: any, sorter: SorterResult) 
     <UserModal
       v-model:open="state.modalVisible"
       :current-item="state.currentItem"
-      @ok="initData"
+      @ok="initData();state.currentItem = null"
+      @cancel="state.currentItem = null"
     />
     <ACard>
       <div class="flex">

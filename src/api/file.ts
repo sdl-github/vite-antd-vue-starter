@@ -1,11 +1,12 @@
 import { mutation, query } from '@/utils/graphql'
-import { FileProviderEnum, type ModelTypes } from '@/utils/graphql/zeus'
+import { FileProviderEnum } from '@/utils/graphql/zeus'
+import type { ModelTypes, ValueTypes } from '@/utils/graphql/zeus'
 
-export function queryFilePage(param?: ModelTypes['FileQueryPageParamInput']) {
+export function queryFilePage(spec: ValueTypes['QueryFilePageSpecInput']) {
   return query({
     queryFilePage: [
       {
-        param,
+        spec,
       },
       {
         content: {

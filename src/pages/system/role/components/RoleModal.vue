@@ -60,10 +60,15 @@ function handleOk() {
       const data = Object.assign({}, unref(model))
       const { id, name, key, level } = data
       const createInput: RoleCreateInput = {
-        name, key, level,
+        name,
+        key,
+        level,
       }
       const updateInput: RoleUpdateInput = {
-        id, name, key, level,
+        id,
+        name,
+        key,
+        level,
       }
       const api = data.id ? updateRole : createRole
       const input = (data.id ? updateInput : createInput) as ModelType
@@ -88,7 +93,7 @@ function handleCancel() {
 </script>
 
 <template>
-  <a-modal
+  <AModal
     :open="open"
     :destroy-on-close="true"
     :title="currentItem?.id ? '编辑' : ' 创建'"
@@ -99,7 +104,7 @@ function handleCancel() {
     @ok="handleOk"
     @cancel="handleCancel"
   >
-    <a-form
+    <AForm
       ref="formRef"
       class="mt-5"
       :model="model"
@@ -107,28 +112,28 @@ function handleCancel() {
       :wrapper-col="{ span: 16 }"
       autocomplete="off"
     >
-      <a-row :gutter="[16, 8]">
-        <a-col :span="24">
-          <a-form-item label="权限名称" name="name" :rules="rules.name">
-            <a-input
+      <ARow :gutter="[16, 8]">
+        <ACol :span="24">
+          <AFormItem label="权限名称" name="name" :rules="rules.name">
+            <AInput
               v-model:value="model.name"
               :placeholder="requireMessage('权限名称')"
             />
-          </a-form-item>
-        </a-col>
-        <a-col :span="24">
-          <a-form-item label="权限标识" name="key" :rules="rules.key">
-            <a-input v-model:value="model.key" :placeholder="requireMessage('权限标识')" />
-          </a-form-item>
-        </a-col>
-        <a-col :span="24">
-          <a-form-item label="权限等级" name="level" :rules="rules.level">
-            <a-input-number v-model:value="model.level" :placeholder="requireMessage('权限等级')" class="w-full" />
-          </a-form-item>
-        </a-col>
-      </a-row>
-    </a-form>
-  </a-modal>
+          </AFormItem>
+        </ACol>
+        <ACol :span="24">
+          <AFormItem label="权限标识" name="key" :rules="rules.key">
+            <AInput v-model:value="model.key" :placeholder="requireMessage('权限标识')" />
+          </AFormItem>
+        </ACol>
+        <ACol :span="24">
+          <AFormItem label="权限等级" name="level" :rules="rules.level">
+            <AInputNumber v-model:value="model.level" :placeholder="requireMessage('权限等级')" class="w-full" />
+          </AFormItem>
+        </ACol>
+      </ARow>
+    </AForm>
+  </AModal>
 </template>
 
 <style lang="scss" scoped>

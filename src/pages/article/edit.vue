@@ -61,7 +61,7 @@ async function handleSave() {
 
     const res = await api(data)
     if ('createArticle' in res)
-      state.form.id = res.createArticle?.id
+      state.form.id = res.createArticle!.id as string
 
     loading()
     saveLoading.value = false

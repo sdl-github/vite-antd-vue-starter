@@ -56,7 +56,7 @@ export function revoke(id: string) {
   })
 }
 
-export function updateUserProfile(data: ModelTypes['UpdateUserProfileInputInput']) {
+export function updateUserProfile(data: ModelTypes['UpdateUserProfileInput']) {
   return request({
     url: '/auth/updateUserProfile',
     method: 'POST',
@@ -64,7 +64,7 @@ export function updateUserProfile(data: ModelTypes['UpdateUserProfileInputInput'
   })
 }
 
-export function registerUser(data: ModelTypes['UserRegisterInputInput']) {
+export function registerUser(data: ModelTypes['UserRegisterInput']) {
   return request({
     url: '/auth/registerUser',
     method: 'POST',

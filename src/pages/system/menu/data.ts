@@ -2,13 +2,13 @@ import type { TableColumnType } from 'ant-design-vue'
 
 import type { ModelTypes, ValueTypes } from '@/utils/graphql/zeus'
 
-export type SearchParam = ValueTypes['MenuQueryPageParamInput']
+export type SearchParam = ModelTypes['QueryMenuSpecInput']
 export type Menu = ModelTypes['Menu']
 
 export type MenuType = ModelTypes['MenuTypeEnum']
 
-export type MenuCreateInput = ModelTypes['MenuCreateInputInput']
-export type MenuUpdateInput = ModelTypes['MenuUpdateInputInput']
+export type MenuCreateInput = ModelTypes['CreateMenuInput']
+export type MenuUpdateInput = ModelTypes['UpdateMenuInput']
 
 export const columns: TableColumnType<Menu>[] = [
   {

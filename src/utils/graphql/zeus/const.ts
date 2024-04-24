@@ -2,36 +2,29 @@
 
 export const AllTypesProps: Record<string,any> = {
 	ArticleStatusEnum: "enum" as const,
-	CreateArticleCategoryInputInput:{
+	CreateArticleCategoryInput:{
 
 	},
-	CreateArticleInputInput:{
+	CreateArticleInput:{
 
 	},
+	CreateMenuInput:{
+		type:"MenuTypeEnum"
+	},
+	CreateRoleInput:{
+
+	},
+	CreateUserInput:{
+		gender:"GenderEnum"
+	},
+	Date: `scalar.Date` as const,
+	DefaultRoleEnum: "enum" as const,
 	Direction: "enum" as const,
 	FileProviderEnum: "enum" as const,
-	FileQueryPageParamInput:{
-		provider:"FileProviderEnum"
-	},
 	GenderEnum: "enum" as const,
 	LocalDateTime: `scalar.LocalDateTime` as const,
-	LoginInputInput:{
-
-	},
 	Long: `scalar.Long` as const,
-	MenuCreateInputInput:{
-		type:"MenuTypeEnum"
-	},
-	MenuQueryPageParamInput:{
-
-	},
-	MenuQueryParamInput:{
-		type:"MenuTypeEnum"
-	},
 	MenuTypeEnum: "enum" as const,
-	MenuUpdateInputInput:{
-		type:"MenuTypeEnum"
-	},
 	Mutation:{
 		deleteMenu:{
 
@@ -40,25 +33,28 @@ export const AllTypesProps: Record<string,any> = {
 
 		},
 		createMenu:{
-			input:"MenuCreateInputInput"
+			input:"CreateMenuInput"
 		},
 		updateArticle:{
-			input:"UpdateArticleInputInput"
+			input:"UpdateArticleInput"
+		},
+		updateRole:{
+			input:"UpdateRoleInput"
 		},
 		deleteArticleCategory:{
 
 		},
 		updateArticleCategory:{
-			input:"UpdateArticleCategoryInputInput"
+			input:"UpdateArticleCategoryInput"
 		},
 		createArticleCategory:{
-			input:"CreateArticleCategoryInputInput"
-		},
-		updateRole:{
-			input:"RoleUpdateInputInput"
+			input:"CreateArticleCategoryInput"
 		},
 		createArticle:{
-			input:"CreateArticleInputInput"
+			input:"CreateArticleInput"
+		},
+		updateRoleMenu:{
+			input:"UpdateRoleMenuInput"
 		},
 		publishArticle:{
 
@@ -67,10 +63,10 @@ export const AllTypesProps: Record<string,any> = {
 
 		},
 		updateUser:{
-			input:"UserUpdateInputInput"
+			input:"UpdateUserInput"
 		},
 		createRole:{
-			input:"RoleCreateInputInput"
+			input:"CreateRoleInput"
 		},
 		deleteRole:{
 
@@ -79,22 +75,22 @@ export const AllTypesProps: Record<string,any> = {
 
 		},
 		updateMenu:{
-			input:"MenuUpdateInputInput"
+			input:"UpdateMenuInput"
 		},
 		updateUserProfile:{
-			input:"UpdateUserProfileInputInput"
+			input:"UpdateUserProfileInput"
 		},
 		registerUser:{
-			input:"UserRegisterInputInput"
+			input:"UserRegisterInput"
 		},
 		loginByAccount:{
-			input:"LoginInputInput"
+			input:"UserLoginInput"
 		},
 		deleteUser:{
 
 		},
 		createUser:{
-			input:"UserCreateInputInput"
+			input:"CreateUserInput"
 		},
 		deleteFileById:{
 
@@ -103,34 +99,37 @@ export const AllTypesProps: Record<string,any> = {
 	NullHandling: "enum" as const,
 	Query:{
 		queryMenuList:{
-			param:"MenuQueryParamInput"
+			spec:"QueryMenuSpecInput"
 		},
 		queryUserPage:{
-			param:"UserQueryParamInput"
+			specification:"QueryUserPageSpecificationInput"
 		},
 		queryArticle:{
 
 		},
 		queryMenuTree:{
-			param:"MenuQueryPageParamInput"
+			spec:"QueryMenuSpecInput"
 		},
 		queryRolePage:{
-			param:"RoleQueryParamInput"
+			specification:"QueryRolePageSpecificationInput"
 		},
 		queryRole:{
 
+		},
+		queryUserList:{
+			specification:"QueryUserSpecificationInput"
 		},
 		queryArticlePage:{
 			specification:"QueryArticlePageSpecificationInput"
 		},
 		queryFilePage:{
-			param:"FileQueryPageParamInput"
-		},
-		queryArticleCategory:{
-			specification:"QueryArticleCategorySpecificationInput"
+			spec:"QueryFilePageSpecInput"
 		},
 		queryUser:{
 
+		},
+		queryArticleCategory:{
+			specification:"QueryArticleCategorySpecificationInput"
 		}
 	},
 	QueryArticleCategorySpecificationInput:{
@@ -139,35 +138,47 @@ export const AllTypesProps: Record<string,any> = {
 	QueryArticlePageSpecificationInput:{
 
 	},
-	RoleCreateInputInput:{
+	QueryFilePageSpecInput:{
+		provider:"FileProviderEnum"
+	},
+	QueryMenuSpecInput:{
+		type:"MenuTypeEnum"
+	},
+	QueryRolePageSpecificationInput:{
 
 	},
-	RoleQueryParamInput:{
+	QueryUserPageSpecificationInput:{
 
 	},
-	RoleUpdateInputInput:{
+	QueryUserSpecificationInput:{
 
 	},
-	UpdateArticleCategoryInputInput:{
+	UpdateArticleCategoryInput:{
 
 	},
-	UpdateArticleInputInput:{
+	UpdateArticleInput:{
 
 	},
-	UpdateUserProfileInputInput:{
+	UpdateMenuInput:{
+		type:"MenuTypeEnum"
+	},
+	UpdateRoleInput:{
 
 	},
-	UserCreateInputInput:{
+	UpdateRoleMenuInput:{
+
+	},
+	UpdateUserInput:{
 		gender:"GenderEnum"
 	},
-	UserQueryParamInput:{
+	UpdateUserProfileInput:{
 
 	},
-	UserRegisterInputInput:{
+	UserLoginInput:{
 
 	},
-	UserUpdateInputInput:{
-		gender:"GenderEnum"
+	UserRegisterInput:{
+
 	}
 }
 
@@ -219,6 +230,7 @@ export const ReturnTypes: Record<string,any> = {
 		updatedAt:"LocalDateTime",
 		updatedBy:"String"
 	},
+	Date: `scalar.Date` as const,
 	File:{
 		bucket:"String",
 		category:"String",
@@ -270,11 +282,12 @@ export const ReturnTypes: Record<string,any> = {
 		unpublishArticle:"Boolean",
 		createMenu:"Menu",
 		updateArticle:"Article",
+		updateRole:"Role",
 		deleteArticleCategory:"Boolean",
 		updateArticleCategory:"ArticleCategory",
 		createArticleCategory:"ArticleCategory",
-		updateRole:"Role",
 		createArticle:"Article",
+		updateRoleMenu:"Boolean",
 		publishArticle:"Boolean",
 		revoke:"Boolean",
 		updateUser:"User",
@@ -388,12 +401,13 @@ export const ReturnTypes: Record<string,any> = {
 		queryRolePage:"Page_Role",
 		queryLoginSessionList:"LoginSessionResult",
 		queryRole:"Role",
+		queryUserList:"User",
 		queryAllRoleList:"Role",
-		queryAllUserList:"User",
+		queryDefaultRole:"DefaultRoleEnum",
 		queryArticlePage:"Page_Article",
 		queryFilePage:"Page_File",
-		queryArticleCategory:"ArticleCategory",
-		queryUser:"User"
+		queryUser:"User",
+		queryArticleCategory:"ArticleCategory"
 	},
 	Role:{
 		createdAt:"LocalDateTime",
@@ -402,6 +416,7 @@ export const ReturnTypes: Record<string,any> = {
 		id:"String",
 		key:"String",
 		level:"Int",
+		menuIds:"String",
 		menus:"Menu",
 		name:"String",
 		updatedAt:"LocalDateTime",
@@ -421,7 +436,6 @@ export const ReturnTypes: Record<string,any> = {
 		email:"String",
 		gender:"GenderEnum",
 		id:"String",
-		job:"String",
 		nickName:"String",
 		note:"String",
 		phone:"String",
@@ -435,8 +449,11 @@ export const ReturnTypes: Record<string,any> = {
 		email:"String",
 		gender:"GenderEnum",
 		id:"String",
+		lastExamData:"Date",
 		menus:"Menu",
 		nickName:"String",
+		openMessage:"Boolean",
+		orgId:"String",
 		passwordEnable:"Boolean",
 		permissions:"String",
 		phone:"String",

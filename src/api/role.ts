@@ -1,5 +1,5 @@
 import { mutation, query } from '@/utils/graphql'
-import type { ModelTypes } from '@/utils/graphql/zeus'
+import type { ModelTypes, ValueTypes } from '@/utils/graphql/zeus'
 
 export function queryAllRoleList() {
   return query({
@@ -11,9 +11,9 @@ export function queryAllRoleList() {
   })
 }
 
-export function queryRolePage(param: ModelTypes['RoleQueryParamInput']) {
+export function queryRolePage(specification: ValueTypes['QueryRolePageSpecificationInput']) {
   return query({
-    queryRolePage: [{ param }, {
+    queryRolePage: [{ specification }, {
       content: {
         id: true,
         name: true,
@@ -34,15 +34,16 @@ export function queryRolePage(param: ModelTypes['RoleQueryParamInput']) {
   })
 }
 
-export function createRole(input: ModelTypes['RoleCreateInputInput']) {
+export function createRole(input: ModelTypes['CreateRoleInput']) {
   return mutation({
     createRole: [
-      { input }, { id: true },
+      { input },
+      { id: true },
     ],
   })
 }
 
-export function updateRole(input: ModelTypes['RoleUpdateInputInput']) {
+export function updateRole(input: ModelTypes['UpdateRoleInput']) {
   return mutation({
     updateRole: [{ input }, { id: true }],
   })

@@ -3,14 +3,14 @@ import type { ModelTypes } from '@/utils/graphql/zeus'
 import request from '~/utils/request'
 
 type Menu = ModelTypes['Menu']
-export function queryMenuTree(params?: ModelTypes['MenuQueryPageParamInput']): Promise<Menu[]> {
+export function queryMenuTree(params: ModelTypes['QueryMenuSpecInput']): Promise<Menu[]> {
   return request({
     url: '/menu/queryMenuTree',
     params,
   })
 }
 
-export function createMenu(input: ModelTypes['MenuCreateInputInput']) {
+export function createMenu(input: ModelTypes['CreateMenuInput']) {
   return mutation({
     createMenu: [
       { input },
@@ -19,7 +19,7 @@ export function createMenu(input: ModelTypes['MenuCreateInputInput']) {
   })
 }
 
-export function updateMenu(input: ModelTypes['MenuUpdateInputInput']) {
+export function updateMenu(input: ModelTypes['UpdateMenuInput']) {
   return mutation({
     updateMenu: [
       { input },

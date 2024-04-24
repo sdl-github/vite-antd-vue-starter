@@ -58,9 +58,9 @@ const { model } = toRefs(state)
 
 watch(() => props.currentItem, (val) => {
   if (val?.id) {
-    const { id, roles, userName = '', gender, nickName, phone, email } = val
+    const { id, roles, userName = '', gender, nickName, phone, email, note } = val
     const roleIds = roles?.map(role => role?.id)
-    state.model = { id, userName, nickName, gender, phone, email, roleIds }
+    state.model = { id, userName, nickName, gender, phone, email, roleIds, note }
   }
 })
 

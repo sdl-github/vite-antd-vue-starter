@@ -6,7 +6,7 @@
 <script setup lang="ts">
 import useSWRV from 'swrv'
 import { message } from 'ant-design-vue'
-import type { ModelTypes, ValueTypes } from '@/utils/graphql/zeus'
+import type { ModelTypes } from '@/utils/graphql/zeus'
 import { createArticleCategory, deleteArticleCategory, queryArticleCategoryTree, updateArticleCategory } from '@/api/article-category'
 
 const rules = {

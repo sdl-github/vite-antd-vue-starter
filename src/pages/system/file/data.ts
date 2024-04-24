@@ -3,7 +3,7 @@ import { FileProviderEnum, type ModelTypes, type ValueTypes } from '@/utils/grap
 
 export type File = ModelTypes['File']
 
-export type SearchParam = ValueTypes['FileQueryPageParamInput']
+export type SearchParam = ValueTypes['QueryFilePageSpecInput']
 
 export type TFileProviderEnum = ValueTypes['FileProviderEnum']
 

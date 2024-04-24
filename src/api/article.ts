@@ -1,7 +1,7 @@
 import { mutation, query } from '@/utils/graphql'
 import type { ModelTypes, ValueTypes } from '@/utils/graphql/zeus'
 
-export function queryArticlePage(specification: ValueTypes['QueryArticlePageSpecificationInput']) {
+export function queryArticlePage(specification: ModelTypes['QueryArticlePageSpecificationInput']) {
   return query({
     queryArticlePage: [{ specification }, {
       content: {
@@ -23,39 +23,37 @@ export function queryArticlePage(specification: ValueTypes['QueryArticlePageSpec
   })
 }
 
-
-
-export function createArticle(input: ValueTypes["CreateArticleInputInput"]) {
+export function createArticle(input: ModelTypes['CreateArticleInput']) {
   return mutation({
     createArticle: [
-      { input }, {
-        id: true
-      }
-    ]
+      { input },
+      {
+        id: true,
+      },
+    ],
   })
 }
 
-
-export function updateArticle(input: ValueTypes["UpdateArticleInputInput"]) {
+export function updateArticle(input: ModelTypes['UpdateArticleInput']) {
   return mutation({
     updateArticle: [
-      { input }, {
-        id: true
-      }
-    ]
+      { input },
+      {
+        id: true,
+      },
+    ],
   })
 }
-
 
 export function delArticle(id: string) {
   return mutation({
-    deleteArticle: [{ id }, true]
+    deleteArticle: [{ id }, true],
   })
 }
 
 export function queryArticle(id: string) {
   return query({
-    queryArticle:[{id},{
+    queryArticle: [{ id }, {
       id: true,
       title: true,
       image: true,
@@ -64,19 +62,19 @@ export function queryArticle(id: string) {
       status: true,
       html: true,
       markdown: true,
-      categoryId: true
-    }]
+      categoryId: true,
+    }],
   })
 }
 
 export function publishArticle(id: string) {
   return mutation({
-    publishArticle: [{ id }, true]
+    publishArticle: [{ id }, true],
   })
 }
 
 export function unpublishArticle(id: string) {
   return mutation({
-    unpublishArticle: [{ id }, true]
+    unpublishArticle: [{ id }, true],
   })
 }

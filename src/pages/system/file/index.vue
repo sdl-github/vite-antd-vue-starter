@@ -46,6 +46,7 @@ function generateSearch() {
     fileName: '',
     originName: '',
     provider: undefined,
+    sort: 'createdAt desc',
   }
   return search
 }
@@ -185,20 +186,20 @@ function handleOpenUploadDrawer() {
       :data-source="state.data" :loading="state.loading"
     >
       <template #bodyCell="{ column, record }: { column: TableColumnType<File>, record: File }">
-        <template v-if=" column.dataIndex === 'size' ">
+        <template v-if="column.dataIndex === 'size'">
           <span>
             {{ formatBytes(record.fileSize || '') }}
           </span>
         </template>
-        <template v-if=" column.dataIndex === 'createdAt' ">
+        <template v-if="column.dataIndex === 'createdAt'">
           <span v-time>
             {{ record.createdAt }}
           </span>
         </template>
-        <template v-if=" column.key === 'operation' ">
+        <template v-if="column.key === 'operation'">
           <span>
             <APopconfirm
-              :title=" `确定要删除${record.fileName}?` " ok-text="确定" cancel-text="取消"
+              :title="`确定要删除${record.fileName}?`" ok-text="确定" cancel-text="取消"
               @confirm="handleDelete(record.id!)"
             >
               <a>删除</a>
@@ -209,8 +210,8 @@ function handleOpenUploadDrawer() {
     </ATable>
     <div class="pagination-card">
       <APagination
-        v-model:current=" search.pageNo " v-model:pageSize=" search.pageSize " show-size-changer
-        :total=" state.total " :show-total=" () => `共 ${state.total} 条` " @change=" handleShowSizeChange "
+        v-model:current="search.pageNo" v-model:pageSize="search.pageSize" show-size-changer
+        :total="state.total" :show-total="() => `共 ${state.total} 条`" @change="handleShowSizeChange"
       />
     </div>
   </div>

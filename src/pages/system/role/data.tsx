@@ -1,6 +1,6 @@
 import type { ModelTypes, ValueTypes } from '@/utils/graphql/zeus'
 
-export type SearchParam = ValueTypes['RoleQueryParamInput']
+export type SearchParam = ValueTypes['QueryRolePageSpecificationInput']
 export type Role = ModelTypes['Role']
-export type RoleCreateInput = ModelTypes['RoleCreateInputInput']
-export type RoleUpdateInput = ModelTypes['RoleUpdateInputInput']
+export type RoleCreateInput = ModelTypes['CreateRoleInput']
+export type RoleUpdateInput = ModelTypes['UpdateRoleInput']

@@ -1,9 +1,9 @@
 import { mutation, query } from '@/utils/graphql'
-import type { ModelTypes } from '@/utils/graphql/zeus'
+import type { ModelTypes, ValueTypes } from '@/utils/graphql/zeus'
 
-export function queryUserPage(param: ModelTypes['UserQueryParamInput']) {
+export function queryUserPage(specification: ValueTypes['QueryUserPageSpecificationInput']) {
   return query({
-    queryUserPage: [{ param }, {
+    queryUserPage: [{ specification }, {
       content: {
         id: true,
         userName: true,
@@ -13,7 +13,6 @@ export function queryUserPage(param: ModelTypes['UserQueryParamInput']) {
         email: true,
         gender: true,
         note: true,
-        job: true,
         roles: {
           id: true,
           name: true,
@@ -29,13 +28,13 @@ export function queryUserPage(param: ModelTypes['UserQueryParamInput']) {
   })
 }
 
-export function createUser(input: ModelTypes['UserCreateInputInput']) {
+export function createUser(input: ValueTypes['CreateUserInput']) {
   return mutation({
     createUser: [{ input }, { id: true }],
   })
 }
 
-export function updateUser(input: ModelTypes['UserUpdateInputInput']) {
+export function updateUser(input: ModelTypes['UpdateUserInput']) {
   return mutation({
     updateUser: [{ input }, { id: true }],
   })

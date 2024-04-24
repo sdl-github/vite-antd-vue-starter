@@ -3,11 +3,11 @@ import type { TableColumnType } from 'ant-design-vue'
 
 import type { ModelTypes, ValueTypes } from '@/utils/graphql/zeus'
 
-export type SearchParam = ModelTypes['UserQueryParamInput']
+export type SearchParam = ModelTypes['QueryUserPageSpecificationInput']
 export type User = ModelTypes['User']
 
-export type UserCreateInput = ModelTypes['UserCreateInputInput']
-export type UserUpdateInput = ModelTypes['UserUpdateInputInput']
+export type UserCreateInput = ModelTypes['CreateUserInput']
+export type UserUpdateInput = ModelTypes['UpdateUserInput']
 
 export const enum GenderEnum {
   MALE = '男',
