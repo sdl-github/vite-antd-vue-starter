@@ -839,7 +839,6 @@ export const $ = <Type extends GraphQLVariableType, Name extends string>(name: N
 };
 type ZEUS_INTERFACES = GraphQLTypes["BaseEntity"]
 export type ScalarCoders = {
-	Date?: ScalarResolver;
 	LocalDateTime?: ScalarResolver;
 	Long?: ScalarResolver;
 }
@@ -956,8 +955,6 @@ export type ValueTypes = {
 	roleIds?: Array<string | undefined | null> | undefined | null | Variable<any, string>,
 	userName: string | Variable<any, string>
 };
-	/** Built-in scalar representing an instant in time */
-["Date"]:unknown;
 	["DefaultRoleEnum"]:DefaultRoleEnum;
 	["Direction"]:Direction;
 	["File"]: AliasType<{
@@ -1035,11 +1032,12 @@ deleteArticleCategory?: [{	id?: string | undefined | null | Variable<any, string
 updateArticleCategory?: [{	input?: ValueTypes["UpdateArticleCategoryInput"] | undefined | null | Variable<any, string>},ValueTypes["ArticleCategory"]],
 createArticleCategory?: [{	input?: ValueTypes["CreateArticleCategoryInput"] | undefined | null | Variable<any, string>},ValueTypes["ArticleCategory"]],
 createArticle?: [{	input?: ValueTypes["CreateArticleInput"] | undefined | null | Variable<any, string>},ValueTypes["Article"]],
-updateRoleMenu?: [{	input: ValueTypes["UpdateRoleMenuInput"] | Variable<any, string>},boolean | `@${string}`],
 publishArticle?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
+updateRoleMenu?: [{	input: ValueTypes["UpdateRoleMenuInput"] | Variable<any, string>},boolean | `@${string}`],
 revoke?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
 updateUser?: [{	input: ValueTypes["UpdateUserInput"] | Variable<any, string>},ValueTypes["User"]],
 createRole?: [{	input: ValueTypes["CreateRoleInput"] | Variable<any, string>},ValueTypes["Role"]],
+updateMenuVisible?: [{	input: ValueTypes["UpdateMenuVisibleInput"] | Variable<any, string>},ValueTypes["Menu"]],
 deleteRole?: [{	roleId?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
 deleteArticle?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
 updateMenu?: [{	input: ValueTypes["UpdateMenuInput"] | Variable<any, string>},ValueTypes["Menu"]],
@@ -1281,11 +1279,17 @@ queryArticleCategory?: [{	specification?: ValueTypes["QueryArticleCategorySpecif
 	type?: ValueTypes["MenuTypeEnum"] | undefined | null | Variable<any, string>,
 	visible?: boolean | undefined | null | Variable<any, string>
 };
+	["UpdateMenuVisibleInput"]: {
+	/** id */
+	id?: string | undefined | null | Variable<any, string>,
+	visible?: boolean | undefined | null | Variable<any, string>
+};
 	["UpdateRoleInput"]: {
 	/** id */
 	id?: string | undefined | null | Variable<any, string>,
 	key?: string | undefined | null | Variable<any, string>,
 	level?: number | undefined | null | Variable<any, string>,
+	menuIds?: Array<string | undefined | null> | undefined | null | Variable<any, string>,
 	name?: string | undefined | null | Variable<any, string>
 };
 	["UpdateRoleMenuInput"]: {
@@ -1335,12 +1339,11 @@ queryArticleCategory?: [{	specification?: ValueTypes["QueryArticleCategorySpecif
 	avatar?:boolean | `@${string}`,
 	email?:boolean | `@${string}`,
 	gender?:boolean | `@${string}`,
+	/** id */
 	id?:boolean | `@${string}`,
-	lastExamData?:boolean | `@${string}`,
 	menus?:ValueTypes["Menu"],
 	nickName?:boolean | `@${string}`,
-	openMessage?:boolean | `@${string}`,
-	orgId?:boolean | `@${string}`,
+	note?:boolean | `@${string}`,
 	passwordEnable?:boolean | `@${string}`,
 	permissions?:boolean | `@${string}`,
 	phone?:boolean | `@${string}`,
@@ -1475,8 +1478,6 @@ export type ResolverInputTypes = {
 	roleIds?: Array<string | undefined | null> | undefined | null,
 	userName: string
 };
-	/** Built-in scalar representing an instant in time */
-["Date"]:unknown;
 	["DefaultRoleEnum"]:DefaultRoleEnum;
 	["Direction"]:Direction;
 	["File"]: AliasType<{
@@ -1554,11 +1555,12 @@ deleteArticleCategory?: [{	id?: string | undefined | null},boolean | `@${string}
 updateArticleCategory?: [{	input?: ResolverInputTypes["UpdateArticleCategoryInput"] | undefined | null},ResolverInputTypes["ArticleCategory"]],
 createArticleCategory?: [{	input?: ResolverInputTypes["CreateArticleCategoryInput"] | undefined | null},ResolverInputTypes["ArticleCategory"]],
 createArticle?: [{	input?: ResolverInputTypes["CreateArticleInput"] | undefined | null},ResolverInputTypes["Article"]],
-updateRoleMenu?: [{	input: ResolverInputTypes["UpdateRoleMenuInput"]},boolean | `@${string}`],
 publishArticle?: [{	id?: string | undefined | null},boolean | `@${string}`],
+updateRoleMenu?: [{	input: ResolverInputTypes["UpdateRoleMenuInput"]},boolean | `@${string}`],
 revoke?: [{	id?: string | undefined | null},boolean | `@${string}`],
 updateUser?: [{	input: ResolverInputTypes["UpdateUserInput"]},ResolverInputTypes["User"]],
 createRole?: [{	input: ResolverInputTypes["CreateRoleInput"]},ResolverInputTypes["Role"]],
+updateMenuVisible?: [{	input: ResolverInputTypes["UpdateMenuVisibleInput"]},ResolverInputTypes["Menu"]],
 deleteRole?: [{	roleId?: string | undefined | null},boolean | `@${string}`],
 deleteArticle?: [{	id?: string | undefined | null},boolean | `@${string}`],
 updateMenu?: [{	input: ResolverInputTypes["UpdateMenuInput"]},ResolverInputTypes["Menu"]],
@@ -1800,11 +1802,17 @@ queryArticleCategory?: [{	specification?: ResolverInputTypes["QueryArticleCatego
 	type?: ResolverInputTypes["MenuTypeEnum"] | undefined | null,
 	visible?: boolean | undefined | null
 };
+	["UpdateMenuVisibleInput"]: {
+	/** id */
+	id?: string | undefined | null,
+	visible?: boolean | undefined | null
+};
 	["UpdateRoleInput"]: {
 	/** id */
 	id?: string | undefined | null,
 	key?: string | undefined | null,
 	level?: number | undefined | null,
+	menuIds?: Array<string | undefined | null> | undefined | null,
 	name?: string | undefined | null
 };
 	["UpdateRoleMenuInput"]: {
@@ -1854,12 +1862,11 @@ queryArticleCategory?: [{	specification?: ResolverInputTypes["QueryArticleCatego
 	avatar?:boolean | `@${string}`,
 	email?:boolean | `@${string}`,
 	gender?:boolean | `@${string}`,
+	/** id */
 	id?:boolean | `@${string}`,
-	lastExamData?:boolean | `@${string}`,
 	menus?:ResolverInputTypes["Menu"],
 	nickName?:boolean | `@${string}`,
-	openMessage?:boolean | `@${string}`,
-	orgId?:boolean | `@${string}`,
+	note?:boolean | `@${string}`,
 	passwordEnable?:boolean | `@${string}`,
 	permissions?:boolean | `@${string}`,
 	phone?:boolean | `@${string}`,
@@ -1979,8 +1986,6 @@ export type ModelTypes = {
 	roleIds?: Array<string | undefined> | undefined,
 	userName: string
 };
-	/** Built-in scalar representing an instant in time */
-["Date"]:any;
 	["DefaultRoleEnum"]:DefaultRoleEnum;
 	["Direction"]:Direction;
 	["File"]: {
@@ -2055,11 +2060,12 @@ export type ModelTypes = {
 	updateArticleCategory?: ModelTypes["ArticleCategory"] | undefined,
 	createArticleCategory?: ModelTypes["ArticleCategory"] | undefined,
 	createArticle?: ModelTypes["Article"] | undefined,
-	updateRoleMenu?: boolean | undefined,
 	publishArticle?: boolean | undefined,
+	updateRoleMenu?: boolean | undefined,
 	revoke: boolean,
 	updateUser?: ModelTypes["User"] | undefined,
 	createRole?: ModelTypes["Role"] | undefined,
+	updateMenuVisible?: ModelTypes["Menu"] | undefined,
 	deleteRole: boolean,
 	deleteArticle?: boolean | undefined,
 	updateMenu?: ModelTypes["Menu"] | undefined,
@@ -2290,11 +2296,17 @@ export type ModelTypes = {
 	type?: ModelTypes["MenuTypeEnum"] | undefined,
 	visible?: boolean | undefined
 };
+	["UpdateMenuVisibleInput"]: {
+	/** id */
+	id?: string | undefined,
+	visible?: boolean | undefined
+};
 	["UpdateRoleInput"]: {
 	/** id */
 	id?: string | undefined,
 	key?: string | undefined,
 	level?: number | undefined,
+	menuIds?: Array<string | undefined> | undefined,
 	name?: string | undefined
 };
 	["UpdateRoleMenuInput"]: {
@@ -2343,12 +2355,11 @@ export type ModelTypes = {
 		avatar?: string | undefined,
 	email?: string | undefined,
 	gender?: ModelTypes["GenderEnum"] | undefined,
+	/** id */
 	id?: string | undefined,
-	lastExamData?: ModelTypes["Date"] | undefined,
 	menus?: Array<ModelTypes["Menu"] | undefined> | undefined,
 	nickName?: string | undefined,
-	openMessage?: boolean | undefined,
-	orgId?: string | undefined,
+	note?: string | undefined,
 	passwordEnable: boolean,
 	permissions?: Array<string | undefined> | undefined,
 	phone?: string | undefined,
@@ -2486,8 +2497,6 @@ export type GraphQLTypes = {
 	roleIds?: Array<string | undefined> | undefined,
 	userName: string
 };
-	/** Built-in scalar representing an instant in time */
-["Date"]: "scalar" & { name: "Date" };
 	["DefaultRoleEnum"]: DefaultRoleEnum;
 	["Direction"]: Direction;
 	["File"]: {
@@ -2566,11 +2575,12 @@ export type GraphQLTypes = {
 	updateArticleCategory?: GraphQLTypes["ArticleCategory"] | undefined,
 	createArticleCategory?: GraphQLTypes["ArticleCategory"] | undefined,
 	createArticle?: GraphQLTypes["Article"] | undefined,
-	updateRoleMenu?: boolean | undefined,
 	publishArticle?: boolean | undefined,
+	updateRoleMenu?: boolean | undefined,
 	revoke: boolean,
 	updateUser?: GraphQLTypes["User"] | undefined,
 	createRole?: GraphQLTypes["Role"] | undefined,
+	updateMenuVisible?: GraphQLTypes["Menu"] | undefined,
 	deleteRole: boolean,
 	deleteArticle?: boolean | undefined,
 	updateMenu?: GraphQLTypes["Menu"] | undefined,
@@ -2811,11 +2821,17 @@ export type GraphQLTypes = {
 	type?: GraphQLTypes["MenuTypeEnum"] | undefined,
 	visible?: boolean | undefined
 };
+	["UpdateMenuVisibleInput"]: {
+		/** id */
+	id?: string | undefined,
+	visible?: boolean | undefined
+};
 	["UpdateRoleInput"]: {
 		/** id */
 	id?: string | undefined,
 	key?: string | undefined,
 	level?: number | undefined,
+	menuIds?: Array<string | undefined> | undefined,
 	name?: string | undefined
 };
 	["UpdateRoleMenuInput"]: {
@@ -2866,12 +2882,11 @@ export type GraphQLTypes = {
 	avatar?: string | undefined,
 	email?: string | undefined,
 	gender?: GraphQLTypes["GenderEnum"] | undefined,
+	/** id */
 	id?: string | undefined,
-	lastExamData?: GraphQLTypes["Date"] | undefined,
 	menus?: Array<GraphQLTypes["Menu"] | undefined> | undefined,
 	nickName?: string | undefined,
-	openMessage?: boolean | undefined,
-	orgId?: string | undefined,
+	note?: string | undefined,
 	passwordEnable: boolean,
 	permissions?: Array<string | undefined> | undefined,
 	phone?: string | undefined,
@@ -2934,7 +2949,6 @@ type ZEUS_VARIABLES = {
 	["CreateMenuInput"]: ValueTypes["CreateMenuInput"];
 	["CreateRoleInput"]: ValueTypes["CreateRoleInput"];
 	["CreateUserInput"]: ValueTypes["CreateUserInput"];
-	["Date"]: ValueTypes["Date"];
 	["DefaultRoleEnum"]: ValueTypes["DefaultRoleEnum"];
 	["Direction"]: ValueTypes["Direction"];
 	["FileProviderEnum"]: ValueTypes["FileProviderEnum"];
@@ -2953,6 +2967,7 @@ type ZEUS_VARIABLES = {
 	["UpdateArticleCategoryInput"]: ValueTypes["UpdateArticleCategoryInput"];
 	["UpdateArticleInput"]: ValueTypes["UpdateArticleInput"];
 	["UpdateMenuInput"]: ValueTypes["UpdateMenuInput"];
+	["UpdateMenuVisibleInput"]: ValueTypes["UpdateMenuVisibleInput"];
 	["UpdateRoleInput"]: ValueTypes["UpdateRoleInput"];
 	["UpdateRoleMenuInput"]: ValueTypes["UpdateRoleMenuInput"];
 	["UpdateUserInput"]: ValueTypes["UpdateUserInput"];

@@ -30,7 +30,7 @@ async function handleLogout() {
         </div>
       </div>
       <AMenu v-model:selectedKeys="selectedKeys" v-model:openKeys="openKeys" mode="inline" :theme="theme">
-        <MenuItem v-for="menu in menus" :key="menu.path" :menu="menu" />
+        <MenuItem v-for="menu in menus" :key="menu.name" :menu="menu" />
       </AMenu>
     </ALayoutSider>
     <ALayout>

@@ -57,7 +57,7 @@ async function handleSave() {
     const api = data.id ? updateArticle : createArticle
 
     if (!data.id)
-      delete data.id
+      delete (data as any).id
 
     const res = await api(data)
     if ('createArticle' in res)
@@ -87,7 +87,7 @@ async function handlePublish() {
     <div class="rounded bg-white">
       <APageHeader class="px-4 py-2" sub-title="新建/编辑文章" @back="() => router.push('/article')">
         <template #title>
-          <div class="cursor-pointer">
+          <div class="cursor-pointer" @click="router.push('/article')">
             返回
           </div>
         </template>

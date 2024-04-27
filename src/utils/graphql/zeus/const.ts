@@ -17,7 +17,6 @@ export const AllTypesProps: Record<string,any> = {
 	CreateUserInput:{
 		gender:"GenderEnum"
 	},
-	Date: `scalar.Date` as const,
 	DefaultRoleEnum: "enum" as const,
 	Direction: "enum" as const,
 	FileProviderEnum: "enum" as const,
@@ -53,11 +52,11 @@ export const AllTypesProps: Record<string,any> = {
 		createArticle:{
 			input:"CreateArticleInput"
 		},
-		updateRoleMenu:{
-			input:"UpdateRoleMenuInput"
-		},
 		publishArticle:{
 
+		},
+		updateRoleMenu:{
+			input:"UpdateRoleMenuInput"
 		},
 		revoke:{
 
@@ -67,6 +66,9 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		createRole:{
 			input:"CreateRoleInput"
+		},
+		updateMenuVisible:{
+			input:"UpdateMenuVisibleInput"
 		},
 		deleteRole:{
 
@@ -162,6 +164,9 @@ export const AllTypesProps: Record<string,any> = {
 	UpdateMenuInput:{
 		type:"MenuTypeEnum"
 	},
+	UpdateMenuVisibleInput:{
+
+	},
 	UpdateRoleInput:{
 
 	},
@@ -230,7 +235,6 @@ export const ReturnTypes: Record<string,any> = {
 		updatedAt:"LocalDateTime",
 		updatedBy:"String"
 	},
-	Date: `scalar.Date` as const,
 	File:{
 		bucket:"String",
 		category:"String",
@@ -287,11 +291,12 @@ export const ReturnTypes: Record<string,any> = {
 		updateArticleCategory:"ArticleCategory",
 		createArticleCategory:"ArticleCategory",
 		createArticle:"Article",
-		updateRoleMenu:"Boolean",
 		publishArticle:"Boolean",
+		updateRoleMenu:"Boolean",
 		revoke:"Boolean",
 		updateUser:"User",
 		createRole:"Role",
+		updateMenuVisible:"Menu",
 		deleteRole:"Boolean",
 		deleteArticle:"Boolean",
 		updateMenu:"Menu",
@@ -449,11 +454,9 @@ export const ReturnTypes: Record<string,any> = {
 		email:"String",
 		gender:"GenderEnum",
 		id:"String",
-		lastExamData:"Date",
 		menus:"Menu",
 		nickName:"String",
-		openMessage:"Boolean",
-		orgId:"String",
+		note:"String",
 		passwordEnable:"Boolean",
 		permissions:"String",
 		phone:"String",

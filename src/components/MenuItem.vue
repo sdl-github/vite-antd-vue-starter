@@ -15,7 +15,7 @@ export default defineComponent({
   setup() {
     const router = useRouter()
     const handleClickMenu = (menu: any) => {
-      const { path } = menu
+      const { path, component } = menu
       router.push(path)
     }
     return {
@@ -28,7 +28,7 @@ export default defineComponent({
 <template>
   <template v-if="!menu.children">
     <AMenuItem
-      :key="menu.path"
+      :key="menu.name"
       @click="handleClickMenu(menu)"
     >
       <template #icon>
@@ -40,7 +40,7 @@ export default defineComponent({
     </AMenuItem>
   </template>
   <template v-else>
-    <ASubMenu :key="menu.path">
+    <ASubMenu :key="menu.name">
       <template #icon>
         <div :class="`i-ri-${menu?.icon}`" />
       </template>

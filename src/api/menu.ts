@@ -28,6 +28,15 @@ export function updateMenu(input: ModelTypes['UpdateMenuInput']) {
   })
 }
 
+export function updateMenuVisible(input: ModelTypes['UpdateMenuVisibleInput']) {
+  return mutation({
+    updateMenuVisible: [
+      { input },
+      { id: true },
+    ],
+  })
+}
+
 export function deleteMenu(menuId: string) {
   return mutation({
     deleteMenu: [

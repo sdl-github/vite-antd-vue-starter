@@ -15,6 +15,7 @@ import type { Role, RoleUpdateInput, SearchParam } from './data'
 import RoleModal from './components/RoleModal.vue'
 import PermissionSelect from './components/PermissionSelect.vue'
 import { deleteRole, queryRolePage, updateRole } from '@/api/role'
+import { DefaultRoleEnum } from '~/utils/graphql/zeus'
 
 interface State {
   loading: boolean
@@ -99,7 +100,7 @@ export default defineComponent({
         align: 'center',
         customRender: ({ record }) => (
           <span>
-            {!record.default && (
+            {record.key !== DefaultRoleEnum.SUPER_ADMIN && (
               <div>
                 <a onClick={() => {
                   state.currentItem = record
@@ -193,8 +194,12 @@ export default defineComponent({
           currentItem={state.currentItem}
           onCancel={() => {
             state.modalVisible = false
+            state.currentItem = {}
           }}
-          onOk={() => initData()}
+          onOk={() => {
+            initData()
+            state.currentItem = {}
+          }}
         />
         <PermissionSelect
           visible={state.permissionVisible}

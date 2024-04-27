@@ -12,7 +12,7 @@ import { columns } from './data'
 
 import MenuModal from './components/MenuModal.vue'
 import { MenuTypeEnum } from '@/utils/graphql/zeus'
-import { deleteMenu, queryMenuTree, updateMenu } from '@/api/menu'
+import { deleteMenu, queryMenuTree, updateMenu, updateMenuVisible } from '@/api/menu'
 
 interface State {
   loading: boolean
@@ -113,7 +113,7 @@ async function handleChangeVisible(record: Menu) {
     return
 
   try {
-    await updateMenu({ id, visible })
+    await updateMenuVisible({ id, visible })
     loading()
     message.success('成功')
     return true
