@@ -3,24 +3,24 @@ import { FileProviderEnum, type ModelTypes, type ValueTypes } from '@/utils/grap
 
 export type File = ModelTypes['File']
 
-export type SearchParam = ValueTypes['QueryFilePageSpecInput']
+export type SearchParam = ModelTypes['QueryFilePageSpecInput']
 
-export type TFileProviderEnum = ValueTypes['FileProviderEnum']
+export type TFileProviderEnum = ModelTypes['FileProviderEnum']
 
 export const providerOption = [
   {
     label: '缤纷云',
     value: FileProviderEnum.BITIFUL_S4,
   },
+  {
+    label: '本地',
+    value: FileProviderEnum.LOCAL,
+  },
 ]
-export const providerOptionEnum: {
-  [key: string]: {
-    label: string
-    value: string
-  }
-} = {}
-
-providerOption.forEach(item => providerOptionEnum[item.value] = item)
+export const providerOptionMap = providerOption.reduce((map, item) => {
+  map[item.value] = item.label
+  return map
+}, {} as Record<TFileProviderEnum, string>)
 
 export const columns: TableColumnType<File>[] = [
   {
@@ -28,7 +28,6 @@ export const columns: TableColumnType<File>[] = [
     align: 'center',
     width: 140,
     dataIndex: 'provider',
-    customRender: opt => providerOptionEnum[opt.value].label,
   },
   {
     title: '存储桶',
@@ -68,12 +67,6 @@ export const columns: TableColumnType<File>[] = [
     align: 'center',
     width: 180,
     dataIndex: 'createdAt',
-  },
-  {
-    title: '创建人',
-    align: 'center',
-    width: 180,
-    dataIndex: 'createdBy',
   },
   {
     title: '操作',

@@ -62,6 +62,7 @@ declare module 'vue' {
     AUpload: typeof import('ant-design-vue/es')['Upload']
     copy: typeof import('./components/ImageCropperModal copy.vue')['default']
     FengMap: typeof import('./components/FengMap.vue')['default']
+    FilePone: typeof import('./components/file-pone/index.vue')['default']
     HaloRichtextEditor: typeof import('./components/halo-richtext-editor/index.vue')['default']
     ImageCropperModal: typeof import('./components/ImageCropperModal.vue')['default']
     MenuItem: typeof import('./components/MenuItem.vue')['default']

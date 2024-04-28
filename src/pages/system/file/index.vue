@@ -9,7 +9,7 @@ import { onMounted, reactive } from 'vue'
 import type { TableColumnType } from 'ant-design-vue'
 import { message } from 'ant-design-vue'
 import type { File, SearchParam } from './data'
-import { columns } from './data'
+import { columns, providerOption, providerOptionMap } from './data'
 import FileUploadModal from './components/FileUploadModal.vue'
 import { deleteFileById, queryFilePage } from '@/api/file'
 
@@ -143,7 +143,7 @@ function handleOpenUploadDrawer() {
       <div class="flex">
         <AInput v-model:value="search.fileName" placeholder="文件名" class="w-200px" />
         <AInput v-model:value="search.originName" placeholder="原始文件名" class="ml-4 w-200px" />
-        <AInput v-model:value="search.provider" placeholder="存储提供服务方" class="ml-4 w-200px" />
+        <ASelect v-model:value="search.provider" class="ml-2 w-200px" :options="providerOption" placeholder="存储提供服务方" />
         <div class="ml-2 flex items-center">
           <AButton
             :loading="state.loading" class="flex items-center justify-center" type="primary"
@@ -186,6 +186,11 @@ function handleOpenUploadDrawer() {
       :data-source="state.data" :loading="state.loading"
     >
       <template #bodyCell="{ column, record }: { column: TableColumnType<File>, record: File }">
+        <template v-if="column.dataIndex === 'provider' && record.provider">
+          <span>
+            {{ providerOptionMap[record.provider] }}
+          </span>
+        </template>
         <template v-if="column.dataIndex === 'size'">
           <span>
             {{ formatBytes(record.fileSize || '') }}

@@ -37,10 +37,10 @@ export function deleteFileById(id: string) {
   })
 }
 
-export function upload(file: File | Blob, bucket?: string): Promise<ModelTypes['File']> {
+export function upload(file: File | Blob, bucket?: string, provider: FileProviderEnum = FileProviderEnum.LOCAL): Promise<ModelTypes['File']> {
   const data = new FormData()
   data.append('file', file)
-  data.append('provider', FileProviderEnum.LOCAL)
+  data.append('provider', provider)
   if (bucket)
     data.append('bucket', bucket)
 

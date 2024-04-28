@@ -2,7 +2,7 @@
 import { providerOption } from '../data'
 import { FileProviderEnum } from '@/utils/graphql/zeus'
 
-// import FilePone from '@/components/file-pone/index.vue'
+import FilePone from '@/components/file-pone/index.vue'
 
 interface Props {
   open: boolean
@@ -24,8 +24,8 @@ const state = reactive({
 
 function generateModel() {
   return {
-    provider: FileProviderEnum.BITIFUL_S4,
-    bucket: 'space',
+    provider: FileProviderEnum.LOCAL,
+    bucket: 'default',
   }
 }
 const { model } = toRefs(state)
@@ -64,6 +64,7 @@ function handleOk() {
               </ARadioButton>
             </ARadioGroup>
           </AFormItem>
+          <FilePone />
         </ACol>
       </ARow>
     </AForm>
