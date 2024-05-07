@@ -8,6 +8,9 @@ export const AllTypesProps: Record<string,any> = {
 	CreateArticleInput:{
 
 	},
+	CreateCommentInput:{
+
+	},
 	CreateMenuInput:{
 		type:"MenuTypeEnum"
 	},
@@ -31,17 +34,8 @@ export const AllTypesProps: Record<string,any> = {
 		unpublishArticle:{
 
 		},
-		createMenu:{
-			input:"CreateMenuInput"
-		},
 		updateArticle:{
 			input:"UpdateArticleInput"
-		},
-		updateRole:{
-			input:"UpdateRoleInput"
-		},
-		deleteArticleCategory:{
-
 		},
 		updateArticleCategory:{
 			input:"UpdateArticleCategoryInput"
@@ -49,26 +43,41 @@ export const AllTypesProps: Record<string,any> = {
 		createArticleCategory:{
 			input:"CreateArticleCategoryInput"
 		},
-		createArticle:{
-			input:"CreateArticleInput"
-		},
-		publishArticle:{
-
-		},
-		updateRoleMenu:{
-			input:"UpdateRoleMenuInput"
-		},
-		revoke:{
-
-		},
-		updateUser:{
-			input:"UpdateUserInput"
+		updateRole:{
+			input:"UpdateRoleInput"
 		},
 		createRole:{
 			input:"CreateRoleInput"
 		},
+		revoke:{
+
+		},
 		updateMenuVisible:{
 			input:"UpdateMenuVisibleInput"
+		},
+		createComment:{
+			input:"CreateCommentInput"
+		},
+		updateMenu:{
+			input:"UpdateMenuInput"
+		},
+		createMenu:{
+			input:"CreateMenuInput"
+		},
+		deleteArticleCategory:{
+
+		},
+		createArticle:{
+			input:"CreateArticleInput"
+		},
+		updateRoleMenu:{
+			input:"UpdateRoleMenuInput"
+		},
+		publishArticle:{
+
+		},
+		updateUser:{
+			input:"UpdateUserInput"
 		},
 		deleteRole:{
 
@@ -76,20 +85,17 @@ export const AllTypesProps: Record<string,any> = {
 		deleteArticle:{
 
 		},
-		updateMenu:{
-			input:"UpdateMenuInput"
-		},
 		updateUserProfile:{
 			input:"UpdateUserProfileInput"
+		},
+		deleteUser:{
+
 		},
 		registerUser:{
 			input:"UserRegisterInput"
 		},
 		loginByAccount:{
 			input:"UserLoginInput"
-		},
-		deleteUser:{
-
 		},
 		createUser:{
 			input:"CreateUserInput"
@@ -284,27 +290,28 @@ export const ReturnTypes: Record<string,any> = {
 	Mutation:{
 		deleteMenu:"Boolean",
 		unpublishArticle:"Boolean",
-		createMenu:"Menu",
 		updateArticle:"Article",
-		updateRole:"Role",
-		deleteArticleCategory:"Boolean",
 		updateArticleCategory:"ArticleCategory",
 		createArticleCategory:"ArticleCategory",
-		createArticle:"Article",
-		publishArticle:"Boolean",
-		updateRoleMenu:"Boolean",
-		revoke:"Boolean",
-		updateUser:"User",
+		updateRole:"Role",
 		createRole:"Role",
+		revoke:"Boolean",
 		updateMenuVisible:"Menu",
-		deleteRole:"Boolean",
-		deleteArticle:"Boolean",
+		createComment:"Boolean",
 		updateMenu:"Menu",
 		logout:"Boolean",
+		createMenu:"Menu",
+		deleteArticleCategory:"Boolean",
+		createArticle:"Article",
+		updateRoleMenu:"Boolean",
+		publishArticle:"Boolean",
+		updateUser:"User",
+		deleteRole:"Boolean",
+		deleteArticle:"Boolean",
 		updateUserProfile:"Boolean",
+		deleteUser:"Boolean",
 		registerUser:"Boolean",
 		loginByAccount:"String",
-		deleteUser:"Boolean",
 		createUser:"User",
 		deleteFileById:"Boolean"
 	},

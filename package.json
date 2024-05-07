@@ -15,7 +15,7 @@
     "typecheck": "vue-tsc --noEmit",
     "up": "taze major -I",
     "sizecheck": "pnpm dlx vite-bundle-visualizer",
-    "zl": "pnpm dlx graphql-zeus http://localhost:8080/graphql ./src/utils/graphql --ts",
+    "zl": "zeus http://localhost:8080/graphql ./src/utils/graphql --ts",
     "z": "zeus https://api.saybai.cn/graphql ./src/utils/graphql --ts"
   },
   "dependencies": {
@@ -60,6 +60,7 @@
     "critters": "^0.0.20",
     "cross-env": "^7.0.3",
     "eslint": "^8.52.0",
+    "graphql-zeus": "^5.3.4",
     "https-localhost": "^4.7.1",
     "pnpm": "^8.9.2",
     "rollup": "^4.1.4",

@@ -163,7 +163,9 @@ export const Thunder =
     graphqlOptions?: ThunderGraphQLOptions<SCLR>,
   ) =>
   <Z extends ValueTypes[R]>(
-    o: (Z & ValueTypes[R]) | ValueTypes[R],
+    o: Z & {
+      [P in keyof Z]: P extends keyof ValueTypes[R] ? Z[P] : never;
+    },
     ops?: OperationOptions & { variables?: Record<string, unknown> },
   ) =>
     fn(
@@ -195,7 +197,9 @@ export const SubscriptionThunder =
     graphqlOptions?: ThunderGraphQLOptions<SCLR>,
   ) =>
   <Z extends ValueTypes[R]>(
-    o: (Z & ValueTypes[R]) | ValueTypes[R],
+    o: Z & {
+      [P in keyof Z]: P extends keyof ValueTypes[R] ? Z[P] : never;
+    },
     ops?: OperationOptions & { variables?: ExtractVariables<Z> },
   ) => {
     const returnedFunction = fn(
@@ -233,7 +237,7 @@ export const Zeus = <
   R extends keyof ValueTypes = GenericOperation<O>,
 >(
   operation: O,
-  o: (Z & ValueTypes[R]) | ValueTypes[R],
+  o: Z,
   ops?: {
     operationOptions?: OperationOptions;
     scalars?: ScalarDefinition;
@@ -751,7 +755,11 @@ export type ScalarResolver = {
   decode?: (s: unknown) => unknown;
 };
 
-export type SelectionFunction<V> = <T>(t: T | V) => T;
+export type SelectionFunction<V> = <Z extends V>(
+  t: Z & {
+    [P in keyof Z]: P extends keyof V ? Z[P] : never;
+  },
+) => Z;
 
 type BuiltInVariableTypes = {
   ['String']: string;
@@ -926,6 +934,13 @@ export type ValueTypes = {
 	metaTitle?: string | undefined | null | Variable<any, string>,
 	title: string | Variable<any, string>
 };
+	["CreateCommentInput"]: {
+	content?: string | undefined | null | Variable<any, string>,
+	parentId?: string | undefined | null | Variable<any, string>,
+	relationId?: string | undefined | null | Variable<any, string>,
+	replyCommentId?: string | undefined | null | Variable<any, string>,
+	type?: string | undefined | null | Variable<any, string>
+};
 	["CreateMenuInput"]: {
 	component?: string | undefined | null | Variable<any, string>,
 	frame?: boolean | undefined | null | Variable<any, string>,
@@ -1025,27 +1040,28 @@ export type ValueTypes = {
 ["Mutation"]: AliasType<{
 deleteMenu?: [{	menuId?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
 unpublishArticle?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
-createMenu?: [{	input: ValueTypes["CreateMenuInput"] | Variable<any, string>},ValueTypes["Menu"]],
 updateArticle?: [{	input?: ValueTypes["UpdateArticleInput"] | undefined | null | Variable<any, string>},ValueTypes["Article"]],
-updateRole?: [{	input: ValueTypes["UpdateRoleInput"] | Variable<any, string>},ValueTypes["Role"]],
-deleteArticleCategory?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
 updateArticleCategory?: [{	input?: ValueTypes["UpdateArticleCategoryInput"] | undefined | null | Variable<any, string>},ValueTypes["ArticleCategory"]],
 createArticleCategory?: [{	input?: ValueTypes["CreateArticleCategoryInput"] | undefined | null | Variable<any, string>},ValueTypes["ArticleCategory"]],
-createArticle?: [{	input?: ValueTypes["CreateArticleInput"] | undefined | null | Variable<any, string>},ValueTypes["Article"]],
-publishArticle?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
-updateRoleMenu?: [{	input: ValueTypes["UpdateRoleMenuInput"] | Variable<any, string>},boolean | `@${string}`],
-revoke?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
-updateUser?: [{	input: ValueTypes["UpdateUserInput"] | Variable<any, string>},ValueTypes["User"]],
+updateRole?: [{	input: ValueTypes["UpdateRoleInput"] | Variable<any, string>},ValueTypes["Role"]],
 createRole?: [{	input: ValueTypes["CreateRoleInput"] | Variable<any, string>},ValueTypes["Role"]],
+revoke?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
 updateMenuVisible?: [{	input: ValueTypes["UpdateMenuVisibleInput"] | Variable<any, string>},ValueTypes["Menu"]],
-deleteRole?: [{	roleId?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
-deleteArticle?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
+createComment?: [{	input?: ValueTypes["CreateCommentInput"] | undefined | null | Variable<any, string>},boolean | `@${string}`],
 updateMenu?: [{	input: ValueTypes["UpdateMenuInput"] | Variable<any, string>},ValueTypes["Menu"]],
 	logout?:boolean | `@${string}`,
+createMenu?: [{	input: ValueTypes["CreateMenuInput"] | Variable<any, string>},ValueTypes["Menu"]],
+deleteArticleCategory?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
+createArticle?: [{	input?: ValueTypes["CreateArticleInput"] | undefined | null | Variable<any, string>},ValueTypes["Article"]],
+updateRoleMenu?: [{	input: ValueTypes["UpdateRoleMenuInput"] | Variable<any, string>},boolean | `@${string}`],
+publishArticle?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
+updateUser?: [{	input: ValueTypes["UpdateUserInput"] | Variable<any, string>},ValueTypes["User"]],
+deleteRole?: [{	roleId?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
+deleteArticle?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
 updateUserProfile?: [{	input?: ValueTypes["UpdateUserProfileInput"] | undefined | null | Variable<any, string>},boolean | `@${string}`],
+deleteUser?: [{	userId: string | Variable<any, string>},boolean | `@${string}`],
 registerUser?: [{	input?: ValueTypes["UserRegisterInput"] | undefined | null | Variable<any, string>},boolean | `@${string}`],
 loginByAccount?: [{	input?: ValueTypes["UserLoginInput"] | undefined | null | Variable<any, string>},boolean | `@${string}`],
-deleteUser?: [{	userId: string | Variable<any, string>},boolean | `@${string}`],
 createUser?: [{	input: ValueTypes["CreateUserInput"] | Variable<any, string>},ValueTypes["User"]],
 deleteFileById?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
 		__typename?: boolean | `@${string}`
@@ -1449,6 +1465,13 @@ export type ResolverInputTypes = {
 	metaTitle?: string | undefined | null,
 	title: string
 };
+	["CreateCommentInput"]: {
+	content?: string | undefined | null,
+	parentId?: string | undefined | null,
+	relationId?: string | undefined | null,
+	replyCommentId?: string | undefined | null,
+	type?: string | undefined | null
+};
 	["CreateMenuInput"]: {
 	component?: string | undefined | null,
 	frame?: boolean | undefined | null,
@@ -1548,27 +1571,28 @@ export type ResolverInputTypes = {
 ["Mutation"]: AliasType<{
 deleteMenu?: [{	menuId?: string | undefined | null},boolean | `@${string}`],
 unpublishArticle?: [{	id?: string | undefined | null},boolean | `@${string}`],
-createMenu?: [{	input: ResolverInputTypes["CreateMenuInput"]},ResolverInputTypes["Menu"]],
 updateArticle?: [{	input?: ResolverInputTypes["UpdateArticleInput"] | undefined | null},ResolverInputTypes["Article"]],
-updateRole?: [{	input: ResolverInputTypes["UpdateRoleInput"]},ResolverInputTypes["Role"]],
-deleteArticleCategory?: [{	id?: string | undefined | null},boolean | `@${string}`],
 updateArticleCategory?: [{	input?: ResolverInputTypes["UpdateArticleCategoryInput"] | undefined | null},ResolverInputTypes["ArticleCategory"]],
 createArticleCategory?: [{	input?: ResolverInputTypes["CreateArticleCategoryInput"] | undefined | null},ResolverInputTypes["ArticleCategory"]],
-createArticle?: [{	input?: ResolverInputTypes["CreateArticleInput"] | undefined | null},ResolverInputTypes["Article"]],
-publishArticle?: [{	id?: string | undefined | null},boolean | `@${string}`],
-updateRoleMenu?: [{	input: ResolverInputTypes["UpdateRoleMenuInput"]},boolean | `@${string}`],
-revoke?: [{	id?: string | undefined | null},boolean | `@${string}`],
-updateUser?: [{	input: ResolverInputTypes["UpdateUserInput"]},ResolverInputTypes["User"]],
+updateRole?: [{	input: ResolverInputTypes["UpdateRoleInput"]},ResolverInputTypes["Role"]],
 createRole?: [{	input: ResolverInputTypes["CreateRoleInput"]},ResolverInputTypes["Role"]],
+revoke?: [{	id?: string | undefined | null},boolean | `@${string}`],
 updateMenuVisible?: [{	input: ResolverInputTypes["UpdateMenuVisibleInput"]},ResolverInputTypes["Menu"]],
-deleteRole?: [{	roleId?: string | undefined | null},boolean | `@${string}`],
-deleteArticle?: [{	id?: string | undefined | null},boolean | `@${string}`],
+createComment?: [{	input?: ResolverInputTypes["CreateCommentInput"] | undefined | null},boolean | `@${string}`],
 updateMenu?: [{	input: ResolverInputTypes["UpdateMenuInput"]},ResolverInputTypes["Menu"]],
 	logout?:boolean | `@${string}`,
+createMenu?: [{	input: ResolverInputTypes["CreateMenuInput"]},ResolverInputTypes["Menu"]],
+deleteArticleCategory?: [{	id?: string | undefined | null},boolean | `@${string}`],
+createArticle?: [{	input?: ResolverInputTypes["CreateArticleInput"] | undefined | null},ResolverInputTypes["Article"]],
+updateRoleMenu?: [{	input: ResolverInputTypes["UpdateRoleMenuInput"]},boolean | `@${string}`],
+publishArticle?: [{	id?: string | undefined | null},boolean | `@${string}`],
+updateUser?: [{	input: ResolverInputTypes["UpdateUserInput"]},ResolverInputTypes["User"]],
+deleteRole?: [{	roleId?: string | undefined | null},boolean | `@${string}`],
+deleteArticle?: [{	id?: string | undefined | null},boolean | `@${string}`],
 updateUserProfile?: [{	input?: ResolverInputTypes["UpdateUserProfileInput"] | undefined | null},boolean | `@${string}`],
+deleteUser?: [{	userId: string},boolean | `@${string}`],
 registerUser?: [{	input?: ResolverInputTypes["UserRegisterInput"] | undefined | null},boolean | `@${string}`],
 loginByAccount?: [{	input?: ResolverInputTypes["UserLoginInput"] | undefined | null},boolean | `@${string}`],
-deleteUser?: [{	userId: string},boolean | `@${string}`],
 createUser?: [{	input: ResolverInputTypes["CreateUserInput"]},ResolverInputTypes["User"]],
 deleteFileById?: [{	id?: string | undefined | null},boolean | `@${string}`],
 		__typename?: boolean | `@${string}`
@@ -1957,6 +1981,13 @@ export type ModelTypes = {
 	metaTitle?: string | undefined,
 	title: string
 };
+	["CreateCommentInput"]: {
+	content?: string | undefined,
+	parentId?: string | undefined,
+	relationId?: string | undefined,
+	replyCommentId?: string | undefined,
+	type?: string | undefined
+};
 	["CreateMenuInput"]: {
 	component?: string | undefined,
 	frame?: boolean | undefined,
@@ -2053,27 +2084,28 @@ export type ModelTypes = {
 ["Mutation"]: {
 		deleteMenu: boolean,
 	unpublishArticle?: boolean | undefined,
-	createMenu?: ModelTypes["Menu"] | undefined,
 	updateArticle?: ModelTypes["Article"] | undefined,
-	updateRole?: ModelTypes["Role"] | undefined,
-	deleteArticleCategory?: boolean | undefined,
 	updateArticleCategory?: ModelTypes["ArticleCategory"] | undefined,
 	createArticleCategory?: ModelTypes["ArticleCategory"] | undefined,
-	createArticle?: ModelTypes["Article"] | undefined,
-	publishArticle?: boolean | undefined,
-	updateRoleMenu?: boolean | undefined,
-	revoke: boolean,
-	updateUser?: ModelTypes["User"] | undefined,
+	updateRole?: ModelTypes["Role"] | undefined,
 	createRole?: ModelTypes["Role"] | undefined,
+	revoke: boolean,
 	updateMenuVisible?: ModelTypes["Menu"] | undefined,
-	deleteRole: boolean,
-	deleteArticle?: boolean | undefined,
+	createComment: boolean,
 	updateMenu?: ModelTypes["Menu"] | undefined,
 	logout: boolean,
+	createMenu?: ModelTypes["Menu"] | undefined,
+	deleteArticleCategory?: boolean | undefined,
+	createArticle?: ModelTypes["Article"] | undefined,
+	updateRoleMenu?: boolean | undefined,
+	publishArticle?: boolean | undefined,
+	updateUser?: ModelTypes["User"] | undefined,
+	deleteRole: boolean,
+	deleteArticle?: boolean | undefined,
 	updateUserProfile?: boolean | undefined,
+	deleteUser: boolean,
 	registerUser?: boolean | undefined,
 	loginByAccount?: string | undefined,
-	deleteUser: boolean,
 	createUser?: ModelTypes["User"] | undefined,
 	deleteFileById: boolean
 };
@@ -2468,6 +2500,13 @@ export type GraphQLTypes = {
 	metaTitle?: string | undefined,
 	title: string
 };
+	["CreateCommentInput"]: {
+		content?: string | undefined,
+	parentId?: string | undefined,
+	relationId?: string | undefined,
+	replyCommentId?: string | undefined,
+	type?: string | undefined
+};
 	["CreateMenuInput"]: {
 		component?: string | undefined,
 	frame?: boolean | undefined,
@@ -2568,27 +2607,28 @@ export type GraphQLTypes = {
 	__typename: "Mutation",
 	deleteMenu: boolean,
 	unpublishArticle?: boolean | undefined,
-	createMenu?: GraphQLTypes["Menu"] | undefined,
 	updateArticle?: GraphQLTypes["Article"] | undefined,
-	updateRole?: GraphQLTypes["Role"] | undefined,
-	deleteArticleCategory?: boolean | undefined,
 	updateArticleCategory?: GraphQLTypes["ArticleCategory"] | undefined,
 	createArticleCategory?: GraphQLTypes["ArticleCategory"] | undefined,
-	createArticle?: GraphQLTypes["Article"] | undefined,
-	publishArticle?: boolean | undefined,
-	updateRoleMenu?: boolean | undefined,
-	revoke: boolean,
-	updateUser?: GraphQLTypes["User"] | undefined,
+	updateRole?: GraphQLTypes["Role"] | undefined,
 	createRole?: GraphQLTypes["Role"] | undefined,
+	revoke: boolean,
 	updateMenuVisible?: GraphQLTypes["Menu"] | undefined,
-	deleteRole: boolean,
-	deleteArticle?: boolean | undefined,
+	createComment: boolean,
 	updateMenu?: GraphQLTypes["Menu"] | undefined,
 	logout: boolean,
+	createMenu?: GraphQLTypes["Menu"] | undefined,
+	deleteArticleCategory?: boolean | undefined,
+	createArticle?: GraphQLTypes["Article"] | undefined,
+	updateRoleMenu?: boolean | undefined,
+	publishArticle?: boolean | undefined,
+	updateUser?: GraphQLTypes["User"] | undefined,
+	deleteRole: boolean,
+	deleteArticle?: boolean | undefined,
 	updateUserProfile?: boolean | undefined,
+	deleteUser: boolean,
 	registerUser?: boolean | undefined,
 	loginByAccount?: string | undefined,
-	deleteUser: boolean,
 	createUser?: GraphQLTypes["User"] | undefined,
 	deleteFileById: boolean
 };
@@ -2946,6 +2986,7 @@ type ZEUS_VARIABLES = {
 	["ArticleStatusEnum"]: ValueTypes["ArticleStatusEnum"];
 	["CreateArticleCategoryInput"]: ValueTypes["CreateArticleCategoryInput"];
 	["CreateArticleInput"]: ValueTypes["CreateArticleInput"];
+	["CreateCommentInput"]: ValueTypes["CreateCommentInput"];
 	["CreateMenuInput"]: ValueTypes["CreateMenuInput"];
 	["CreateRoleInput"]: ValueTypes["CreateRoleInput"];
 	["CreateUserInput"]: ValueTypes["CreateUserInput"];
