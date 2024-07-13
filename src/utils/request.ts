@@ -41,9 +41,10 @@ function handleHttpError(response: any) {
 
 function handleServiceError(data: any) {
   if (data.errors) {
-    const { code, message } = data.errors[0]
+    const { code, message, extensions: { code: extraCode } } = data.errors[0]
+
     let msg = message
-    if (code === 'UNAUTHENTICATED') {
+    if (code === 'UNAUTHENTICATED' || extraCode === 401) {
       removeToken()
       msg = '登录已经过期，请重新登录'
       if (!authModal) {
