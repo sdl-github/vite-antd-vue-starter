@@ -102,15 +102,16 @@ async function handlePublish() {
       </APageHeader>
     </div>
 
-    <div class="mt-2 min-h-40vh rounded bg-white p-2">
+    <div class="m-auto mt-2 min-h-80vh w-768px rounded bg-white p-2">
       <div v-if="loading" class="h-100vh flex justify-center pt-10">
         <div class="flex flex-col items-center">
           <ASpin />
           <div>加载中</div>
         </div>
       </div>
-      <div v-else class="">
-        <HaloRichtextEditor v-model:content="form.html" />
+      <div v-else class="w-full">
+        <!-- <HaloRichtextEditor v-model:content="form.html" /> -->
+        <TextbusEditor v-model:content="form.html" />
       </div>
     </div>
   </div>
