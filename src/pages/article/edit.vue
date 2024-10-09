@@ -84,7 +84,7 @@ async function handlePublish() {
   <div class="w-full p-2">
     <ArticlePublishModal />
 
-    <div class="rounded bg-white">
+    <div class="sticky top-0 z-999 rounded bg-white shadow">
       <APageHeader class="px-4 py-2" sub-title="新建/编辑文章" @back="() => router.push('/article')">
         <template #title>
           <div class="cursor-pointer" @click="router.push('/article')">
@@ -109,8 +109,7 @@ async function handlePublish() {
           <div>加载中</div>
         </div>
       </div>
-      <div v-else class="w-full">
-        <!-- <HaloRichtextEditor v-model:content="form.html" /> -->
+      <div v-else class="w-full px-10 py-8">
         <TextbusEditor v-model:content="form.html" />
       </div>
     </div>

@@ -4,7 +4,33 @@
 </route>
 
 <script setup lang="tsx">
+import { mapEntries } from 'radash'
+
 const loading = ref(false)
+
+// 获取svg文件名
+function getSvgName(path: string) {
+  const regex = /\/([^/]+)\.svg$/
+  const match = path.match(regex)
+  if (match) {
+    const fileName = match[1]
+    return fileName
+  }
+  return path
+}
+
+// 获取所有本地图标
+function generateLocalIconList() {
+  const localSvgList = import.meta.glob('@/assets/svg-icons/*.svg', {
+    query: '?raw',
+    import: 'default',
+    eager: true,
+  })
+
+  return mapEntries(localSvgList, (key, value) => {
+    return [getSvgName(key), value]
+  })
+}
 </script>
 
 <template>

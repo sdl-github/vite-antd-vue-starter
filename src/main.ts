@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import '@unocss/reset/tailwind-compat.css'
+import 'virtual:svg-icons-register'
 
 import App from './App.vue'
 import router from './router'

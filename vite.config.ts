@@ -1,4 +1,6 @@
 import path from 'node:path'
+import process from 'node:process'
+
 import { defineConfig } from 'vite'
 import Vue from '@vitejs/plugin-vue'
 import Pages from 'vite-plugin-pages'
@@ -11,6 +13,8 @@ import Unocss from 'unocss/vite'
 import WebfontDownload from 'vite-plugin-webfont-dl'
 import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 import VueJsx from '@vitejs/plugin-vue-jsx'
+
+import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 
 export default defineConfig({
   server: {
@@ -82,5 +86,12 @@ export default defineConfig({
 
     // https://github.com/webfansplz/vite-plugin-vue-devtools
     VueDevTools(),
+
+    createSvgIconsPlugin({
+      iconDirs: [path.resolve(process.cwd(), 'src/assets/svg-icons')],
+      symbolId: `${'local'}:[name]`,
+      inject: 'body-last',
+      customDomId: '__SVG_ICON_LOCAL__',
+    }),
   ],
 })

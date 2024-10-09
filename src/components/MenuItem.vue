@@ -32,7 +32,7 @@ export default defineComponent({
       @click="handleClickMenu(menu)"
     >
       <template #icon>
-        <div :class="`i-ri-${menu?.icon}`" />
+        <SystemIcon :icon="menu.icon" class="text-xl" />
       </template>
       <span>
         {{ menu?.title }}
@@ -42,7 +42,7 @@ export default defineComponent({
   <template v-else>
     <ASubMenu :key="menu.name">
       <template #icon>
-        <div :class="`i-ri-${menu?.icon}`" />
+        <SystemIcon :icon="menu.icon" class="text-xl" />
       </template>
       <template #title>
         {{ menu?.title }}
