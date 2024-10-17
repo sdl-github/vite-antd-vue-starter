@@ -180,6 +180,7 @@ async function handleUnpublish(id: string) {
                 <a>下架</a>
               </APopconfirm>
               <ADivider type="vertical" />
+              <a target="_blank" :href="`/#/article/${record.id}`">预览</a>
             </template>
             <template v-if="record.status === ArticleStatusEnum.DRAFT">
               <APopconfirm
