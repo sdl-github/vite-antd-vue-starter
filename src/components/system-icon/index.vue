@@ -4,10 +4,6 @@ import { Icon as IconifyIcon } from '@iconify/vue'
 interface iconProps {
   /* 图标名称 */
   icon?: string
-  /* 图标颜色 */
-  color?: string
-  /* 图标大小 */
-  size?: number
 }
 const { icon } = defineProps<iconProps>()
 const attrs = useAttrs()
@@ -28,8 +24,9 @@ const symbolId = computed(() => {
 </script>
 
 <template>
-  <template
+  <span
     v-if="icon"
+    class="inline-block"
   >
     <template v-if="isLocal">
       <svg aria-hidden="true" width="1.2em" height="1.2em" v-bind="bindAttrs">
@@ -39,5 +36,5 @@ const symbolId = computed(() => {
     <template v-else>
       <IconifyIcon :icon="icon" v-bind="bindAttrs" />
     </template>
-  </template>
+  </span>
 </template>

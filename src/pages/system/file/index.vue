@@ -203,6 +203,8 @@ function handleOpenUploadDrawer() {
         </template>
         <template v-if="column.key === 'operation'">
           <span>
+            <a target="_blank" :href="`${record.url}`">预览</a>
+            <ADivider type="vertical" />
             <APopconfirm
               :title="`确定要删除${record.fileName}?`" ok-text="确定" cancel-text="取消"
               @confirm="handleDelete(record.id!)"

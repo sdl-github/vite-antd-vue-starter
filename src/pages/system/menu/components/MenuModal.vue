@@ -145,7 +145,7 @@ function handleCancel() {
         <template v-if="model.type === MenuTypeEnum.MENU">
           <ACol :span="12">
             <AFormItem label="图标" name="icon">
-              <AInput v-model:value="model.icon" :placeholder="requireMessage('图标')" />
+              <IconSelect v-model:value="model.icon" :placeholder="requireMessage('图标')" />
             </AFormItem>
           </ACol>
           <ACol :span="12">

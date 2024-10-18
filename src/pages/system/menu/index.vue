@@ -179,6 +179,11 @@ async function handleChangeVisible(record: Menu) {
         <template v-if="column.dataIndex === 'visible' && record.type === MenuTypeEnum.MENU">
           <ASwitch v-model:checked="record.visible" @change="handleChangeVisible(record)" />
         </template>
+        <template v-if="column.dataIndex === 'icon'">
+          <span v-if="record.icon">
+            <SystemIcon :icon="record.icon" class="h-6 w-6" />
+          </span>
+        </template>
         <template v-if="column.dataIndex === 'createdAt'">
           <span>
             {{ formatDate(record.createdAt) }}
