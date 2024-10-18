@@ -15,7 +15,7 @@ const loading = computed(() => !data.value)
         <h1 class="my-10 text-xl font-bold">
           {{ data?.queryArticle?.title }}
         </h1>
-        <TextbusEditor :content="data?.queryArticle?.html" />
+        <TextbusEditor :content="data?.queryArticle?.html" :readonly="true" />
       </div>
     </ASkeleton>
   </div>

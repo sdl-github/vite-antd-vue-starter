@@ -10,12 +10,17 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  readonly: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const emits = defineEmits(['update:content'])
 
 const editor = new Editor({
   content: props.content,
+  readonly: props.readonly,
 })
 const editorRef = ref<Editor>()
 
