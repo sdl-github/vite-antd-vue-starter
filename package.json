@@ -15,7 +15,7 @@
     "up": "taze major -I",
     "sizecheck": "pnpm dlx vite-bundle-visualizer",
     "zl": "zeus http://localhost:8080/graphql ./src/utils/graphql --ts",
-    "z": "zeus https://api.saybai.cn/graphql ./src/utils/graphql --ts"
+    "z": "zeus https://api.jstodo.top/graphql ./src/utils/graphql --ts"
   },
   "dependencies": {
     "@iconify/vue": "^4.1.2",

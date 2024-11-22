@@ -17,6 +17,11 @@ export const AllTypesProps: Record<string,any> = {
 	CreateRoleInput:{
 
 	},
+	CreateTodoInput:{
+		doneDate:"LocalDateTime",
+		planDate:"LocalDateTime",
+		warnDate:"LocalDateTime"
+	},
 	CreateUserInput:{
 		gender:"GenderEnum"
 	},
@@ -37,20 +42,20 @@ export const AllTypesProps: Record<string,any> = {
 		updateArticle:{
 			input:"UpdateArticleInput"
 		},
+		updateRole:{
+			input:"UpdateRoleInput"
+		},
 		updateArticleCategory:{
 			input:"UpdateArticleCategoryInput"
 		},
 		createArticleCategory:{
 			input:"CreateArticleCategoryInput"
 		},
-		updateRole:{
-			input:"UpdateRoleInput"
+		revoke:{
+
 		},
 		createRole:{
 			input:"CreateRoleInput"
-		},
-		revoke:{
-
 		},
 		updateMenuVisible:{
 			input:"UpdateMenuVisibleInput"
@@ -85,11 +90,11 @@ export const AllTypesProps: Record<string,any> = {
 		deleteArticle:{
 
 		},
+		updateTodo:{
+			input:"UpdateTodoInput"
+		},
 		updateUserProfile:{
 			input:"UpdateUserProfileInput"
-		},
-		deleteUser:{
-
 		},
 		registerUser:{
 			input:"UserRegisterInput"
@@ -97,17 +102,32 @@ export const AllTypesProps: Record<string,any> = {
 		loginByAccount:{
 			input:"UserLoginInput"
 		},
+		deleteUser:{
+
+		},
 		createUser:{
 			input:"CreateUserInput"
 		},
 		deleteFileById:{
 
+		},
+		deleteTodo:{
+
+		},
+		createTodo:{
+			input:"CreateTodoInput"
 		}
 	},
 	NullHandling: "enum" as const,
 	Query:{
+		queryCommentPage:{
+			specification:"QueryCommentPageSpecificationInput"
+		},
 		queryMenuList:{
 			spec:"QueryMenuSpecInput"
+		},
+		queryTodo:{
+
 		},
 		queryUserPage:{
 			specification:"QueryUserPageSpecificationInput"
@@ -127,23 +147,29 @@ export const AllTypesProps: Record<string,any> = {
 		queryUserList:{
 			specification:"QueryUserSpecificationInput"
 		},
+		queryTodoPage:{
+			specification:"QueryTodoPageSpecificationInput"
+		},
 		queryArticlePage:{
 			specification:"QueryArticlePageSpecificationInput"
 		},
 		queryFilePage:{
 			spec:"QueryFilePageSpecInput"
 		},
-		queryUser:{
-
-		},
 		queryArticleCategory:{
 			specification:"QueryArticleCategorySpecificationInput"
+		},
+		queryUser:{
+
 		}
 	},
 	QueryArticleCategorySpecificationInput:{
 
 	},
 	QueryArticlePageSpecificationInput:{
+
+	},
+	QueryCommentPageSpecificationInput:{
 
 	},
 	QueryFilePageSpecInput:{
@@ -153,6 +179,9 @@ export const AllTypesProps: Record<string,any> = {
 		type:"MenuTypeEnum"
 	},
 	QueryRolePageSpecificationInput:{
+
+	},
+	QueryTodoPageSpecificationInput:{
 
 	},
 	QueryUserPageSpecificationInput:{
@@ -179,6 +208,11 @@ export const AllTypesProps: Record<string,any> = {
 	UpdateRoleMenuInput:{
 
 	},
+	UpdateTodoInput:{
+		doneDate:"LocalDateTime",
+		planDate:"LocalDateTime",
+		warnDate:"LocalDateTime"
+	},
 	UpdateUserInput:{
 		gender:"GenderEnum"
 	},
@@ -194,6 +228,9 @@ export const AllTypesProps: Record<string,any> = {
 }
 
 export const ReturnTypes: Record<string,any> = {
+	oneOf:{
+
+	},
 	Article:{
 		author:"User",
 		authorId:"String",
@@ -231,13 +268,33 @@ export const ReturnTypes: Record<string,any> = {
 	BaseEntity:{
 		"...on Article": "Article",
 		"...on ArticleCategory": "ArticleCategory",
+		"...on Comment": "Comment",
 		"...on File": "File",
 		"...on Menu": "Menu",
 		"...on Role": "Role",
+		"...on Todo": "Todo",
 		"...on User": "User",
 		createdAt:"LocalDateTime",
 		createdBy:"String",
 		id:"String",
+		updatedAt:"LocalDateTime",
+		updatedBy:"String"
+	},
+	Comment:{
+		author:"Boolean",
+		content:"String",
+		createdAt:"LocalDateTime",
+		createdBy:"String",
+		id:"String",
+		parent:"Comment",
+		parentId:"String",
+		relation:"Article",
+		relationId:"String",
+		replyComment:"Comment",
+		replyCommentId:"String",
+		replyUser:"User",
+		replyUserId:"String",
+		type:"String",
 		updatedAt:"LocalDateTime",
 		updatedBy:"String"
 	},
@@ -291,11 +348,11 @@ export const ReturnTypes: Record<string,any> = {
 		deleteMenu:"Boolean",
 		unpublishArticle:"Boolean",
 		updateArticle:"Article",
+		updateRole:"Role",
 		updateArticleCategory:"ArticleCategory",
 		createArticleCategory:"ArticleCategory",
-		updateRole:"Role",
-		createRole:"Role",
 		revoke:"Boolean",
+		createRole:"Role",
 		updateMenuVisible:"Menu",
 		createComment:"Boolean",
 		updateMenu:"Menu",
@@ -308,12 +365,15 @@ export const ReturnTypes: Record<string,any> = {
 		updateUser:"User",
 		deleteRole:"Boolean",
 		deleteArticle:"Boolean",
+		updateTodo:"Todo",
 		updateUserProfile:"Boolean",
-		deleteUser:"Boolean",
 		registerUser:"Boolean",
 		loginByAccount:"String",
+		deleteUser:"Boolean",
 		createUser:"User",
-		deleteFileById:"Boolean"
+		deleteFileById:"Boolean",
+		deleteTodo:"Boolean",
+		createTodo:"Todo"
 	},
 	Order:{
 		direction:"Direction",
@@ -323,6 +383,25 @@ export const ReturnTypes: Record<string,any> = {
 	},
 	Page_Article:{
 		content:"Article",
+		first:"Boolean",
+		hasContent:"Boolean",
+		hasNext:"Boolean",
+		hasPrevious:"Boolean",
+		last:"Boolean",
+		nextOrLastPageable:"Pagination",
+		nextPageable:"Pagination",
+		number:"Int",
+		numberOfElements:"Int",
+		pageable:"Pagination",
+		previousOrFirstPageable:"Pagination",
+		previousPageable:"Pagination",
+		size:"Int",
+		sort:"Sorting",
+		totalElements:"Long",
+		totalPages:"Int"
+	},
+	Page_Comment:{
+		content:"Comment",
 		first:"Boolean",
 		hasContent:"Boolean",
 		hasNext:"Boolean",
@@ -378,6 +457,25 @@ export const ReturnTypes: Record<string,any> = {
 		totalElements:"Long",
 		totalPages:"Int"
 	},
+	Page_Todo:{
+		content:"Todo",
+		first:"Boolean",
+		hasContent:"Boolean",
+		hasNext:"Boolean",
+		hasPrevious:"Boolean",
+		last:"Boolean",
+		nextOrLastPageable:"Pagination",
+		nextPageable:"Pagination",
+		number:"Int",
+		numberOfElements:"Int",
+		pageable:"Pagination",
+		previousOrFirstPageable:"Pagination",
+		previousPageable:"Pagination",
+		size:"Int",
+		sort:"Sorting",
+		totalElements:"Long",
+		totalPages:"Int"
+	},
 	Page_User:{
 		content:"User",
 		first:"Boolean",
@@ -405,7 +503,9 @@ export const ReturnTypes: Record<string,any> = {
 	Query:{
 		app:"String",
 		userInfo:"UserInfoResult",
+		queryCommentPage:"Page_Comment",
 		queryMenuList:"Menu",
+		queryTodo:"Todo",
 		queryArticleCategoryTree:"ArticleCategory",
 		queryUserPage:"Page_User",
 		queryArticle:"Article",
@@ -416,10 +516,11 @@ export const ReturnTypes: Record<string,any> = {
 		queryUserList:"User",
 		queryAllRoleList:"Role",
 		queryDefaultRole:"DefaultRoleEnum",
+		queryTodoPage:"Page_Todo",
 		queryArticlePage:"Page_Article",
 		queryFilePage:"Page_File",
-		queryUser:"User",
-		queryArticleCategory:"ArticleCategory"
+		queryArticleCategory:"ArticleCategory",
+		queryUser:"User"
 	},
 	Role:{
 		createdAt:"LocalDateTime",
@@ -440,6 +541,22 @@ export const ReturnTypes: Record<string,any> = {
 	},
 	Sorting:{
 		orders:"Order"
+	},
+	Todo:{
+		content:"String",
+		createdAt:"LocalDateTime",
+		createdBy:"String",
+		doneDate:"LocalDateTime",
+		icon:"String",
+		id:"String",
+		planDate:"LocalDateTime",
+		sort:"Int",
+		title:"String",
+		updatedAt:"LocalDateTime",
+		updatedBy:"String",
+		user:"User",
+		userId:"String",
+		warnDate:"LocalDateTime"
 	},
 	User:{
 		avatar:"String",

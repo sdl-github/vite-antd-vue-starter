@@ -1,7 +1,7 @@
 /* eslint-disable */
 
 import { AllTypesProps, ReturnTypes, Ops } from './const';
-export const HOST = "http://localhost:8080/graphql"
+export const HOST = "https://api.jstodo.top/graphql"
 
 
 export const HEADERS = {}
@@ -913,10 +913,36 @@ export type ValueTypes = {
 	updatedBy?:boolean | `@${string}`;
 		['...on Article']?: Omit<ValueTypes["Article"],keyof ValueTypes["BaseEntity"]>;
 		['...on ArticleCategory']?: Omit<ValueTypes["ArticleCategory"],keyof ValueTypes["BaseEntity"]>;
+		['...on Comment']?: Omit<ValueTypes["Comment"],keyof ValueTypes["BaseEntity"]>;
 		['...on File']?: Omit<ValueTypes["File"],keyof ValueTypes["BaseEntity"]>;
 		['...on Menu']?: Omit<ValueTypes["Menu"],keyof ValueTypes["BaseEntity"]>;
 		['...on Role']?: Omit<ValueTypes["Role"],keyof ValueTypes["BaseEntity"]>;
+		['...on Todo']?: Omit<ValueTypes["Todo"],keyof ValueTypes["BaseEntity"]>;
 		['...on User']?: Omit<ValueTypes["User"],keyof ValueTypes["BaseEntity"]>;
+		__typename?: boolean | `@${string}`
+}>;
+	["Comment"]: AliasType<{
+	author?:boolean | `@${string}`,
+	content?:boolean | `@${string}`,
+	/** 创建时间 */
+	createdAt?:boolean | `@${string}`,
+	/** 创建人 */
+	createdBy?:boolean | `@${string}`,
+	/** id */
+	id?:boolean | `@${string}`,
+	parent?:ValueTypes["Comment"],
+	parentId?:boolean | `@${string}`,
+	relation?:ValueTypes["Article"],
+	relationId?:boolean | `@${string}`,
+	replyComment?:ValueTypes["Comment"],
+	replyCommentId?:boolean | `@${string}`,
+	replyUser?:ValueTypes["User"],
+	replyUserId?:boolean | `@${string}`,
+	type?:boolean | `@${string}`,
+	/** 更新时间 */
+	updatedAt?:boolean | `@${string}`,
+	/** 更新人 */
+	updatedBy?:boolean | `@${string}`,
 		__typename?: boolean | `@${string}`
 }>;
 	["CreateArticleCategoryInput"]: {
@@ -958,6 +984,15 @@ export type ValueTypes = {
 	key?: string | undefined | null | Variable<any, string>,
 	level?: number | undefined | null | Variable<any, string>,
 	name?: string | undefined | null | Variable<any, string>
+};
+	["CreateTodoInput"]: {
+	content?: string | undefined | null | Variable<any, string>,
+	doneDate?: ValueTypes["LocalDateTime"] | undefined | null | Variable<any, string>,
+	icon?: string | undefined | null | Variable<any, string>,
+	planDate?: ValueTypes["LocalDateTime"] | undefined | null | Variable<any, string>,
+	sort?: number | undefined | null | Variable<any, string>,
+	title: string | Variable<any, string>,
+	warnDate?: ValueTypes["LocalDateTime"] | undefined | null | Variable<any, string>
 };
 	["CreateUserInput"]: {
 	avatar?: string | undefined | null | Variable<any, string>,
@@ -1041,11 +1076,11 @@ export type ValueTypes = {
 deleteMenu?: [{	menuId?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
 unpublishArticle?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
 updateArticle?: [{	input?: ValueTypes["UpdateArticleInput"] | undefined | null | Variable<any, string>},ValueTypes["Article"]],
+updateRole?: [{	input: ValueTypes["UpdateRoleInput"] | Variable<any, string>},ValueTypes["Role"]],
 updateArticleCategory?: [{	input?: ValueTypes["UpdateArticleCategoryInput"] | undefined | null | Variable<any, string>},ValueTypes["ArticleCategory"]],
 createArticleCategory?: [{	input?: ValueTypes["CreateArticleCategoryInput"] | undefined | null | Variable<any, string>},ValueTypes["ArticleCategory"]],
-updateRole?: [{	input: ValueTypes["UpdateRoleInput"] | Variable<any, string>},ValueTypes["Role"]],
-createRole?: [{	input: ValueTypes["CreateRoleInput"] | Variable<any, string>},ValueTypes["Role"]],
 revoke?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
+createRole?: [{	input: ValueTypes["CreateRoleInput"] | Variable<any, string>},ValueTypes["Role"]],
 updateMenuVisible?: [{	input: ValueTypes["UpdateMenuVisibleInput"] | Variable<any, string>},ValueTypes["Menu"]],
 createComment?: [{	input?: ValueTypes["CreateCommentInput"] | undefined | null | Variable<any, string>},boolean | `@${string}`],
 updateMenu?: [{	input: ValueTypes["UpdateMenuInput"] | Variable<any, string>},ValueTypes["Menu"]],
@@ -1058,12 +1093,15 @@ publishArticle?: [{	id?: string | undefined | null | Variable<any, string>},bool
 updateUser?: [{	input: ValueTypes["UpdateUserInput"] | Variable<any, string>},ValueTypes["User"]],
 deleteRole?: [{	roleId?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
 deleteArticle?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
+updateTodo?: [{	input?: ValueTypes["UpdateTodoInput"] | undefined | null | Variable<any, string>},ValueTypes["Todo"]],
 updateUserProfile?: [{	input?: ValueTypes["UpdateUserProfileInput"] | undefined | null | Variable<any, string>},boolean | `@${string}`],
-deleteUser?: [{	userId: string | Variable<any, string>},boolean | `@${string}`],
 registerUser?: [{	input?: ValueTypes["UserRegisterInput"] | undefined | null | Variable<any, string>},boolean | `@${string}`],
 loginByAccount?: [{	input?: ValueTypes["UserLoginInput"] | undefined | null | Variable<any, string>},boolean | `@${string}`],
+deleteUser?: [{	userId: string | Variable<any, string>},boolean | `@${string}`],
 createUser?: [{	input: ValueTypes["CreateUserInput"] | Variable<any, string>},ValueTypes["User"]],
 deleteFileById?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
+deleteTodo?: [{	id?: string | undefined | null | Variable<any, string>},boolean | `@${string}`],
+createTodo?: [{	input?: ValueTypes["CreateTodoInput"] | undefined | null | Variable<any, string>},ValueTypes["Todo"]],
 		__typename?: boolean | `@${string}`
 }>;
 	["NullHandling"]:NullHandling;
@@ -1076,6 +1114,26 @@ deleteFileById?: [{	id?: string | undefined | null | Variable<any, string>},bool
 }>;
 	["Page_Article"]: AliasType<{
 	content?:ValueTypes["Article"],
+	first?:boolean | `@${string}`,
+	hasContent?:boolean | `@${string}`,
+	hasNext?:boolean | `@${string}`,
+	hasPrevious?:boolean | `@${string}`,
+	last?:boolean | `@${string}`,
+	nextOrLastPageable?:ValueTypes["Pagination"],
+	nextPageable?:ValueTypes["Pagination"],
+	number?:boolean | `@${string}`,
+	numberOfElements?:boolean | `@${string}`,
+	pageable?:ValueTypes["Pagination"],
+	previousOrFirstPageable?:ValueTypes["Pagination"],
+	previousPageable?:ValueTypes["Pagination"],
+	size?:boolean | `@${string}`,
+	sort?:ValueTypes["Sorting"],
+	totalElements?:boolean | `@${string}`,
+	totalPages?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
+	["Page_Comment"]: AliasType<{
+	content?:ValueTypes["Comment"],
 	first?:boolean | `@${string}`,
 	hasContent?:boolean | `@${string}`,
 	hasNext?:boolean | `@${string}`,
@@ -1134,6 +1192,26 @@ deleteFileById?: [{	id?: string | undefined | null | Variable<any, string>},bool
 	totalPages?:boolean | `@${string}`,
 		__typename?: boolean | `@${string}`
 }>;
+	["Page_Todo"]: AliasType<{
+	content?:ValueTypes["Todo"],
+	first?:boolean | `@${string}`,
+	hasContent?:boolean | `@${string}`,
+	hasNext?:boolean | `@${string}`,
+	hasPrevious?:boolean | `@${string}`,
+	last?:boolean | `@${string}`,
+	nextOrLastPageable?:ValueTypes["Pagination"],
+	nextPageable?:ValueTypes["Pagination"],
+	number?:boolean | `@${string}`,
+	numberOfElements?:boolean | `@${string}`,
+	pageable?:ValueTypes["Pagination"],
+	previousOrFirstPageable?:ValueTypes["Pagination"],
+	previousPageable?:ValueTypes["Pagination"],
+	size?:boolean | `@${string}`,
+	sort?:ValueTypes["Sorting"],
+	totalElements?:boolean | `@${string}`,
+	totalPages?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
 	["Page_User"]: AliasType<{
 	content?:ValueTypes["User"],
 	first?:boolean | `@${string}`,
@@ -1164,7 +1242,9 @@ deleteFileById?: [{	id?: string | undefined | null | Variable<any, string>},bool
 ["Query"]: AliasType<{
 	app?:boolean | `@${string}`,
 	userInfo?:ValueTypes["UserInfoResult"],
+queryCommentPage?: [{	specification?: ValueTypes["QueryCommentPageSpecificationInput"] | undefined | null | Variable<any, string>},ValueTypes["Page_Comment"]],
 queryMenuList?: [{	spec?: ValueTypes["QueryMenuSpecInput"] | undefined | null | Variable<any, string>},ValueTypes["Menu"]],
+queryTodo?: [{	id?: string | undefined | null | Variable<any, string>},ValueTypes["Todo"]],
 	queryArticleCategoryTree?:ValueTypes["ArticleCategory"],
 queryUserPage?: [{	specification: ValueTypes["QueryUserPageSpecificationInput"] | Variable<any, string>},ValueTypes["Page_User"]],
 queryArticle?: [{	id?: string | undefined | null | Variable<any, string>},ValueTypes["Article"]],
@@ -1175,10 +1255,11 @@ queryRole?: [{	roleId?: string | undefined | null | Variable<any, string>},Value
 queryUserList?: [{	specification?: ValueTypes["QueryUserSpecificationInput"] | undefined | null | Variable<any, string>},ValueTypes["User"]],
 	queryAllRoleList?:ValueTypes["Role"],
 	queryDefaultRole?:boolean | `@${string}`,
+queryTodoPage?: [{	specification?: ValueTypes["QueryTodoPageSpecificationInput"] | undefined | null | Variable<any, string>},ValueTypes["Page_Todo"]],
 queryArticlePage?: [{	specification?: ValueTypes["QueryArticlePageSpecificationInput"] | undefined | null | Variable<any, string>},ValueTypes["Page_Article"]],
 queryFilePage?: [{	spec?: ValueTypes["QueryFilePageSpecInput"] | undefined | null | Variable<any, string>},ValueTypes["Page_File"]],
-queryUser?: [{	userId?: string | undefined | null | Variable<any, string>},ValueTypes["User"]],
 queryArticleCategory?: [{	specification?: ValueTypes["QueryArticleCategorySpecificationInput"] | undefined | null | Variable<any, string>},ValueTypes["ArticleCategory"]],
+queryUser?: [{	userId?: string | undefined | null | Variable<any, string>},ValueTypes["User"]],
 		__typename?: boolean | `@${string}`
 }>;
 	["QueryArticleCategorySpecificationInput"]: {
@@ -1192,6 +1273,14 @@ queryArticleCategory?: [{	specification?: ValueTypes["QueryArticleCategorySpecif
 	pageSize: number | Variable<any, string>,
 	sort: string | Variable<any, string>,
 	title?: string | undefined | null | Variable<any, string>
+};
+	["QueryCommentPageSpecificationInput"]: {
+	pageNo: number | Variable<any, string>,
+	pageSize: number | Variable<any, string>,
+	parentId?: string | undefined | null | Variable<any, string>,
+	relationId?: string | undefined | null | Variable<any, string>,
+	replyCommentId?: string | undefined | null | Variable<any, string>,
+	sort: string | Variable<any, string>
 };
 	["QueryFilePageSpecInput"]: {
 	category?: string | undefined | null | Variable<any, string>,
@@ -1216,6 +1305,13 @@ queryArticleCategory?: [{	specification?: ValueTypes["QueryArticleCategorySpecif
 	pageNo: number | Variable<any, string>,
 	pageSize: number | Variable<any, string>,
 	sort: string | Variable<any, string>
+};
+	["QueryTodoPageSpecificationInput"]: {
+	pageNo: number | Variable<any, string>,
+	pageSize: number | Variable<any, string>,
+	sort: string | Variable<any, string>,
+	title?: string | undefined | null | Variable<any, string>,
+	userId?: string | undefined | null | Variable<any, string>
 };
 	["QueryUserPageSpecificationInput"]: {
 	email?: string | undefined | null | Variable<any, string>,
@@ -1259,6 +1355,28 @@ queryArticleCategory?: [{	specification?: ValueTypes["QueryArticleCategorySpecif
 }>;
 	["Sorting"]: AliasType<{
 	orders?:ValueTypes["Order"],
+		__typename?: boolean | `@${string}`
+}>;
+	["Todo"]: AliasType<{
+	content?:boolean | `@${string}`,
+	/** 创建时间 */
+	createdAt?:boolean | `@${string}`,
+	/** 创建人 */
+	createdBy?:boolean | `@${string}`,
+	doneDate?:boolean | `@${string}`,
+	icon?:boolean | `@${string}`,
+	/** id */
+	id?:boolean | `@${string}`,
+	planDate?:boolean | `@${string}`,
+	sort?:boolean | `@${string}`,
+	title?:boolean | `@${string}`,
+	/** 更新时间 */
+	updatedAt?:boolean | `@${string}`,
+	/** 更新人 */
+	updatedBy?:boolean | `@${string}`,
+	user?:ValueTypes["User"],
+	userId?:boolean | `@${string}`,
+	warnDate?:boolean | `@${string}`,
 		__typename?: boolean | `@${string}`
 }>;
 	["UpdateArticleCategoryInput"]: {
@@ -1312,6 +1430,17 @@ queryArticleCategory?: [{	specification?: ValueTypes["QueryArticleCategorySpecif
 	/** id */
 	id?: string | undefined | null | Variable<any, string>,
 	menuIds?: Array<string | undefined | null> | undefined | null | Variable<any, string>
+};
+	["UpdateTodoInput"]: {
+	content?: string | undefined | null | Variable<any, string>,
+	doneDate?: ValueTypes["LocalDateTime"] | undefined | null | Variable<any, string>,
+	icon?: string | undefined | null | Variable<any, string>,
+	/** id */
+	id: string | Variable<any, string>,
+	planDate?: ValueTypes["LocalDateTime"] | undefined | null | Variable<any, string>,
+	sort?: number | undefined | null | Variable<any, string>,
+	title?: string | undefined | null | Variable<any, string>,
+	warnDate?: ValueTypes["LocalDateTime"] | undefined | null | Variable<any, string>
 };
 	["UpdateUserInput"]: {
 	avatar?: string | undefined | null | Variable<any, string>,
@@ -1444,10 +1573,36 @@ export type ResolverInputTypes = {
 	updatedBy?:boolean | `@${string}`;
 		['...on Article']?: Omit<ResolverInputTypes["Article"],keyof ResolverInputTypes["BaseEntity"]>;
 		['...on ArticleCategory']?: Omit<ResolverInputTypes["ArticleCategory"],keyof ResolverInputTypes["BaseEntity"]>;
+		['...on Comment']?: Omit<ResolverInputTypes["Comment"],keyof ResolverInputTypes["BaseEntity"]>;
 		['...on File']?: Omit<ResolverInputTypes["File"],keyof ResolverInputTypes["BaseEntity"]>;
 		['...on Menu']?: Omit<ResolverInputTypes["Menu"],keyof ResolverInputTypes["BaseEntity"]>;
 		['...on Role']?: Omit<ResolverInputTypes["Role"],keyof ResolverInputTypes["BaseEntity"]>;
+		['...on Todo']?: Omit<ResolverInputTypes["Todo"],keyof ResolverInputTypes["BaseEntity"]>;
 		['...on User']?: Omit<ResolverInputTypes["User"],keyof ResolverInputTypes["BaseEntity"]>;
+		__typename?: boolean | `@${string}`
+}>;
+	["Comment"]: AliasType<{
+	author?:boolean | `@${string}`,
+	content?:boolean | `@${string}`,
+	/** 创建时间 */
+	createdAt?:boolean | `@${string}`,
+	/** 创建人 */
+	createdBy?:boolean | `@${string}`,
+	/** id */
+	id?:boolean | `@${string}`,
+	parent?:ResolverInputTypes["Comment"],
+	parentId?:boolean | `@${string}`,
+	relation?:ResolverInputTypes["Article"],
+	relationId?:boolean | `@${string}`,
+	replyComment?:ResolverInputTypes["Comment"],
+	replyCommentId?:boolean | `@${string}`,
+	replyUser?:ResolverInputTypes["User"],
+	replyUserId?:boolean | `@${string}`,
+	type?:boolean | `@${string}`,
+	/** 更新时间 */
+	updatedAt?:boolean | `@${string}`,
+	/** 更新人 */
+	updatedBy?:boolean | `@${string}`,
 		__typename?: boolean | `@${string}`
 }>;
 	["CreateArticleCategoryInput"]: {
@@ -1489,6 +1644,15 @@ export type ResolverInputTypes = {
 	key?: string | undefined | null,
 	level?: number | undefined | null,
 	name?: string | undefined | null
+};
+	["CreateTodoInput"]: {
+	content?: string | undefined | null,
+	doneDate?: ResolverInputTypes["LocalDateTime"] | undefined | null,
+	icon?: string | undefined | null,
+	planDate?: ResolverInputTypes["LocalDateTime"] | undefined | null,
+	sort?: number | undefined | null,
+	title: string,
+	warnDate?: ResolverInputTypes["LocalDateTime"] | undefined | null
 };
 	["CreateUserInput"]: {
 	avatar?: string | undefined | null,
@@ -1572,11 +1736,11 @@ export type ResolverInputTypes = {
 deleteMenu?: [{	menuId?: string | undefined | null},boolean | `@${string}`],
 unpublishArticle?: [{	id?: string | undefined | null},boolean | `@${string}`],
 updateArticle?: [{	input?: ResolverInputTypes["UpdateArticleInput"] | undefined | null},ResolverInputTypes["Article"]],
+updateRole?: [{	input: ResolverInputTypes["UpdateRoleInput"]},ResolverInputTypes["Role"]],
 updateArticleCategory?: [{	input?: ResolverInputTypes["UpdateArticleCategoryInput"] | undefined | null},ResolverInputTypes["ArticleCategory"]],
 createArticleCategory?: [{	input?: ResolverInputTypes["CreateArticleCategoryInput"] | undefined | null},ResolverInputTypes["ArticleCategory"]],
-updateRole?: [{	input: ResolverInputTypes["UpdateRoleInput"]},ResolverInputTypes["Role"]],
-createRole?: [{	input: ResolverInputTypes["CreateRoleInput"]},ResolverInputTypes["Role"]],
 revoke?: [{	id?: string | undefined | null},boolean | `@${string}`],
+createRole?: [{	input: ResolverInputTypes["CreateRoleInput"]},ResolverInputTypes["Role"]],
 updateMenuVisible?: [{	input: ResolverInputTypes["UpdateMenuVisibleInput"]},ResolverInputTypes["Menu"]],
 createComment?: [{	input?: ResolverInputTypes["CreateCommentInput"] | undefined | null},boolean | `@${string}`],
 updateMenu?: [{	input: ResolverInputTypes["UpdateMenuInput"]},ResolverInputTypes["Menu"]],
@@ -1589,12 +1753,15 @@ publishArticle?: [{	id?: string | undefined | null},boolean | `@${string}`],
 updateUser?: [{	input: ResolverInputTypes["UpdateUserInput"]},ResolverInputTypes["User"]],
 deleteRole?: [{	roleId?: string | undefined | null},boolean | `@${string}`],
 deleteArticle?: [{	id?: string | undefined | null},boolean | `@${string}`],
+updateTodo?: [{	input?: ResolverInputTypes["UpdateTodoInput"] | undefined | null},ResolverInputTypes["Todo"]],
 updateUserProfile?: [{	input?: ResolverInputTypes["UpdateUserProfileInput"] | undefined | null},boolean | `@${string}`],
-deleteUser?: [{	userId: string},boolean | `@${string}`],
 registerUser?: [{	input?: ResolverInputTypes["UserRegisterInput"] | undefined | null},boolean | `@${string}`],
 loginByAccount?: [{	input?: ResolverInputTypes["UserLoginInput"] | undefined | null},boolean | `@${string}`],
+deleteUser?: [{	userId: string},boolean | `@${string}`],
 createUser?: [{	input: ResolverInputTypes["CreateUserInput"]},ResolverInputTypes["User"]],
 deleteFileById?: [{	id?: string | undefined | null},boolean | `@${string}`],
+deleteTodo?: [{	id?: string | undefined | null},boolean | `@${string}`],
+createTodo?: [{	input?: ResolverInputTypes["CreateTodoInput"] | undefined | null},ResolverInputTypes["Todo"]],
 		__typename?: boolean | `@${string}`
 }>;
 	["NullHandling"]:NullHandling;
@@ -1607,6 +1774,26 @@ deleteFileById?: [{	id?: string | undefined | null},boolean | `@${string}`],
 }>;
 	["Page_Article"]: AliasType<{
 	content?:ResolverInputTypes["Article"],
+	first?:boolean | `@${string}`,
+	hasContent?:boolean | `@${string}`,
+	hasNext?:boolean | `@${string}`,
+	hasPrevious?:boolean | `@${string}`,
+	last?:boolean | `@${string}`,
+	nextOrLastPageable?:ResolverInputTypes["Pagination"],
+	nextPageable?:ResolverInputTypes["Pagination"],
+	number?:boolean | `@${string}`,
+	numberOfElements?:boolean | `@${string}`,
+	pageable?:ResolverInputTypes["Pagination"],
+	previousOrFirstPageable?:ResolverInputTypes["Pagination"],
+	previousPageable?:ResolverInputTypes["Pagination"],
+	size?:boolean | `@${string}`,
+	sort?:ResolverInputTypes["Sorting"],
+	totalElements?:boolean | `@${string}`,
+	totalPages?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
+	["Page_Comment"]: AliasType<{
+	content?:ResolverInputTypes["Comment"],
 	first?:boolean | `@${string}`,
 	hasContent?:boolean | `@${string}`,
 	hasNext?:boolean | `@${string}`,
@@ -1665,6 +1852,26 @@ deleteFileById?: [{	id?: string | undefined | null},boolean | `@${string}`],
 	totalPages?:boolean | `@${string}`,
 		__typename?: boolean | `@${string}`
 }>;
+	["Page_Todo"]: AliasType<{
+	content?:ResolverInputTypes["Todo"],
+	first?:boolean | `@${string}`,
+	hasContent?:boolean | `@${string}`,
+	hasNext?:boolean | `@${string}`,
+	hasPrevious?:boolean | `@${string}`,
+	last?:boolean | `@${string}`,
+	nextOrLastPageable?:ResolverInputTypes["Pagination"],
+	nextPageable?:ResolverInputTypes["Pagination"],
+	number?:boolean | `@${string}`,
+	numberOfElements?:boolean | `@${string}`,
+	pageable?:ResolverInputTypes["Pagination"],
+	previousOrFirstPageable?:ResolverInputTypes["Pagination"],
+	previousPageable?:ResolverInputTypes["Pagination"],
+	size?:boolean | `@${string}`,
+	sort?:ResolverInputTypes["Sorting"],
+	totalElements?:boolean | `@${string}`,
+	totalPages?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
 	["Page_User"]: AliasType<{
 	content?:ResolverInputTypes["User"],
 	first?:boolean | `@${string}`,
@@ -1695,7 +1902,9 @@ deleteFileById?: [{	id?: string | undefined | null},boolean | `@${string}`],
 ["Query"]: AliasType<{
 	app?:boolean | `@${string}`,
 	userInfo?:ResolverInputTypes["UserInfoResult"],
+queryCommentPage?: [{	specification?: ResolverInputTypes["QueryCommentPageSpecificationInput"] | undefined | null},ResolverInputTypes["Page_Comment"]],
 queryMenuList?: [{	spec?: ResolverInputTypes["QueryMenuSpecInput"] | undefined | null},ResolverInputTypes["Menu"]],
+queryTodo?: [{	id?: string | undefined | null},ResolverInputTypes["Todo"]],
 	queryArticleCategoryTree?:ResolverInputTypes["ArticleCategory"],
 queryUserPage?: [{	specification: ResolverInputTypes["QueryUserPageSpecificationInput"]},ResolverInputTypes["Page_User"]],
 queryArticle?: [{	id?: string | undefined | null},ResolverInputTypes["Article"]],
@@ -1706,10 +1915,11 @@ queryRole?: [{	roleId?: string | undefined | null},ResolverInputTypes["Role"]],
 queryUserList?: [{	specification?: ResolverInputTypes["QueryUserSpecificationInput"] | undefined | null},ResolverInputTypes["User"]],
 	queryAllRoleList?:ResolverInputTypes["Role"],
 	queryDefaultRole?:boolean | `@${string}`,
+queryTodoPage?: [{	specification?: ResolverInputTypes["QueryTodoPageSpecificationInput"] | undefined | null},ResolverInputTypes["Page_Todo"]],
 queryArticlePage?: [{	specification?: ResolverInputTypes["QueryArticlePageSpecificationInput"] | undefined | null},ResolverInputTypes["Page_Article"]],
 queryFilePage?: [{	spec?: ResolverInputTypes["QueryFilePageSpecInput"] | undefined | null},ResolverInputTypes["Page_File"]],
-queryUser?: [{	userId?: string | undefined | null},ResolverInputTypes["User"]],
 queryArticleCategory?: [{	specification?: ResolverInputTypes["QueryArticleCategorySpecificationInput"] | undefined | null},ResolverInputTypes["ArticleCategory"]],
+queryUser?: [{	userId?: string | undefined | null},ResolverInputTypes["User"]],
 		__typename?: boolean | `@${string}`
 }>;
 	["QueryArticleCategorySpecificationInput"]: {
@@ -1723,6 +1933,14 @@ queryArticleCategory?: [{	specification?: ResolverInputTypes["QueryArticleCatego
 	pageSize: number,
 	sort: string,
 	title?: string | undefined | null
+};
+	["QueryCommentPageSpecificationInput"]: {
+	pageNo: number,
+	pageSize: number,
+	parentId?: string | undefined | null,
+	relationId?: string | undefined | null,
+	replyCommentId?: string | undefined | null,
+	sort: string
 };
 	["QueryFilePageSpecInput"]: {
 	category?: string | undefined | null,
@@ -1747,6 +1965,13 @@ queryArticleCategory?: [{	specification?: ResolverInputTypes["QueryArticleCatego
 	pageNo: number,
 	pageSize: number,
 	sort: string
+};
+	["QueryTodoPageSpecificationInput"]: {
+	pageNo: number,
+	pageSize: number,
+	sort: string,
+	title?: string | undefined | null,
+	userId?: string | undefined | null
 };
 	["QueryUserPageSpecificationInput"]: {
 	email?: string | undefined | null,
@@ -1790,6 +2015,28 @@ queryArticleCategory?: [{	specification?: ResolverInputTypes["QueryArticleCatego
 }>;
 	["Sorting"]: AliasType<{
 	orders?:ResolverInputTypes["Order"],
+		__typename?: boolean | `@${string}`
+}>;
+	["Todo"]: AliasType<{
+	content?:boolean | `@${string}`,
+	/** 创建时间 */
+	createdAt?:boolean | `@${string}`,
+	/** 创建人 */
+	createdBy?:boolean | `@${string}`,
+	doneDate?:boolean | `@${string}`,
+	icon?:boolean | `@${string}`,
+	/** id */
+	id?:boolean | `@${string}`,
+	planDate?:boolean | `@${string}`,
+	sort?:boolean | `@${string}`,
+	title?:boolean | `@${string}`,
+	/** 更新时间 */
+	updatedAt?:boolean | `@${string}`,
+	/** 更新人 */
+	updatedBy?:boolean | `@${string}`,
+	user?:ResolverInputTypes["User"],
+	userId?:boolean | `@${string}`,
+	warnDate?:boolean | `@${string}`,
 		__typename?: boolean | `@${string}`
 }>;
 	["UpdateArticleCategoryInput"]: {
@@ -1843,6 +2090,17 @@ queryArticleCategory?: [{	specification?: ResolverInputTypes["QueryArticleCatego
 	/** id */
 	id?: string | undefined | null,
 	menuIds?: Array<string | undefined | null> | undefined | null
+};
+	["UpdateTodoInput"]: {
+	content?: string | undefined | null,
+	doneDate?: ResolverInputTypes["LocalDateTime"] | undefined | null,
+	icon?: string | undefined | null,
+	/** id */
+	id: string,
+	planDate?: ResolverInputTypes["LocalDateTime"] | undefined | null,
+	sort?: number | undefined | null,
+	title?: string | undefined | null,
+	warnDate?: ResolverInputTypes["LocalDateTime"] | undefined | null
 };
 	["UpdateUserInput"]: {
 	avatar?: string | undefined | null,
@@ -1965,7 +2223,30 @@ export type ModelTypes = {
 	updatedBy?: string | undefined
 };
 	["ArticleStatusEnum"]:ArticleStatusEnum;
-	["BaseEntity"]: ModelTypes["Article"] | ModelTypes["ArticleCategory"] | ModelTypes["File"] | ModelTypes["Menu"] | ModelTypes["Role"] | ModelTypes["User"];
+	["BaseEntity"]: ModelTypes["Article"] | ModelTypes["ArticleCategory"] | ModelTypes["Comment"] | ModelTypes["File"] | ModelTypes["Menu"] | ModelTypes["Role"] | ModelTypes["Todo"] | ModelTypes["User"];
+	["Comment"]: {
+		author?: boolean | undefined,
+	content?: string | undefined,
+	/** 创建时间 */
+	createdAt?: ModelTypes["LocalDateTime"] | undefined,
+	/** 创建人 */
+	createdBy?: string | undefined,
+	/** id */
+	id?: string | undefined,
+	parent?: ModelTypes["Comment"] | undefined,
+	parentId?: string | undefined,
+	relation?: ModelTypes["Article"] | undefined,
+	relationId?: string | undefined,
+	replyComment?: ModelTypes["Comment"] | undefined,
+	replyCommentId?: string | undefined,
+	replyUser?: ModelTypes["User"] | undefined,
+	replyUserId?: string | undefined,
+	type?: string | undefined,
+	/** 更新时间 */
+	updatedAt?: ModelTypes["LocalDateTime"] | undefined,
+	/** 更新人 */
+	updatedBy?: string | undefined
+};
 	["CreateArticleCategoryInput"]: {
 	icon?: string | undefined,
 	name?: string | undefined,
@@ -2005,6 +2286,15 @@ export type ModelTypes = {
 	key?: string | undefined,
 	level?: number | undefined,
 	name?: string | undefined
+};
+	["CreateTodoInput"]: {
+	content?: string | undefined,
+	doneDate?: ModelTypes["LocalDateTime"] | undefined,
+	icon?: string | undefined,
+	planDate?: ModelTypes["LocalDateTime"] | undefined,
+	sort?: number | undefined,
+	title: string,
+	warnDate?: ModelTypes["LocalDateTime"] | undefined
 };
 	["CreateUserInput"]: {
 	avatar?: string | undefined,
@@ -2085,11 +2375,11 @@ export type ModelTypes = {
 		deleteMenu: boolean,
 	unpublishArticle?: boolean | undefined,
 	updateArticle?: ModelTypes["Article"] | undefined,
+	updateRole?: ModelTypes["Role"] | undefined,
 	updateArticleCategory?: ModelTypes["ArticleCategory"] | undefined,
 	createArticleCategory?: ModelTypes["ArticleCategory"] | undefined,
-	updateRole?: ModelTypes["Role"] | undefined,
-	createRole?: ModelTypes["Role"] | undefined,
 	revoke: boolean,
+	createRole?: ModelTypes["Role"] | undefined,
 	updateMenuVisible?: ModelTypes["Menu"] | undefined,
 	createComment: boolean,
 	updateMenu?: ModelTypes["Menu"] | undefined,
@@ -2102,12 +2392,15 @@ export type ModelTypes = {
 	updateUser?: ModelTypes["User"] | undefined,
 	deleteRole: boolean,
 	deleteArticle?: boolean | undefined,
+	updateTodo?: ModelTypes["Todo"] | undefined,
 	updateUserProfile?: boolean | undefined,
-	deleteUser: boolean,
 	registerUser?: boolean | undefined,
 	loginByAccount?: string | undefined,
+	deleteUser: boolean,
 	createUser?: ModelTypes["User"] | undefined,
-	deleteFileById: boolean
+	deleteFileById: boolean,
+	deleteTodo?: boolean | undefined,
+	createTodo?: ModelTypes["Todo"] | undefined
 };
 	["NullHandling"]:NullHandling;
 	["Order"]: {
@@ -2118,6 +2411,25 @@ export type ModelTypes = {
 };
 	["Page_Article"]: {
 		content?: Array<ModelTypes["Article"] | undefined> | undefined,
+	first: boolean,
+	hasContent: boolean,
+	hasNext: boolean,
+	hasPrevious: boolean,
+	last: boolean,
+	nextOrLastPageable?: ModelTypes["Pagination"] | undefined,
+	nextPageable?: ModelTypes["Pagination"] | undefined,
+	number: number,
+	numberOfElements: number,
+	pageable?: ModelTypes["Pagination"] | undefined,
+	previousOrFirstPageable?: ModelTypes["Pagination"] | undefined,
+	previousPageable?: ModelTypes["Pagination"] | undefined,
+	size: number,
+	sort?: ModelTypes["Sorting"] | undefined,
+	totalElements: ModelTypes["Long"],
+	totalPages: number
+};
+	["Page_Comment"]: {
+		content?: Array<ModelTypes["Comment"] | undefined> | undefined,
 	first: boolean,
 	hasContent: boolean,
 	hasNext: boolean,
@@ -2173,6 +2485,25 @@ export type ModelTypes = {
 	totalElements: ModelTypes["Long"],
 	totalPages: number
 };
+	["Page_Todo"]: {
+		content?: Array<ModelTypes["Todo"] | undefined> | undefined,
+	first: boolean,
+	hasContent: boolean,
+	hasNext: boolean,
+	hasPrevious: boolean,
+	last: boolean,
+	nextOrLastPageable?: ModelTypes["Pagination"] | undefined,
+	nextPageable?: ModelTypes["Pagination"] | undefined,
+	number: number,
+	numberOfElements: number,
+	pageable?: ModelTypes["Pagination"] | undefined,
+	previousOrFirstPageable?: ModelTypes["Pagination"] | undefined,
+	previousPageable?: ModelTypes["Pagination"] | undefined,
+	size: number,
+	sort?: ModelTypes["Sorting"] | undefined,
+	totalElements: ModelTypes["Long"],
+	totalPages: number
+};
 	["Page_User"]: {
 		content?: Array<ModelTypes["User"] | undefined> | undefined,
 	first: boolean,
@@ -2201,7 +2532,9 @@ export type ModelTypes = {
 ["Query"]: {
 		app?: string | undefined,
 	userInfo?: ModelTypes["UserInfoResult"] | undefined,
+	queryCommentPage?: ModelTypes["Page_Comment"] | undefined,
 	queryMenuList?: Array<ModelTypes["Menu"] | undefined> | undefined,
+	queryTodo?: ModelTypes["Todo"] | undefined,
 	queryArticleCategoryTree?: Array<ModelTypes["ArticleCategory"] | undefined> | undefined,
 	queryUserPage?: ModelTypes["Page_User"] | undefined,
 	queryArticle?: ModelTypes["Article"] | undefined,
@@ -2212,10 +2545,11 @@ export type ModelTypes = {
 	queryUserList?: Array<ModelTypes["User"] | undefined> | undefined,
 	queryAllRoleList?: Array<ModelTypes["Role"] | undefined> | undefined,
 	queryDefaultRole?: Array<ModelTypes["DefaultRoleEnum"] | undefined> | undefined,
+	queryTodoPage?: ModelTypes["Page_Todo"] | undefined,
 	queryArticlePage?: ModelTypes["Page_Article"] | undefined,
 	queryFilePage?: ModelTypes["Page_File"] | undefined,
-	queryUser?: ModelTypes["User"] | undefined,
-	queryArticleCategory?: Array<ModelTypes["ArticleCategory"] | undefined> | undefined
+	queryArticleCategory?: Array<ModelTypes["ArticleCategory"] | undefined> | undefined,
+	queryUser?: ModelTypes["User"] | undefined
 };
 	["QueryArticleCategorySpecificationInput"]: {
 	name?: string | undefined,
@@ -2228,6 +2562,14 @@ export type ModelTypes = {
 	pageSize: number,
 	sort: string,
 	title?: string | undefined
+};
+	["QueryCommentPageSpecificationInput"]: {
+	pageNo: number,
+	pageSize: number,
+	parentId?: string | undefined,
+	relationId?: string | undefined,
+	replyCommentId?: string | undefined,
+	sort: string
 };
 	["QueryFilePageSpecInput"]: {
 	category?: string | undefined,
@@ -2252,6 +2594,13 @@ export type ModelTypes = {
 	pageNo: number,
 	pageSize: number,
 	sort: string
+};
+	["QueryTodoPageSpecificationInput"]: {
+	pageNo: number,
+	pageSize: number,
+	sort: string,
+	title?: string | undefined,
+	userId?: string | undefined
 };
 	["QueryUserPageSpecificationInput"]: {
 	email?: string | undefined,
@@ -2293,6 +2642,27 @@ export type ModelTypes = {
 };
 	["Sorting"]: {
 		orders: Array<ModelTypes["Order"]>
+};
+	["Todo"]: {
+		content?: string | undefined,
+	/** 创建时间 */
+	createdAt?: ModelTypes["LocalDateTime"] | undefined,
+	/** 创建人 */
+	createdBy?: string | undefined,
+	doneDate?: ModelTypes["LocalDateTime"] | undefined,
+	icon?: string | undefined,
+	/** id */
+	id?: string | undefined,
+	planDate?: ModelTypes["LocalDateTime"] | undefined,
+	sort?: number | undefined,
+	title?: string | undefined,
+	/** 更新时间 */
+	updatedAt?: ModelTypes["LocalDateTime"] | undefined,
+	/** 更新人 */
+	updatedBy?: string | undefined,
+	user?: ModelTypes["User"] | undefined,
+	userId?: string | undefined,
+	warnDate?: ModelTypes["LocalDateTime"] | undefined
 };
 	["UpdateArticleCategoryInput"]: {
 	icon?: string | undefined,
@@ -2345,6 +2715,17 @@ export type ModelTypes = {
 	/** id */
 	id?: string | undefined,
 	menuIds?: Array<string | undefined> | undefined
+};
+	["UpdateTodoInput"]: {
+	content?: string | undefined,
+	doneDate?: ModelTypes["LocalDateTime"] | undefined,
+	icon?: string | undefined,
+	/** id */
+	id: string,
+	planDate?: ModelTypes["LocalDateTime"] | undefined,
+	sort?: number | undefined,
+	title?: string | undefined,
+	warnDate?: ModelTypes["LocalDateTime"] | undefined
 };
 	["UpdateUserInput"]: {
 	avatar?: string | undefined,
@@ -2467,7 +2848,7 @@ export type GraphQLTypes = {
 };
 	["ArticleStatusEnum"]: ArticleStatusEnum;
 	["BaseEntity"]: {
-	__typename:"Article" | "ArticleCategory" | "File" | "Menu" | "Role" | "User",
+	__typename:"Article" | "ArticleCategory" | "Comment" | "File" | "Menu" | "Role" | "Todo" | "User",
 	/** 创建时间 */
 	createdAt?: GraphQLTypes["LocalDateTime"] | undefined,
 	/** 创建人 */
@@ -2480,10 +2861,36 @@ export type GraphQLTypes = {
 	updatedBy?: string | undefined
 	['...on Article']: '__union' & GraphQLTypes["Article"];
 	['...on ArticleCategory']: '__union' & GraphQLTypes["ArticleCategory"];
+	['...on Comment']: '__union' & GraphQLTypes["Comment"];
 	['...on File']: '__union' & GraphQLTypes["File"];
 	['...on Menu']: '__union' & GraphQLTypes["Menu"];
 	['...on Role']: '__union' & GraphQLTypes["Role"];
+	['...on Todo']: '__union' & GraphQLTypes["Todo"];
 	['...on User']: '__union' & GraphQLTypes["User"];
+};
+	["Comment"]: {
+	__typename: "Comment",
+	author?: boolean | undefined,
+	content?: string | undefined,
+	/** 创建时间 */
+	createdAt?: GraphQLTypes["LocalDateTime"] | undefined,
+	/** 创建人 */
+	createdBy?: string | undefined,
+	/** id */
+	id?: string | undefined,
+	parent?: GraphQLTypes["Comment"] | undefined,
+	parentId?: string | undefined,
+	relation?: GraphQLTypes["Article"] | undefined,
+	relationId?: string | undefined,
+	replyComment?: GraphQLTypes["Comment"] | undefined,
+	replyCommentId?: string | undefined,
+	replyUser?: GraphQLTypes["User"] | undefined,
+	replyUserId?: string | undefined,
+	type?: string | undefined,
+	/** 更新时间 */
+	updatedAt?: GraphQLTypes["LocalDateTime"] | undefined,
+	/** 更新人 */
+	updatedBy?: string | undefined
 };
 	["CreateArticleCategoryInput"]: {
 		icon?: string | undefined,
@@ -2524,6 +2931,15 @@ export type GraphQLTypes = {
 		key?: string | undefined,
 	level?: number | undefined,
 	name?: string | undefined
+};
+	["CreateTodoInput"]: {
+		content?: string | undefined,
+	doneDate?: GraphQLTypes["LocalDateTime"] | undefined,
+	icon?: string | undefined,
+	planDate?: GraphQLTypes["LocalDateTime"] | undefined,
+	sort?: number | undefined,
+	title: string,
+	warnDate?: GraphQLTypes["LocalDateTime"] | undefined
 };
 	["CreateUserInput"]: {
 		avatar?: string | undefined,
@@ -2608,11 +3024,11 @@ export type GraphQLTypes = {
 	deleteMenu: boolean,
 	unpublishArticle?: boolean | undefined,
 	updateArticle?: GraphQLTypes["Article"] | undefined,
+	updateRole?: GraphQLTypes["Role"] | undefined,
 	updateArticleCategory?: GraphQLTypes["ArticleCategory"] | undefined,
 	createArticleCategory?: GraphQLTypes["ArticleCategory"] | undefined,
-	updateRole?: GraphQLTypes["Role"] | undefined,
-	createRole?: GraphQLTypes["Role"] | undefined,
 	revoke: boolean,
+	createRole?: GraphQLTypes["Role"] | undefined,
 	updateMenuVisible?: GraphQLTypes["Menu"] | undefined,
 	createComment: boolean,
 	updateMenu?: GraphQLTypes["Menu"] | undefined,
@@ -2625,12 +3041,15 @@ export type GraphQLTypes = {
 	updateUser?: GraphQLTypes["User"] | undefined,
 	deleteRole: boolean,
 	deleteArticle?: boolean | undefined,
+	updateTodo?: GraphQLTypes["Todo"] | undefined,
 	updateUserProfile?: boolean | undefined,
-	deleteUser: boolean,
 	registerUser?: boolean | undefined,
 	loginByAccount?: string | undefined,
+	deleteUser: boolean,
 	createUser?: GraphQLTypes["User"] | undefined,
-	deleteFileById: boolean
+	deleteFileById: boolean,
+	deleteTodo?: boolean | undefined,
+	createTodo?: GraphQLTypes["Todo"] | undefined
 };
 	["NullHandling"]: NullHandling;
 	["Order"]: {
@@ -2643,6 +3062,26 @@ export type GraphQLTypes = {
 	["Page_Article"]: {
 	__typename: "Page_Article",
 	content?: Array<GraphQLTypes["Article"] | undefined> | undefined,
+	first: boolean,
+	hasContent: boolean,
+	hasNext: boolean,
+	hasPrevious: boolean,
+	last: boolean,
+	nextOrLastPageable?: GraphQLTypes["Pagination"] | undefined,
+	nextPageable?: GraphQLTypes["Pagination"] | undefined,
+	number: number,
+	numberOfElements: number,
+	pageable?: GraphQLTypes["Pagination"] | undefined,
+	previousOrFirstPageable?: GraphQLTypes["Pagination"] | undefined,
+	previousPageable?: GraphQLTypes["Pagination"] | undefined,
+	size: number,
+	sort?: GraphQLTypes["Sorting"] | undefined,
+	totalElements: GraphQLTypes["Long"],
+	totalPages: number
+};
+	["Page_Comment"]: {
+	__typename: "Page_Comment",
+	content?: Array<GraphQLTypes["Comment"] | undefined> | undefined,
 	first: boolean,
 	hasContent: boolean,
 	hasNext: boolean,
@@ -2700,6 +3139,26 @@ export type GraphQLTypes = {
 	totalElements: GraphQLTypes["Long"],
 	totalPages: number
 };
+	["Page_Todo"]: {
+	__typename: "Page_Todo",
+	content?: Array<GraphQLTypes["Todo"] | undefined> | undefined,
+	first: boolean,
+	hasContent: boolean,
+	hasNext: boolean,
+	hasPrevious: boolean,
+	last: boolean,
+	nextOrLastPageable?: GraphQLTypes["Pagination"] | undefined,
+	nextPageable?: GraphQLTypes["Pagination"] | undefined,
+	number: number,
+	numberOfElements: number,
+	pageable?: GraphQLTypes["Pagination"] | undefined,
+	previousOrFirstPageable?: GraphQLTypes["Pagination"] | undefined,
+	previousPageable?: GraphQLTypes["Pagination"] | undefined,
+	size: number,
+	sort?: GraphQLTypes["Sorting"] | undefined,
+	totalElements: GraphQLTypes["Long"],
+	totalPages: number
+};
 	["Page_User"]: {
 	__typename: "Page_User",
 	content?: Array<GraphQLTypes["User"] | undefined> | undefined,
@@ -2731,7 +3190,9 @@ export type GraphQLTypes = {
 	__typename: "Query",
 	app?: string | undefined,
 	userInfo?: GraphQLTypes["UserInfoResult"] | undefined,
+	queryCommentPage?: GraphQLTypes["Page_Comment"] | undefined,
 	queryMenuList?: Array<GraphQLTypes["Menu"] | undefined> | undefined,
+	queryTodo?: GraphQLTypes["Todo"] | undefined,
 	queryArticleCategoryTree?: Array<GraphQLTypes["ArticleCategory"] | undefined> | undefined,
 	queryUserPage?: GraphQLTypes["Page_User"] | undefined,
 	queryArticle?: GraphQLTypes["Article"] | undefined,
@@ -2742,10 +3203,11 @@ export type GraphQLTypes = {
 	queryUserList?: Array<GraphQLTypes["User"] | undefined> | undefined,
 	queryAllRoleList?: Array<GraphQLTypes["Role"] | undefined> | undefined,
 	queryDefaultRole?: Array<GraphQLTypes["DefaultRoleEnum"] | undefined> | undefined,
+	queryTodoPage?: GraphQLTypes["Page_Todo"] | undefined,
 	queryArticlePage?: GraphQLTypes["Page_Article"] | undefined,
 	queryFilePage?: GraphQLTypes["Page_File"] | undefined,
-	queryUser?: GraphQLTypes["User"] | undefined,
-	queryArticleCategory?: Array<GraphQLTypes["ArticleCategory"] | undefined> | undefined
+	queryArticleCategory?: Array<GraphQLTypes["ArticleCategory"] | undefined> | undefined,
+	queryUser?: GraphQLTypes["User"] | undefined
 };
 	["QueryArticleCategorySpecificationInput"]: {
 		name?: string | undefined,
@@ -2758,6 +3220,14 @@ export type GraphQLTypes = {
 	pageSize: number,
 	sort: string,
 	title?: string | undefined
+};
+	["QueryCommentPageSpecificationInput"]: {
+		pageNo: number,
+	pageSize: number,
+	parentId?: string | undefined,
+	relationId?: string | undefined,
+	replyCommentId?: string | undefined,
+	sort: string
 };
 	["QueryFilePageSpecInput"]: {
 		category?: string | undefined,
@@ -2782,6 +3252,13 @@ export type GraphQLTypes = {
 	pageNo: number,
 	pageSize: number,
 	sort: string
+};
+	["QueryTodoPageSpecificationInput"]: {
+		pageNo: number,
+	pageSize: number,
+	sort: string,
+	title?: string | undefined,
+	userId?: string | undefined
 };
 	["QueryUserPageSpecificationInput"]: {
 		email?: string | undefined,
@@ -2826,6 +3303,28 @@ export type GraphQLTypes = {
 	["Sorting"]: {
 	__typename: "Sorting",
 	orders: Array<GraphQLTypes["Order"]>
+};
+	["Todo"]: {
+	__typename: "Todo",
+	content?: string | undefined,
+	/** 创建时间 */
+	createdAt?: GraphQLTypes["LocalDateTime"] | undefined,
+	/** 创建人 */
+	createdBy?: string | undefined,
+	doneDate?: GraphQLTypes["LocalDateTime"] | undefined,
+	icon?: string | undefined,
+	/** id */
+	id?: string | undefined,
+	planDate?: GraphQLTypes["LocalDateTime"] | undefined,
+	sort?: number | undefined,
+	title?: string | undefined,
+	/** 更新时间 */
+	updatedAt?: GraphQLTypes["LocalDateTime"] | undefined,
+	/** 更新人 */
+	updatedBy?: string | undefined,
+	user?: GraphQLTypes["User"] | undefined,
+	userId?: string | undefined,
+	warnDate?: GraphQLTypes["LocalDateTime"] | undefined
 };
 	["UpdateArticleCategoryInput"]: {
 		icon?: string | undefined,
@@ -2878,6 +3377,17 @@ export type GraphQLTypes = {
 		/** id */
 	id?: string | undefined,
 	menuIds?: Array<string | undefined> | undefined
+};
+	["UpdateTodoInput"]: {
+		content?: string | undefined,
+	doneDate?: GraphQLTypes["LocalDateTime"] | undefined,
+	icon?: string | undefined,
+	/** id */
+	id: string,
+	planDate?: GraphQLTypes["LocalDateTime"] | undefined,
+	sort?: number | undefined,
+	title?: string | undefined,
+	warnDate?: GraphQLTypes["LocalDateTime"] | undefined
 };
 	["UpdateUserInput"]: {
 		avatar?: string | undefined,
@@ -2989,6 +3499,7 @@ type ZEUS_VARIABLES = {
 	["CreateCommentInput"]: ValueTypes["CreateCommentInput"];
 	["CreateMenuInput"]: ValueTypes["CreateMenuInput"];
 	["CreateRoleInput"]: ValueTypes["CreateRoleInput"];
+	["CreateTodoInput"]: ValueTypes["CreateTodoInput"];
 	["CreateUserInput"]: ValueTypes["CreateUserInput"];
 	["DefaultRoleEnum"]: ValueTypes["DefaultRoleEnum"];
 	["Direction"]: ValueTypes["Direction"];
@@ -3000,9 +3511,11 @@ type ZEUS_VARIABLES = {
 	["NullHandling"]: ValueTypes["NullHandling"];
 	["QueryArticleCategorySpecificationInput"]: ValueTypes["QueryArticleCategorySpecificationInput"];
 	["QueryArticlePageSpecificationInput"]: ValueTypes["QueryArticlePageSpecificationInput"];
+	["QueryCommentPageSpecificationInput"]: ValueTypes["QueryCommentPageSpecificationInput"];
 	["QueryFilePageSpecInput"]: ValueTypes["QueryFilePageSpecInput"];
 	["QueryMenuSpecInput"]: ValueTypes["QueryMenuSpecInput"];
 	["QueryRolePageSpecificationInput"]: ValueTypes["QueryRolePageSpecificationInput"];
+	["QueryTodoPageSpecificationInput"]: ValueTypes["QueryTodoPageSpecificationInput"];
 	["QueryUserPageSpecificationInput"]: ValueTypes["QueryUserPageSpecificationInput"];
 	["QueryUserSpecificationInput"]: ValueTypes["QueryUserSpecificationInput"];
 	["UpdateArticleCategoryInput"]: ValueTypes["UpdateArticleCategoryInput"];
@@ -3011,6 +3524,7 @@ type ZEUS_VARIABLES = {
 	["UpdateMenuVisibleInput"]: ValueTypes["UpdateMenuVisibleInput"];
 	["UpdateRoleInput"]: ValueTypes["UpdateRoleInput"];
 	["UpdateRoleMenuInput"]: ValueTypes["UpdateRoleMenuInput"];
+	["UpdateTodoInput"]: ValueTypes["UpdateTodoInput"];
 	["UpdateUserInput"]: ValueTypes["UpdateUserInput"];
 	["UpdateUserProfileInput"]: ValueTypes["UpdateUserProfileInput"];
 	["UserLoginInput"]: ValueTypes["UserLoginInput"];
