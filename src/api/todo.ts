@@ -1,5 +1,6 @@
 import { mutation, query } from '@/utils/graphql'
 import type { ModelTypes } from '@/utils/graphql/zeus'
+import request from '~/utils/request'
 
 export function queryTodoPage(specification: ModelTypes['QueryTodoPageSpecificationInput']) {
   return query({
@@ -26,28 +27,18 @@ export function queryTodoPage(specification: ModelTypes['QueryTodoPageSpecificat
 }
 
 export function createTodo(input: ModelTypes['CreateTodoInput']) {
-  return mutation({
-    createTodo: [
-      {
-        input,
-      },
-      {
-        id: true,
-      },
-    ],
+  return request({
+    url: '/todo/create',
+    method: 'post',
+    data: input,
   })
 }
 
 export function updateTodo(input: ModelTypes['UpdateTodoInput']) {
-  return mutation({
-    updateTodo: [
-      {
-        input,
-      },
-      {
-        id: true,
-      },
-    ],
+  return request({
+    url: '/todo/update',
+    method: 'post',
+    data: input,
   })
 }
 
